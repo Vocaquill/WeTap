@@ -1,15 +1,44 @@
-var builder = WebApplication.CreateBuilder(args);
+using Serilog;
+using Serilog.Events;
 
-// Add services to the container.
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-builder.Services.AddControllers();
+try
+{
+    var builder = WebApplication.CreateBuilder(args);
 
-var app = builder.Build();
+    builder.Host.UseSerilog((context, services, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+    );
 
-// Configure the HTTP request pipeline.
+    // Add services to the container.
 
-app.UseAuthorization();
+    builder.Services.AddControllers();
 
-app.MapControllers();
+    var app = builder.Build();
 
-app.Run();
+    // Configure the HTTP request pipeline.
+
+    app.UseSerilogRequestLogging();
+
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.Run();
+}
+catch(Exception ex)
+{
+    Log.Fatal(ex, "Application falied to start");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
+
+
