@@ -4,7 +4,7 @@ namespace WeTapAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class WeatherForecastController(ILogger<WeatherForecastController> logger) : ControllerBase
     {
         private static readonly string[] Summaries =
         [
@@ -14,6 +14,8 @@ namespace WeTapAPI.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
+            //logger.LogInformation("---Get Wheather---");
+            //logger.LogError("---Get Wheather---");
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
