@@ -1,3 +1,4 @@
+using Infrastructure;
 using Serilog;
 using Serilog.Events;
 
@@ -17,6 +18,7 @@ try
     );
 
     // Add services to the container.
+    builder.Services.AddInfrastructureServices(builder.Configuration);
 
     builder.Services.AddControllers();
 
@@ -34,7 +36,7 @@ try
 
 
 }
-catch(Exception ex)
+catch (Exception ex) when (ex is not OperationCanceledException && ex.GetType().Name != "HostAbortedException")
 {
     Log.Fatal(ex, "Application falied to start");
 }
