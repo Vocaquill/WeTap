@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Бойовик",
+    "slug": "action",
+    "imagePath": "https://i.guim.co.uk/img/media/b4e641a5a83d8798246c45164b63adaf8ca22223/0_0_2953_1906/master/2953.jpg?width=465&dpr=1&s=none&crop=none"
+  },
+  {
+    "name": "Пригоди",
+    "slug": "adventure",
+    "imagePath": "https://www.awn.com/sites/default/files/styles/original/public/image/featured/1027668-here-are-42-amazing-pieces-concept-art-disney-s-jungle-book.jpg?itok=QNMy6Z9-"
+  },
+  {
+    "name": "Драма",
+    "slug": "drama",
+    "imagePath": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrCgF03fwqa72mv4aj8ugVWDsRez6tPGagjg&s"
+  },
+  {
+    "name": "Комедія",
+    "slug": "comedy",
+    "imagePath": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMOUuVYfSHA9U0A790nwKPHXNs-SgCR1ECEw&s"
+  },
+  {
+    "name": "Наукова фантастика",
+    "slug": "sci-fi",
+    "imagePath": "https://www.dreamstale.com/wp-content/uploads/2014/04/incredible-sci-fi-stunning-images-featured.jpg"
+  },
+  {
+    "name": "Трилер",
+    "slug": "thriller",
+    "imagePath": "https://images.artwanted.com/large/76/50629_907276.jpg"
+  },
+  {
+    "name": "Жахи",
+    "slug": "horror",
+    "imagePath": "https://cdn.mos.cms.futurecdn.net/4Rio5YkTZHswzZsRAptnGh.jpg"
+  },
+  {
+    "name": "Анімація",
+    "slug": "animation",
+    "imagePath": "https://images.squarespace-cdn.com/content/v1/54fc8146e4b02a22841f4df7/1572479248205-STA5TDK1HRHZMNGJPWY3/cover9.jpg?format=1000w"
+  }
+]
