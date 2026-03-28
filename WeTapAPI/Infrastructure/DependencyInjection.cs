@@ -1,5 +1,7 @@
 using Application.Genres.Queries.GetGenres;
+using Application.Interfaces;
 using Application.Mappings;
+using Application.Services;
 using Domain;
 using Infrastructure.Jobs;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,10 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        //services
+        services.AddScoped<ISeederService, SeederService>();
+
+        // DB
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         
         services.AddDbContext<AppDbContext>(options =>
@@ -36,7 +42,7 @@ public static class DependencyInjection
             q.AddTrigger(opts => opts
                 .ForJob(jobKey)
                 .WithIdentity("GenreSeederJob-trigger")
-                .StartNow()); // Execute once at startup
+                .StartNow());
         });
 
         services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);

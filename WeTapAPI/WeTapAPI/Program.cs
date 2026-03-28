@@ -17,7 +17,7 @@ try
         .ReadFrom.Services(services)
     );
 
-    // Add services to the container.
+    // Мтод що будує залежності у infrstructure рівні
     builder.Services.AddInfrastructureServices(builder.Configuration);
 
     builder.Services.AddControllers();
