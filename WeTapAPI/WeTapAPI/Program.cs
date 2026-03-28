@@ -1,4 +1,5 @@
 using Infrastructure;
+using Infrastructure.Middlewares;
 using Serilog;
 using Serilog.Events;
 
@@ -26,6 +27,8 @@ try
 
     // Configure the HTTP request pipeline.
 
+    app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+
     app.UseSerilogRequestLogging();
 
     app.UseAuthorization();
@@ -33,6 +36,7 @@ try
     app.MapControllers();
 
     app.Run();
+
 
 
 }
