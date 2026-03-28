@@ -1,3 +1,5 @@
+using Infrastructure;
+using Infrastructure.Middlewares;
 using Serilog;
 using Serilog.Events;
 
@@ -16,13 +18,16 @@ try
         .ReadFrom.Services(services)
     );
 
-    // Add services to the container.
+    // Мтод що будує залежності у infrstructure рівні
+    builder.Services.AddInfrastructureServices(builder.Configuration);
 
     builder.Services.AddControllers();
 
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
+
+    app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
     app.UseSerilogRequestLogging();
 
@@ -33,8 +38,9 @@ try
     app.Run();
 
 
+
 }
-catch(Exception ex)
+catch (Exception ex) when (ex is not OperationCanceledException && ex.GetType().Name != "HostAbortedException")
 {
     Log.Fatal(ex, "Application falied to start");
 }

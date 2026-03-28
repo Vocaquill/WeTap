@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="Application/Application.csproj" Id="e89829d2-8660-4189-91ff-43339d90e958" />
+  <Project Path="Domain/Domain.csproj" Id="9b038dc5-e6a7-4ff1-bcc5-312520b89d4a" />
+  <Project Path="Infrastructure/Infrastructure.csproj" Id="d8a768af-9926-4233-964d-dcb0121f4013" />
   <Project Path="WeTapAPI/WeTapAPI.csproj" />
 </Solution>
