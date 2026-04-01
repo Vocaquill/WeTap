@@ -18,8 +18,8 @@ try
         .ReadFrom.Services(services)
     );
 
-    // Мтод що будує залежності у infrstructure рівні
     builder.Services.AddInfrastructureServices(builder.Configuration);
+    builder.Services.AddSwaggerDocumentation();
 
     builder.Services.AddControllers();
 
@@ -27,6 +27,11 @@ try
 
     // Метод конфігурації папок з рівня інфраструктури
     app.UseImagesDirectory(builder.Configuration);
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwaggerDocumentation();
+    }
 
     app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
