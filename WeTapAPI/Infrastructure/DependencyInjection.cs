@@ -17,6 +17,7 @@ public static class DependencyInjection
     {
         //services
         services.AddScoped<ISeederService, SeederService>();
+        services.AddScoped<IImageService, ImageService>();
 
         // DB
         var connectionString = configuration.GetConnectionString("DefaultConnection");
