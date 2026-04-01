@@ -25,7 +25,8 @@ try
 
     var app = builder.Build();
 
-    // Configure the HTTP request pipeline.
+    // Метод конфігурації папок з рівня інфраструктури
+    app.UseImagesDirectory(builder.Configuration);
 
     app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 

@@ -10,7 +10,8 @@ namespace Application.Services;
 
 public class SeederService(
     AppDbContext appDbContext,
-    IMapper mapper) : ISeederService
+    IMapper mapper,
+    IImageService imageService) : ISeederService
 {
     public async Task SeedGenresAsync(string jsonPath)
     {
@@ -25,7 +26,16 @@ public class SeederService(
 
         if (genresData != null)
         {
-            var genres = genresData.Select(g => mapper.Map<GenreEntity>(g)).ToList();
+            var genreTasks = genresData.Select(async g =>
+            {
+                GenreEntity entity = mapper.Map<GenreEntity>(g);
+                if (!string.IsNullOrEmpty(g.ImagePath))
+                    entity.Image = await imageService.SaveImageFromUrlAsync(g.ImagePath);
+
+                return entity;
+            });
+
+            var genres = await Task.WhenAll(genreTasks);
 
             await appDbContext.Genres.AddRangeAsync(genres);
             await appDbContext.SaveChangesAsync();
