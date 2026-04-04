@@ -86,16 +86,6 @@ public class GenericRepository<TEntity, TKey>(AppDbContext context, IMapper mapp
 
     public async Task<int> SaveChangesAsync() => await context.SaveChangesAsync();
 
-    protected async Task ReplaceImageAsync(IHasImage entity, IFormFile? newFile)
-    {
-        if (imageService == null || newFile == null) return;
-
-        if (!string.IsNullOrEmpty(entity.ImageUrl))
-            await imageService.DeleteImageAsync(entity.ImageUrl);
-
-        entity.ImageUrl = await imageService.SaveImageAsync(newFile);
-    }
-
     public IQueryable<TEntity> AsQurable(bool isSoft = false)
     {
         var query = context.Set<TEntity>().AsQueryable();
