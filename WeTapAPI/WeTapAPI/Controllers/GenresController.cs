@@ -1,5 +1,6 @@
 using Application.Models.Genre;
 using Application.Features.Genres.Commands.CreateGenre;
+using Application.Features.Genres.Queries.GetGenres;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,14 @@ public class GenresController(IMediator mediator) : ControllerBase
     {
         var command = new CreateGenreCommand(model);
         var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<GenreItemModel>>> GetAll()
+    {
+        var query = new GetGenresQuery();
+        var result = await mediator.Send(query);
         return Ok(result);
     }
 }
