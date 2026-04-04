@@ -1,4 +1,5 @@
-using Application.Features.Genres.Queries.GetGenres;
+using Application.Models.Genre;
+using Application.Features.Genres.Commands.CreateGenre;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,12 +9,11 @@ namespace WeTapAPI.Controllers;
 [Route("api/[controller]")]
 public class GenresController(IMediator mediator) : ControllerBase
 {
-
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [HttpPost]
+    public async Task<ActionResult<GenreItemModel>> Create([FromForm] GenreCreateModel model)
     {
-        var query = new GetGenresQuery();
-        var result = await mediator.Send(query);
+        var command = new CreateGenreCommand(model);
+        var result = await mediator.Send(command);
         return Ok(result);
     }
 }
