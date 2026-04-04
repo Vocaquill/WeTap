@@ -1,4 +1,4 @@
-using Application.Genres.Queries.GetGenres;
+using Application.Features.Genres.Queries.GetGenres;
 using Application.Interfaces;
 using Application.Mappings;
 using Application.Services;

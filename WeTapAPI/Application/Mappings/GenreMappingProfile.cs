@@ -1,6 +1,6 @@
 using Application.Models.Genre;
 using AutoMapper;
-using Domain.Entities;
+using Domain.Entities.Genre;
 
 namespace Application.Mappings;
 

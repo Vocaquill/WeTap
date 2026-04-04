@@ -1,6 +1,6 @@
 using Application.Models.Genre;
 using MediatR;
 
-namespace Application.Genres.Queries.GetGenres;
+namespace Application.Features.Genres.Queries.GetGenres;
 
 public record GetGenresQuery : IRequest<IEnumerable<GenreItemModel>>;

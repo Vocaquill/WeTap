@@ -4,7 +4,7 @@ using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Genres.Queries.GetGenres;
+namespace Application.Features.Genres.Queries.GetGenres;
 
 public class GetGenresQueryHandler(AppDbContext context, IMapper mapper) : IRequestHandler<GetGenresQuery, IEnumerable<GenreItemModel>>
 {
