@@ -27,7 +27,7 @@ public class GenresController(IMediator mediator) : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost]
+    [HttpPut]
     public async Task<ActionResult<GenreItemModel>> Update([FromForm] GenreUpdateModel model)
     {
         var command = new UpdateGenreCommand(model);
