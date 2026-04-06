@@ -3,6 +3,7 @@ using Application.Features.Genres.Commands.CreateGenre;
 using Application.Features.Genres.Queries.GetGenres;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Application.Features.Genres.Commands.UpdateGenre;
 
 namespace WeTapAPI.Controllers;
 
@@ -23,6 +24,14 @@ public class GenresController(IMediator mediator) : ControllerBase
     {
         var query = new GetGenresQuery();
         var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<GenreItemModel>> Update([FromForm] GenreUpdateModel model)
+    {
+        var command = new UpdateGenreCommand(model);
+        var result = await mediator.Send(command);
         return Ok(result);
     }
 }

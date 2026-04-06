@@ -10,5 +10,9 @@ public class GenreMappingProfile : Profile
     {
         CreateMap<GenreEntity, GenreItemModel>();
         CreateMap<GenreSeedModel, GenreEntity>();
+        CreateMap<GenreUpdateModel, GenreEntity>()
+            .ForMember(x => x.Image, opt => opt.Ignore());
+        CreateMap<GenreCreateModel, GenreEntity>()
+            .ForMember(x => x.Image, opt => opt.Ignore());
     }
 }

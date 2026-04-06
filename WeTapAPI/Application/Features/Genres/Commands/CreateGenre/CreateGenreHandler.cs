@@ -15,11 +15,7 @@ public class CreateGenreHandler(IGenericRepository<GenreEntity, long> repo,
         CreateGenreCommand request,
         CancellationToken cancellationToken)
     {
-        var entity = new GenreEntity
-        {
-            Name = request.Model.Name,
-            Slug = request.Model.Slug
-        };
+        var entity = mapper.Map<GenreEntity>(request.Model);
 
         if (request.Model.Image != null)
         {
