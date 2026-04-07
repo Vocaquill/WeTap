@@ -1,9 +1,10 @@
-using Application.Genres.Queries.GetGenres;
+using Application.Features.Genres.Queries.GetGenres;
 using Application.Interfaces;
 using Application.Mappings;
 using Application.Services;
 using Domain;
 using Infrastructure.Jobs;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,7 @@ public static class DependencyInjection
         //services
         services.AddScoped<ISeederService, SeederService>();
         services.AddScoped<IImageService, ImageService>();
+        services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
         // DB
         var connectionString = configuration.GetConnectionString("DefaultConnection");

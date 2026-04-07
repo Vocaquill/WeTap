@@ -1,6 +1,10 @@
-using Application.Genres.Queries.GetGenres;
+using Application.Models.Genre;
+using Application.Features.Genres.Commands.CreateGenre;
+using Application.Features.Genres.Queries.GetGenres;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Application.Features.Genres.Commands.UpdateGenre;
+using Application.Features.Genres.Commands.DeleteGenre;
 
 namespace WeTapAPI.Controllers;
 
@@ -8,12 +12,35 @@ namespace WeTapAPI.Controllers;
 [Route("api/[controller]")]
 public class GenresController(IMediator mediator) : ControllerBase
 {
+    [HttpPost]
+    public async Task<ActionResult<GenreItemModel>> Create([FromForm] GenreCreateModel model)
+    {
+        var command = new CreateGenreCommand(model);
+        var result = await mediator.Send(command);
+        return Ok(result);
+    }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<IEnumerable<GenreItemModel>>> GetAll()
     {
         var query = new GetGenresQuery();
         var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpPut]
+    public async Task<ActionResult<GenreItemModel>> Update([FromForm] GenreUpdateModel model)
+    {
+        var command = new UpdateGenreCommand(model);
+        var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpDelete]
+    public async Task<ActionResult<IEnumerable<GenreItemModel>>> Delete([FromBody] GenreDeleteModel model)
+    {
+        var command = new DeleteGenreCommand(model);
+        var result = await mediator.Send(command);
         return Ok(result);
     }
 }

@@ -2,7 +2,7 @@ using Application.Interfaces;
 using Application.Models.Genre;
 using AutoMapper;
 using Domain;
-using Domain.Entities;
+using Domain.Entities.Genre;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
