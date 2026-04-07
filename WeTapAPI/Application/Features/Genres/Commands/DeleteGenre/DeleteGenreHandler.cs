@@ -16,12 +16,21 @@ public class DeleteGenreHandler(IGenericRepository<GenreEntity, long> repo,
 {
     public async Task<IEnumerable<GenreItemModel>> Handle(DeleteGenreCommand request, CancellationToken cancellationToken)
     {
-        var genre = await context.Genres.Where(x => x.Id == request.Model.Id && !x.IsDeleted).FirstAsync();
-        if (genre == null)
-            throw new Exception("Genre not found");
+        GenreEntity genre;
 
-        if (!string.IsNullOrEmpty(genre.Image))
-            await imageService.DeleteImageAsync(genre.Image);
+        try
+        {
+            genre = await context.Genres.Where(x => x.Id == request.Model.Id && !x.IsDeleted).FirstAsync();
+            if (genre == null)
+                throw new Exception();
+        }
+        catch (Exception)
+        {
+            throw new Exception("Genre not found");
+        }
+
+        //if (!string.IsNullOrEmpty(genre.Image))
+        //    await imageService.DeleteImageAsync(genre.Image); -- можливо потрібно, а можливо і ні
 
         await repo.DeleteAsync(genre.Id);
 
