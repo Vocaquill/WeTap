@@ -1,9 +1,8 @@
 ﻿using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Xabe.FFmpeg;
+using Xabe.FFmpeg.Downloader;
 
 namespace Application.Services;
 
@@ -18,21 +17,36 @@ public class VideoFileService : IVideoFileService
             Directory.GetCurrentDirectory(),
             configuration["VideosDir"]!
         );
-
         Directory.CreateDirectory(videosDir);
+
+        // Це завантажить ffpmeg.exe у папку з додатком, якщо його там немає
+        FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official).Wait();
     }
 
     public async Task<string> SaveVideoAsync(IFormFile file)
     {
-        var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-        if (!allowedExtensions.Contains(ext))
-            throw new InvalidOperationException("Unsupported video format");
+        // 1. Зберігаємо тимчасовий файл (оригінал)
+        var tempInputPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + Path.GetExtension(file.FileName));
+        using (var stream = new FileStream(tempInputPath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
 
-        var fileName = $"{Guid.NewGuid()}{ext}";
-        var path = Path.Combine(videosDir, fileName);
+        // 2. Готуємо шлях для фінального MP4
+        var fileName = $"{Guid.NewGuid()}.mp4";
+        var outputPath = Path.Combine(videosDir, fileName);
 
-        await using var stream = new FileStream(path, FileMode.Create);
-        await file.CopyToAsync(stream);
+        try
+        {
+            // 3. Перекодовуємо в H.264 (відео) та AAC (аудіо) — це стандарт для вебу
+            var conversion = await FFmpeg.Conversions.FromSnippet.ToMp4(tempInputPath, outputPath);
+            await conversion.Start();
+        }
+        finally
+        {
+            // Видаляємо тимчасовий файл
+            if (File.Exists(tempInputPath)) File.Delete(tempInputPath);
+        }
 
         return fileName;
     }
