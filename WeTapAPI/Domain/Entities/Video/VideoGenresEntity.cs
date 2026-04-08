@@ -1,10 +1,12 @@
 ﻿using Domain.Entities.Genre;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Domain.Entities.Video;
 
+[Table("tbl_vieos_genres")]
 public class VideoGenresEntity
 {
     public long VideoId { get; set; }
