@@ -1,3 +1,4 @@
+using Domain.Entities.Video;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,4 +15,6 @@ public class GenreEntity : BaseEntity<long>
 
     [StringLength(255)]
     public string? Image { get; set; }
+
+    public virtual ICollection<VideoGenresEntity>? VideoGenres { get; set; }
 }
