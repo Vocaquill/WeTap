@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Xabe.FFmpeg;
@@ -32,21 +32,29 @@ public class VideoFileService : IVideoFileService
             await file.CopyToAsync(stream);
         }
 
-        // 2. Готуємо шлях для фінального MP4
-        var fileName = $"{Guid.NewGuid()}.mp4";
-        var outputPath = Path.Combine(videosDir, fileName);
-
         try
         {
-            // 3. Перекодовуємо в H.264 (відео) та AAC (аудіо) — це стандарт для вебу
-            var conversion = await FFmpeg.Conversions.FromSnippet.ToMp4(tempInputPath, outputPath);
-            await conversion.Start();
+            return await SaveVideoFromFilePathAsync(tempInputPath);
         }
         finally
         {
             // Видаляємо тимчасовий файл
             if (File.Exists(tempInputPath)) File.Delete(tempInputPath);
         }
+    }
+
+    public async Task<string> SaveVideoFromFilePathAsync(string filePath)
+    {
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException("Source video file not found", filePath);
+
+        // 2. Готуємо шлях для фінального MP4
+        var fileName = $"{Guid.NewGuid()}.mp4";
+        var outputPath = Path.Combine(videosDir, fileName);
+
+        // 3. Перекодовуємо в H.264 (відео) та AAC (аудіо) — це стандарт для вебу
+        var conversion = await FFmpeg.Conversions.FromSnippet.ToMp4(filePath, outputPath);
+        await conversion.Start();
 
         return fileName;
     }
