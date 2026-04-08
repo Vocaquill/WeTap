@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;
 
-namespace Infrastructure;
+namespace Infrastructure.ProgramConfiguration;
 
 public static class SwaggerConfigurator
 {

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 
-namespace Infrastructure;
+namespace Infrastructure.ProgramConfiguration;
 
 public static class StaticFilesConfigurator
 {

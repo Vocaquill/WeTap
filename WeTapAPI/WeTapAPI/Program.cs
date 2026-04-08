@@ -1,5 +1,5 @@
-using Infrastructure;
 using Infrastructure.Middlewares;
+using Infrastructure.ProgramConfiguration;
 using Serilog;
 using Serilog.Events;
 

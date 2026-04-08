@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 
-namespace Infrastructure;
+namespace Infrastructure.ProgramConfiguration;
 
 public static class DependencyInjection
 {
@@ -19,6 +19,7 @@ public static class DependencyInjection
         //services
         services.AddScoped<ISeederService, SeederService>();
         services.AddScoped<IImageService, ImageService>();
+        services.AddScoped<IVideoFileService, VideoFileService>();
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
 
         // DB
