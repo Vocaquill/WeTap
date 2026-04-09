@@ -1,6 +1,7 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Application.Models.Video;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Entities.Video;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,9 @@ public class CreateVideoHandler(IGenericRepository<VideoEntity, long> repo,
         await repo.AddAsync(entity);
         await repo.SaveChangesAsync();
 
-        return mapper.Map<VideoItemModel>(entity);
+        return await repo.AsQurable()
+            .Where(x => x.Id == entity.Id)
+            .ProjectTo<VideoItemModel>(mapper.ConfigurationProvider)
+            .FirstAsync(cancellationToken);
     }
 }

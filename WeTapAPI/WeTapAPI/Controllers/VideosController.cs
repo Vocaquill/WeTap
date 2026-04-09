@@ -1,3 +1,4 @@
+using Application.Features.Videos.Queries.GetVideos;
 using Application.Features.Videos.Commands.CreateVideo;
 using Application.Interfaces;
 using Application.Models.Genre;
@@ -20,6 +21,14 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     public async Task<ActionResult<string>> Create([FromForm] TestVideoSavingCommand model)
     {
         var result = await videoFileService.SaveVideoAsync(model.File);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<VideoItemModel>>> GetAll()
+    {
+        var query = new GetVideosQuery();
+        var result = await mediator.Send(query);
         return Ok(result);
     }
 
