@@ -5,6 +5,7 @@ using Application.Models.Genre;
 using Application.Models.Video;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Application.Features.Videos.Commands.UpdateVideo;
 
 namespace WeTapAPI.Controllers;
 
@@ -36,6 +37,14 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     public async Task<ActionResult<VideoItemModel>> Create([FromForm] VideoCreateModel model)
     {
         var command = new CreateVideoCommand(model);
+        var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpPut]
+    public async Task<ActionResult<VideoItemModel>> Update([FromForm] VideoUpdateModel model)
+    {
+        var command = new UpdateVideoCommand(model);
         var result = await mediator.Send(command);
         return Ok(result);
     }
