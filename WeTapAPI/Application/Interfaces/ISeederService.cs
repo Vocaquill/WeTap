@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,4 +8,5 @@ public interface ISeederService
 {
     public Task UpdateDatabase();
     public Task SeedGenresAsync(string jsonPath);
+    public Task SeedVideosAsync(string jsonPath, string videosFolder);
 }

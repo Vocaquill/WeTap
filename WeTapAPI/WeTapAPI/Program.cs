@@ -1,5 +1,5 @@
-using Infrastructure;
 using Infrastructure.Middlewares;
+using Infrastructure.ProgramConfiguration;
 using Serilog;
 using Serilog.Events;
 
@@ -27,6 +27,7 @@ try
 
     // Метод конфігурації папок з рівня інфраструктури
     app.UseImagesDirectory(builder.Configuration);
+    app.UseVideosDirectory(builder.Configuration);
 
     if (app.Environment.IsDevelopment())
     {

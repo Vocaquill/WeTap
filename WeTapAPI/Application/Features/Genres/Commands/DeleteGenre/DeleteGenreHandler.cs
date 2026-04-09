@@ -9,9 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.Genres.Commands.DeleteGenre;
 
 public class DeleteGenreHandler(IGenericRepository<GenreEntity, long> repo,
-    IMapper mapper,
-    IImageService imageService,
-    AppDbContext context)
+    IMapper mapper)
     : IRequestHandler<DeleteGenreCommand, IEnumerable<GenreItemModel>>
 {
     public async Task<IEnumerable<GenreItemModel>> Handle(DeleteGenreCommand request, CancellationToken cancellationToken)
@@ -20,7 +18,7 @@ public class DeleteGenreHandler(IGenericRepository<GenreEntity, long> repo,
 
         try
         {
-            genre = await context.Genres.Where(x => x.Id == request.Model.Id && !x.IsDeleted).FirstAsync();
+            genre = await repo.AsQurable().Where(x => x.Id == request.Model.Id && !x.IsDeleted).FirstAsync();
             if (genre == null)
                 throw new Exception();
         }

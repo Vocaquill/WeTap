@@ -283,3 +283,9 @@ yarn-debug.log*
 yarn-error.log*
 
 package-lock.json
+
+ffmpeg.exe
+ffprobe.exe
+version.json
+
+*.mp4
