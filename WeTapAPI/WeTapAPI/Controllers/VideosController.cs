@@ -1,11 +1,13 @@
+using Application.Features.Videos.Commands.CreateVideo;
 using Application.Interfaces;
 using Application.Models.Genre;
+using Application.Models.Video;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WeTapAPI.Controllers;
 
-public class TestVideoSavingCommand : IRequest<GenreItemModel>
+public class TestVideoSavingCommand : IRequest
 {
     public IFormFile File { get; set; }
 }
@@ -14,10 +16,18 @@ public class TestVideoSavingCommand : IRequest<GenreItemModel>
 [Route("api/[controller]")]
 public class VideosController(IMediator mediator, IVideoFileService videoFileService) : ControllerBase
 {
-    [HttpPost("TestVideoSaving")]
-    public async Task<ActionResult<GenreItemModel>> Create([FromForm] TestVideoSavingCommand model)
+    [HttpPost("TestVideoSaving")] // для тесту
+    public async Task<ActionResult<string>> Create([FromForm] TestVideoSavingCommand model)
     {
         var result = await videoFileService.SaveVideoAsync(model.File);
+        return Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<VideoItemModel>> Create([FromForm] VideoCreateModel model)
+    {
+        var command = new CreateVideoCommand(model);
+        var result = await mediator.Send(command);
         return Ok(result);
     }
 }

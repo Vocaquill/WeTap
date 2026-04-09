@@ -15,7 +15,7 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<VideoGenresEntity>(mg =>
+        modelBuilder.Entity<VideoGenreEntity>(mg =>
         {
             mg.HasKey(x => new { x.VideoId, x.GenreId });
 

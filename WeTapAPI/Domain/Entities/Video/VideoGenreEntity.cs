@@ -7,7 +7,7 @@ using System.Text;
 namespace Domain.Entities.Video;
 
 [Table("tbl_vieos_genres")]
-public class VideoGenresEntity
+public class VideoGenreEntity
 {
     public long VideoId { get; set; }
     public long GenreId { get; set; }

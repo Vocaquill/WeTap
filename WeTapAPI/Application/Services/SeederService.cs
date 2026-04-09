@@ -78,7 +78,7 @@ public class SeederService(
                 {
                     foreach (var genreId in v.GenreIds)
                     {
-                        entity.VideoGenres.Add(new VideoGenresEntity { GenreId = genreId });
+                        entity.VideoGenres.Add(new VideoGenreEntity { GenreId = genreId });
                     }
                 }
 

@@ -22,5 +22,5 @@ public class VideoEntity : BaseEntity<long>
 
     [StringLength(255)]
     public string? Video { get; set; }
-    public virtual ICollection<VideoGenresEntity>? VideoGenres { get; set; } = new List<VideoGenresEntity>();
+    public virtual ICollection<VideoGenreEntity>? VideoGenres { get; set; } = new List<VideoGenreEntity>();
 }
