@@ -6,6 +6,7 @@ using Application.Models.Video;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Videos.Commands.UpdateVideo;
+using Application.Features.Videos.Commands.DeleteVideo;
 
 namespace WeTapAPI.Controllers;
 
@@ -45,6 +46,14 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     public async Task<ActionResult<VideoItemModel>> Update([FromForm] VideoUpdateModel model)
     {
         var command = new UpdateVideoCommand(model);
+        var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpDelete]
+    public async Task<ActionResult<IEnumerable<VideoItemModel>>> Delete([FromBody] VideoDeleteModel model)
+    {
+        var command = new DeleteVideoCommand(model);
         var result = await mediator.Send(command);
         return Ok(result);
     }
