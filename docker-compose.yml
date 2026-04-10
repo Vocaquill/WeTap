@@ -1,0 +1,46 @@
+version: "3.9"
+
+networks:
+  counterwatch_net:
+    driver: bridge
+
+services:
+  db:
+    image: postgres:17
+    container_name: wetap-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: wetap
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - /data/wetap/postgres:/var/lib/postgresql/data
+    networks:
+      - wetap_net
+
+  api:
+    image: pedro007salo/wetap-api:latest
+    container_name: wetap-api
+    restart: unless-stopped
+    volumes:
+      - /data/wetap/media:/app/media
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: Host=db;Database=wetap;Username=postgres;Password=postgres
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      - db
+    networks:
+      - wetap_net
+
+  web:
+    image: pedro007salo/wetap-web:latest
+    container_name: wetap-web
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8081:80"
+    depends_on:
+      - api
+    networks:
+      - wetap_net
