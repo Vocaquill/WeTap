@@ -1,0 +1,42 @@
+[
+  { 
+    "name": "Природа", 
+    "slug": "nature"
+  },
+  { 
+    "name": "Технології", 
+    "slug": "technology"
+  },
+  { 
+    "name": "Музика", 
+    "slug": "music"
+  },
+  { 
+    "name": "Спорт", 
+    "slug": "sport"
+  },
+  { 
+    "name": "Подорожі", 
+    "slug": "travel"
+  },
+  { 
+    "name": "Кулінарія", 
+    "slug": "cooking"
+  },
+  { 
+    "name": "Наука", 
+    "slug": "science"
+  },
+  { 
+    "name": "Освіта", 
+    "slug": "education"
+  },
+  { 
+    "name": "Гумор", 
+    "slug": "humor"
+  },
+  { 
+    "name": "Ігри", 
+    "slug": "gaming"
+  }
+]

@@ -50,6 +50,13 @@ public static class DependencyInjection
 
             var videoJobKey = new JobKey("VideoSeederJob");
             q.AddJob<VideoSeederJob>(opts => opts.WithIdentity(videoJobKey).StoreDurably());
+            
+            var tagJobKey = new JobKey("TagSeederJob");
+            q.AddJob<TagSeederJob>(opts => opts.WithIdentity(tagJobKey));
+            q.AddTrigger(opts => opts
+                .ForJob(tagJobKey)
+                .WithIdentity("TagSeederJob-trigger")
+                .StartNow());
         });
 
         services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
