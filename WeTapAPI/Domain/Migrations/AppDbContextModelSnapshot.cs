@@ -55,6 +55,35 @@ namespace Domain.Migrations
                     b.ToTable("tbl_genres");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Tag.TagEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_tags");
+                });
+
             modelBuilder.Entity("Domain.Entities.Video.VideoEntity", b =>
                 {
                     b.Property<long>("Id")
@@ -97,7 +126,7 @@ namespace Domain.Migrations
                     b.ToTable("tbl_videos");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Video.VideoGenresEntity", b =>
+            modelBuilder.Entity("Domain.Entities.Video.VideoGenreEntity", b =>
                 {
                     b.Property<long>("VideoId")
                         .HasColumnType("bigint");
@@ -112,7 +141,22 @@ namespace Domain.Migrations
                     b.ToTable("tbl_vieos_genres");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Video.VideoGenresEntity", b =>
+            modelBuilder.Entity("Domain.Entities.Video.VideoTagEntity", b =>
+                {
+                    b.Property<long>("VideoId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("TagId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("VideoId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("tbl_videos_tags");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Video.VideoGenreEntity", b =>
                 {
                     b.HasOne("Domain.Entities.Genre.GenreEntity", "Genre")
                         .WithMany("VideoGenres")
@@ -131,14 +175,40 @@ namespace Domain.Migrations
                     b.Navigation("Video");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Video.VideoTagEntity", b =>
+                {
+                    b.HasOne("Domain.Entities.Tag.TagEntity", "Tag")
+                        .WithMany("VideoTags")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Video.VideoEntity", "Video")
+                        .WithMany("VideoTags")
+                        .HasForeignKey("VideoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tag");
+
+                    b.Navigation("Video");
+                });
+
             modelBuilder.Entity("Domain.Entities.Genre.GenreEntity", b =>
                 {
                     b.Navigation("VideoGenres");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Tag.TagEntity", b =>
+                {
+                    b.Navigation("VideoTags");
+                });
+
             modelBuilder.Entity("Domain.Entities.Video.VideoEntity", b =>
                 {
                     b.Navigation("VideoGenres");
+
+                    b.Navigation("VideoTags");
                 });
 #pragma warning restore 612, 618
         }

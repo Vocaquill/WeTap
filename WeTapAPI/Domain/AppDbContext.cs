@@ -1,4 +1,5 @@
 using Domain.Entities.Genre;
+using Domain.Entities.Tag;
 using Domain.Entities.Video;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,7 @@ public class AppDbContext : DbContext
 
     public DbSet<GenreEntity> Genres { get; set; }
     public DbSet<VideoEntity> Videos { get; set; }
+    public DbSet<TagEntity> Tags { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,6 +29,21 @@ public class AppDbContext : DbContext
             mg.HasOne(x => x.Genre)
                 .WithMany(g => g.VideoGenres)
                 .HasForeignKey(x => x.GenreId)
+                .IsRequired();
+        });
+        
+        modelBuilder.Entity<VideoTagEntity>(vt =>
+        {
+            vt.HasKey(x => new { x.VideoId, x.TagId });
+            
+            vt.HasOne(x => x.Video)
+                .WithMany(v => v.VideoTags)
+                .HasForeignKey(x => x.VideoId)
+                .IsRequired();
+            
+            vt.HasOne(x => x.Tag)
+                .WithMany(t => t.VideoTags)
+                .HasForeignKey(x => x.TagId)
                 .IsRequired();
         });
     }
