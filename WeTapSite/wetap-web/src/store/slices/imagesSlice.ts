@@ -30,8 +30,8 @@ export const uploadImage = createAsyncThunk<
             });
 
             return response.data; // The image URL
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error) && error.response?.data) {
+        } catch (error : any) {
+            if (error.response?.data) {
                 return rejectWithValue(error.response.data as string);
             }
             return rejectWithValue('Failed to upload image');
