@@ -1,9 +1,3 @@
-version: "3.9"
-
-networks:
-  counterwatch_net:
-    driver: bridge
-
 services:
   db:
     image: postgres:17
@@ -44,3 +38,7 @@ services:
       - api
     networks:
       - wetap_net
+
+networks:
+  wetap_net:
+    driver: bridge
