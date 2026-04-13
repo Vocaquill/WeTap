@@ -41,22 +41,23 @@ public static class DependencyInjection
         // Quartz
         services.AddQuartz(q =>
         {
-            var jobKey = new JobKey("GenreSeederJob");
-            q.AddJob<GenreSeederJob>(opts => opts.WithIdentity(jobKey));
+            q.AddJobListener<SeederOrchestratorListener>();
+
+            var migrationJobKey = new JobKey(nameof(DbMigrationJob));
+            q.AddJob<DbMigrationJob>(opts => opts.WithIdentity(migrationJobKey));
             q.AddTrigger(opts => opts
-                .ForJob(jobKey)
-                .WithIdentity("GenreSeederJob-trigger")
+                .ForJob(migrationJobKey)
+                .WithIdentity("DbMigrationJob-trigger")
                 .StartNow());
 
-            var videoJobKey = new JobKey("VideoSeederJob");
+            var tagJobKey = new JobKey(nameof(TagSeederJob));
+            q.AddJob<TagSeederJob>(opts => opts.WithIdentity(tagJobKey).StoreDurably());
+
+            var genreJobKey = new JobKey(nameof(GenreSeederJob));
+            q.AddJob<GenreSeederJob>(opts => opts.WithIdentity(genreJobKey).StoreDurably());
+
+            var videoJobKey = new JobKey(nameof(VideoSeederJob));
             q.AddJob<VideoSeederJob>(opts => opts.WithIdentity(videoJobKey).StoreDurably());
-            
-            var tagJobKey = new JobKey("TagSeederJob");
-            q.AddJob<TagSeederJob>(opts => opts.WithIdentity(tagJobKey));
-            q.AddTrigger(opts => opts
-                .ForJob(tagJobKey)
-                .WithIdentity("TagSeederJob-trigger")
-                .StartNow());
         });
 
         services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
