@@ -8,4 +8,5 @@ public class VideoSeedModel
     public string ImagePath { get; set; } = string.Empty;
     public string VideoFile { get; set; } = string.Empty;
     public List<long> GenreIds { get; set; } = new List<long>();
+    public List<long> TagIds { get; set; } = new List<long>();
 }

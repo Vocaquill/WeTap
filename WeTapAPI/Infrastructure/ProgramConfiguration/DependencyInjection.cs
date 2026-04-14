@@ -3,12 +3,17 @@ using Application.Interfaces;
 using Application.Mappings;
 using Application.Services;
 using Domain;
+using Infrastructure.Filters;
 using Infrastructure.Jobs;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
+using FluentValidation;
+using Application.Validators.Video;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Infrastructure.ProgramConfiguration;
 
@@ -41,18 +46,46 @@ public static class DependencyInjection
         // Quartz
         services.AddQuartz(q =>
         {
-            var jobKey = new JobKey("GenreSeederJob");
-            q.AddJob<GenreSeederJob>(opts => opts.WithIdentity(jobKey));
+            q.AddJobListener<SeederOrchestratorListener>();
+
+            var migrationJobKey = new JobKey(nameof(DbMigrationJob));
+            q.AddJob<DbMigrationJob>(opts => opts.WithIdentity(migrationJobKey));
             q.AddTrigger(opts => opts
-                .ForJob(jobKey)
-                .WithIdentity("GenreSeederJob-trigger")
+                .ForJob(migrationJobKey)
+                .WithIdentity("DbMigrationJob-trigger")
                 .StartNow());
 
-            var videoJobKey = new JobKey("VideoSeederJob");
+            var tagJobKey = new JobKey(nameof(TagSeederJob));
+            q.AddJob<TagSeederJob>(opts => opts.WithIdentity(tagJobKey).StoreDurably());
+
+            var genreJobKey = new JobKey(nameof(GenreSeederJob));
+            q.AddJob<GenreSeederJob>(opts => opts.WithIdentity(genreJobKey).StoreDurably());
+
+            var videoJobKey = new JobKey(nameof(VideoSeederJob));
             q.AddJob<VideoSeederJob>(opts => opts.WithIdentity(videoJobKey).StoreDurably());
         });
 
         services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+
+        // FluentValidation
+        services.AddValidatorsFromAssemblyContaining<VideoCreateModelValidator>();
+
+        // MVC Filter and Options
+        services.Configure<MvcOptions>(options =>
+        {
+            options.Filters.Add<ValidationFilter>();
+        });
+
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
+
+        services.Configure<FormOptions>(options =>
+        {
+            options.MultipartBodyLengthLimit = long.MaxValue;
+            options.MultipartHeadersLengthLimit = int.MaxValue;
+        });
 
         return services;
     }

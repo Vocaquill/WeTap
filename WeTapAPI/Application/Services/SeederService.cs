@@ -1,10 +1,12 @@
 using Application.Interfaces;
 using Application.Models.Genre;
 using Application.Models.Video;
+using Application.Models.Tag;
 using AutoMapper;
 using Domain;
 using Domain.Entities.Genre;
 using Domain.Entities.Video;
+using Domain.Entities.Tag;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
@@ -82,9 +84,36 @@ public class SeederService(
                     }
                 }
 
+                if (v.TagIds != null && v.TagIds.Count > 0)
+                {
+                    foreach (var tagId in v.TagIds)
+                    {
+                        entity.VideoTags.Add(new VideoTagEntity { TagId = tagId });
+                    }
+                }
+
                 await appDbContext.Videos.AddAsync(entity);
             }
 
+            await appDbContext.SaveChangesAsync();
+        }
+    }
+    
+    public async Task SeedTagsAsync(string jsonPath)
+    {
+        if (await appDbContext.Tags.AnyAsync(t => !t.IsDeleted))
+            return;
+
+        if (!File.Exists(jsonPath))
+            throw new FileNotFoundException("Tags.json not found.", jsonPath);
+
+        var json = await File.ReadAllTextAsync(jsonPath);
+        var tagsData = JsonSerializer.Deserialize<List<TagSeedModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        if (tagsData != null)
+        {
+            var tags = tagsData.Select(t => mapper.Map<TagEntity>(t)).ToList();
+            await appDbContext.Tags.AddRangeAsync(tags);
             await appDbContext.SaveChangesAsync();
         }
     }

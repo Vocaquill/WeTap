@@ -20,6 +20,7 @@ public class TestVideoSavingCommand : IRequest
 public class VideosController(IMediator mediator, IVideoFileService videoFileService) : ControllerBase
 {
     [HttpPost("TestVideoSaving")] // для тесту
+    [Consumes("multipart/form-data")]
     public async Task<ActionResult<string>> Create([FromForm] TestVideoSavingCommand model)
     {
         var result = await videoFileService.SaveVideoAsync(model.File);
@@ -35,6 +36,7 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     }
 
     [HttpPost]
+    [Consumes("multipart/form-data")]
     public async Task<ActionResult<VideoItemModel>> Create([FromForm] VideoCreateModel model)
     {
         var command = new CreateVideoCommand(model);
@@ -43,6 +45,7 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     }
 
     [HttpPut]
+    [Consumes("multipart/form-data")]
     public async Task<ActionResult<VideoItemModel>> Update([FromForm] VideoUpdateModel model)
     {
         var command = new UpdateVideoCommand(model);
