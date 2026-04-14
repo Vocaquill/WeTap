@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using FluentValidation;
 using Application.Validators.Video;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Infrastructure.ProgramConfiguration;
 
@@ -78,6 +79,12 @@ public static class DependencyInjection
         services.Configure<ApiBehaviorOptions>(options =>
         {
             options.SuppressModelStateInvalidFilter = true;
+        });
+
+        services.Configure<FormOptions>(options =>
+        {
+            options.MultipartBodyLengthLimit = long.MaxValue;
+            options.MultipartHeadersLengthLimit = int.MaxValue;
         });
 
         return services;

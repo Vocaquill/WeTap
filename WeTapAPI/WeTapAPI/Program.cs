@@ -13,6 +13,21 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.Limits.MaxRequestBodySize = null;
+    });
+
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowAll", policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+    });
+
     builder.Host.UseSerilog((context, services, configuration) => configuration
         .ReadFrom.Configuration(context.Configuration)
         .ReadFrom.Services(services)
@@ -37,6 +52,8 @@ try
     app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
     app.UseSerilogRequestLogging();
+
+    app.UseCors("AllowAll");
 
     app.UseAuthorization();
 
