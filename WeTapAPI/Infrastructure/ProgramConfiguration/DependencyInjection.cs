@@ -3,12 +3,16 @@ using Application.Interfaces;
 using Application.Mappings;
 using Application.Services;
 using Domain;
+using Infrastructure.Filters;
 using Infrastructure.Jobs;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
+using FluentValidation;
+using Application.Validators.Video;
 
 namespace Infrastructure.ProgramConfiguration;
 
@@ -61,6 +65,20 @@ public static class DependencyInjection
         });
 
         services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+
+        // FluentValidation
+        services.AddValidatorsFromAssemblyContaining<VideoCreateModelValidator>();
+
+        // MVC Filter and Options
+        services.Configure<MvcOptions>(options =>
+        {
+            options.Filters.Add<ValidationFilter>();
+        });
+
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
 
         return services;
     }
