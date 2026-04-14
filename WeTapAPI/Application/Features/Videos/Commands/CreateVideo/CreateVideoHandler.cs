@@ -27,6 +27,17 @@ public class CreateVideoHandler(IGenericRepository<VideoEntity, long> repo,
             });
         }
 
+        if (request.Model.TagIds != null)
+        {
+            foreach (var tagId in request.Model.TagIds.Distinct())
+            {
+                entity.VideoTags.Add(new VideoTagEntity
+                {
+                    TagId = tagId
+                });
+            }
+        }
+
         if (request.Model.Image != null)
             entity.Image = await imageService.SaveImageAsync(request.Model.Image);
 

@@ -42,6 +42,21 @@ public class VideoCreateModelValidator : AbstractValidator<VideoCreateModel>
             })
             .WithMessage("Один або кілька обраних жанрів не знайдено");
 
+        RuleFor(x => x.TagIds)
+            .Cascade(CascadeMode.Stop)
+            .MustAsync(async (tagIds, cancellation) =>
+            {
+                if (tagIds == null || tagIds.Length == 0) return true;
+
+                var count = await db.Tags
+                    .CountAsync(t =>
+                        tagIds.Contains(t.Id) && !t.IsDeleted,
+                        cancellation);
+
+                return count == tagIds.Distinct().Count();
+            })
+            .WithMessage("Один або кілька обраних тегів не знайдено");
+
         RuleFor(x => x.Video)
             .NotNull().WithMessage("Відео-файл є обов'язковим");
 

@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Application.Models.Video;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -26,6 +26,7 @@ public class UpdateVideoHandler(
 
         var entity = await repo.AsQurable()
             .Include(x => x.VideoGenres)
+            .Include(x => x.VideoTags)
             .FirstOrDefaultAsync(x => x.Id == model.Id && !x.IsDeleted, cancellationToken);
 
         if (entity == null)
@@ -40,6 +41,18 @@ public class UpdateVideoHandler(
             {
                 GenreId = genreId
             });
+        }
+
+        entity.VideoTags.Clear();
+        if (model.TagIds != null)
+        {
+            foreach (var tagId in model.TagIds.Distinct())
+            {
+                entity.VideoTags.Add(new VideoTagEntity
+                {
+                    TagId = tagId
+                });
+            }
         }
 
         if (model.Image != null)

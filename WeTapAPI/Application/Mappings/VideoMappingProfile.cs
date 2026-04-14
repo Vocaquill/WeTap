@@ -24,11 +24,13 @@ public class VideoMappingProfile : Profile
         CreateMap<VideoCreateModel, VideoEntity>()
             .ForMember(dest => dest.Image, opt => opt.Ignore())
             .ForMember(dest => dest.Video, opt => opt.Ignore())
-            .ForMember(dest => dest.VideoGenres, opt => opt.Ignore());
+            .ForMember(dest => dest.VideoGenres, opt => opt.Ignore())
+            .ForMember(dest => dest.VideoTags, opt => opt.Ignore());
 
         CreateMap<VideoUpdateModel, VideoEntity>()
             .ForMember(dest => dest.Image, opt => opt.Ignore())
             .ForMember(dest => dest.Video, opt => opt.Ignore())
-            .ForMember(dest => dest.VideoGenres, opt => opt.Ignore());
+            .ForMember(dest => dest.VideoGenres, opt => opt.Ignore())
+            .ForMember(dest => dest.VideoTags, opt => opt.Ignore());
     }
 }
