@@ -84,6 +84,14 @@ public class SeederService(
                     }
                 }
 
+                if (v.TagIds != null && v.TagIds.Count > 0)
+                {
+                    foreach (var tagId in v.TagIds)
+                    {
+                        entity.VideoTags.Add(new VideoTagEntity { TagId = tagId });
+                    }
+                }
+
                 await appDbContext.Videos.AddAsync(entity);
             }
 

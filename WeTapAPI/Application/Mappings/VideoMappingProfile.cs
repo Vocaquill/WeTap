@@ -11,7 +11,10 @@ public class VideoMappingProfile : Profile
         CreateMap<VideoEntity, VideoItemModel>()
             .ForMember(x => x.Genres,
                 opt => opt.MapFrom(x =>
-                    x.VideoGenres.Select(mg => mg.Genre)));
+                    x.VideoGenres.Select(mg => mg.Genre)))
+            .ForMember(x => x.Tags,
+                opt => opt.MapFrom(x =>
+                    x.VideoTags.Select(mt => mt.Tag)));
 
         CreateMap<VideoSeedModel, VideoEntity>()
             .ForMember(dest => dest.Image, opt => opt.Ignore())

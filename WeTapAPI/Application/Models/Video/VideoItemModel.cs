@@ -1,4 +1,5 @@
 ﻿using Application.Models.Genre;
+using Application.Models.Tag;
 
 namespace Application.Models.Video;
 
@@ -12,4 +13,5 @@ public class VideoItemModel
     public string? Image { get; set; }
     public string? Video { get; set; }
     public List<GenreItemModel> Genres { get; set; } = new();
+    public List<TagItemModel> Tags { get; set; } = new();
 }
