@@ -7,6 +7,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Videos.Commands.UpdateVideo;
 using Application.Features.Videos.Commands.DeleteVideo;
+using Application.Models.Search;
+using Application.Features.Videos.Queries.SearchVideos;
 
 namespace WeTapAPI.Controllers;
 
@@ -31,6 +33,14 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     public async Task<ActionResult<IEnumerable<VideoItemModel>>> GetAll()
     {
         var query = new GetVideosQuery();
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("search")]
+    public async Task<ActionResult<SearchResult<VideoItemModel>>> Search([FromQuery] VideoSearchModel model)
+    {
+        var query = new SearchVideosQuery(model);
         var result = await mediator.Send(query);
         return Ok(result);
     }

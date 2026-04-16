@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Application.Models.Search;
 using Application.Models.Video;
 using AutoMapper;
@@ -24,16 +24,32 @@ public class SearchVideosQueryHandler(
             .AsNoTracking()
             .Where(x => !x.IsDeleted);
 
+        if (!string.IsNullOrWhiteSpace(request.Model.Q))
+        {
+            string q = request.Model.Q.Trim().ToLower();
+            query = query.Where(x =>
+                x.Title.ToLower().Contains(q) ||
+                x.Description.ToLower().Contains(q) ||
+                (x.VideoTags != null && x.VideoTags.Any(vt => vt.Tag.Name.ToLower().Contains(q)))
+            );
+        }
+
         if (!string.IsNullOrWhiteSpace(request.Model.Title))
         {
-            string title = request.Model.Title.Trim();
-            query = query.Where(x => x.Title.Contains(title));
+            string title = request.Model.Title.Trim().ToLower();
+            query = query.Where(x => x.Title.ToLower().Contains(title));
         }
 
         if (request.Model.GenreId.HasValue)
         {
             query = query.Where(x =>
-                x.VideoGenres.Any(mg => mg.GenreId == request.Model.GenreId));
+                x.VideoGenres != null && x.VideoGenres.Any(mg => mg.GenreId == request.Model.GenreId));
+        }
+
+        if (request.Model.TagId.HasValue)
+        {
+            query = query.Where(x =>
+                x.VideoTags != null && x.VideoTags.Any(vt => vt.TagId == request.Model.TagId));
         }
 
         if (int.TryParse(request.Model.CreateYearFrom, out int fromYear))
@@ -49,8 +65,16 @@ public class SearchVideosQueryHandler(
         int totalCount = await query.CountAsync();
         int totalPages = (int)Math.Ceiling(totalCount / (double)itemsPerPage);
 
+        if (request.Model.SortBy == "date")
+        {
+            query = query.OrderByDescending(x => x.DateCreated);
+        }
+        else
+        {
+            query = query.OrderByDescending(x => x.Id);
+        }
+
         var items = await query
-            .OrderByDescending(x => x.Id)
             .Skip((currentPage - 1) * itemsPerPage)
             .Take(itemsPerPage)
             .ProjectTo<VideoItemModel>(mapper.ConfigurationProvider)
