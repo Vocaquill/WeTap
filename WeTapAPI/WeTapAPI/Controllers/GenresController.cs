@@ -5,6 +5,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Genres.Commands.UpdateGenre;
 using Application.Features.Genres.Commands.DeleteGenre;
+using Application.Models.Search;
+using Application.Features.Genres.Queries.SearchGenres;
+
 
 namespace WeTapAPI.Controllers;
 
@@ -24,6 +27,14 @@ public class GenresController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<IEnumerable<GenreItemModel>>> GetAll()
     {
         var query = new GetGenresQuery();
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("search")]
+    public async Task<ActionResult<SearchResult<GenreItemModel>>> Search([FromQuery] GenreSearchModel model)
+    {
+        var query = new SearchGenresQuery(model);
         var result = await mediator.Send(query);
         return Ok(result);
     }

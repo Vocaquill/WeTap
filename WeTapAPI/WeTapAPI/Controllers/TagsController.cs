@@ -3,6 +3,8 @@ using Application.Features.Tags.Commands.DeleteTag;
 using Application.Features.Tags.Commands.UpdateTag;
 using Application.Features.Tags.Queries.GetTags;
 using Application.Models.Tag;
+using Application.Models.Search;
+using Application.Features.Tags.Queries.SearchTags;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +26,14 @@ public class TagsController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<IEnumerable<TagItemModel>>> GetAll()
     {
         var query = new GetTagsQuery();
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("search")]
+    public async Task<ActionResult<SearchResult<TagItemModel>>> Search([FromQuery] TagSearchModel model)
+    {
+        var query = new SearchTagsQuery(model);
         var result = await mediator.Send(query);
         return Ok(result);
     }
