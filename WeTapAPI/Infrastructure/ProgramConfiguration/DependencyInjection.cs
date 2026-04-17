@@ -87,6 +87,12 @@ public static class DependencyInjection
             options.MultipartHeadersLengthLimit = int.MaxValue;
         });
 
+        // SignalR
+        services.AddSignalR(options =>
+        {
+            options.EnableDetailedErrors = true;
+        });
+
         return services;
     }
 }
