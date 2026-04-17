@@ -1,5 +1,6 @@
 using Infrastructure.Middlewares;
 using Infrastructure.ProgramConfiguration;
+using Hangfire;
 using Serilog;
 using Serilog.Events;
 
@@ -57,6 +58,8 @@ try
     app.UseCors("AllowAll");
 
     app.UseAuthorization();
+
+    app.UseHangfireDashboard();
 
     app.MapControllers();
 

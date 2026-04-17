@@ -14,6 +14,8 @@ using Quartz;
 using FluentValidation;
 using Application.Validators.Video;
 using Microsoft.AspNetCore.Http.Features;
+using Hangfire;
+using Hangfire.PostgreSql;
 
 namespace Infrastructure.ProgramConfiguration;
 
@@ -92,6 +94,16 @@ public static class DependencyInjection
         {
             options.EnableDetailedErrors = true;
         });
+
+        // Hangfire
+        services.AddHangfire(config => config
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString))
+        );
+
+        services.AddHangfireServer();
 
         return services;
     }
