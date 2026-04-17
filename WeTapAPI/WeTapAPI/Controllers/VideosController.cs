@@ -9,6 +9,7 @@ using Application.Features.Videos.Commands.UpdateVideo;
 using Application.Features.Videos.Commands.DeleteVideo;
 using Application.Models.Search;
 using Application.Features.Videos.Queries.SearchVideos;
+using Application.Models.VideoProcessing;
 
 namespace WeTapAPI.Controllers;
 
@@ -47,7 +48,7 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
 
     [HttpPost]
     [Consumes("multipart/form-data")]
-    public async Task<ActionResult<VideoItemModel>> Create([FromForm] VideoCreateModel model)
+    public async Task<ActionResult<VideoProcessingResult>> Create([FromForm] VideoCreateModel model)
     {
         var command = new CreateVideoCommand(model);
         var result = await mediator.Send(command);
@@ -56,7 +57,7 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
 
     [HttpPut]
     [Consumes("multipart/form-data")]
-    public async Task<ActionResult<VideoItemModel>> Update([FromForm] VideoUpdateModel model)
+    public async Task<ActionResult<VideoProcessingResult>> Update([FromForm] VideoUpdateModel model)
     {
         var command = new UpdateVideoCommand(model);
         var result = await mediator.Send(command);

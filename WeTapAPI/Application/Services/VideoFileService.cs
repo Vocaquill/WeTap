@@ -4,6 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Xabe.FFmpeg;
 using Xabe.FFmpeg.Downloader;
 
+using System.Collections.Concurrent;
+using Application.Models.VideoProcessing;
+
 namespace Application.Services;
 
 public class VideoFileService : IVideoFileService
@@ -18,7 +21,7 @@ public class VideoFileService : IVideoFileService
 
         Directory.CreateDirectory(_videosDir);
 
-        // Завантаження FFmpeg (краще робити це один раз при старті додатка, але залишаємо логіку тут)
+        // Завантаження FFmpeg
         FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official).GetAwaiter().GetResult();
     }
 
@@ -43,20 +46,38 @@ public class VideoFileService : IVideoFileService
 
     public async Task<string> SaveVideoFromFilePathAsync(string filePath)
     {
+        return await SaveVideoWithProgressAsync(filePath, _ => { });
+    }
+
+    public async Task<string> SaveVideoWithProgressAsync(string filePath, Action<VideoProgressUpdate> onProgress)
+    {
         if (!File.Exists(filePath))
             throw new FileNotFoundException("Source video file not found", filePath);
 
         var mediaInfo = await FFmpeg.GetMediaInfo(filePath);
         string baseFileName = $"{Guid.NewGuid()}.mp4";
 
-        var tasks = _videoSizes.Select(size => ProcessVideoAsync(filePath, baseFileName, size, mediaInfo));
+        var progressDict = new ConcurrentDictionary<int, double>();
+        foreach (var size in _videoSizes) progressDict[size] = 0;
+
+        var tasks = _videoSizes.Select(size => ProcessVideoAsync(filePath, baseFileName, size, mediaInfo, (percent) =>
+        {
+            progressDict[size] = percent;
+            var totalProgress = progressDict.Values.Average();
+            onProgress(new VideoProgressUpdate
+            {
+                Percentage = Math.Round(totalProgress, 2),
+                Status = "Processing",
+                EstimatedTimeRemaining = "..."
+            });
+        }));
 
         await Task.WhenAll(tasks);
 
         return baseFileName;
     }
 
-    private async Task ProcessVideoAsync(string inputPath, string baseName, int height, IMediaInfo mediaInfo)
+    private async Task ProcessVideoAsync(string inputPath, string baseName, int height, IMediaInfo mediaInfo, Action<double>? onProgress = null)
     {
         var outputPath = Path.Combine(_videosDir, $"{height}_{baseName}");
 
@@ -66,7 +87,6 @@ public class VideoFileService : IVideoFileService
         if (videoStream == null) return;
 
         // Розраховуємо ширину, щоб зберегти пропорції (повинна бути кратна 2 для кодека H.264)
-        // Формула: (оригінальна_ширина * цільова_висота) / оригінальна_висота
         double ratio = (double)videoStream.Width / videoStream.Height;
         int width = (int)(height * ratio);
         if (width % 2 != 0) width++;
@@ -77,10 +97,14 @@ public class VideoFileService : IVideoFileService
 
         var conversion = FFmpeg.Conversions.New().AddStream(vStream);
 
-        // Додаємо аудіо, якщо воно є
         if (audioStream != null)
         {
             conversion.AddStream(audioStream.SetCodec(AudioCodec.aac));
+        }
+
+        if (onProgress != null)
+        {
+            conversion.OnProgress += (sender, args) => onProgress(args.Percent);
         }
 
         await conversion.SetOutput(outputPath).Start();

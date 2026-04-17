@@ -1,15 +1,11 @@
-using Application.Interfaces;
-using Application.Models.Video;
+using Application.Models.VideoProcessing;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain.Entities.Video;
+using Hangfire;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using Application.Jobs;
+using Application.Interfaces;
 
 namespace Application.Features.Videos.Commands.UpdateVideo;
 
@@ -17,10 +13,11 @@ public class UpdateVideoHandler(
     IGenericRepository<VideoEntity, long> repo,
     IMapper mapper,
     IImageService imageService,
-    IVideoFileService videoFileService
-) : IRequestHandler<UpdateVideoCommand, VideoItemModel>
+    IVideoFileService videoFileService,
+    IBackgroundJobClient backgroundJobClient
+) : IRequestHandler<UpdateVideoCommand, VideoProcessingResult>
 {
-    public async Task<VideoItemModel> Handle(UpdateVideoCommand request, CancellationToken cancellationToken)
+    public async Task<VideoProcessingResult> Handle(UpdateVideoCommand request, CancellationToken cancellationToken)
     {
         var model = request.Model;
 
@@ -37,10 +34,7 @@ public class UpdateVideoHandler(
         entity.VideoGenres.Clear();
         foreach (var genreId in model.GenreIds.Distinct())
         {
-            entity.VideoGenres.Add(new VideoGenreEntity
-            {
-                GenreId = genreId
-            });
+            entity.VideoGenres.Add(new VideoGenreEntity { GenreId = genreId });
         }
 
         entity.VideoTags.Clear();
@@ -48,10 +42,7 @@ public class UpdateVideoHandler(
         {
             foreach (var tagId in model.TagIds.Distinct())
             {
-                entity.VideoTags.Add(new VideoTagEntity
-                {
-                    TagId = tagId
-                });
+                entity.VideoTags.Add(new VideoTagEntity { TagId = tagId });
             }
         }
 
@@ -63,19 +54,29 @@ public class UpdateVideoHandler(
             entity.Image = await imageService.SaveImageAsync(model.Image);
         }
 
+        var trackingId = Guid.NewGuid().ToString();
+
         if (model.Video != null)
         {
+            // Delete old video files
             if (entity.Video != null)
                 await videoFileService.DeleteVideoAsync(entity.Video);
 
-            entity.Video = await videoFileService.SaveVideoAsync(model.Video);
+            entity.Video = "processing...";
+
+            // Save video to temp path
+            var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}{Path.GetExtension(model.Video.FileName)}");
+            using (var stream = new FileStream(tempPath, FileMode.Create))
+            {
+                await model.Video.CopyToAsync(stream);
+            }
+
+            backgroundJobClient.Enqueue<VideoProcessingJob>(job => 
+                job.ProcessVideoAsync(entity.Id, tempPath, trackingId));
         }
 
         await repo.SaveChangesAsync();
 
-        return await repo.AsQurable()
-            .Where(x => x.Id == entity.Id)
-            .ProjectTo<VideoItemModel>(mapper.ConfigurationProvider)
-            .FirstAsync(cancellationToken);
+        return new VideoProcessingResult { TrackingId = trackingId };
     }
 }

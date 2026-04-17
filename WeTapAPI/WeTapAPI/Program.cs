@@ -1,6 +1,7 @@
 using Infrastructure.Middlewares;
 using Infrastructure.ProgramConfiguration;
 using Hangfire;
+using Application.Hubs;
 using Serilog;
 using Serilog.Events;
 
@@ -62,6 +63,7 @@ try
     app.UseHangfireDashboard();
 
     app.MapControllers();
+    app.MapHub<VideoProgressHub>("/videoProgressHub");
 
     app.Run();
 

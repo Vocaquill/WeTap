@@ -4,6 +4,7 @@ using Application.Mappings;
 using Application.Services;
 using Domain;
 using Infrastructure.Filters;
+using Application.Jobs;
 using Infrastructure.Jobs;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,7 @@ public static class DependencyInjection
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IVideoFileService, VideoFileService>();
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+        services.AddScoped<VideoProcessingJob>();
 
         // DB
         var connectionString = configuration.GetConnectionString("DefaultConnection");
