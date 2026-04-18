@@ -2,9 +2,9 @@ namespace Application.Models.VideoProcessing;
 
 public class VideoProgressUpdate
 {
-    public double Percentage { get; set; }
-    public string EstimatedTimeRemaining { get; set; } // e.g. "00:01:30"
-    public string Status { get; set; } // e.g. "Uploading", "Processing", "Completed"
+    public double Percentage { get; set; } // відсоток завершення обробки
+    public string EstimatedTimeRemaining { get; set; } // скільки часу залишилось до завершення
+    public string Status { get; set; } // статус обробки (напр: "Processing", "Completed", "Failed")
 }
 
 public class VideoProcessingResult

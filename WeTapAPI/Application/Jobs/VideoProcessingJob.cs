@@ -41,7 +41,6 @@ public class VideoProcessingJob(
 
             logger.LogInformation("Video processing finished. BaseFileName: {FileName}. Updating database...", baseFileName);
 
-            // Update entity in DB
             var entity = await repo.GetByIdAsync(videoId);
             if (entity != null)
             {
