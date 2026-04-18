@@ -37,7 +37,6 @@ public class CreateVideoHandler(IGenericRepository<VideoEntity, long> repo,
         if (request.Model.Image != null)
             entity.Image = await imageService.SaveImageAsync(request.Model.Image);
 
-        // We set a placeholder for video because it will be updated by the job
         entity.Video = "processing..."; 
 
         await repo.AddAsync(entity);
@@ -47,14 +46,12 @@ public class CreateVideoHandler(IGenericRepository<VideoEntity, long> repo,
 
         if (request.Model.Video != null)
         {
-            // Save video to a permanent temp path for Hangfire
             var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}{Path.GetExtension(request.Model.Video.FileName)}");
             using (var stream = new FileStream(tempPath, FileMode.Create))
             {
                 await request.Model.Video.CopyToAsync(stream);
             }
 
-            // Queue processing job
             backgroundJobClient.Enqueue<VideoProcessingJob>(job => 
                 job.ProcessVideoAsync(entity.Id, tempPath, trackingId));
         }
