@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<GenreEntity> Genres { get; set; }
     public DbSet<VideoEntity> Videos { get; set; }
     public DbSet<TagEntity> Tags { get; set; }
+    public DbSet<VideoPrivacyEntity> VideoPrivacies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
