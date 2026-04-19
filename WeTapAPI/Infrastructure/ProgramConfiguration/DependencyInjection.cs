@@ -4,6 +4,7 @@ using Application.Mappings;
 using Application.Services;
 using Domain;
 using Infrastructure.Filters;
+using Application.Jobs;
 using Infrastructure.Jobs;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,8 @@ using Quartz;
 using FluentValidation;
 using Application.Validators.Video;
 using Microsoft.AspNetCore.Http.Features;
+using Hangfire;
+using Hangfire.PostgreSql;
 
 namespace Infrastructure.ProgramConfiguration;
 
@@ -26,6 +29,7 @@ public static class DependencyInjection
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IVideoFileService, VideoFileService>();
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+        services.AddScoped<VideoProcessingJob>();
 
         // DB
         var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -86,6 +90,22 @@ public static class DependencyInjection
             options.MultipartBodyLengthLimit = long.MaxValue;
             options.MultipartHeadersLengthLimit = int.MaxValue;
         });
+
+        // SignalR
+        services.AddSignalR(options =>
+        {
+            options.EnableDetailedErrors = true;
+        });
+
+        // Hangfire
+        services.AddHangfire(config => config
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString))
+        );
+
+        services.AddHangfireServer();
 
         return services;
     }
