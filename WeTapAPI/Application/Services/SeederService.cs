@@ -1,3 +1,4 @@
+using Application.Constants;
 using Application.Interfaces;
 using Application.Models.Genre;
 using Application.Models.Video;
@@ -60,9 +61,18 @@ public class SeederService(
 
         if (videosData != null)
         {
+            var privacies = await appDbContext.VideoPrivacies.ToListAsync();
+            var publicPrivacy = privacies.FirstOrDefault(p => p.SystemCode == VideoPrivacyConstants.Public);
+
             foreach (var v in videosData)
             {
                 var entity = mapper.Map<VideoEntity>(v);
+
+                var privacy = privacies.FirstOrDefault(p => p.SystemCode == v.PrivacySystemCode) ?? publicPrivacy;
+                if (privacy != null)
+                {
+                    entity.PrivacyId = privacy.Id;
+                }
 
                 if (!string.IsNullOrEmpty(v.ImagePath))
                     entity.Image = await imageService.SaveImageFromUrlAsync(v.ImagePath);
@@ -116,6 +126,22 @@ public class SeederService(
             await appDbContext.Tags.AddRangeAsync(tags);
             await appDbContext.SaveChangesAsync();
         }
+    }
+
+    public async Task SeedVideoPrivaciesAsync()
+    {
+        if (await appDbContext.VideoPrivacies.AnyAsync())
+            return;
+
+        var privacies = new List<VideoPrivacyEntity>
+        {
+            new() { Name = "Публічне", SystemCode = VideoPrivacyConstants.Public },
+            new() { Name = "Приватне", SystemCode = VideoPrivacyConstants.Private },
+            new() { Name = "За посиланням", SystemCode = VideoPrivacyConstants.UrlOnly }
+        };
+
+        await appDbContext.VideoPrivacies.AddRangeAsync(privacies);
+        await appDbContext.SaveChangesAsync();
     }
 
     public async Task UpdateDatabase()

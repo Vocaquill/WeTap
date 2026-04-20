@@ -9,4 +9,5 @@ public class VideoSeedModel
     public string VideoFile { get; set; } = string.Empty;
     public List<long> GenreIds { get; set; } = new List<long>();
     public List<long> TagIds { get; set; } = new List<long>();
+    public string PrivacySystemCode { get; set; } = string.Empty;
 }

@@ -3,6 +3,7 @@ using System;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,13 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Domain.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260415155536_add_users_table")]
+    partial class add_users_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.6")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -254,9 +257,6 @@ namespace Domain.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<long>("PrivacyId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -271,12 +271,7 @@ namespace Domain.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<long>("ViewCount")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PrivacyId");
 
                     b.ToTable("tbl_videos");
                 });
@@ -294,35 +289,6 @@ namespace Domain.Migrations
                     b.HasIndex("GenreId");
 
                     b.ToTable("tbl_vieos_genres");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Video.VideoPrivacyEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("SystemCode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("tbl_video_privacies");
                 });
 
             modelBuilder.Entity("Domain.Entities.Video.VideoTagEntity", b =>
@@ -437,17 +403,6 @@ namespace Domain.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Video.VideoEntity", b =>
-                {
-                    b.HasOne("Domain.Entities.Video.VideoPrivacyEntity", "Privacy")
-                        .WithMany("Videos")
-                        .HasForeignKey("PrivacyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Privacy");
-                });
-
             modelBuilder.Entity("Domain.Entities.Video.VideoGenreEntity", b =>
                 {
                     b.HasOne("Domain.Entities.Genre.GenreEntity", "Genre")
@@ -540,11 +495,6 @@ namespace Domain.Migrations
                     b.Navigation("VideoGenres");
 
                     b.Navigation("VideoTags");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Video.VideoPrivacyEntity", b =>
-                {
-                    b.Navigation("Videos");
                 });
 #pragma warning restore 612, 618
         }
