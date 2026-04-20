@@ -16,6 +16,8 @@ public class VideoMappingProfile : Profile
                 opt => opt.MapFrom(x =>
                     x.VideoTags.Select(mt => mt.Tag)));
 
+        CreateMap<VideoPrivacyEntity, VideoPrivacyItemModel>();
+
         CreateMap<VideoSeedModel, VideoEntity>()
             .ForMember(dest => dest.Image, opt => opt.Ignore())
             .ForMember(dest => dest.Video, opt => opt.Ignore())

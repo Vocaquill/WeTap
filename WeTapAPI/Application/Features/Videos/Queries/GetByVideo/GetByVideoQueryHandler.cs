@@ -1,4 +1,4 @@
-﻿using Application.Features.Videos.Queries.GetVideos;
+using Application.Features.Videos.Queries.GetVideos;
 using Application.Interfaces;
 using Application.Models.Video;
 using AutoMapper;
@@ -14,10 +14,17 @@ public class GetByVideoQueryHandler(IGenericRepository<VideoEntity, long> repo, 
     public async Task<VideoItemModel> Handle(GetByVideoQuery request, CancellationToken cancellationToken)
     {
         VideoItemModel model = new VideoItemModel();
-        VideoEntity entity = new VideoEntity();
+        VideoEntity? entity = null;
+        IQueryable<VideoEntity> query = repo.AsQurable()
+            .Include(x => x.Privacy)
+            .Include(x => x.VideoGenres!)
+                .ThenInclude(x => x.Genre)
+            .Include(x => x.VideoTags!)
+                .ThenInclude(x => x.Tag);
+
         if (request.Model.Id != null) 
         {
-            entity = await repo.GetByIdAsync(request.Model.Id.Value);
+            entity = await query.FirstOrDefaultAsync(x => x.Id == request.Model.Id.Value);
 
             if (entity == null)
                 throw new Exception($"Відео з id {request.Model.Id.Value} не знайдено");
@@ -26,7 +33,7 @@ public class GetByVideoQueryHandler(IGenericRepository<VideoEntity, long> repo, 
         }
         else if (request.Model.Slug != null) 
         {
-            entity = await repo.AsQurable().Where(x => x.Slug == request.Model.Slug).FirstAsync();
+            entity = await query.FirstOrDefaultAsync(x => x.Slug == request.Model.Slug);
 
             if (entity == null)
                 throw new Exception($"Відео з slug {request.Model.Slug} не знайдено");
