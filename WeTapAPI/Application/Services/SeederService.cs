@@ -61,9 +61,18 @@ public class SeederService(
 
         if (videosData != null)
         {
+            var privacies = await appDbContext.VideoPrivacies.ToListAsync();
+            var publicPrivacy = privacies.FirstOrDefault(p => p.SystemCode == VideoPrivacyConstants.Public);
+
             foreach (var v in videosData)
             {
                 var entity = mapper.Map<VideoEntity>(v);
+
+                var privacy = privacies.FirstOrDefault(p => p.SystemCode == v.PrivacySystemCode) ?? publicPrivacy;
+                if (privacy != null)
+                {
+                    entity.PrivacyId = privacy.Id;
+                }
 
                 if (!string.IsNullOrEmpty(v.ImagePath))
                     entity.Image = await imageService.SaveImageFromUrlAsync(v.ImagePath);
