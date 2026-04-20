@@ -10,6 +10,7 @@ using Application.Features.Videos.Commands.DeleteVideo;
 using Application.Models.Search;
 using Application.Features.Videos.Queries.SearchVideos;
 using Application.Models.VideoProcessing;
+using Application.Features.Videos.Queries.GetByVideo;
 
 namespace WeTapAPI.Controllers;
 
@@ -34,6 +35,14 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     public async Task<ActionResult<IEnumerable<VideoItemModel>>> GetAll()
     {
         var query = new GetVideosQuery();
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("get-by")]
+    public async Task<ActionResult<VideoItemModel>> GetById([FromQuery] GetByModel model)
+    {
+        var query = new GetByVideoQuery(model);
         var result = await mediator.Send(query);
         return Ok(result);
     }
