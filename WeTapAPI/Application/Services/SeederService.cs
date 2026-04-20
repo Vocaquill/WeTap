@@ -1,3 +1,4 @@
+using Application.Constants;
 using Application.Interfaces;
 using Application.Models.Genre;
 using Application.Models.Video;
@@ -116,6 +117,22 @@ public class SeederService(
             await appDbContext.Tags.AddRangeAsync(tags);
             await appDbContext.SaveChangesAsync();
         }
+    }
+
+    public async Task SeedVideoPrivaciesAsync()
+    {
+        if (await appDbContext.VideoPrivacies.AnyAsync())
+            return;
+
+        var privacies = new List<VideoPrivacyEntity>
+        {
+            new() { Name = "Публічне", SystemCode = VideoPrivacyConstants.Public },
+            new() { Name = "Приватне", SystemCode = VideoPrivacyConstants.Private },
+            new() { Name = "За посиланням", SystemCode = VideoPrivacyConstants.UrlOnly }
+        };
+
+        await appDbContext.VideoPrivacies.AddRangeAsync(privacies);
+        await appDbContext.SaveChangesAsync();
     }
 
     public async Task UpdateDatabase()
