@@ -11,4 +11,5 @@ public interface ISeederService
     public Task SeedVideosAsync(string jsonPath, string videosFolder);
     public Task SeedTagsAsync(string jsonPath);
     public Task SeedVideoPrivaciesAsync();
+    public Task SeedVideoLanguagesAsync(string jsonPath);
 }

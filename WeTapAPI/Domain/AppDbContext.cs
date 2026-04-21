@@ -2,6 +2,7 @@ using Domain.Entities.Genre;
 using Domain.Entities.Identity;
 using Domain.Entities.Tag;
 using Domain.Entities.Video;
+using Domain.Entities.Language;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ public class AppDbContext :
     public DbSet<VideoEntity> Videos { get; set; }
     public DbSet<TagEntity> Tags { get; set; }
     public DbSet<VideoPrivacyEntity> VideoPrivacies { get; set; }
+    public DbSet<VideoLanguageEntity> VideoLanguages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

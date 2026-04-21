@@ -1,0 +1,42 @@
+[
+  {
+    "Name": "Українська",
+    "LanguageCode": "uk"
+  },
+  {
+    "Name": "English",
+    "LanguageCode": "en"
+  },
+  {
+    "Name": "Polski",
+    "LanguageCode": "pl"
+  },
+  {
+    "Name": "Deutsch",
+    "LanguageCode": "de"
+  },
+  {
+    "Name": "Français",
+    "LanguageCode": "fr"
+  },
+  {
+    "Name": "Español",
+    "LanguageCode": "es"
+  },
+  {
+    "Name": "Italiano",
+    "LanguageCode": "it"
+  },
+  {
+    "Name": "日本語",
+    "LanguageCode": "ja"
+  },
+  {
+    "Name": "한국어",
+    "LanguageCode": "ko"
+  },
+  {
+    "Name": "中文",
+    "LanguageCode": "zh"
+  }
+]
