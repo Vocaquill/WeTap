@@ -68,6 +68,9 @@ public static class DependencyInjection
             var privacyJobKey = new JobKey(nameof(VideoPrivacySeederJob));
             q.AddJob<VideoPrivacySeederJob>(opts => opts.WithIdentity(privacyJobKey).StoreDurably());
 
+            var languageJobKey = new JobKey(nameof(LanguageSeederJob));
+            q.AddJob<LanguageSeederJob>(opts => opts.WithIdentity(languageJobKey).StoreDurably());
+
             var videoJobKey = new JobKey(nameof(VideoSeederJob));
             q.AddJob<VideoSeederJob>(opts => opts.WithIdentity(videoJobKey).StoreDurably());
         });

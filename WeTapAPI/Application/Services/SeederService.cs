@@ -8,6 +8,8 @@ using Domain;
 using Domain.Entities.Genre;
 using Domain.Entities.Video;
 using Domain.Entities.Tag;
+using Domain.Entities.Language;
+using Application.Models.Language;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
@@ -50,9 +52,6 @@ public class SeederService(
 
     public async Task SeedVideosAsync(string jsonPath, string videosFolder)
     {
-        if (await appDbContext.Videos.AnyAsync())
-            return;
-
         if (!File.Exists(jsonPath))
             throw new FileNotFoundException("Videos.json not found.", jsonPath);
 
@@ -66,6 +65,9 @@ public class SeederService(
 
             foreach (var v in videosData)
             {
+                if (await appDbContext.Videos.AnyAsync(vid => vid.Slug == v.Slug))
+                    continue;
+
                 var entity = mapper.Map<VideoEntity>(v);
 
                 var privacy = privacies.FirstOrDefault(p => p.SystemCode == v.PrivacySystemCode) ?? publicPrivacy;
@@ -102,10 +104,27 @@ public class SeederService(
                     }
                 }
 
-                await appDbContext.Videos.AddAsync(entity);
-            }
+                if (!string.IsNullOrEmpty(v.LanguageCode))
+                {
+                    var language = await appDbContext.VideoLanguages.FirstOrDefaultAsync(l => l.LanguageCode == v.LanguageCode);
+                    if (language != null)
+                    {
+                        entity.LanguageId = language.Id;
+                    }
+                }
 
-            await appDbContext.SaveChangesAsync();
+                if (entity.LanguageId == 0)
+                {
+                    var defaultLanguage = await appDbContext.VideoLanguages.FirstOrDefaultAsync(l => l.LanguageCode == "uk");
+                    if (defaultLanguage != null)
+                    {
+                        entity.LanguageId = defaultLanguage.Id;
+                    }
+                }
+
+                await appDbContext.Videos.AddAsync(entity);
+                await appDbContext.SaveChangesAsync();
+            }
         }
     }
     
@@ -142,6 +161,25 @@ public class SeederService(
 
         await appDbContext.VideoPrivacies.AddRangeAsync(privacies);
         await appDbContext.SaveChangesAsync();
+    }
+
+    public async Task SeedVideoLanguagesAsync(string jsonPath)
+    {
+        if (await appDbContext.VideoLanguages.AnyAsync())
+            return;
+
+        if (!File.Exists(jsonPath))
+            throw new FileNotFoundException("Languages.json not found.", jsonPath);
+
+        var json = await File.ReadAllTextAsync(jsonPath);
+        var languagesData = JsonSerializer.Deserialize<List<LanguageSeedModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        if (languagesData != null)
+        {
+            var languages = languagesData.Select(l => mapper.Map<VideoLanguageEntity>(l)).ToList();
+            await appDbContext.VideoLanguages.AddRangeAsync(languages);
+            await appDbContext.SaveChangesAsync();
+        }
     }
 
     public async Task UpdateDatabase()

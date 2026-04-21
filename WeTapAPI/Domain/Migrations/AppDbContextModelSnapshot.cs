@@ -202,6 +202,35 @@ namespace Domain.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Language.VideoLanguageEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LanguageCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_video_languages");
+                });
+
             modelBuilder.Entity("Domain.Entities.Tag.TagEntity", b =>
                 {
                     b.Property<long>("Id")
@@ -254,6 +283,9 @@ namespace Domain.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<long>("LanguageId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("PrivacyId")
                         .HasColumnType("bigint");
 
@@ -276,6 +308,8 @@ namespace Domain.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LanguageId");
+
                     b.HasIndex("PrivacyId");
 
                     b.ToTable("tbl_videos");
@@ -293,7 +327,7 @@ namespace Domain.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("tbl_vieos_genres");
+                    b.ToTable("tbl_videos_genres");
                 });
 
             modelBuilder.Entity("Domain.Entities.Video.VideoPrivacyEntity", b =>
@@ -439,11 +473,19 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Entities.Video.VideoEntity", b =>
                 {
+                    b.HasOne("Domain.Entities.Language.VideoLanguageEntity", "Language")
+                        .WithMany("Videos")
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Video.VideoPrivacyEntity", "Privacy")
                         .WithMany("Videos")
                         .HasForeignKey("PrivacyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Language");
 
                     b.Navigation("Privacy");
                 });
@@ -528,6 +570,11 @@ namespace Domain.Migrations
                     b.Navigation("UserLogins");
 
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Language.VideoLanguageEntity", b =>
+                {
+                    b.Navigation("Videos");
                 });
 
             modelBuilder.Entity("Domain.Entities.Tag.TagEntity", b =>
