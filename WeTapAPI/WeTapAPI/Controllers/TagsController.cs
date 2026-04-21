@@ -5,6 +5,7 @@ using Application.Features.Tags.Queries.GetTags;
 using Application.Models.Tag;
 using Application.Models.Search;
 using Application.Features.Tags.Queries.SearchTags;
+using Application.Features.Tags.Queries.GetByTag;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,6 +52,14 @@ public class TagsController(IMediator mediator) : ControllerBase
     {
         var command = new DeleteTagCommand(model);
         var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpGet("get-by")]
+    public async Task<ActionResult<TagItemModel>> GetBy([FromQuery] GetByModel model)
+    {
+        var query = new GetByTagQuery(model);
+        var result = await mediator.Send(query);
         return Ok(result);
     }
 }

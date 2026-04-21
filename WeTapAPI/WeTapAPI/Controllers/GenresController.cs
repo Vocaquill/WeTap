@@ -7,6 +7,7 @@ using Application.Features.Genres.Commands.UpdateGenre;
 using Application.Features.Genres.Commands.DeleteGenre;
 using Application.Models.Search;
 using Application.Features.Genres.Queries.SearchGenres;
+using Application.Features.Genres.Queries.GetByGenre;
 
 
 namespace WeTapAPI.Controllers;
@@ -52,6 +53,14 @@ public class GenresController(IMediator mediator) : ControllerBase
     {
         var command = new DeleteGenreCommand(model);
         var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpGet("get-by")]
+    public async Task<ActionResult<GenreItemModel>> GetBy([FromQuery] GetByModel model)
+    {
+        var query = new GetByGenreQuery(model);
+        var result = await mediator.Send(query);
         return Ok(result);
     }
 }
