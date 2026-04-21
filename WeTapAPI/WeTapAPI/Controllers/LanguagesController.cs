@@ -1,4 +1,6 @@
 using Application.Features.Languages.Commands.CreateLanguage;
+using Application.Features.Languages.Commands.UpdateLanguage;
+using Application.Features.Languages.Commands.DeleteLanguage;
 using Application.Features.Languages.Queries.SearchLanguages;
 using Application.Features.Languages.Queries.GetByLanguage;
 using Application.Models.Search;
@@ -33,6 +35,22 @@ public class LanguagesController(IMediator mediator) : ControllerBase
     {
         var query = new GetByLanguageQuery(model);
         var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpPut]
+    public async Task<ActionResult<LanguageItemModel>> Update([FromBody] LanguageUpdateModel model)
+    {
+        var command = new UpdateLanguageCommand(model);
+        var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpDelete]
+    public async Task<ActionResult<IEnumerable<LanguageItemModel>>> Delete([FromBody] LanguageDeleteModel model)
+    {
+        var command = new DeleteLanguageCommand(model);
+        var result = await mediator.Send(command);
         return Ok(result);
     }
 }

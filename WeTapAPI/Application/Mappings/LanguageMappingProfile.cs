@@ -11,5 +11,6 @@ public class LanguageMappingProfile : Profile
         CreateMap<LanguageSeedModel, VideoLanguageEntity>();
         CreateMap<VideoLanguageEntity, LanguageItemModel>();
         CreateMap<LanguageCreateModel, VideoLanguageEntity>();
+        CreateMap<LanguageUpdateModel, VideoLanguageEntity>();
     }
 }
