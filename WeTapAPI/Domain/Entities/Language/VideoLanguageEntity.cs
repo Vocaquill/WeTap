@@ -1,8 +1,10 @@
 ﻿using Domain.Entities.Video;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.Language;
 
+[Table("tbl_video_languages")]
 public class VideoLanguageEntity : BaseEntity<long>
 {
     [Required]
