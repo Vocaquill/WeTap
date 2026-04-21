@@ -9,5 +9,7 @@ public class LanguageMappingProfile : Profile
     public LanguageMappingProfile()
     {
         CreateMap<LanguageSeedModel, VideoLanguageEntity>();
+        CreateMap<VideoLanguageEntity, LanguageItemModel>();
+        CreateMap<LanguageCreateModel, VideoLanguageEntity>();
     }
 }

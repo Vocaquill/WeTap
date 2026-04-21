@@ -12,4 +12,5 @@ public class VideoUpdateModel
     public long[]? TagIds { get; set; }
     public IFormFile? Image { get; set; }
     public IFormFile? Video { get; set; }
+    public long LanguageId { get; set; }
 }

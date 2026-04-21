@@ -62,5 +62,14 @@ public class VideoCreateModelValidator : AbstractValidator<VideoCreateModel>
 
         RuleFor(x => x.Description)
             .MaximumLength(1000).WithMessage("Опис повинен містити не більше 1000 символів");
+
+        RuleFor(x => x.LanguageId)
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty().WithMessage("Мова є обов'язковою")
+            .MustAsync(async (langId, cancellation) =>
+            {
+                return await db.VideoLanguages.AnyAsync(l => l.Id == langId, cancellation);
+            })
+            .WithMessage("Мову не знайдено");
     }
 }

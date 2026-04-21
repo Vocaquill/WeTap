@@ -25,6 +25,9 @@
     <None Update="Seeding\Genres.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Seeding\Videos_Big.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Seeding\Videos.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
