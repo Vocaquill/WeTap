@@ -9,24 +9,21 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.Languages.Commands.DeleteLanguage;
 
 public class DeleteLanguageHandler(IGenericRepository<VideoLanguageEntity, long> repo, IMapper mapper)
-    : IRequestHandler<DeleteLanguageCommand, IEnumerable<LanguageItemModel>>
+    : IRequestHandler<DeleteLanguageCommand>
 {
-    public async Task<IEnumerable<LanguageItemModel>> Handle(DeleteLanguageCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteLanguageCommand request, CancellationToken cancellationToken)
     {
-        var entities = await repo.AsQurable()
-            .Where(x => request.Model.Ids.Contains(x.Id))
-            .ToListAsync(cancellationToken);
+        var entity = await repo.AsQurable()
+            .FirstOrDefaultAsync(x => x.Id == request.Model.Id, cancellationToken);
 
-        foreach (var entity in entities)
+        if (entity == null)
         {
-            entity.IsDeleted = true;
+            throw new Exception($"Language with Id {request.Model.Id} not found.");
         }
+
+        entity.IsDeleted = true;
 
         await repo.SaveChangesAsync();
 
-        return await repo.AsQurable()
-            .AsNoTracking()
-            .ProjectTo<LanguageItemModel>(mapper.ConfigurationProvider)
-            .ToListAsync(cancellationToken);
     }
 }

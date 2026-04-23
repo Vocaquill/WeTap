@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { IServerValidationErrors } from '../types/aditional';
+import type {IServerValidationErrors} from "../types/Additional/IServerValidationErrors.ts";
 
 export const useFormServerErrors = () => {
     const [errors, setErrors] = useState<IServerValidationErrors>({});

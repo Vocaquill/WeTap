@@ -9,13 +9,13 @@ public class LanguageDeleteModelValidator : AbstractValidator<LanguageDeleteMode
 {
     public LanguageDeleteModelValidator(AppDbContext db)
     {
-        RuleFor(x => x.Ids)
-            .NotEmpty().WithMessage("Список Id не може бути порожнім")
-            .MustAsync(async (ids, cancellation) =>
-            {
-                var count = await db.VideoLanguages.CountAsync(l => ids.Contains(l.Id), cancellation);
-                return count == ids.Distinct().Count();
-            })
-            .WithMessage("Одну або кілька мов не знайдено");
+        RuleFor(x => x.Id)
+            .Cascade(CascadeMode.Stop)
+            .GreaterThan(0).WithMessage("Id повинен бути більше 0")
+            .MustAsync(async (id, cancellation) =>
+                await db.Tags.AnyAsync(
+                    t => t.Id == id && !t.IsDeleted,
+                    cancellation))
+            .WithMessage("Мову не знайдено");
     }
 }

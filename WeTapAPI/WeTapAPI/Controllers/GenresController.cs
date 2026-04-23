@@ -49,11 +49,11 @@ public class GenresController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<ActionResult<IEnumerable<GenreItemModel>>> Delete([FromBody] GenreDeleteModel model)
+    public async Task<ActionResult> Delete([FromBody] GenreDeleteModel model)
     {
         var command = new DeleteGenreCommand(model);
-        var result = await mediator.Send(command);
-        return Ok(result);
+        await mediator.Send(command);
+        return Ok();
     }
 
     [HttpGet("get-by")]
