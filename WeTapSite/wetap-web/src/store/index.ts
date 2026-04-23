@@ -7,6 +7,8 @@ import { setupListeners } from "@reduxjs/toolkit/query/react";
 import {apiAccount} from "../services/api/apiAccount.ts";
 import {apiVideos} from "../services/api/apiVideos.ts";
 import {apiTags} from "../services/api/apiTags.ts";
+import {apiLanguages} from "../services/api/apiLanguages.ts";
+
 
 import authReducer from "./slices/authSlice.ts";
 
@@ -19,6 +21,8 @@ export const store = configureStore({
         [apiAccount.reducerPath]: apiAccount.reducer,
         [apiVideos.reducerPath]: apiVideos.reducer,
         [apiTags.reducerPath]: apiTags.reducer,
+        [apiLanguages.reducerPath]: apiLanguages.reducer,
+
 
         //[apiUser.reducerPath]: apiUser.reducer,
     },
@@ -29,7 +33,9 @@ export const store = configureStore({
             apiGenres.middleware,
             apiAccount.middleware,
             apiVideos.middleware,
-            apiTags.middleware
+            apiTags.middleware,
+            apiLanguages.middleware
+
 
             //apiUser.middleware
         )
