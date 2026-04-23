@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { createBaseQuery } from "../../utils/createBaseQuery.ts";
-import type { IPagedResult } from "../../types/aditional.ts";
 import type {
   IMovieCommentCreate,
   IMovieGetBySlug,
@@ -12,6 +11,7 @@ import type {
   IMovieReaction,
 } from "../../types/movie.ts";
 import { serialize } from "object-to-formdata";
+import type {IPagedResult} from "../../types/Additional/IPagedResult.ts";
 
 export const apiMovies = createApi({
   reducerPath: "api/movies",

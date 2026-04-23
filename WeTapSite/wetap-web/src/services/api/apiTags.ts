@@ -1,12 +1,12 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { createBaseQuery } from "../../utils/createBaseQuery.ts";
-import type { IPagedResult } from "../../types/aditional.ts";
 import type { ITagItemResponse } from "../../types/Tag/ITagItemResponse.ts";
 import type { ITagSearchRequest } from "../../types/Tag/ITagSearchRequest.ts";
 import type { IGetByRequest } from "../../types/Additional/IGetByRequest.ts";
 import type { ITagCreateRequest } from "../../types/Tag/ITagCreateRequest.ts";
 import type { ITagEditRequest } from "../../types/Tag/ITagEditRequest.ts";
 import type { ITagDeleteRequest } from "../../types/Tag/ITagDeleteRequest.ts";
+import type { IPagedResult } from "../../types/Additional/IPagedResult.ts";
 
 export const apiTags = createApi({
     reducerPath: "api/tags",

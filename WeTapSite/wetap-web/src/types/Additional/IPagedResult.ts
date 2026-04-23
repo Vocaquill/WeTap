@@ -1,8 +1,3 @@
-export interface IBaseSearch {
-    page: number;
-    itemPerPage: number;
-}
-
 export interface IPagedResult<T> {
     items: T[];
     pagination: {
@@ -11,8 +6,4 @@ export interface IPagedResult<T> {
         itemsPerPage: number;
         currentPage: number;
     };
-}
-
-export interface IServerValidationErrors {
-    [field: string]: string[];
 }

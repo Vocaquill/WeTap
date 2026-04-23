@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { createBaseQuery } from "../../utils/createBaseQuery.ts";
-import type { IPagedResult } from "../../types/aditional.ts";
 import { serialize } from "object-to-formdata";
 import type {IGenreItemResponse} from "../../types/Genre/IGenreItemResponse.ts";
 import type {IGenreSearchRequest} from "../../types/Genre/IGenreSearchRequest.ts";
@@ -8,6 +7,7 @@ import type {IGetByRequest} from "../../types/Additional/IGetByRequest.ts";
 import type {IGenreCreateRequest} from "../../types/Genre/IGenreCreateRequest.ts";
 import type {IGenreEditRequest} from "../../types/Genre/IGenreEditRequest.ts";
 import type {IGenreDeleteRequest} from "../../types/Genre/IGenreDeleteRequest.ts";
+import type {IPagedResult} from "../../types/Additional/IPagedResult.ts";
 
 export const apiGenres = createApi({
     reducerPath: "api/genres",
