@@ -50,7 +50,7 @@ public class LanguagesController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<IEnumerable<LanguageItemModel>>> Delete([FromBody] LanguageDeleteModel model)
     {
         var command = new DeleteLanguageCommand(model);
-        var result = await mediator.Send(command);
-        return Ok(result);
+        await mediator.Send(command);
+        return Ok();
     }
 }
