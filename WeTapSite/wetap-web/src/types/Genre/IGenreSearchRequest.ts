@@ -1,4 +1,4 @@
-import type {IBaseSearch} from "../aditional.ts";
+import type {IBaseSearch} from "../Additional/IBaseSearch.ts";
 
 export interface IGenreSearchRequest extends IBaseSearch {
     q?: string;
