@@ -12,17 +12,18 @@ namespace Application.Services;
 public class VideoFileService : IVideoFileService
 {
     private readonly string _videosDir;
+    private readonly string _ffmpegPath;
     private readonly List<int> _videoSizes;
 
     public VideoFileService(IConfiguration configuration)
     {
         _videosDir = Path.Combine(Directory.GetCurrentDirectory(), configuration["VideosDir"]!);
         _videoSizes = configuration.GetSection("VideoSizes").Get<List<int>>()!;
+        _ffmpegPath = Path.Combine(Directory.GetCurrentDirectory(), "FFmpeg");
 
         Directory.CreateDirectory(_videosDir);
 
-        // Завантаження FFmpeg
-        FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official).GetAwaiter().GetResult();
+        FFmpeg.SetExecutablesPath(_ffmpegPath);
     }
 
     public async Task<string> SaveVideoAsync(IFormFile file)
@@ -51,6 +52,9 @@ public class VideoFileService : IVideoFileService
 
     public async Task<string> SaveVideoWithProgressAsync(string filePath, Action<VideoProgressUpdate> onProgress)
     {
+        // Завантаження FFmpeg
+        await FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official, _ffmpegPath);
+
         var mediaInfo = await FFmpeg.GetMediaInfo(filePath);
         string baseFileName = $"{Guid.NewGuid()}.mp4";
 

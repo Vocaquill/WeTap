@@ -7,4 +7,5 @@ export interface IVideoCreateRequest {
     image?: File;
     video?: File;
     languageId: number;
+    privacyId: number;
 }

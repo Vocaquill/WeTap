@@ -25,11 +25,11 @@ public class GetByLanguageHandler(
         }
         else if (!string.IsNullOrWhiteSpace(request.Model.Slug))
         {
-            // Language doesn't have slug, but for consistency with GetByModel we check LanguageCode if it's passed in Slug field?
-            // User said: "Якшо у моделі нема slug, нічого страшного, далі юзай ту модельку, нічого нового не тре створювати"
-            // So I'll just check LanguageCode if Slug is provided.
             entity = await query.FirstOrDefaultAsync(x => x.LanguageCode == request.Model.Slug, cancellationToken);
         }
+
+        if (entity == null)
+            throw new KeyNotFoundException("Language not found");
 
         return entity == null ? null : mapper.Map<LanguageItemModel>(entity);
     }

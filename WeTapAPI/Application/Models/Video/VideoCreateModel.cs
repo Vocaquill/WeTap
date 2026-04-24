@@ -12,4 +12,5 @@ public class VideoCreateModel
     public IFormFile? Image { get; set; }
     public IFormFile? Video { get; set; }
     public long LanguageId { get; set; }
+    public long PrivacyId { get; set; }
 }

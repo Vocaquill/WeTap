@@ -29,6 +29,9 @@ public class GetByTagHandler(
             entity = await query.FirstOrDefaultAsync(x => x.Slug == request.Model.Slug, cancellationToken);
         }
 
+        if (entity == null)
+            throw new KeyNotFoundException("Tag not found");
+
         return entity == null ? null : mapper.Map<TagItemModel>(entity);
     }
 }
