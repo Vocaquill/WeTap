@@ -41,6 +41,9 @@ public class GetByVideoQueryHandler(IGenericRepository<VideoEntity, long> repo, 
             model = mapper.Map<VideoItemModel>(entity);
         }
 
+        if (entity == null)
+            throw new Exception("Відео не знайдено");
+
         entity.ViewCount++;
         await repo.UpdateAsync(entity);
 

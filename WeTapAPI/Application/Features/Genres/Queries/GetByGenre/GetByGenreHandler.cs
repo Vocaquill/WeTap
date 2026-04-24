@@ -29,6 +29,9 @@ public class GetByGenreHandler(
             entity = await query.FirstOrDefaultAsync(x => x.Slug == request.Model.Slug, cancellationToken);
         }
 
+        if(entity == null)
+            throw new KeyNotFoundException("Genre not found");
+
         return entity == null ? null : mapper.Map<GenreItemModel>(entity);
     }
 }
