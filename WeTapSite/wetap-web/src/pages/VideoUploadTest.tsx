@@ -3,7 +3,7 @@ import { Card, Button, Upload, Progress, Typography, Space, message } from 'antd
 import { UploadOutlined } from '@ant-design/icons';
 import { useCreateVideoMutation } from '../services/api/apiVideos';
 import { useVideoProgress } from '../hooks/useVideoProgress';
-import type { IVideoCreateModel } from '../types/video';
+import type {IVideoCreateRequest} from "../types/Video/IVideoCreateRequest.ts";
 
 const { Text } = Typography;
 
@@ -19,13 +19,15 @@ const VideoUploadTest: React.FC = () => {
             return;
         }
 
-        const model: IVideoCreateModel = {
+        const model: IVideoCreateRequest = {
             title: "Test Video " + new Date().getTime(),
             slug: "test-video-" + new Date().getTime(),
             description: "Default description for testing SignalR progress",
             genreIds: [1],
             tagIds: [1],
-            video: file
+            video: file,
+            languageId: 2,
+            privacyId: 1,
         };
 
         try {
