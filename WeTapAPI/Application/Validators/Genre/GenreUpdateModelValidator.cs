@@ -2,6 +2,7 @@ using Application.Models.Genre;
 using Domain;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Application.Validators;
 
 namespace Application.Validators.Genre;
 
@@ -37,5 +38,8 @@ public class GenreUpdateModelValidator : AbstractValidator<GenreUpdateModel>
                     cancellation);
             })
             .WithMessage("Інший жанр з таким слагом вже існує");
+
+        RuleFor(x => x.Image)
+            .IsImage();
     }
 }

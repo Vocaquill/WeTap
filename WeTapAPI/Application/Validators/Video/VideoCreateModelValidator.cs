@@ -2,6 +2,7 @@ using Application.Models.Video;
 using Domain;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Application.Validators;
 
 namespace Application.Validators.Video;
 
@@ -71,5 +72,8 @@ public class VideoCreateModelValidator : AbstractValidator<VideoCreateModel>
                 return await db.VideoLanguages.AnyAsync(l => l.Id == langId, cancellation);
             })
             .WithMessage("Мову не знайдено");
+
+        RuleFor(x => x.Image)
+            .IsImage();
     }
 }
