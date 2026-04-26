@@ -289,3 +289,4 @@ ffprobe.exe
 version.json
 
 *.mp4
+!sample.mp4
