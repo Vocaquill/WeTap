@@ -58,7 +58,6 @@ public class UpdateVideoHandler(
 
         if (model.Video != null)
         {
-            // Delete old video files
             if (entity.Video != null)
                 await videoFileService.DeleteVideoAsync(entity.Video);
 
