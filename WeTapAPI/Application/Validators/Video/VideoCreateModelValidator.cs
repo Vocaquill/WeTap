@@ -59,7 +59,8 @@ public class VideoCreateModelValidator : AbstractValidator<VideoCreateModel>
             .WithMessage("Один або кілька обраних тегів не знайдено");
 
         RuleFor(x => x.Video)
-            .NotNull().WithMessage("Відео-файл є обов'язковим");
+            .NotNull().WithMessage("Відео-файл є обов'язковим")
+            .IsVideo();
 
         RuleFor(x => x.Description)
             .MaximumLength(1000).WithMessage("Опис повинен містити не більше 1000 символів");

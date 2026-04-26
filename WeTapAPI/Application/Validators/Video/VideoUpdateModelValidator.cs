@@ -72,6 +72,9 @@ public class VideoUpdateModelValidator : AbstractValidator<VideoUpdateModel>
         RuleFor(x => x.Description)
             .MaximumLength(1000).WithMessage("Опис повинен містити не більше 1000 символів");
 
+        RuleFor(x => x.Video)
+            .IsVideo();
+
         RuleFor(x => x.LanguageId)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Мова є обов'язковою")
