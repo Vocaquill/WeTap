@@ -28,6 +28,7 @@ public class VideoUpdateModelValidator : AbstractValidator<VideoUpdateModel>
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Слаг є обов'язковим")
             .MaximumLength(255).WithMessage("Слаг повинен містити не більше 255 символів")
+            .IsSlug()
             .MustAsync(async (model, slug, cancellation) =>
             {
                 var normalized = slug!.Trim().ToLower().Replace(" ", "-");

@@ -2,6 +2,7 @@ using Application.Models.Tag;
 using Domain;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Application.Validators;
 
 namespace Application.Validators.Tag;
 
@@ -27,6 +28,7 @@ public class TagUpdateModelValidator : AbstractValidator<TagUpdateModel>
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Слаг є обов'язковим")
             .MaximumLength(100).WithMessage("Слаг не повинен перевищувати 100 символів")
+            .IsSlug()
             .MustAsync(async (model, slug, cancellation) =>
             {
                 var normalized = slug!.Trim().ToLower().Replace(" ", "-");

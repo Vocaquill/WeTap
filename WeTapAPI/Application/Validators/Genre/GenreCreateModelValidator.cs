@@ -19,6 +19,7 @@ public class GenreCreateModelValidator : AbstractValidator<GenreCreateModel>
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Слаг є обов'язковим")
             .MaximumLength(100).WithMessage("Слаг не повинен перевищувати 100 символів")
+            .IsSlug()
             .MustAsync(async (slug, cancellation) =>
             {
                 var normalized = slug!.Trim().ToLower().Replace(" ", "-");

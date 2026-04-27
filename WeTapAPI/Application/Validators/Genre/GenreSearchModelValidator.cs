@@ -1,5 +1,6 @@
-using Application.Models.Genre;
 using FluentValidation;
+using Application.Validators;
+using Application.Models.Genre;
 
 namespace Application.Validators.Genre;
 
@@ -19,8 +20,9 @@ public class GenreSearchModelValidator : AbstractValidator<GenreSearchModel>
         RuleFor(x => x.Name)
             .MaximumLength(100).WithMessage("Назва повинна бути не більше 100 символів");
 
-        RuleFor(x => x.Slug)
-            .MaximumLength(100).WithMessage("Slug повинен бути не більше 100 символів");
+        RuleFor(x => x.Slug!)
+            .MaximumLength(100).WithMessage("Slug повинен бути не більше 100 символів")
+            .IsSlug();
 
         RuleFor(x => x.SortBy)
             .Must(sortBy => string.IsNullOrEmpty(sortBy) || new[] { "name", "slug" }.Contains(sortBy.ToLower()))
