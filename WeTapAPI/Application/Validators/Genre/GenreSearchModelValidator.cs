@@ -24,6 +24,6 @@ public class GenreSearchModelValidator : AbstractValidator<GenreSearchModel>
 
         RuleFor(x => x.SortBy)
             .Must(sortBy => string.IsNullOrEmpty(sortBy) || new[] { "name", "slug" }.Contains(sortBy.ToLower()))
-            .WithMessage("Обрано недопустиме поле для сортування");
+            .WithMessage("Обрано недопустиме поле для сортування, доступні такі поля: name, slug");
     }
 }
