@@ -22,7 +22,17 @@ public class TagUpdateModelValidator : AbstractValidator<TagUpdateModel>
         RuleFor(x => x.Name)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Назва тегу є обов'язковою")
-            .MaximumLength(100).WithMessage("Назва тегу не повинна перевищувати 100 символів");
+            .MaximumLength(100).WithMessage("Назва тегу не повинна перевищувати 100 символів")
+            .MustAsync(async (model, name, cancellation) =>
+            {
+                var normalized = name!.Trim().ToLower();
+                return !await db.Tags.AnyAsync(
+                    t => !t.IsDeleted && 
+                         t.Name.ToLower() == normalized && 
+                         t.Id != model.Id,
+                    cancellation);
+            })
+            .WithMessage("Інший тег з такою назвою вже існує");
 
         RuleFor(x => x.Slug)
             .Cascade(CascadeMode.Stop)
