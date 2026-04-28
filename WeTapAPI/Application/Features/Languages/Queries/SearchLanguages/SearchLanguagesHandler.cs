@@ -25,7 +25,7 @@ public class SearchLanguagesHandler(
         if (!string.IsNullOrWhiteSpace(request.Model.Name))
         {
             string name = request.Model.Name.Trim().ToLower();
-            query = query.Where(x => x.Name.ToLower().Contains(name));
+            query = query.Where(x => x.Name.ToLower().Contains(name) || x.LanguageCode.ToLower().Contains(name));
         }
 
         int totalCount = await query.CountAsync(cancellationToken);
