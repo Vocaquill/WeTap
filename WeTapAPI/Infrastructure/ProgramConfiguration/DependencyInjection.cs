@@ -23,6 +23,7 @@ public static class DependencyInjection
     {
         //services
         services.AddScoped<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<ISeederService, SeederService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IVideoFileService, VideoFileService>();
