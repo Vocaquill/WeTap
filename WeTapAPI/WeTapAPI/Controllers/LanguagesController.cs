@@ -23,7 +23,7 @@ public class LanguagesController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<ActionResult<IEnumerable<LanguageItemModel>>> Search([FromQuery] LanguageSearchModel model)
+    public async Task<ActionResult<SearchResult<LanguageItemModel>>> Search([FromQuery] LanguageSearchModel model)
     {
         var query = new SearchLanguagesQuery(model);
         var result = await mediator.Send(query);
