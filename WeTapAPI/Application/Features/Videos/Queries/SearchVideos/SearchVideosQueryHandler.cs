@@ -22,7 +22,7 @@ public class SearchVideosQueryHandler(
 
         IQueryable<VideoEntity> query = repo.AsQurable()
             .AsNoTracking()
-            .Where(x => !x.IsDeleted);
+            .Where(x => !x.IsDeleted && x.Video != "processing...");
 
         if (!string.IsNullOrWhiteSpace(request.Model.Q))
         {
