@@ -30,7 +30,7 @@ public class GetByTagHandler(
         }
 
         if (entity == null)
-            throw new KeyNotFoundException("Tag not found");
+            throw new KeyNotFoundException("Тег не знайдено");
 
         return entity == null ? null : mapper.Map<TagItemModel>(entity);
     }

@@ -18,7 +18,7 @@ public class DeleteLanguageHandler(IGenericRepository<VideoLanguageEntity, long>
 
         if (entity == null)
         {
-            throw new Exception($"Language with Id {request.Model.Id} not found.");
+            throw new Exception($"Мову з Id {request.Model.Id} не знайдено.");
         }
 
         entity.IsDeleted = true;

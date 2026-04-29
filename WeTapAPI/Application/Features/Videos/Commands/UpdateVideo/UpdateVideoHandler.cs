@@ -27,7 +27,7 @@ public class UpdateVideoHandler(
             .FirstOrDefaultAsync(x => x.Id == model.Id && !x.IsDeleted, cancellationToken);
 
         if (entity == null)
-            throw new Exception("Video not found");
+            throw new Exception("Відео не знайдено");
 
         mapper.Map(model, entity);
 
@@ -61,7 +61,7 @@ public class UpdateVideoHandler(
             if (entity.Video != null)
                 await videoFileService.DeleteVideoAsync(entity.Video);
 
-            entity.Video = "processing...";
+            entity.Video = "обробляється...";
 
             // Save video to temp path
             var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}{Path.GetExtension(model.Video.FileName)}");

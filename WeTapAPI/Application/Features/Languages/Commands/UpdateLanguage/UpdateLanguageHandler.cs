@@ -16,7 +16,7 @@ public class UpdateLanguageHandler(IGenericRepository<VideoLanguageEntity, long>
             .FirstOrDefaultAsync(x => x.Id == request.Model.Id, cancellationToken);
 
         if (entity == null)
-            throw new Exception("Language not found");
+            throw new Exception("Мову не знайдено");
 
         mapper.Map(request.Model, entity);
 

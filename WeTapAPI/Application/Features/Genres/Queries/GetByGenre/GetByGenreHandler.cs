@@ -30,7 +30,7 @@ public class GetByGenreHandler(
         }
 
         if(entity == null)
-            throw new KeyNotFoundException("Genre not found");
+            throw new KeyNotFoundException("Жанр не знайдено");
 
         return entity == null ? null : mapper.Map<GenreItemModel>(entity);
     }

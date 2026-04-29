@@ -27,7 +27,7 @@ public class SeederService(
             return;
 
         if (!File.Exists(jsonPath))
-            throw new FileNotFoundException("Genres.json not found.", jsonPath);
+            throw new FileNotFoundException("Файл Genres.json не знайдено.", jsonPath);
 
         var json = await File.ReadAllTextAsync(jsonPath);
         var genresData = JsonSerializer.Deserialize<List<GenreSeedModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -53,7 +53,7 @@ public class SeederService(
     public async Task SeedVideosAsync(string jsonPath, string videosFolder)
     {
         if (!File.Exists(jsonPath))
-            throw new FileNotFoundException("Videos.json not found.", jsonPath);
+            throw new FileNotFoundException("Файл Videos.json не знайдено.", jsonPath);
 
         var json = await File.ReadAllTextAsync(jsonPath);
         var videosData = JsonSerializer.Deserialize<List<VideoSeedModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -134,7 +134,7 @@ public class SeederService(
             return;
 
         if (!File.Exists(jsonPath))
-            throw new FileNotFoundException("Tags.json not found.", jsonPath);
+            throw new FileNotFoundException("Файл Tags.json не знайдено.", jsonPath);
 
         var json = await File.ReadAllTextAsync(jsonPath);
         var tagsData = JsonSerializer.Deserialize<List<TagSeedModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -169,7 +169,7 @@ public class SeederService(
             return;
 
         if (!File.Exists(jsonPath))
-            throw new FileNotFoundException("Languages.json not found.", jsonPath);
+            throw new FileNotFoundException("Файл Languages.json не знайдено.", jsonPath);
 
         var json = await File.ReadAllTextAsync(jsonPath);
         var languagesData = JsonSerializer.Deserialize<List<LanguageSeedModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });

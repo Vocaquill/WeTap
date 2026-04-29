@@ -23,14 +23,14 @@ public class VideoProcessingJob(
             if (!File.Exists(tempFilePath))
             {
                 logger.LogError("Temp file not found at path: {TempPath}", tempFilePath);
-                throw new FileNotFoundException("Temp file for video processing not found", tempFilePath);
+                throw new FileNotFoundException("Тимчасовий файл для обробки відео не знайдено", tempFilePath);
             }
 
             await hubContext.Clients.Group(trackingId).SendAsync("ReceiveProgress", new VideoProgressUpdate
             {
                 Percentage = 0,
-                Status = "Starting",
-                EstimatedTimeRemaining = "Calculating..."
+                Status = "Початок",
+                EstimatedTimeRemaining = "Розрахунок..."
             });
 
             logger.LogInformation("Calling VideoFileService to process video...");
@@ -57,7 +57,7 @@ public class VideoProcessingJob(
             await hubContext.Clients.Group(trackingId).SendAsync("ReceiveProgress", new VideoProgressUpdate
             {
                 Percentage = 100,
-                Status = "Completed",
+                Status = "Завершено",
                 EstimatedTimeRemaining = "00:00:00"
             });
         }
@@ -68,7 +68,7 @@ public class VideoProcessingJob(
             await hubContext.Clients.Group(trackingId).SendAsync("ReceiveProgress", new VideoProgressUpdate
             {
                 Percentage = 0,
-                Status = $"Error: {ex.Message}",
+                Status = $"Помилка: {ex.Message}",
                 EstimatedTimeRemaining = "N/A"
             });
             

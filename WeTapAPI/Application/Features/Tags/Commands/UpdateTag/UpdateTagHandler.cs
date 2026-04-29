@@ -17,7 +17,7 @@ public class UpdateTagHandler(IGenericRepository<TagEntity, long> repo, IMapper 
         var tag = context.Tags.FirstOrDefault(x => x.Id == request.Model.Id && !x.IsDeleted);
 
         if (tag == null)
-            throw new Exception($"Tag with id {request.Model.Id} not found");
+            throw new Exception($"Тег з id {request.Model.Id} не знайдено");
 
         mapper.Map(request.Model, tag);
 

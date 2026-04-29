@@ -1,4 +1,4 @@
-﻿using Application.Features.Genres.Commands.CreateGenre;
+using Application.Features.Genres.Commands.CreateGenre;
 using Application.Interfaces;
 using Application.Models.Genre;
 using AutoMapper;
@@ -23,7 +23,7 @@ public class UpdateGenreHandler(IGenericRepository<GenreEntity, long> repo,
 
         if (genre == null)
         {
-            throw new Exception($"Genre with id {id} not found");
+            throw new Exception($"Жанр з id {id} не знайдено");
         }
 
         var oldImage = genre.Image;

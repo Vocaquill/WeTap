@@ -24,7 +24,7 @@ public class DeleteTagHandler(IGenericRepository<TagEntity, long> repo, IMapper 
         }
         catch (Exception)
         {
-            throw new Exception("Tag not found");
+            throw new Exception("Тег не знайдено");
         }
 
         await repo.DeleteAsync(tag.Id);
