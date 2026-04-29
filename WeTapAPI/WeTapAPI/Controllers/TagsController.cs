@@ -48,11 +48,11 @@ public class TagsController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<ActionResult<IEnumerable<TagItemModel>>> Delete([FromBody] TagDeleteModel model)
+    public async Task<ActionResult> Delete([FromBody] TagDeleteModel model)
     {
         var command = new DeleteTagCommand(model);
-        var result = await mediator.Send(command);
-        return Ok(result);
+        await mediator.Send(command);
+        return Ok();
     }
 
     [HttpGet("get-by")]
