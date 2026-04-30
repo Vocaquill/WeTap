@@ -17,7 +17,7 @@ namespace Domain.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.5")
+                .HasAnnotation("ProductVersion", "10.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -202,6 +202,35 @@ namespace Domain.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Language.VideoLanguageEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LanguageCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_video_languages");
+                });
+
             modelBuilder.Entity("Domain.Entities.Tag.TagEntity", b =>
                 {
                     b.Property<long>("Id")
@@ -254,6 +283,12 @@ namespace Domain.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<long>("LanguageId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PrivacyId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -268,7 +303,14 @@ namespace Domain.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<long>("ViewCount")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("PrivacyId");
 
                     b.ToTable("tbl_videos");
                 });
@@ -285,7 +327,36 @@ namespace Domain.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("tbl_vieos_genres");
+                    b.ToTable("tbl_videos_genres");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Video.VideoPrivacyEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("SystemCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbl_video_privacies");
                 });
 
             modelBuilder.Entity("Domain.Entities.Video.VideoTagEntity", b =>
@@ -400,6 +471,25 @@ namespace Domain.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Video.VideoEntity", b =>
+                {
+                    b.HasOne("Domain.Entities.Language.VideoLanguageEntity", "Language")
+                        .WithMany("Videos")
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Video.VideoPrivacyEntity", "Privacy")
+                        .WithMany("Videos")
+                        .HasForeignKey("PrivacyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Language");
+
+                    b.Navigation("Privacy");
+                });
+
             modelBuilder.Entity("Domain.Entities.Video.VideoGenreEntity", b =>
                 {
                     b.HasOne("Domain.Entities.Genre.GenreEntity", "Genre")
@@ -482,6 +572,11 @@ namespace Domain.Migrations
                     b.Navigation("UserRoles");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Language.VideoLanguageEntity", b =>
+                {
+                    b.Navigation("Videos");
+                });
+
             modelBuilder.Entity("Domain.Entities.Tag.TagEntity", b =>
                 {
                     b.Navigation("VideoTags");
@@ -492,6 +587,11 @@ namespace Domain.Migrations
                     b.Navigation("VideoGenres");
 
                     b.Navigation("VideoTags");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Video.VideoPrivacyEntity", b =>
+                {
+                    b.Navigation("Videos");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,6 +2,8 @@ using Domain;
 using Domain.Entities.Identity;
 using Infrastructure.Middlewares;
 using Infrastructure.ProgramConfiguration;
+using Hangfire;
+using Application.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -30,9 +32,10 @@ try
     {
         options.AddPolicy("AllowAll", policy =>
         {
-            policy.AllowAnyOrigin()
+            policy.SetIsOriginAllowed(_ => true)
                   .AllowAnyHeader()
-                  .AllowAnyMethod();
+                  .AllowAnyMethod()
+                  .AllowCredentials();
         });
     });
 
@@ -146,7 +149,10 @@ try
 
     app.UseAuthorization();
 
+    app.UseHangfireDashboard();
+
     app.MapControllers();
+    app.MapHub<VideoProgressHub>("/videoProgressHub");
 
     app.Run();
 

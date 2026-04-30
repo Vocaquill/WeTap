@@ -5,6 +5,10 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Genres.Commands.UpdateGenre;
 using Application.Features.Genres.Commands.DeleteGenre;
+using Application.Models.Search;
+using Application.Features.Genres.Queries.SearchGenres;
+using Application.Features.Genres.Queries.GetByGenre;
+
 
 namespace WeTapAPI.Controllers;
 
@@ -28,6 +32,14 @@ public class GenresController(IMediator mediator) : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("search")]
+    public async Task<ActionResult<SearchResult<GenreItemModel>>> Search([FromQuery] GenreSearchModel model)
+    {
+        var query = new SearchGenresQuery(model);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
     [HttpPut]
     public async Task<ActionResult<GenreItemModel>> Update([FromForm] GenreUpdateModel model)
     {
@@ -37,10 +49,18 @@ public class GenresController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<ActionResult<IEnumerable<GenreItemModel>>> Delete([FromBody] GenreDeleteModel model)
+    public async Task<ActionResult> Delete([FromBody] GenreDeleteModel model)
     {
         var command = new DeleteGenreCommand(model);
-        var result = await mediator.Send(command);
+        await mediator.Send(command);
+        return Ok();
+    }
+
+    [HttpGet("get-by")]
+    public async Task<ActionResult<GenreItemModel>> GetBy([FromQuery] GetByModel model)
+    {
+        var query = new GetByGenreQuery(model);
+        var result = await mediator.Send(query);
         return Ok(result);
     }
 }

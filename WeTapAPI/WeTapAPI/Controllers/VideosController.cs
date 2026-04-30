@@ -7,6 +7,10 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Videos.Commands.UpdateVideo;
 using Application.Features.Videos.Commands.DeleteVideo;
+using Application.Models.Search;
+using Application.Features.Videos.Queries.SearchVideos;
+using Application.Models.VideoProcessing;
+using Application.Features.Videos.Queries.GetByVideo;
 
 namespace WeTapAPI.Controllers;
 
@@ -35,9 +39,25 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
         return Ok(result);
     }
 
+    [HttpGet("get-by")]
+    public async Task<ActionResult<VideoItemModel>> GetById([FromQuery] GetByModel model)
+    {
+        var query = new GetByVideoQuery(model);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("search")]
+    public async Task<ActionResult<SearchResult<VideoItemModel>>> Search([FromQuery] VideoSearchModel model)
+    {
+        var query = new SearchVideosQuery(model);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
     [HttpPost]
     [Consumes("multipart/form-data")]
-    public async Task<ActionResult<VideoItemModel>> Create([FromForm] VideoCreateModel model)
+    public async Task<ActionResult<VideoProcessingResult>> Create([FromForm] VideoCreateModel model)
     {
         var command = new CreateVideoCommand(model);
         var result = await mediator.Send(command);
@@ -46,7 +66,7 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
 
     [HttpPut]
     [Consumes("multipart/form-data")]
-    public async Task<ActionResult<VideoItemModel>> Update([FromForm] VideoUpdateModel model)
+    public async Task<ActionResult<VideoProcessingResult>> Update([FromForm] VideoUpdateModel model)
     {
         var command = new UpdateVideoCommand(model);
         var result = await mediator.Send(command);

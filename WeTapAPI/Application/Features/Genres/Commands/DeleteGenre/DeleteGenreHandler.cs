@@ -10,9 +10,9 @@ namespace Application.Features.Genres.Commands.DeleteGenre;
 
 public class DeleteGenreHandler(IGenericRepository<GenreEntity, long> repo,
     IMapper mapper)
-    : IRequestHandler<DeleteGenreCommand, IEnumerable<GenreItemModel>>
+    : IRequestHandler<DeleteGenreCommand>
 {
-    public async Task<IEnumerable<GenreItemModel>> Handle(DeleteGenreCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteGenreCommand request, CancellationToken cancellationToken)
     {
         GenreEntity genre;
 
@@ -31,10 +31,5 @@ public class DeleteGenreHandler(IGenericRepository<GenreEntity, long> repo,
         //    await imageService.DeleteImageAsync(genre.Image); -- можливо потрібно, а можливо і ні
 
         await repo.DeleteAsync(genre.Id);
-
-        var entityList = await repo.ListAllAsync();
-        var modelList = mapper.Map<IEnumerable<GenreItemModel>>(entityList);
-
-        return modelList;
     }
 }

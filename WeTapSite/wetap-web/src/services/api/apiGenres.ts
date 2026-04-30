@@ -1,15 +1,13 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { createBaseQuery } from "../../utils/createBaseQuery.ts";
-import type { IPagedResult } from "../../types/aditional.ts";
-import type {
-    IGenreItem,
-    IGenreSearch,
-    IGenreCreate,
-    IGenreEdit,
-    IGenreDelete,
-    IGenreGetBySlug,
-} from "../../types/genre.ts";
 import { serialize } from "object-to-formdata";
+import type {IGenreItemResponse} from "../../types/Genre/IGenreItemResponse.ts";
+import type {IGenreSearchRequest} from "../../types/Genre/IGenreSearchRequest.ts";
+import type {IGetByRequest} from "../../types/Additional/IGetByRequest.ts";
+import type {IGenreCreateRequest} from "../../types/Genre/IGenreCreateRequest.ts";
+import type {IGenreEditRequest} from "../../types/Genre/IGenreEditRequest.ts";
+import type {IGenreDeleteRequest} from "../../types/Genre/IGenreDeleteRequest.ts";
+import type {IPagedResult} from "../../types/Additional/IPagedResult.ts";
 
 export const apiGenres = createApi({
     reducerPath: "api/genres",
@@ -17,26 +15,26 @@ export const apiGenres = createApi({
     tagTypes: ["Genres", "Genre"],
     endpoints: (builder) => ({
 
-        searchGenres: builder.query<IPagedResult<IGenreItem>, IGenreSearch>({
+        searchGenres: builder.query<IPagedResult<IGenreItemResponse>, IGenreSearchRequest>({
             query: (params) => ({
-                url: "Search",
+                url: "search",
                 method: "GET",
                 params,
             }),
             providesTags: ["Genres"],
         }),
 
-        getBySlug: builder.query<IGenreItem, IGenreGetBySlug>({
-            query: ({ slug }) => ({
-                url: "BySlug",
+        getBy: builder.query<IGenreItemResponse, IGetByRequest>({
+            query: (par) => ({
+                url: "get-by",
                 method: "GET",
-                params: { slug },
+                params: par,
             }),
             providesTags: (result) =>
                 result ? [{ type: "Genre", id: result.id }] : ["Genre"],
         }),
 
-        createGenre: builder.mutation<IGenreItem, IGenreCreate>({
+        createGenre: builder.mutation<IGenreItemResponse, IGenreCreateRequest>({
             query: (body) => ({
                 url: "",
                 method: "POST",
@@ -45,7 +43,7 @@ export const apiGenres = createApi({
             invalidatesTags: ["Genres"],
         }),
 
-        editGenre: builder.mutation<IGenreItem, IGenreEdit>({
+        editGenre: builder.mutation<IGenreItemResponse, IGenreEditRequest>({
             query: (body) => ({
                 url: "",
                 method: "PUT",
@@ -54,7 +52,7 @@ export const apiGenres = createApi({
             invalidatesTags: ["Genres"],
         }),
 
-        deleteGenre: builder.mutation<void, IGenreDelete>({
+        deleteGenre: builder.mutation<void, IGenreDeleteRequest>({
             query: (body) => ({
                 url: "",
                 method: "DELETE",
@@ -67,7 +65,7 @@ export const apiGenres = createApi({
 
 export const {
     useSearchGenresQuery,
-    useGetBySlugQuery,
+    useGetByQuery,
     useCreateGenreMutation,
     useEditGenreMutation,
     useDeleteGenreMutation,

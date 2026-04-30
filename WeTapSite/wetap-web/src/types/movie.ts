@@ -1,5 +1,5 @@
-import type {IGenreItem} from "./genre.ts";
 import type {IBaseSearch} from "./aditional.ts";
+import type {IGenreItemResponse} from "./Genre/IGenreItemResponse.ts";
 
 export interface IMovieCommentCreate {
     movieId: number;
@@ -57,7 +57,7 @@ export interface IMovieItem {
     image?: string;
     video?: string;
     trailerUrl?: string;
-    genres: IGenreItem[];
+    genres: IGenreItemResponse[];
     likesCount: number;
     dislikesCount: number;
     comments: IMovieCommentItem[];
