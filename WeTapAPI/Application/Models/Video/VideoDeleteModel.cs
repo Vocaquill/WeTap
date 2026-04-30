@@ -1,6 +1,6 @@
-﻿namespace Application.Models.Video;
+namespace Application.Models.Video;
 
 public class VideoDeleteModel
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 }

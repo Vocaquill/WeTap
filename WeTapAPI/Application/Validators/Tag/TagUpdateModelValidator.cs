@@ -1,7 +1,8 @@
 using Application.Models.Tag;
 using Domain;
+using Domain.Entities.Tag;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
+using Application.Validators.Extensions;
 
 namespace Application.Validators.Tag;
 
@@ -12,30 +13,19 @@ public class TagUpdateModelValidator : AbstractValidator<TagUpdateModel>
         RuleFor(x => x.Id)
             .Cascade(CascadeMode.Stop)
             .GreaterThan(0).WithMessage("Id повинен бути більше 0")
-            .MustAsync(async (id, cancellation) =>
-                await db.Tags.AnyAsync(
-                    t => t.Id == id && !t.IsDeleted,
-                    cancellation))
-            .WithMessage("Тег не знайдено");
+            .MustExistAsync<TagUpdateModel, TagEntity, long>(db, "Тег не знайдено");
 
         RuleFor(x => x.Name)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Назва тегу є обов'язковою")
-            .MaximumLength(100).WithMessage("Назва тегу не повинна перевищувати 100 символів");
+            .MaximumLength(100).WithMessage("Назва тегу не повинна перевищувати 100 символів")
+            .UniquePropertyUpdateAsync<TagUpdateModel, TagEntity, long>(db, "Name", x => x.Id, "Інший тег з такою назвою вже існує");
 
         RuleFor(x => x.Slug)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Слаг є обов'язковим")
             .MaximumLength(100).WithMessage("Слаг не повинен перевищувати 100 символів")
-            .MustAsync(async (model, slug, cancellation) =>
-            {
-                var normalized = slug!.Trim().ToLower().Replace(" ", "-");
-                return !await db.Tags.AnyAsync(
-                    t => !t.IsDeleted &&
-                         t.Slug == normalized &&
-                         t.Id != model.Id,
-                    cancellation);
-            })
-            .WithMessage("Інший тег з таким слагом вже існує");
+            .IsSlug()
+            .UniqueSlugUpdateAsync<TagUpdateModel, TagEntity, long>(db, x => x.Id, "Інший тег з таким слагом вже існує");
     }
 }

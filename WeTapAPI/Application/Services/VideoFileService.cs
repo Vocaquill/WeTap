@@ -1,11 +1,11 @@
 using Application.Interfaces;
+using Application.Models.VideoProcessing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
 using Xabe.FFmpeg;
 using Xabe.FFmpeg.Downloader;
-
-using System.Collections.Concurrent;
-using Application.Models.VideoProcessing;
 
 namespace Application.Services;
 
@@ -52,8 +52,22 @@ public class VideoFileService : IVideoFileService
 
     public async Task<string> SaveVideoWithProgressAsync(string filePath, Action<VideoProgressUpdate> onProgress)
     {
-        // Завантаження FFmpeg
-        await FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official, _ffmpegPath);
+        // Визначаємо ім'я файлу залежно від ОС (Windows використовує .exe)
+        string ffmpegFileName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "ffmpeg.exe" : "ffmpeg";
+        string ffmpegFullExecutablePath = Path.Combine(_ffmpegPath, ffmpegFileName);
+
+        // Перевіряємо, чи існує файл FFmpeg, щоб не завантажувати його щоразу
+        if (!File.Exists(ffmpegFullExecutablePath))
+        {
+            // Повідомляємо про початок завантаження
+            onProgress?.Invoke(new VideoProgressUpdate { Status = "Downloading FFmpeg...", Percentage = 0 });
+
+            // Завантаження FFmpeg
+            await FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official, _ffmpegPath);
+        }
+
+        // Вказуємо бібліотеці шлях до завантажених файлів
+        FFmpeg.SetExecutablesPath(_ffmpegPath);
 
         var mediaInfo = await FFmpeg.GetMediaInfo(filePath);
         string baseFileName = $"{Guid.NewGuid()}.mp4";

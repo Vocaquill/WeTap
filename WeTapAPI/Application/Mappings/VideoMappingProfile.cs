@@ -1,6 +1,7 @@
 using Application.Models.Video;
 using AutoMapper;
 using Domain.Entities.Video;
+using System.Globalization;
 
 namespace Application.Mappings;
 
@@ -8,13 +9,18 @@ public class VideoMappingProfile : Profile
 {
     public VideoMappingProfile()
     {
+        var ukraineCulture = new CultureInfo("uk-UA");
+
         CreateMap<VideoEntity, VideoItemModel>()
             .ForMember(x => x.Genres,
                 opt => opt.MapFrom(x =>
                     x.VideoGenres.Select(mg => mg.Genre)))
             .ForMember(x => x.Tags,
                 opt => opt.MapFrom(x =>
-                    x.VideoTags.Select(mt => mt.Tag)));
+                    x.VideoTags.Select(mt => mt.Tag)))
+            .ForMember(dest => dest.DateCreated,
+                opt => opt.MapFrom(src =>
+                    src.DateCreated.ToString("d MMMM yyyy'р.' 'о' HH:mm", ukraineCulture)));
 
         CreateMap<VideoPrivacyEntity, VideoPrivacyItemModel>();
 

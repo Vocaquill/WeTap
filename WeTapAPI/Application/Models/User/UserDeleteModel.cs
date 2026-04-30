@@ -1,6 +1,6 @@
-﻿namespace Application.Models.User;
+namespace Application.Models.User;
 
 public class UserDeleteModel
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 }

@@ -1,7 +1,8 @@
 using Application.Models.Tag;
 using Domain;
+using Domain.Entities.Tag;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
+using Application.Validators.Extensions;
 
 namespace Application.Validators.Tag;
 
@@ -12,10 +13,6 @@ public class TagDeleteModelValidator : AbstractValidator<TagDeleteModel>
         RuleFor(x => x.Id)
             .Cascade(CascadeMode.Stop)
             .GreaterThan(0).WithMessage("Id повинен бути більше 0")
-            .MustAsync(async (id, cancellation) =>
-                await db.Tags.AnyAsync(
-                    t => t.Id == id && !t.IsDeleted,
-                    cancellation))
-            .WithMessage("Тег не знайдено");
+            .MustExistAsync<TagDeleteModel, TagEntity, long>(db, "Тег не знайдено");
     }
 }

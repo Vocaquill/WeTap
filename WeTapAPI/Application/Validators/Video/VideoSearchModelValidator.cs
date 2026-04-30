@@ -29,6 +29,6 @@ public class VideoSearchModelValidator : AbstractValidator<VideoSearchModel>
 
         RuleFor(x => x.SortBy)
             .Must(sortBy => string.IsNullOrEmpty(sortBy) || new[] { "date", "views", "rating" }.Contains(sortBy.ToLower()))
-            .WithMessage("Обрано недопустиме поле для сортування");
+            .WithMessage("Обрано недопустиме поле для сортування, доступні такі поля: date, views, rating");
     }
 }

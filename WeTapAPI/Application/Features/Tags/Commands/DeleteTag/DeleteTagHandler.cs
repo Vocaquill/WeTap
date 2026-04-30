@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.Tags.Commands.DeleteTag;
 
 public class DeleteTagHandler(IGenericRepository<TagEntity, long> repo, IMapper mapper)
-    : IRequestHandler<DeleteTagCommand, IEnumerable<TagItemModel>>
+    : IRequestHandler<DeleteTagCommand>
 {
-    public async Task<IEnumerable<TagItemModel>> Handle(
+    public async Task Handle(
         DeleteTagCommand request,
         CancellationToken cancellationToken)
     {
@@ -24,12 +24,9 @@ public class DeleteTagHandler(IGenericRepository<TagEntity, long> repo, IMapper 
         }
         catch (Exception)
         {
-            throw new Exception("Tag not found");
+            throw new Exception("Тег не знайдено");
         }
 
         await repo.DeleteAsync(tag.Id);
-
-        var entityList = await repo.ListAllAsync();
-        return mapper.Map<IEnumerable<TagItemModel>>(entityList);
     }
 }

@@ -29,7 +29,7 @@ public class GetByLanguageHandler(
         }
 
         if (entity == null)
-            throw new KeyNotFoundException("Language not found");
+            throw new KeyNotFoundException("Мову не знайдено");
 
         return entity == null ? null : mapper.Map<LanguageItemModel>(entity);
     }

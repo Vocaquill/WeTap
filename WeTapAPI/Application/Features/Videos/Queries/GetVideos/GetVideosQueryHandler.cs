@@ -14,6 +14,7 @@ public class GetVideosQueryHandler(IGenericRepository<VideoEntity, long> repo, I
     public async Task<IEnumerable<VideoItemModel>> Handle(GetVideosQuery request, CancellationToken cancellationToken)
     {
         return await repo.AsQurable()
+            .Where(x => x.Video != "processing...")
             .ProjectTo<VideoItemModel>(mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
     }

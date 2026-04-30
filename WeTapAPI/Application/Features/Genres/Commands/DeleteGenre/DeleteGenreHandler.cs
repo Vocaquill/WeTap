@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Application.Models.Genre;
 using AutoMapper;
 using Domain;
@@ -24,7 +24,7 @@ public class DeleteGenreHandler(IGenericRepository<GenreEntity, long> repo,
         }
         catch (Exception)
         {
-            throw new Exception("Genre not found");
+            throw new Exception("Жанр не знайдено");
         }
 
         //if (!string.IsNullOrEmpty(genre.Image))

@@ -1,10 +1,12 @@
 using Domain.Entities.Video;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities.Genre;
 
 [Table("tbl_genres")]
+[Index(nameof(Slug), IsUnique = true)]
 public class GenreEntity : BaseEntity<long>
 {
     [StringLength(255)]

@@ -15,6 +15,7 @@ using Quartz;
 using FluentValidation;
 using Application.Validators.Video;
 using Microsoft.AspNetCore.Http.Features;
+using System.Globalization;
 using Hangfire;
 using Hangfire.PostgreSql;
 
@@ -24,6 +25,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        // FluentValidation Global Configuration
+        ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("uk");
+
         //services
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IUserService, UserService>();

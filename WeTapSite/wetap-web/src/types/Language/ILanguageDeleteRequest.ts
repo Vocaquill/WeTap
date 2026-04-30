@@ -1,3 +1,3 @@
 export interface ILanguageDeleteRequest {
-    ids: number[];
+    id: number;
 }

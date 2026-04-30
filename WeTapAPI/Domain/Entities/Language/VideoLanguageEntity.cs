@@ -1,10 +1,12 @@
 ﻿using Domain.Entities.Video;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.Language;
 
 [Table("tbl_video_languages")]
+[Index(nameof(LanguageCode), IsUnique = true)]
 public class VideoLanguageEntity : BaseEntity<long>
 {
     [Required]

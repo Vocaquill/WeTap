@@ -52,6 +52,9 @@ namespace Domain.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
                     b.ToTable("tbl_genres");
                 });
 
@@ -228,6 +231,9 @@ namespace Domain.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LanguageCode")
+                        .IsUnique();
+
                     b.ToTable("tbl_video_languages");
                 });
 
@@ -256,6 +262,12 @@ namespace Domain.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
 
                     b.ToTable("tbl_tags");
                 });
@@ -311,6 +323,9 @@ namespace Domain.Migrations
                     b.HasIndex("LanguageId");
 
                     b.HasIndex("PrivacyId");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
 
                     b.ToTable("tbl_videos");
                 });

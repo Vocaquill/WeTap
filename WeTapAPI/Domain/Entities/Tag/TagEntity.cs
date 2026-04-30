@@ -1,10 +1,13 @@
 using Domain.Entities.Video;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities.Tag;
 
 [Table("tbl_tags")]
+[Index(nameof(Name), IsUnique = true)]
+[Index(nameof(Slug), IsUnique = true)]
 public class TagEntity : BaseEntity<long>
 {
     [Required]
