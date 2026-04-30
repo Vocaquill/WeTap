@@ -85,6 +85,15 @@ public class VideoUpdateModelValidator : AbstractValidator<VideoUpdateModel>
             })
             .WithMessage("Мову не знайдено");
 
+        RuleFor(x => x.PrivacyId)
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty().WithMessage("Приватність є обов'язковою")
+            .MustAsync(async (privacyId, cancellation) =>
+            {
+                return await db.VideoPrivacies.AnyAsync(p => p.Id == privacyId, cancellation);
+            })
+            .WithMessage("Приватність не знайдено");
+
         RuleFor(x => x.Image)
             .IsImage();
     }
