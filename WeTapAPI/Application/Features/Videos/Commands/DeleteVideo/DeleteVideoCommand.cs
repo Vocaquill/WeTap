@@ -5,4 +5,4 @@ using MediatR;
 namespace Application.Features.Videos.Commands.DeleteVideo;
 
 public record DeleteVideoCommand(VideoDeleteModel Model) 
-    : IRequest<IEnumerable<VideoItemModel>> {}
+    : IRequest {}

@@ -74,10 +74,10 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     }
 
     [HttpDelete]
-    public async Task<ActionResult<IEnumerable<VideoItemModel>>> Delete([FromBody] VideoDeleteModel model)
+    public async Task<ActionResult> Delete([FromBody] VideoDeleteModel model)
     {
         var command = new DeleteVideoCommand(model);
-        var result = await mediator.Send(command);
-        return Ok(result);
+        await mediator.Send(command);
+        return Ok();
     }
 }
