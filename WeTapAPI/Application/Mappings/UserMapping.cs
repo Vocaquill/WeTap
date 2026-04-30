@@ -5,9 +5,9 @@ using Domain.Entities.Identity;
 
 namespace Application.Mappings;
 
-public class UserMapper: Profile
+public class UserMapping: Profile
 {
-    public UserMapper()
+    public UserMapping()
     {
         CreateMap<UserEntity, UserItemModel>()
             .ForMember(dest => dest.IsLoginGoogle, opt => opt.MapFrom(src => src.UserLogins!.Any(l => l.LoginProvider == "Google")))

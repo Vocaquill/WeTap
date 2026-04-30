@@ -1,15 +1,17 @@
 using Application.Constants;
 using Application.Interfaces;
 using Application.Models.Genre;
-using Application.Models.Video;
 using Application.Models.Tag;
+using Application.Models.Video;
 using AutoMapper;
 using Domain;
 using Domain.Entities.Genre;
-using Domain.Entities.Video;
+using Domain.Entities.Identity;
 using Domain.Entities.Tag;
 using Domain.Entities.Language;
 using Application.Models.Language;
+using Domain.Entities.Video;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
@@ -17,6 +19,7 @@ namespace Application.Services;
 
 public class SeederService(
     AppDbContext appDbContext,
+    RoleManager<RoleEntity> roleManager,
     IMapper mapper,
     IImageService imageService,
     IVideoFileService videoFileService) : ISeederService
@@ -179,6 +182,25 @@ public class SeederService(
             var languages = languagesData.Select(l => mapper.Map<VideoLanguageEntity>(l)).ToList();
             await appDbContext.VideoLanguages.AddRangeAsync(languages);
             await appDbContext.SaveChangesAsync();
+        }
+    }
+
+    public async Task SeedRolesAsync()
+    {
+        foreach (var roleName in Roles.AllRoles)
+        {
+            if (!await roleManager.RoleExistsAsync(roleName))
+            {
+                var result = await roleManager.CreateAsync(new RoleEntity
+                {
+                    Name = roleName
+                });
+
+                if (!result.Succeeded)
+                {
+                    Console.WriteLine($"Error Create Role {roleName}");
+                }
+            }
         }
     }
 
