@@ -29,6 +29,8 @@ public static class DependencyInjection
         ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("uk");
 
         //services
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<ISeederService, SeederService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IVideoFileService, VideoFileService>();
@@ -62,6 +64,9 @@ public static class DependencyInjection
                 .ForJob(migrationJobKey)
                 .WithIdentity("DbMigrationJob-trigger")
                 .StartNow());
+
+            var roleJobKey = new JobKey(nameof(RoleSeederJob));
+            q.AddJob<RoleSeederJob>(opts => opts.WithIdentity(roleJobKey).StoreDurably());
 
             var tagJobKey = new JobKey(nameof(TagSeederJob));
             q.AddJob<TagSeederJob>(opts => opts.WithIdentity(tagJobKey).StoreDurably());

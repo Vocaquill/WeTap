@@ -19,7 +19,10 @@ public class SeederOrchestratorListener : JobListenerSupport
 
         if (jobKey == nameof(DbMigrationJob))
         {
-            // After migration, start Tag, Genre, Privacy, and Language seeders in parallel
+            await context.Scheduler.TriggerJob(new JobKey(nameof(RoleSeederJob)), cancellationToken);
+        }
+        else if (jobKey == nameof(RoleSeederJob))
+        {
             await context.Scheduler.TriggerJob(new JobKey(nameof(TagSeederJob)), cancellationToken);
             await context.Scheduler.TriggerJob(new JobKey(nameof(GenreSeederJob)), cancellationToken);
             await context.Scheduler.TriggerJob(new JobKey(nameof(VideoPrivacySeederJob)), cancellationToken);
