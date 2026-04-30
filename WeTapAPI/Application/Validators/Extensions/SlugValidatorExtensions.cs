@@ -1,7 +1,7 @@
 using FluentValidation;
 using System.Text.RegularExpressions;
 
-namespace Application.Validators;
+namespace Application.Validators.Extensions;
 
 public static class SlugValidatorExtensions
 {

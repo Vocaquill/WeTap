@@ -1,5 +1,5 @@
 using FluentValidation;
-using Application.Validators;
+using Application.Validators.Extensions;
 using Application.Models.Genre;
 
 namespace Application.Validators.Genre;

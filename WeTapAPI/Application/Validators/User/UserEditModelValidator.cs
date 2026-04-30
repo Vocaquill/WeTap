@@ -1,6 +1,6 @@
 using Application.Models.User;
 using FluentValidation;
-using Application.Validators;
+using Application.Validators.Extensions;
 
 namespace Application.Validators.User;
 

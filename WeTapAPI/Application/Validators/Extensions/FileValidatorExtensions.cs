@@ -2,7 +2,7 @@ using Application.Constants;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.Validators;
+namespace Application.Validators.Extensions;
 
 public static class FileValidatorExtensions
 {

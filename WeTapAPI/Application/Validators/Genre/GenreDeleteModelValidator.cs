@@ -1,7 +1,8 @@
 using Application.Models.Genre;
 using Domain;
+using Domain.Entities.Genre;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
+using Application.Validators.Extensions;
 
 namespace Application.Validators.Genre;
 
@@ -12,10 +13,6 @@ public class GenreDeleteModelValidator : AbstractValidator<GenreDeleteModel>
         RuleFor(x => x.Id)
             .Cascade(CascadeMode.Stop)
             .GreaterThan(0).WithMessage("Id повинен бути більше 0")
-            .MustAsync(async (id, cancellation) =>
-                await db.Genres.AnyAsync(
-                    g => g.Id == id && !g.IsDeleted,
-                    cancellation))
-            .WithMessage("Жанр не знайдено");
+            .MustExistAsync<GenreDeleteModel, GenreEntity, long>(db, "Жанр не знайдено");
     }
 }

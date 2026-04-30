@@ -1,8 +1,11 @@
 using Application.Models.Video;
 using Domain;
+using Domain.Entities.Genre;
+using Domain.Entities.Language;
+using Domain.Entities.Tag;
+using Domain.Entities.Video;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using Application.Validators;
+using Application.Validators.Extensions;
 
 namespace Application.Validators.Video;
 
@@ -20,44 +23,15 @@ public class VideoCreateModelValidator : AbstractValidator<VideoCreateModel>
             .NotEmpty().WithMessage("Слаг є обов'язковим")
             .MaximumLength(255).WithMessage("Слаг повинен містити не більше 255 символів")
             .IsSlug()
-            .MustAsync(async (slug, cancellation) =>
-            {
-                var normalized = slug!.Trim().ToLower().Replace(" ", "-");
-                return !await db.Videos.AnyAsync(
-                    v => !v.IsDeleted && v.Slug == normalized,
-                    cancellation);
-            })
-            .WithMessage("Відео з таким слагом вже існує");
+            .UniqueSlugAsync<VideoCreateModel, VideoEntity, long>(db, "Відео з таким слагом вже існує");
 
         RuleFor(x => x.GenreIds)
             .Cascade(CascadeMode.Stop)
-            .MustAsync(async (genreIds, cancellation) =>
-            {
-                if (genreIds == null || genreIds.Length == 0) return true;
-
-                var count = await db.Genres
-                    .CountAsync(g =>
-                        genreIds.Contains(g.Id) && !g.IsDeleted,
-                        cancellation);
-
-                return count == genreIds.Distinct().Count();
-            })
-            .WithMessage("Один або кілька обраних жанрів не знайдено");
+            .MustExistAsync<VideoCreateModel, GenreEntity, long>(db, "Один або кілька обраних жанрів не знайдено");
 
         RuleFor(x => x.TagIds)
             .Cascade(CascadeMode.Stop)
-            .MustAsync(async (tagIds, cancellation) =>
-            {
-                if (tagIds == null || tagIds.Length == 0) return true;
-
-                var count = await db.Tags
-                    .CountAsync(t =>
-                        tagIds.Contains(t.Id) && !t.IsDeleted,
-                        cancellation);
-
-                return count == tagIds.Distinct().Count();
-            })
-            .WithMessage("Один або кілька обраних тегів не знайдено");
+            .MustExistAsync<VideoCreateModel, TagEntity, long>(db, "Один або кілька обраних тегів не знайдено");
 
         RuleFor(x => x.Video)
             .NotNull().WithMessage("Відео-файл є обов'язковим")
@@ -69,20 +43,12 @@ public class VideoCreateModelValidator : AbstractValidator<VideoCreateModel>
         RuleFor(x => x.LanguageId)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Мова є обов'язковою")
-            .MustAsync(async (langId, cancellation) =>
-            {
-                return await db.VideoLanguages.AnyAsync(l => l.Id == langId, cancellation);
-            })
-            .WithMessage("Мову не знайдено");
+            .MustExistAsync<VideoCreateModel, VideoLanguageEntity, long>(db, "Мову не знайдено");
 
         RuleFor(x => x.PrivacyId)
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Приватність є обов'язковою")
-            .MustAsync(async (privacyId, cancellation) =>
-            {
-                return await db.VideoPrivacies.AnyAsync(p => p.Id == privacyId, cancellation);
-            })
-            .WithMessage("Приватність не знайдено");
+            .MustExistAsync<VideoCreateModel, VideoPrivacyEntity, long>(db, "Приватність не знайдено");
 
         RuleFor(x => x.Image)
             .IsImage();

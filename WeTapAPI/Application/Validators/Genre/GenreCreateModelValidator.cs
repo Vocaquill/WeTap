@@ -1,8 +1,8 @@
 using Application.Models.Genre;
 using Domain;
+using Domain.Entities.Genre;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using Application.Validators;
+using Application.Validators.Extensions;
 
 namespace Application.Validators.Genre;
 
@@ -20,14 +20,7 @@ public class GenreCreateModelValidator : AbstractValidator<GenreCreateModel>
             .NotEmpty().WithMessage("Слаг є обов'язковим")
             .MaximumLength(100).WithMessage("Слаг не повинен перевищувати 100 символів")
             .IsSlug()
-            .MustAsync(async (slug, cancellation) =>
-            {
-                var normalized = slug!.Trim().ToLower().Replace(" ", "-");
-                return !await db.Genres.AnyAsync(
-                    g => !g.IsDeleted && g.Slug == normalized,
-                    cancellation);
-            })
-            .WithMessage("Жанр з таким слагом вже існує");
+            .UniqueSlugAsync<GenreCreateModel, GenreEntity, long>(db, "Жанр з таким слагом вже існує");
 
         RuleFor(x => x.Image)
             .IsImage();

@@ -1,7 +1,8 @@
 using Application.Models.Language;
 using Domain;
+using Domain.Entities.Language;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
+using Application.Validators.Extensions;
 
 namespace Application.Validators.Language;
 
@@ -18,10 +19,6 @@ public class LanguageCreateModelValidator : AbstractValidator<LanguageCreateMode
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage("Код мови є обов'язковим")
             .MaximumLength(50).WithMessage("Код мови повинен містити не більше 50 символів")
-            .MustAsync(async (code, cancellation) =>
-            {
-                return !await db.VideoLanguages.AnyAsync(l => l.LanguageCode == code, cancellation);
-            })
-            .WithMessage("Мова з таким кодом вже існує");
+            .UniquePropertyAsync<LanguageCreateModel, VideoLanguageEntity, long>(db, "LanguageCode", "Мова з таким кодом вже існує");
     }
 }
