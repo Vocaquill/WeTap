@@ -28,6 +28,8 @@ public static class DependencyInjection
         // FluentValidation Global Configuration
         ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("uk");
 
+        services.AddHttpContextAccessor();
+
         //services
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IUserService, UserService>();
