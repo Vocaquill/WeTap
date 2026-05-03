@@ -79,11 +79,15 @@ public class AppDbContext :
                 .IsRequired();
         });
 
+        modelBuilder.Entity<ChannelEntity>()
+            .Property(c => c.Id)
+            .ValueGeneratedNever();
+
         modelBuilder.Entity<ChannelEntity>(c =>
         {
             c.HasOne(c => c.Author)
                 .WithOne(u => u.Channel)
-                .HasForeignKey<ChannelEntity>(c => c.UserId)
+                .HasForeignKey<ChannelEntity>(c => c.Id)
                 .IsRequired();
         });
 

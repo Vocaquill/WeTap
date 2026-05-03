@@ -31,7 +31,7 @@ public class ChannelCreateModelValidator : AbstractValidator<ChannelCreateModel>
                 if (string.IsNullOrEmpty(userIdClaim) || !long.TryParse(userIdClaim, out var userId))
                     return true;
 
-                return !await db.Channels.AnyAsync(x => x.UserId == userId && !x.IsDeleted, cancellation);
+                return !await db.Channels.AnyAsync(x => x.Id == userId && !x.IsDeleted, cancellation);
             })
             .WithMessage("У користувача вже є канал");
 

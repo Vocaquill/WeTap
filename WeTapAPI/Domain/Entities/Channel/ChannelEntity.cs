@@ -25,7 +25,6 @@ public class ChannelEntity : BaseEntity<long>
     [StringLength(255)]
     public string? BannerImage { get; set; }
 
-    public long UserId { get; set; }
     public virtual UserEntity? Author { get; set; }
 
     public virtual ICollection<VideoEntity>? Videos { get; set; } = new List<VideoEntity>();

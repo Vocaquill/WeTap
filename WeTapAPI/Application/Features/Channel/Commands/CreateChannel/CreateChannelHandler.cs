@@ -15,7 +15,7 @@ public class CreateChannelHandler(
     public async Task<ChannelItemModel> Handle(CreateChannelCommand request, CancellationToken cancellationToken)
     {
         var entity = mapper.Map<ChannelEntity>(request.Model);
-        entity.UserId = 1; // тут буде в майбутньому юзерід з токена
+        entity.Id = 1; // тут буде в майбутньому юзерід з токена
 
         if (request.Model.AvatarImage != null)
         {
