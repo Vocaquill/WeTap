@@ -3,6 +3,7 @@ using Domain.Entities.Identity;
 using Domain.Entities.Tag;
 using Domain.Entities.Video;
 using Domain.Entities.Language;
+using Domain.Entities.Channel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,8 @@ public class AppDbContext :
     public DbSet<TagEntity> Tags { get; set; }
     public DbSet<VideoPrivacyEntity> VideoPrivacies { get; set; }
     public DbSet<VideoLanguageEntity> VideoLanguages { get; set; }
+    public DbSet<ChannelEntity> Channels { get; set; }
+    public DbSet<ChannelSubscriberEntity> ChannelSubscribers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -73,6 +76,33 @@ public class AppDbContext :
             vt.HasOne(x => x.Tag)
                 .WithMany(t => t.VideoTags)
                 .HasForeignKey(x => x.TagId)
+                .IsRequired();
+        });
+
+        modelBuilder.Entity<ChannelEntity>()
+            .Property(c => c.Id)
+            .ValueGeneratedNever();
+
+        modelBuilder.Entity<ChannelEntity>(c =>
+        {
+            c.HasOne(c => c.Author)
+                .WithOne(u => u.Channel)
+                .HasForeignKey<ChannelEntity>(c => c.Id)
+                .IsRequired();
+        });
+
+        modelBuilder.Entity<ChannelSubscriberEntity>(cs =>
+        {
+            cs.HasKey(x => new { x.ChannelId, x.UserId });
+
+            cs.HasOne(x => x.Channel)
+                .WithMany(c => c.Subscribers)
+                .HasForeignKey(x => x.ChannelId)
+                .IsRequired();
+
+            cs.HasOne(x => x.User)
+                .WithMany(u => u.SubscribedChannels)
+                .HasForeignKey(x => x.UserId)
                 .IsRequired();
         });
     }
