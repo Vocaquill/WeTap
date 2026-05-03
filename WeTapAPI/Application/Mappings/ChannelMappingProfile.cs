@@ -13,5 +13,10 @@ public class ChannelMappingProfile : Profile
         CreateMap<ChannelCreateModel, ChannelEntity>()
             .ForMember(dest => dest.AvatarImage, opt => opt.Ignore())
             .ForMember(dest => dest.BannerImage, opt => opt.Ignore());
+
+        CreateMap<ChannelUpdateModel, ChannelEntity>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.AvatarImage, opt => opt.Ignore())
+            .ForMember(dest => dest.BannerImage, opt => opt.Ignore());
     }
 }
