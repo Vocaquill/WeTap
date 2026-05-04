@@ -8,8 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Genres.Commands.DeleteGenre;
 
-public class DeleteGenreHandler(IGenericRepository<GenreEntity, long> repo,
-    IMapper mapper)
+public class DeleteGenreHandler(IGenericRepository<GenreEntity, long> repo)
     : IRequestHandler<DeleteGenreCommand>
 {
     public async Task Handle(DeleteGenreCommand request, CancellationToken cancellationToken)

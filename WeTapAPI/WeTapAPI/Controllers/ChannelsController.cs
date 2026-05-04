@@ -1,4 +1,5 @@
 using Application.Features.Channel.Commands.CreateChannel;
+using Application.Features.Channel.Commands.DeleteChannel;
 using Application.Features.Channel.Commands.UpdateChannel;
 using Application.Models.Channel;
 using MediatR;
@@ -28,5 +29,13 @@ public class ChannelsController(IMediator mediator) : ControllerBase
         var command = new UpdateChannelCommand(model);
         var result = await mediator.Send(command);
         return Ok(result);
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> Delete([FromBody] ChannelDeleteModel model)
+    {
+        var command = new DeleteChannelCommand(model);
+        await mediator.Send(command);
+        return Ok();
     }
 }
