@@ -1,7 +1,9 @@
 using Application.Features.Channel.Commands.CreateChannel;
 using Application.Features.Channel.Commands.DeleteChannel;
 using Application.Features.Channel.Commands.UpdateChannel;
+using Application.Features.Channel.Queries.SearchChannels;
 using Application.Models.Channel;
+using Application.Models.Search;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +15,14 @@ namespace WeTapAPI.Controllers;
 [Route("api/[controller]")]
 public class ChannelsController(IMediator mediator) : ControllerBase
 {
+    [HttpGet("search")]
+    public async Task<ActionResult<SearchResult<ChannelItemModel>>> Search([FromQuery] ChannelSearchModel model)
+    {
+        var query = new SearchChannelsQuery(model);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
     [HttpPost]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<ChannelItemModel>> Create([FromForm] ChannelCreateModel model)
