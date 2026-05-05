@@ -1,5 +1,6 @@
 using Application.Features.Channel.Commands.CreateChannel;
 using Application.Features.Channel.Commands.DeleteChannel;
+using Application.Features.Channel.Commands.ToggleChannelSubscription;
 using Application.Features.Channel.Commands.UpdateChannel;
 using Application.Features.Channel.Queries.SearchChannels;
 using Application.Models.Channel;
@@ -45,6 +46,14 @@ public class ChannelsController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> Delete([FromBody] ChannelDeleteModel model)
     {
         var command = new DeleteChannelCommand(model);
+        await mediator.Send(command);
+        return Ok();
+    }
+
+    [HttpPost("subscribe")]
+    public async Task<IActionResult> Subscribe([FromBody] ChannelSubscriptionModel model)
+    {
+        var command = new ToggleChannelSubscriptionCommand(model);
         await mediator.Send(command);
         return Ok();
     }

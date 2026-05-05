@@ -15,7 +15,13 @@ public class CreateChannelHandler(
     public async Task<ChannelItemModel> Handle(CreateChannelCommand request, CancellationToken cancellationToken)
     {
         var entity = mapper.Map<ChannelEntity>(request.Model);
-        entity.Id = 1; // тут буде в майбутньому юзерід з токена
+        long userId = 1; // тут буде в майбутньому юзерід з токена
+        entity.Id = userId;
+
+        if(repo.AsQurable().FirstOrDefault(x => x.Id == userId) != null)
+        {
+            throw new Exception("Канал з таким Id вже існує");
+        }
 
         if (request.Model.AvatarImage != null)
         {
