@@ -1,7 +1,7 @@
-﻿using Application.Features.Genres.Commands.DeleteGenre;
 using Application.Interfaces;
 using Domain.Entities.Channel;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Channel.Commands.DeleteChannel;
 
@@ -10,9 +10,19 @@ public class DeleteChannelHandler(IGenericRepository<ChannelEntity, long> repo)
 {
     public async Task Handle(DeleteChannelCommand request, CancellationToken cancellationToken)
     {
-        var entity = await repo.GetByIdAsync(request.Model.Id);
+        ChannelEntity channel;
 
-        entity!.IsDeleted = true;
-        await repo.UpdateAsync(entity);
+        try
+        {
+            channel = await repo.AsQurable().Where(x => x.Id == request.Model.Id && !x.IsDeleted).FirstAsync(cancellationToken);
+            if (channel == null)
+                throw new Exception();
+        }
+        catch (Exception)
+        {
+            throw new Exception("Канал не знайдено");
+        }
+
+        await repo.DeleteAsync(channel.Id);
     }
 }
