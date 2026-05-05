@@ -1,6 +1,7 @@
-using Domain.Entities.Language;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities.Comments;
+using Domain.Entities.Language;
 using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Entities.Video;
@@ -41,6 +42,9 @@ public class VideoEntity : BaseEntity<long>
     [ForeignKey(nameof(LanguageId))]
     public virtual VideoLanguageEntity? Language { get; set; }
 
-    public virtual ICollection<VideoGenreEntity>? VideoGenres { get; set; } = new List<VideoGenreEntity>();
-    public virtual ICollection<VideoTagEntity>? VideoTags { get; set; } = new List<VideoTagEntity>();
+    public virtual ICollection<VideoGenreEntity>? VideoGenres { get; set; } =
+        new List<VideoGenreEntity>();
+    public virtual ICollection<VideoTagEntity>? VideoTags { get; set; } =
+        new List<VideoTagEntity>();
+    public virtual ICollection<CommentsEntity> Comments { get; set; } = new List<CommentsEntity>();
 }
