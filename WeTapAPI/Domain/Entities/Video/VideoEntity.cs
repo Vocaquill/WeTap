@@ -2,6 +2,7 @@ using Domain.Entities.Language;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Domain.Entities.Channel;
 
 namespace Domain.Entities.Video;
 
@@ -40,6 +41,12 @@ public class VideoEntity : BaseEntity<long>
 
     [ForeignKey(nameof(LanguageId))]
     public virtual VideoLanguageEntity? Language { get; set; }
+
+    [Required]
+    public long ChannelId { get; set; }
+
+    [ForeignKey(nameof(ChannelId))]
+    public virtual ChannelEntity? Channel { get; set; }
 
     public virtual ICollection<VideoGenreEntity>? VideoGenres { get; set; } = new List<VideoGenreEntity>();
     public virtual ICollection<VideoTagEntity>? VideoTags { get; set; } = new List<VideoTagEntity>();

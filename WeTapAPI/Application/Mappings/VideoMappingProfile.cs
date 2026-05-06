@@ -18,6 +18,7 @@ public class VideoMappingProfile : Profile
             .ForMember(x => x.Tags,
                 opt => opt.MapFrom(x =>
                     x.VideoTags.Select(mt => mt.Tag)))
+            .ForMember(x => x.Channel, opt => opt.MapFrom(src => src.Channel))
             .ForMember(dest => dest.DateCreated,
                 opt => opt.MapFrom(src =>
                     src.DateCreated.ToString("d MMMM yyyy'р.' 'о' HH:mm", ukraineCulture)));

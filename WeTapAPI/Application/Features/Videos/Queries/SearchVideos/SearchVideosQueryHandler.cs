@@ -30,6 +30,7 @@ public class SearchVideosQueryHandler(
             query = query.Where(x =>
                 x.Title.ToLower().Contains(q) ||
                 x.Description.ToLower().Contains(q) ||
+                (x.Channel != null && x.Channel.Name.ToLower().Contains(q)) ||
                 (x.VideoTags != null && x.VideoTags.Any(vt => vt.Tag.Name.ToLower().Contains(q))) ||
                 (x.VideoGenres != null && x.VideoGenres.Any(vt => vt.Genre.Name.ToLower().Contains(q)))
             );
@@ -39,6 +40,12 @@ public class SearchVideosQueryHandler(
         {
             string title = request.Model.Title.Trim().ToLower();
             query = query.Where(x => x.Title.ToLower().Contains(title));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Model.ChannelName))
+        {
+            string channelName = request.Model.ChannelName.Trim().ToLower();
+            query = query.Where(x => x.Channel != null && x.Channel.Name.ToLower().Contains(channelName));
         }
 
         if (request.Model.GenreId.HasValue)
