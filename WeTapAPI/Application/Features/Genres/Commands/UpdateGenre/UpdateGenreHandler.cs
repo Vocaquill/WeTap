@@ -21,11 +21,6 @@ public class UpdateGenreHandler(IGenericRepository<GenreEntity, long> repo,
         long id = request.Model.Id;
         var genre = await repo.GetByIdAsync(id);
 
-        if (genre == null)
-        {
-            throw new Exception($"Жанр з id {id} не знайдено");
-        }
-
         var oldImage = genre.Image;
 
         mapper.Map(request.Model, genre);

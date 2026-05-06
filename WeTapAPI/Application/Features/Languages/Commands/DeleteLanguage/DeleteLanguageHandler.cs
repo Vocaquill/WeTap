@@ -16,11 +16,6 @@ public class DeleteLanguageHandler(IGenericRepository<VideoLanguageEntity, long>
         var entity = await repo.AsQurable()
             .FirstOrDefaultAsync(x => x.Id == request.Model.Id, cancellationToken);
 
-        if (entity == null)
-        {
-            throw new Exception($"Мову з Id {request.Model.Id} не знайдено.");
-        }
-
         entity.IsDeleted = true;
 
         await repo.SaveChangesAsync();

@@ -16,9 +16,6 @@ public class ChannelUpdateHandler(IGenericRepository<ChannelEntity, long> repo,
         long id = request.Model.Id;
         var entity = await repo.GetByIdAsync(id);
 
-        if (entity == null)
-            throw new Exception($"Каналу з id {id} не знайдено");
-
         mapper.Map(request.Model, entity);
 
         if (request.Model.AvatarImage != null)

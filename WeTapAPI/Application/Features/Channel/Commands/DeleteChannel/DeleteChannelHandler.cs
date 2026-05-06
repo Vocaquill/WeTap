@@ -10,18 +10,7 @@ public class DeleteChannelHandler(IGenericRepository<ChannelEntity, long> repo)
 {
     public async Task Handle(DeleteChannelCommand request, CancellationToken cancellationToken)
     {
-        ChannelEntity channel;
-
-        try
-        {
-            channel = await repo.AsQurable().Where(x => x.Id == request.Model.Id && !x.IsDeleted).FirstAsync(cancellationToken);
-            if (channel == null)
-                throw new Exception();
-        }
-        catch (Exception)
-        {
-            throw new Exception("Канал не знайдено");
-        }
+        var channel = await repo.GetByIdAsync(request.Model.Id);
 
         await repo.DeleteAsync(channel.Id);
     }
