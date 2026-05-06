@@ -61,7 +61,7 @@ namespace Domain.Migrations
                     b.HasIndex("NickName")
                         .IsUnique();
 
-                    b.ToTable("tbl_channels");
+                    b.ToTable("tbl_channels", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Channel.ChannelSubscriberEntity", b =>
@@ -79,7 +79,7 @@ namespace Domain.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("tbl_channel_subscribers");
+                    b.ToTable("tbl_channel_subscribers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Comments.CommentsEntity", b =>
@@ -130,7 +130,7 @@ namespace Domain.Migrations
 
                     b.HasIndex("VideoId");
 
-                    b.ToTable("tbl_comments");
+                    b.ToTable("tbl_comments", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Genre.GenreEntity", b =>
@@ -166,7 +166,7 @@ namespace Domain.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("tbl_genres");
+                    b.ToTable("tbl_genres", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Identity.RoleEntity", b =>
@@ -345,7 +345,7 @@ namespace Domain.Migrations
                     b.HasIndex("LanguageCode")
                         .IsUnique();
 
-                    b.ToTable("tbl_video_languages");
+                    b.ToTable("tbl_video_languages", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Tag.TagEntity", b =>
@@ -380,7 +380,7 @@ namespace Domain.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("tbl_tags");
+                    b.ToTable("tbl_tags", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Video.VideoEntity", b =>
@@ -443,7 +443,7 @@ namespace Domain.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("tbl_videos");
+                    b.ToTable("tbl_videos", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Video.VideoGenreEntity", b =>
@@ -458,7 +458,7 @@ namespace Domain.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("tbl_videos_genres");
+                    b.ToTable("tbl_videos_genres", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Video.VideoPrivacyEntity", b =>
@@ -487,7 +487,7 @@ namespace Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tbl_video_privacies");
+                    b.ToTable("tbl_video_privacies", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Video.VideoTagEntity", b =>
@@ -502,7 +502,7 @@ namespace Domain.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("tbl_videos_tags");
+                    b.ToTable("tbl_videos_tags", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
