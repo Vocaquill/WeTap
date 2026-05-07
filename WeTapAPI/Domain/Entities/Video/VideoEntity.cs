@@ -1,6 +1,7 @@
-using Domain.Entities.Language;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities.Comments;
+using Domain.Entities.Language;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Channel;
 

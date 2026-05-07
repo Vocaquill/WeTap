@@ -3,6 +3,7 @@ using System;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Domain.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260505183115_AddCommentsTable")]
+    partial class AddCommentsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,7 +64,7 @@ namespace Domain.Migrations
                     b.HasIndex("NickName")
                         .IsUnique();
 
-                    b.ToTable("tbl_channels", (string)null);
+                    b.ToTable("tbl_channels");
                 });
 
             modelBuilder.Entity("Domain.Entities.Channel.ChannelSubscriberEntity", b =>
@@ -79,7 +82,7 @@ namespace Domain.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("tbl_channel_subscribers", (string)null);
+                    b.ToTable("tbl_channel_subscribers");
                 });
 
             modelBuilder.Entity("Domain.Entities.Comments.CommentsEntity", b =>
@@ -130,7 +133,7 @@ namespace Domain.Migrations
 
                     b.HasIndex("VideoId");
 
-                    b.ToTable("tbl_comments", (string)null);
+                    b.ToTable("tbl_comments");
                 });
 
             modelBuilder.Entity("Domain.Entities.Genre.GenreEntity", b =>
@@ -166,7 +169,7 @@ namespace Domain.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("tbl_genres", (string)null);
+                    b.ToTable("tbl_genres");
                 });
 
             modelBuilder.Entity("Domain.Entities.Identity.RoleEntity", b =>
@@ -345,7 +348,7 @@ namespace Domain.Migrations
                     b.HasIndex("LanguageCode")
                         .IsUnique();
 
-                    b.ToTable("tbl_video_languages", (string)null);
+                    b.ToTable("tbl_video_languages");
                 });
 
             modelBuilder.Entity("Domain.Entities.Tag.TagEntity", b =>
@@ -380,7 +383,7 @@ namespace Domain.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("tbl_tags", (string)null);
+                    b.ToTable("tbl_tags");
                 });
 
             modelBuilder.Entity("Domain.Entities.Video.VideoEntity", b =>
@@ -443,7 +446,7 @@ namespace Domain.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("tbl_videos", (string)null);
+                    b.ToTable("tbl_videos");
                 });
 
             modelBuilder.Entity("Domain.Entities.Video.VideoGenreEntity", b =>
@@ -458,7 +461,7 @@ namespace Domain.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("tbl_videos_genres", (string)null);
+                    b.ToTable("tbl_videos_genres");
                 });
 
             modelBuilder.Entity("Domain.Entities.Video.VideoPrivacyEntity", b =>
@@ -487,7 +490,7 @@ namespace Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tbl_video_privacies", (string)null);
+                    b.ToTable("tbl_video_privacies");
                 });
 
             modelBuilder.Entity("Domain.Entities.Video.VideoTagEntity", b =>
@@ -502,7 +505,7 @@ namespace Domain.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("tbl_videos_tags", (string)null);
+                    b.ToTable("tbl_videos_tags");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
