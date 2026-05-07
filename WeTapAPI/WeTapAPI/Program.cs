@@ -44,6 +44,7 @@ try
     app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
     app.UseSerilogRequestLogging();
     app.UseCors("AllowAll");
+    app.UseAuthentication();
     app.UseAuthorization();
     app.UseHangfireDashboard();
 
