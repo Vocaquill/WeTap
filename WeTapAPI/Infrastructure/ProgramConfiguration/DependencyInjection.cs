@@ -30,7 +30,19 @@ public static class DependencyInjection
 
         services.AddHttpContextAccessor();
 
-        //services
+        // CORS
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.SetIsOriginAllowed(_ => true)
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials();
+            });
+        });
+
+        // services
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ISeederService, SeederService>();
@@ -107,6 +119,9 @@ public static class DependencyInjection
             options.MultipartBodyLengthLimit = long.MaxValue;
             options.MultipartHeadersLengthLimit = int.MaxValue;
         });
+
+        // Controllers
+        services.AddControllers();
 
         // SignalR
         services.AddSignalR(options =>

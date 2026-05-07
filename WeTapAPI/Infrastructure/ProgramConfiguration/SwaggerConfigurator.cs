@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi;
 using Scalar.AspNetCore;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Infrastructure.ProgramConfiguration;
 
@@ -14,7 +13,40 @@ public static class SwaggerConfigurator
     public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
-        services.AddOpenApi(); // Сучасний OpenAPI двигун для .NET 9/10
+        
+        services.AddOpenApi(options =>
+        {
+            options.AddDocumentTransformer((document, context, cancellationToken) =>
+            {
+                document.Components ??= new OpenApiComponents();
+                document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+
+                document.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\""
+                };
+
+                document.Security = [
+                    new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecuritySchemeReference("Bearer"),
+                        []
+                    }
+                }
+                ];
+
+                document.SetReferenceHostDocument();
+
+                return Task.CompletedTask;
+            });
+        });
+
         services.AddSwaggerGen(options =>
         {
             // Додаємо підтримку XML коментарів для класичного Swagger
