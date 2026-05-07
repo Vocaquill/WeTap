@@ -15,9 +15,6 @@ public class UpdateLanguageHandler(IGenericRepository<VideoLanguageEntity, long>
         var entity = await repo.AsQurable()
             .FirstOrDefaultAsync(x => x.Id == request.Model.Id, cancellationToken);
 
-        if (entity == null)
-            throw new Exception("Мову не знайдено");
-
         mapper.Map(request.Model, entity);
 
         await repo.SaveChangesAsync();

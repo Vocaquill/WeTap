@@ -12,18 +12,7 @@ public class DeleteVideoHandler(IGenericRepository<VideoEntity, long> repo)
 {
     public async Task Handle(DeleteVideoCommand request, CancellationToken cancellationToken)
     {
-        VideoEntity video;
-
-        try
-        {
-            video = await repo.AsQurable().Where(x => x.Id == request.Model.Id && !x.IsDeleted).FirstAsync();
-            if (video == null)
-                throw new Exception();
-        }
-        catch (Exception)
-        {
-            throw new Exception("Відео не знайдено");
-        }
+        var video = await repo.GetByIdAsync(request.Model.Id);
 
         await repo.DeleteAsync(video.Id);
     }

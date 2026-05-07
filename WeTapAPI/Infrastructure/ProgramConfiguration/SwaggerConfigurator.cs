@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi;
 using Scalar.AspNetCore;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Swashbuckle.AspNetCore.SwaggerUI;
-using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Infrastructure.ProgramConfiguration;
 
@@ -14,18 +12,38 @@ public static class SwaggerConfigurator
     public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
-        services.AddOpenApi(); // Сучасний OpenAPI двигун для .NET 9/10
-        services.AddSwaggerGen(options =>
+        
+        services.AddOpenApi(options =>
         {
-            // Додаємо підтримку XML коментарів для класичного Swagger
-            var assemblyName = Assembly.GetEntryAssembly()?.GetName().Name;
-            if (assemblyName != null)
+            options.AddDocumentTransformer((document, context, cancellationToken) =>
             {
-                var xmlFile = $"{assemblyName}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                if (File.Exists(xmlPath))
-                    options.IncludeXmlComments(xmlPath);
-            }
+                document.Components ??= new OpenApiComponents();
+                document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+
+                document.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\""
+                };
+
+                document.Security = [
+                    new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecuritySchemeReference("Bearer"),
+                        []
+                    }
+                }
+                ];
+
+                document.SetReferenceHostDocument();
+
+                return Task.CompletedTask;
+            });
         });
 
         return services;
@@ -33,21 +51,21 @@ public static class SwaggerConfigurator
 
     public static IApplicationBuilder UseSwaggerDocumentation(this IApplicationBuilder app)
     {
-        // 3. Класичний Swagger UI (доступний за /swagger)
-        app.UseSwagger();
+        // 1. Класичний Swagger UI (доступний за /swagger), але підключений до Microsoft OpenAPI
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "WeTap API v1");
-            options.RoutePrefix = "swagger"; // Включаємо /swagger
+            options.RoutePrefix = "swagger";
+            options.SwaggerEndpoint("/openapi/v1.json", "WeTap API v1");
+            options.OAuthUsePkce();
         });
 
         // Mapping endpoints
         if (app is IEndpointRouteBuilder endpoints)
         {
-            // 1. Стандартний OpenAPI JSON
+            // 2. Стандартний OpenAPI JSON
             endpoints.MapOpenApi();
 
-            // 2. Сучасний інтерфейс Scalar (доступний за /scalar/v1)
+            // 3. Сучасний інтерфейс Scalar (доступний за /scalar/v1)
             endpoints.MapScalarApiReference(options =>
             {
                 options.WithTitle("WeTap API Documentation")

@@ -22,6 +22,117 @@ namespace Domain.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Domain.Entities.Channel.ChannelEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("AvatarImage")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("BannerImage")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("NickName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NickName")
+                        .IsUnique();
+
+                    b.ToTable("tbl_channels");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Channel.ChannelSubscriberEntity", b =>
+                {
+                    b.Property<long>("ChannelId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("DateSubscribed")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("ChannelId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("tbl_channel_subscribers");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Comments.CommentsEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("DislikeCount")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsEdited")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("LikesCount")
+                        .HasColumnType("integer");
+
+                    b.Property<long?>("ParentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("RepliesCount")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("VideoId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VideoId");
+
+                    b.ToTable("tbl_comments");
+                });
+
             modelBuilder.Entity("Domain.Entities.Genre.GenreEntity", b =>
                 {
                     b.Property<long>("Id")
@@ -280,6 +391,9 @@ namespace Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<long>("ChannelId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("timestamp with time zone");
 
@@ -319,6 +433,8 @@ namespace Domain.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChannelId");
 
                     b.HasIndex("LanguageId");
 
@@ -456,6 +572,62 @@ namespace Domain.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Channel.ChannelEntity", b =>
+                {
+                    b.HasOne("Domain.Entities.Identity.UserEntity", "Author")
+                        .WithOne("Channel")
+                        .HasForeignKey("Domain.Entities.Channel.ChannelEntity", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Channel.ChannelSubscriberEntity", b =>
+                {
+                    b.HasOne("Domain.Entities.Channel.ChannelEntity", "Channel")
+                        .WithMany("Subscribers")
+                        .HasForeignKey("ChannelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identity.UserEntity", "User")
+                        .WithMany("SubscribedChannels")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Channel");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Comments.CommentsEntity", b =>
+                {
+                    b.HasOne("Domain.Entities.Comments.CommentsEntity", "Parent")
+                        .WithMany("Replies")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.Identity.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Video.VideoEntity", "Video")
+                        .WithMany("Comments")
+                        .HasForeignKey("VideoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Parent");
+
+                    b.Navigation("User");
+
+                    b.Navigation("Video");
+                });
+
             modelBuilder.Entity("Domain.Entities.Identity.UserLoginEntity", b =>
                 {
                     b.HasOne("Domain.Entities.Identity.UserEntity", "User")
@@ -488,6 +660,12 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Entities.Video.VideoEntity", b =>
                 {
+                    b.HasOne("Domain.Entities.Channel.ChannelEntity", "Channel")
+                        .WithMany("Videos")
+                        .HasForeignKey("ChannelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Language.VideoLanguageEntity", "Language")
                         .WithMany("Videos")
                         .HasForeignKey("LanguageId")
@@ -499,6 +677,8 @@ namespace Domain.Migrations
                         .HasForeignKey("PrivacyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Channel");
 
                     b.Navigation("Language");
 
@@ -570,6 +750,18 @@ namespace Domain.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Entities.Channel.ChannelEntity", b =>
+                {
+                    b.Navigation("Subscribers");
+
+                    b.Navigation("Videos");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Comments.CommentsEntity", b =>
+                {
+                    b.Navigation("Replies");
+                });
+
             modelBuilder.Entity("Domain.Entities.Genre.GenreEntity", b =>
                 {
                     b.Navigation("VideoGenres");
@@ -582,6 +774,10 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Entities.Identity.UserEntity", b =>
                 {
+                    b.Navigation("Channel");
+
+                    b.Navigation("SubscribedChannels");
+
                     b.Navigation("UserLogins");
 
                     b.Navigation("UserRoles");
@@ -599,6 +795,8 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Entities.Video.VideoEntity", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("VideoGenres");
 
                     b.Navigation("VideoTags");

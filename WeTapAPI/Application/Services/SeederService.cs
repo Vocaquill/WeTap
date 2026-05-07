@@ -66,12 +66,20 @@ public class SeederService(
             var privacies = await appDbContext.VideoPrivacies.ToListAsync();
             var publicPrivacy = privacies.FirstOrDefault(p => p.SystemCode == VideoPrivacyConstants.Public);
 
+            var channel = await appDbContext.Channels.FirstOrDefaultAsync();
+            if (channel == null)
+            {
+                Console.WriteLine("SeedVideosAsync: No channel found in the database. Skipping video seeding.");
+                return;
+            }
+
             foreach (var v in videosData)
             {
                 if (await appDbContext.Videos.AnyAsync(vid => vid.Slug == v.Slug))
                     continue;
 
                 var entity = mapper.Map<VideoEntity>(v);
+                entity.ChannelId = channel.Id;
 
                 var privacy = privacies.FirstOrDefault(p => p.SystemCode == v.PrivacySystemCode) ?? publicPrivacy;
                 if (privacy != null)

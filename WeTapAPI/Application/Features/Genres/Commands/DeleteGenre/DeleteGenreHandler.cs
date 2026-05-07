@@ -8,24 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Genres.Commands.DeleteGenre;
 
-public class DeleteGenreHandler(IGenericRepository<GenreEntity, long> repo,
-    IMapper mapper)
+public class DeleteGenreHandler(IGenericRepository<GenreEntity, long> repo)
     : IRequestHandler<DeleteGenreCommand>
 {
     public async Task Handle(DeleteGenreCommand request, CancellationToken cancellationToken)
     {
-        GenreEntity genre;
-
-        try
-        {
-            genre = await repo.AsQurable().Where(x => x.Id == request.Model.Id && !x.IsDeleted).FirstAsync();
-            if (genre == null)
-                throw new Exception();
-        }
-        catch (Exception)
-        {
-            throw new Exception("Жанр не знайдено");
-        }
+        var genre = await repo.GetByIdAsync(request.Model.Id);
 
         //if (!string.IsNullOrEmpty(genre.Image))
         //    await imageService.DeleteImageAsync(genre.Image); -- можливо потрібно, а можливо і ні

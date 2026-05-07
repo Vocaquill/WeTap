@@ -15,6 +15,9 @@ public class VideoItemModel
 
     public string? Image { get; set; }
     public string? Video { get; set; }
+
+    public Application.Models.Channel.ChannelItemModel? Channel { get; set; }
+
     public List<GenreItemModel> Genres { get; set; } = new();
     public List<TagItemModel> Tags { get; set; } = new();
     public VideoPrivacyItemModel? Privacy { get; set; }

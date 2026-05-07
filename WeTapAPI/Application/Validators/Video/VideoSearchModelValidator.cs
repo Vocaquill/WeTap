@@ -19,6 +19,9 @@ public class VideoSearchModelValidator : AbstractValidator<VideoSearchModel>
         RuleFor(x => x.Title)
             .MaximumLength(100).WithMessage("Назва повинна бути не більше 100 символів");
 
+        RuleFor(x => x.ChannelName)
+            .MaximumLength(100).WithMessage("Назва каналу повинна бути не більше 100 символів");
+
         RuleFor(x => x.CreateYearFrom)
             .Must(year => string.IsNullOrEmpty(year) || int.TryParse(year, out _))
             .WithMessage("Рік 'від' повинен бути числовим значенням");

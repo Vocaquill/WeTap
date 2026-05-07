@@ -14,10 +14,7 @@ public class UpdateTagHandler(IGenericRepository<TagEntity, long> repo, IMapper 
         UpdateTagCommand request,
         CancellationToken cancellationToken)
     {
-        var tag = context.Tags.FirstOrDefault(x => x.Id == request.Model.Id && !x.IsDeleted);
-
-        if (tag == null)
-            throw new Exception($"Тег з id {request.Model.Id} не знайдено");
+        var tag = context.Tags.First(x => x.Id == request.Model.Id && !x.IsDeleted);
 
         mapper.Map(request.Model, tag);
 

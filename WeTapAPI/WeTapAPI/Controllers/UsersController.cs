@@ -1,4 +1,5 @@
-﻿using Application.Features.Users.Commands.DeleteUser;
+﻿using Application.Constants;
+using Application.Features.Users.Commands.DeleteUser;
 using Application.Features.Users.Commands.EditUser;
 using Application.Features.Users.Queries.GetUserById;
 using Application.Features.Users.Queries.GetUsers;
@@ -6,11 +7,13 @@ using Application.Features.Users.Queries.SearchUsers;
 using Application.Models.Search;
 using Application.Models.User;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WeTapAPI.Controllers;
 
 [ApiController]
+[Authorize(Roles = Roles.Admin)]
 [Route("api/[controller]/[action]")]
 public class UsersController(IMediator mediator) : ControllerBase
 {

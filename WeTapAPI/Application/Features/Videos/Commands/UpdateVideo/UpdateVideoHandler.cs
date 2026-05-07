@@ -26,9 +26,6 @@ public class UpdateVideoHandler(
             .Include(x => x.VideoTags)
             .FirstOrDefaultAsync(x => x.Id == model.Id && !x.IsDeleted, cancellationToken);
 
-        if (entity == null)
-            throw new Exception("Відео не знайдено");
-
         mapper.Map(model, entity);
 
         entity.VideoGenres.Clear();
