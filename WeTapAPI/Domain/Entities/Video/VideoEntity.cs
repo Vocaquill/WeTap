@@ -51,4 +51,5 @@ public class VideoEntity : BaseEntity<long>
 
     public virtual ICollection<VideoGenreEntity>? VideoGenres { get; set; } = new List<VideoGenreEntity>();
     public virtual ICollection<VideoTagEntity>? VideoTags { get; set; } = new List<VideoTagEntity>();
+    public virtual ICollection<CommentsEntity> Comments { get; set; } = new List<CommentsEntity>();
 }
