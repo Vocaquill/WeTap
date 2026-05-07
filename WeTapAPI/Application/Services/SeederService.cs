@@ -14,12 +14,14 @@ using Domain.Entities.Video;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using Application.Models.User;
 
 namespace Application.Services;
 
 public class SeederService(
     AppDbContext appDbContext,
     RoleManager<RoleEntity> roleManager,
+    UserManager<UserEntity> userManager,
     IMapper mapper,
     IImageService imageService,
     IVideoFileService videoFileService) : ISeederService
@@ -201,6 +203,52 @@ public class SeederService(
                     Console.WriteLine($"Error Create Role {roleName}");
                 }
             }
+        }
+    }
+
+    public async Task SeedUsersAsync(string jsonPath)
+    {
+        if (await appDbContext.Users.AnyAsync())
+            return;
+
+        try
+        {
+            var json = await File.ReadAllTextAsync(jsonPath);
+
+            var users = Newtonsoft.Json.JsonConvert.DeserializeObject<List<UserSeedModel>>(json);
+            if (users == null || users.Count == 0)
+                return;
+
+            foreach (var user in users)
+            {
+                var entity = mapper.Map<UserEntity>(user);
+                entity.Image = await imageService.SaveImageFromUrlAsync(user.ImagePath);
+                var result = await userManager.CreateAsync(entity, user.Password);
+                if (!result.Succeeded)
+                {
+                    Console.WriteLine("Error Create User {0}", user.Email);
+                    continue;
+                }
+                foreach (var role in user.Roles)
+                {
+                    if (await roleManager.RoleExistsAsync(role))
+                    {
+                        await userManager.AddToRoleAsync(entity, role);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not Found Role {0}", role);
+                    }
+                }
+            }
+        }
+        catch (JsonException ex)
+        {
+            Console.WriteLine($"JSON parse error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Seed users error: {ex.Message}");
         }
     }
 

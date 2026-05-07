@@ -68,6 +68,9 @@ public static class DependencyInjection
             var roleJobKey = new JobKey(nameof(RoleSeederJob));
             q.AddJob<RoleSeederJob>(opts => opts.WithIdentity(roleJobKey).StoreDurably());
 
+            var userJobKey = new JobKey(nameof(UserSeederJob));
+            q.AddJob<UserSeederJob>(opts => opts.WithIdentity(userJobKey).StoreDurably());
+
             var tagJobKey = new JobKey(nameof(TagSeederJob));
             q.AddJob<TagSeederJob>(opts => opts.WithIdentity(tagJobKey).StoreDurably());
 
