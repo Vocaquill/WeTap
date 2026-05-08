@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using Application.Models.User;
+using Domain.Entities.Channel;
 
 namespace Application.Services;
 
@@ -237,6 +238,18 @@ public class SeederService(
                     Console.WriteLine("Error Create User {0}", user.Email);
                     continue;
                 }
+
+                // Канал
+                var channel = new ChannelEntity
+                {
+                    Id = entity.Id,
+                    Name = $"{entity.FirstName} {entity.LastName}",
+                    NickName = entity.UserName ?? entity.Email.Split('@')[0],
+                    Author = entity
+                };
+                await appDbContext.Channels.AddAsync(channel);
+                await appDbContext.SaveChangesAsync();
+
                 foreach (var role in user.Roles)
                 {
                     if (await roleManager.RoleExistsAsync(role))
