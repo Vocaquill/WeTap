@@ -23,6 +23,7 @@ public class SeederOrchestratorListener : JobListenerSupport
         }
         else if (jobKey == nameof(RoleSeederJob))
         {
+            await context.Scheduler.TriggerJob(new JobKey(nameof(UserSeederJob)), cancellationToken);
             await context.Scheduler.TriggerJob(new JobKey(nameof(TagSeederJob)), cancellationToken);
             await context.Scheduler.TriggerJob(new JobKey(nameof(GenreSeederJob)), cancellationToken);
             await context.Scheduler.TriggerJob(new JobKey(nameof(VideoPrivacySeederJob)), cancellationToken);
