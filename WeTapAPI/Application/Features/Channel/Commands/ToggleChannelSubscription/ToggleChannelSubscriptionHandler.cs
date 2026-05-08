@@ -9,7 +9,7 @@ public class ToggleChannelSubscriptionHandler(AppDbContext context) : IRequestHa
 {
     public async Task Handle(ToggleChannelSubscriptionCommand request, CancellationToken cancellationToken)
     {
-        long userId = 1; // змінити
+        long userId = 2; // змінити
         long channelId = request.Model.ChannelId;
 
         // Користувач не може підписуватись сам на себе
