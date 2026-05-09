@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
@@ -12,7 +15,7 @@ public static class SwaggerConfigurator
     public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
-        
+
         services.AddOpenApi(options =>
         {
             options.AddDocumentTransformer((document, context, cancellationToken) =>
@@ -22,25 +25,46 @@ public static class SwaggerConfigurator
 
                 document.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
                 {
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
+                    Type       = SecuritySchemeType.Http,
+                    Scheme     = "bearer",
                     BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Name = "Authorization",
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\""
+                    In         = ParameterLocation.Header,
+                    Name       = "Authorization",
+                    Description =
+                        "Enter your JWT token below.\n\n" +
+                        "Example: **eyJhbGci...**\n\n" +
+                        "(Do NOT prefix with 'Bearer ' — Swagger adds it automatically)"
                 };
 
-                document.Security = [
-                    new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecuritySchemeReference("Bearer"),
-                        []
-                    }
-                }
-                ];
-
                 document.SetReferenceHostDocument();
+                return Task.CompletedTask;
+            });
+
+            options.AddOperationTransformer((operation, context, cancellationToken) =>
+            {
+                var metadata = context.Description.ActionDescriptor.EndpointMetadata;
+
+                bool hasAllowAnonymous = metadata.OfType<IAllowAnonymous>().Any();
+                bool hasAuthorize      = metadata.OfType<IAuthorizeData>().Any();
+
+                if (hasAuthorize && !hasAllowAnonymous)
+                {
+                    operation.Responses.TryAdd("401", new OpenApiResponse
+                        { Description = "Unauthorized — valid JWT required" });
+                    operation.Responses.TryAdd("403", new OpenApiResponse
+                        { Description = "Forbidden — insufficient permissions" });
+
+                    operation.Security =
+                    [
+                        new OpenApiSecurityRequirement
+                        {
+                            {
+                                new OpenApiSecuritySchemeReference("Bearer"),
+                                []
+                            }
+                        }
+                    ];
+                }
 
                 return Task.CompletedTask;
             });
@@ -51,21 +75,18 @@ public static class SwaggerConfigurator
 
     public static IApplicationBuilder UseSwaggerDocumentation(this IApplicationBuilder app)
     {
-        // 1. Класичний Swagger UI (доступний за /swagger), але підключений до Microsoft OpenAPI
         app.UseSwaggerUI(options =>
         {
             options.RoutePrefix = "swagger";
             options.SwaggerEndpoint("/openapi/v1.json", "WeTap API v1");
             options.OAuthUsePkce();
+            options.EnablePersistAuthorization();
         });
 
-        // Mapping endpoints
         if (app is IEndpointRouteBuilder endpoints)
         {
-            // 2. Стандартний OpenAPI JSON
             endpoints.MapOpenApi();
 
-            // 3. Сучасний інтерфейс Scalar (доступний за /scalar/v1)
             endpoints.MapScalarApiReference(options =>
             {
                 options.WithTitle("WeTap API Documentation")

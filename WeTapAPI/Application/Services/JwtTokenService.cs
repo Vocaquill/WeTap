@@ -17,6 +17,7 @@ public class JwtTokenService(IConfiguration configuration,
 
         var claims = new List<Claim>
         {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim("email", user.Email),
             new Claim("name", $"{user.LastName} {user.FirstName}"),
             new Claim("image", $"{user.Image}")

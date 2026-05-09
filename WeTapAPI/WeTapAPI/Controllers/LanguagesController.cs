@@ -6,6 +6,7 @@ using Application.Features.Languages.Queries.GetByLanguage;
 using Application.Models.Search;
 using Application.Models.Language;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WeTapAPI.Controllers;
@@ -15,6 +16,7 @@ namespace WeTapAPI.Controllers;
 public class LanguagesController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
+    //[Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult<LanguageItemModel>> Create([FromBody] LanguageCreateModel model)
     {
         var command = new CreateLanguageCommand(model);
@@ -23,7 +25,9 @@ public class LanguagesController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<ActionResult<SearchResult<LanguageItemModel>>> Search([FromQuery] LanguageSearchModel model)
+    [AllowAnonymous]
+    public async Task<ActionResult<SearchResult<LanguageItemModel>>> Search(
+        [FromQuery] LanguageSearchModel model)
     {
         var query = new SearchLanguagesQuery(model);
         var result = await mediator.Send(query);
@@ -31,6 +35,7 @@ public class LanguagesController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("get-by")]
+    [AllowAnonymous]
     public async Task<ActionResult<LanguageItemModel>> GetBy([FromQuery] GetByModel model)
     {
         var query = new GetByLanguageQuery(model);
@@ -39,6 +44,7 @@ public class LanguagesController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut]
+    //[Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult<LanguageItemModel>> Update([FromBody] LanguageUpdateModel model)
     {
         var command = new UpdateLanguageCommand(model);
@@ -47,7 +53,9 @@ public class LanguagesController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<ActionResult<IEnumerable<LanguageItemModel>>> Delete([FromBody] LanguageDeleteModel model)
+    //[Authorize(Roles = Roles.Admin)]
+    public async Task<ActionResult<IEnumerable<LanguageItemModel>>> Delete(
+        [FromBody] LanguageDeleteModel model)
     {
         var command = new DeleteLanguageCommand(model);
         await mediator.Send(command);

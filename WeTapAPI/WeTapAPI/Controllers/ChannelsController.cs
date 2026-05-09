@@ -8,7 +8,6 @@ using Application.Models.Search;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace WeTapAPI.Controllers;
 
@@ -17,7 +16,9 @@ namespace WeTapAPI.Controllers;
 public class ChannelsController(IMediator mediator) : ControllerBase
 {
     [HttpGet("search")]
-    public async Task<ActionResult<SearchResult<ChannelItemModel>>> Search([FromQuery] ChannelSearchModel model)
+    [AllowAnonymous]
+    public async Task<ActionResult<SearchResult<ChannelItemModel>>> Search(
+        [FromQuery] ChannelSearchModel model)
     {
         var query = new SearchChannelsQuery(model);
         var result = await mediator.Send(query);
@@ -25,15 +26,17 @@ public class ChannelsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<ChannelItemModel>> Create([FromForm] ChannelCreateModel model)
-    { 
+    {
         var command = new CreateChannelCommand(model);
         var result = await mediator.Send(command);
         return Ok(result);
     }
 
     [HttpPut]
+    [Authorize]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<ChannelItemModel>> Update([FromForm] ChannelUpdateModel model)
     {
@@ -43,6 +46,7 @@ public class ChannelsController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete]
+    [Authorize]
     public async Task<IActionResult> Delete([FromBody] ChannelDeleteModel model)
     {
         var command = new DeleteChannelCommand(model);
@@ -51,6 +55,7 @@ public class ChannelsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost("subscribe")]
+    [Authorize]
     public async Task<IActionResult> Subscribe([FromBody] ChannelSubscriptionModel model)
     {
         var command = new ToggleChannelSubscriptionCommand(model);

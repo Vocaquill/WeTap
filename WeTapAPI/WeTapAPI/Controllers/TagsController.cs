@@ -7,6 +7,7 @@ using Application.Models.Search;
 using Application.Features.Tags.Queries.SearchTags;
 using Application.Features.Tags.Queries.GetByTag;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WeTapAPI.Controllers;
@@ -16,6 +17,8 @@ namespace WeTapAPI.Controllers;
 public class TagsController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
+    [Authorize]
+    //[Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult<TagItemModel>> Create([FromBody] TagCreateModel model)
     {
         var command = new CreateTagCommand(model);
@@ -24,6 +27,7 @@ public class TagsController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<TagItemModel>>> GetAll()
     {
         var query = new GetTagsQuery();
@@ -32,7 +36,9 @@ public class TagsController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<ActionResult<SearchResult<TagItemModel>>> Search([FromQuery] TagSearchModel model)
+    [AllowAnonymous]
+    public async Task<ActionResult<SearchResult<TagItemModel>>> Search(
+        [FromQuery] TagSearchModel model)
     {
         var query = new SearchTagsQuery(model);
         var result = await mediator.Send(query);
@@ -40,6 +46,7 @@ public class TagsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut]
+    //[Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult<TagItemModel>> Update([FromBody] TagUpdateModel model)
     {
         var command = new UpdateTagCommand(model);
@@ -48,6 +55,7 @@ public class TagsController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete]
+    //[Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult> Delete([FromBody] TagDeleteModel model)
     {
         var command = new DeleteTagCommand(model);
@@ -56,6 +64,7 @@ public class TagsController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("get-by")]
+    [AllowAnonymous]
     public async Task<ActionResult<TagItemModel>> GetBy([FromQuery] GetByModel model)
     {
         var query = new GetByTagQuery(model);
