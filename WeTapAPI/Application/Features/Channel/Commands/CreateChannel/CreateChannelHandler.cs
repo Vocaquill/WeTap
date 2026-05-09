@@ -9,13 +9,14 @@ namespace Application.Features.Channel.Commands.CreateChannel;
 public class CreateChannelHandler(
     IGenericRepository<ChannelEntity, long> repo,
     IMapper mapper,
-    IImageService imageService
+    IImageService imageService,
+    ICurrentUserService currentUserService
 ) : IRequestHandler<CreateChannelCommand, ChannelItemModel>
 {
     public async Task<ChannelItemModel> Handle(CreateChannelCommand request, CancellationToken cancellationToken)
     {
         var entity = mapper.Map<ChannelEntity>(request.Model);
-        long userId = 1; // тут буде в майбутньому юзерід з токена
+        long userId = currentUserService.GetCurrentUserId();
         entity.Id = userId;
 
         if(repo.AsQurable().FirstOrDefault(x => x.Id == userId) != null)
