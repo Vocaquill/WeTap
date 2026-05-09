@@ -8,12 +8,13 @@ namespace Application.Features.Channel.Commands.UpdateChannel;
 
 public class ChannelUpdateHandler(IGenericRepository<ChannelEntity, long> repo,
     IMapper mapper,
-    IImageService imageService
+    IImageService imageService,
+    ICurrentUserService currentUserService
     ) : IRequestHandler<UpdateChannelCommand, ChannelItemModel>
 {
     public async Task<ChannelItemModel> Handle(UpdateChannelCommand request, CancellationToken cancellationToken)
     {
-        long id = request.Model.Id;
+        long id = currentUserService.GetCurrentUserId();
         var entity = await repo.GetByIdAsync(id);
 
         mapper.Map(request.Model, entity);

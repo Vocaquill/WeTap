@@ -1,3 +1,4 @@
+using Application.Interfaces;
 using Application.Models.Comments;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Comments.Commands.CreateComment;
 
-public class CreateCommentCommandHandler(AppDbContext context, IMapper mapper)
+public class CreateCommentCommandHandler(AppDbContext context, IMapper mapper, ICurrentUserService currentUserService)
     : IRequestHandler<CreateCommentCommand, CommentsItemModal>
 {
     public async Task<CommentsItemModal> Handle(
@@ -21,7 +22,7 @@ public class CreateCommentCommandHandler(AppDbContext context, IMapper mapper)
             Content = request.Content,
             VideoId = request.VideoId,
             ParentId = request.ParentId,
-            UserId = request.UserId,
+            UserId = currentUserService.GetCurrentUserId(),
         };
 
         if (request.ParentId.HasValue)

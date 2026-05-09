@@ -34,15 +34,10 @@ public class CommentsController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<CommentsItemModal>> Create(
         [FromBody] CreateCommentRequest request)
     {
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userIdClaim == null || !long.TryParse(userIdClaim, out var userId))
-            return Unauthorized();
-
         var command = new CreateCommentCommand(
             request.Content,
             request.VideoId,
-            request.ParentId,
-            userId
+            request.ParentId
         );
 
         var result = await mediator.Send(command);

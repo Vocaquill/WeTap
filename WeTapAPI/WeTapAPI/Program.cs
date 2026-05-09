@@ -39,9 +39,9 @@ try
         app.UseSwaggerDocumentation();
     }
 
-    app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
-
     app.UseSerilogRequestLogging();  
+
+    app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
     app.UseCors("AllowAll");         
 
