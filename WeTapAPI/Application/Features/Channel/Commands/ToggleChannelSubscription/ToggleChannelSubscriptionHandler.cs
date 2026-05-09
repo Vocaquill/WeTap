@@ -13,7 +13,6 @@ public class ToggleChannelSubscriptionHandler(AppDbContext context, ICurrentUser
         long userId = currentUserService.GetCurrentUserId();
         long channelId = request.Model.ChannelId;
 
-        // Користувач не може підписуватись сам на себе
         if (channelId == userId)
         {
             throw new Exception("Ви не можете підписатися на власний канал");
