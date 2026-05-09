@@ -25,14 +25,12 @@ try
         .ReadFrom.Services(services)
     );
 
-    // Configuration
     builder.Services.AddInfrastructureServices(builder.Configuration);
     builder.Services.AddIdentityConfiguration(builder.Configuration);
     builder.Services.AddSwaggerDocumentation();
 
     var app = builder.Build();
 
-    // Static Files configuration
     app.UseImagesDirectory(builder.Configuration);
     app.UseVideosDirectory(builder.Configuration);
 
@@ -41,12 +39,16 @@ try
         app.UseSwaggerDocumentation();
     }
 
+    app.UseSerilogRequestLogging();  
+
     app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
-    app.UseSerilogRequestLogging();
-    app.UseCors("AllowAll");
-    app.UseAuthentication();
-    app.UseAuthorization();
-    app.UseHangfireDashboard();
+
+    app.UseCors("AllowAll");         
+
+    app.UseAuthentication();         
+    app.UseAuthorization();         
+    
+    app.UseHangfireDashboard();      
 
     app.MapControllers();
     app.MapHub<VideoProgressHub>("/videoProgressHub");
@@ -61,5 +63,3 @@ finally
 {
     Log.CloseAndFlush();
 }
-
-

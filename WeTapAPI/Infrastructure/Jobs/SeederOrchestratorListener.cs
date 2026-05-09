@@ -11,6 +11,7 @@ public class SeederOrchestratorListener : JobListenerSupport
     private bool _genreSeeded = false;
     private bool _privacySeeded = false;
     private bool _languageSeeded = false;
+    private bool _userSeeded = false;
     private readonly object _syncLock = new();
 
     public override async Task JobWasExecuted(IJobExecutionContext context, JobExecutionException? jobException, CancellationToken cancellationToken = default)
@@ -23,12 +24,13 @@ public class SeederOrchestratorListener : JobListenerSupport
         }
         else if (jobKey == nameof(RoleSeederJob))
         {
+            await context.Scheduler.TriggerJob(new JobKey(nameof(UserSeederJob)), cancellationToken);
             await context.Scheduler.TriggerJob(new JobKey(nameof(TagSeederJob)), cancellationToken);
             await context.Scheduler.TriggerJob(new JobKey(nameof(GenreSeederJob)), cancellationToken);
             await context.Scheduler.TriggerJob(new JobKey(nameof(VideoPrivacySeederJob)), cancellationToken);
             await context.Scheduler.TriggerJob(new JobKey(nameof(LanguageSeederJob)), cancellationToken);
         }
-        else if (jobKey == nameof(TagSeederJob) || jobKey == nameof(GenreSeederJob) || jobKey == nameof(VideoPrivacySeederJob) || jobKey == nameof(LanguageSeederJob))
+        else if (jobKey == nameof(TagSeederJob) || jobKey == nameof(GenreSeederJob) || jobKey == nameof(VideoPrivacySeederJob) || jobKey == nameof(LanguageSeederJob) || jobKey == nameof(UserSeederJob))
         {
             bool triggerVideo = false;
 
@@ -38,8 +40,9 @@ public class SeederOrchestratorListener : JobListenerSupport
                 if (jobKey == nameof(GenreSeederJob)) _genreSeeded = true;
                 if (jobKey == nameof(VideoPrivacySeederJob)) _privacySeeded = true;
                 if (jobKey == nameof(LanguageSeederJob)) _languageSeeded = true;
+                if (jobKey == nameof(UserSeederJob)) _userSeeded = true;
 
-                if (_tagSeeded && _genreSeeded && _privacySeeded && _languageSeeded)
+                if (_tagSeeded && _genreSeeded && _privacySeeded && _languageSeeded && _userSeeded)
                 {
                     triggerVideo = true;
                 }
@@ -47,7 +50,7 @@ public class SeederOrchestratorListener : JobListenerSupport
 
             if (triggerVideo)
             {
-                // After Tags, Genres, Privacy, and Languages are done, start Video seeder
+                // After Tags, Genres, Privacy, Languages, and Users are done, start Video seeder
                 await context.Scheduler.TriggerJob(new JobKey(nameof(VideoSeederJob)), cancellationToken);
             }
         }

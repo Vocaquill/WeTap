@@ -14,6 +14,7 @@ namespace WeTapAPI.Controllers;
 public class CommentsController(IMediator mediator) : ControllerBase
 {
     [HttpGet("video/{videoId:long}")]
+    [AllowAnonymous]
     public async Task<ActionResult<List<CommentsItemModal>>> GetByVideo(long videoId)
     {
         var result = await mediator.Send(new GetVideoCommentsQuery(videoId));
@@ -21,6 +22,7 @@ public class CommentsController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("{parentId:long}/replies")]
+    [AllowAnonymous]
     public async Task<ActionResult<List<CommentsItemModal>>> GetReplies(long parentId)
     {
         var result = await mediator.Send(new GetCommentRepliesQuery(parentId));
@@ -30,19 +32,12 @@ public class CommentsController(IMediator mediator) : ControllerBase
     [HttpPost]
     [Authorize]
     public async Task<ActionResult<CommentsItemModal>> Create(
-        [FromBody] CreateCommentRequest request
-    )
+        [FromBody] CreateCommentRequest request)
     {
-        // Безпечно дістаємо ID користувача з токена
-        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userIdClaim == null || !long.TryParse(userIdClaim, out var userId))
-            return Unauthorized();
-
         var command = new CreateCommentCommand(
             request.Content,
             request.VideoId,
-            request.ParentId,
-            userId
+            request.ParentId
         );
 
         var result = await mediator.Send(command);
@@ -50,5 +45,4 @@ public class CommentsController(IMediator mediator) : ControllerBase
     }
 }
 
-// Об'єкт, який приходить від фронтенду
 public record CreateCommentRequest(string Content, long VideoId, long? ParentId);

@@ -23,9 +23,9 @@ public class UserMapping: Profile
             .ForMember(x => x.Image, opt => opt.Ignore())
             .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.Email));
 
-        //CreateMap<UserSeederModel, UserEntity>()
-        //    .ForMember(opt => opt.UserName, opt => opt.MapFrom(x => x.Email))
-        //    .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.ImagePath));
+        CreateMap<UserSeedModel, UserEntity>()
+            .ForMember(opt => opt.UserName, opt => opt.MapFrom(x => x.Email))
+            .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.ImagePath));
 
         CreateMap<UserEditModel, UserEntity>()
             .ForMember(dest => dest.Image, opt => opt.Ignore());

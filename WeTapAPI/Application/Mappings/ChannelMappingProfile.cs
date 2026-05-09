@@ -8,7 +8,8 @@ public class ChannelMappingProfile : Profile
 {
     public ChannelMappingProfile()
     {
-        CreateMap<ChannelEntity, ChannelItemModel>();
+        CreateMap<ChannelEntity, ChannelItemModel>()
+            .ForMember(dest => dest.SubscriberCount, opt => opt.MapFrom(x => x.Subscribers!.Count(x => x.User!.IsDeleted == false)));
 
         CreateMap<ChannelCreateModel, ChannelEntity>()
             .ForMember(dest => dest.AvatarImage, opt => opt.Ignore())

@@ -1,3 +1,4 @@
+using Application.Interfaces;
 using Domain;
 using Domain.Entities.Channel;
 using MediatR;
@@ -5,14 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Channel.Commands.ToggleChannelSubscription;
 
-public class ToggleChannelSubscriptionHandler(AppDbContext context) : IRequestHandler<ToggleChannelSubscriptionCommand>
+public class ToggleChannelSubscriptionHandler(AppDbContext context, ICurrentUserService currentUserService) : IRequestHandler<ToggleChannelSubscriptionCommand>
 {
     public async Task Handle(ToggleChannelSubscriptionCommand request, CancellationToken cancellationToken)
     {
-        long userId = 1; // змінити
+        long userId = currentUserService.GetCurrentUserId();
         long channelId = request.Model.ChannelId;
 
-        // Користувач не може підписуватись сам на себе
         if (channelId == userId)
         {
             throw new Exception("Ви не можете підписатися на власний канал");
