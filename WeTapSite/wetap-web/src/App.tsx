@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 //user
 import UserHomePage from './pages/UserHomePage.tsx'
 import MoviePage from './pages/MoviePage';
+import VideoPage from './pages/VideoPage';
 import LoginPage from './pages/LoginPage.tsx';
 import ProfilePage from './pages/ProfilePage.tsx';
 import EditProfilePage from './pages/EditProfilePage.tsx';
@@ -34,6 +35,7 @@ function App() {
             <Route element={<AppLayout />}>
                 <Route path="/" element={<UserHomePage />} />
                 <Route path="/movie/:slug" element={<MoviePage />} />
+                <Route path="/video/:slug" element={<VideoPage />} />
                 <Route path="search" element={<SearchPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />

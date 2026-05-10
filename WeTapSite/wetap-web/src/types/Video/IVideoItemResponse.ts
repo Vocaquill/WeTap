@@ -13,6 +13,7 @@ export interface IVideoItemResponse {
     title: string;
     slug: string;
     description?: string;
+    dateCreated?: string;
     viewCount: number;
     image?: string;
     video?: string;

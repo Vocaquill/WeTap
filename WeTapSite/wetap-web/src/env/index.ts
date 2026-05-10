@@ -10,7 +10,7 @@ const IMAGES_400_URL = APP_IMAGE_URL + '/400_';
 const IMAGES_800_URL = APP_IMAGE_URL + '/800_';
 const IMAGES_1200_URL = APP_IMAGE_URL + '/1200_';
 
-const VIDEO_URL = API_BASE_URL + '/videos/';
+const VIDEO_URL = API_BASE_URL + '/videos/1080_';
 
 const APP_ENV = {
     API_BASE_URL,
