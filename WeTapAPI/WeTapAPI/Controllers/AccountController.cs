@@ -1,7 +1,10 @@
-﻿using Application.Features.Accounts.Commands.ForgotPassword;
+﻿using Application.Features.Accounts.Commands.ChangePassword;
+using Application.Features.Accounts.Commands.ForgotPassword;
 using Application.Features.Accounts.Commands.GoogleLogin;
 using Application.Features.Accounts.Commands.Login;
 using Application.Features.Accounts.Commands.Register;
+using Application.Features.Accounts.Commands.ResetPassword;
+using Application.Features.Accounts.Queries.ValidateResetToken;
 using Application.Models.Account;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -44,7 +47,7 @@ public class AccountController(IMediator mediator) : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(new {message = ex.Message});
+            return BadRequest(new { message = ex.Message });
         }
     }
 
@@ -74,5 +77,35 @@ public class AccountController(IMediator mediator) : ControllerBase
                 IsValid = false,
                 Errors = new { Email = "Користувача з такою поштою не існує" }
             });
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetPassword([FromBody] AccountResetPasswordModel model)
+    {
+        var command = new ResetPasswordCommand(model);
+        await mediator.Send(command);
+
+        return Ok();
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> ChangePassword([FromBody] AccountChangePasswordModel model)
+    {
+        var command = new ChangePasswordCommand(model);
+        await mediator.Send(command);
+
+        return Ok();
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<IActionResult> ValidateResetToken([FromQuery] AccountValidateResetTokenModel model)
+    {
+        var query = new ValidateResetTokenQuery(model);
+        var result = await mediator.Send(query);
+
+        return Ok(new { IsValid = result });
     }
 }
