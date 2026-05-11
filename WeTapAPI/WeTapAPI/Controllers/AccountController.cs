@@ -1,4 +1,5 @@
-﻿using Application.Features.Accounts.Commands.Login;
+﻿using Application.Features.Accounts.Commands.GoogleLogin;
+using Application.Features.Accounts.Commands.Login;
 using Application.Features.Accounts.Commands.Register;
 using Application.Models.Account;
 using MediatR;
@@ -44,5 +45,15 @@ public class AccountController(IMediator mediator) : ControllerBase
         {
             return BadRequest(new {message = ex.Message});
         }
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> GoogleLogin([FromBody] AccountGoogleLoginRequestModel model)
+    {
+        var command = new GoogleLoginCommand(model);
+        var result = await mediator.Send(command);
+
+        return Ok(new { Token = result });
     }
 }
