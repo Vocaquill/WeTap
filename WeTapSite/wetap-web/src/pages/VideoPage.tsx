@@ -41,7 +41,7 @@ function VideoPage() {
                     <div className="flex-1 lg:max-w-[calc(100%-400px)]">
                         <div className="w-full bg-zinc-900 rounded-xl overflow-hidden shadow-2xl">
                             {video.video && (
-                                <MoviePlayer src={APP_ENV.VIDEO_URL + video.video}/>
+                                <MoviePlayer videoName={video.video}/>
                             )}
                         </div>
 
