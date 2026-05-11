@@ -1,4 +1,5 @@
-﻿using Application.Features.Accounts.Commands.GoogleLogin;
+﻿using Application.Features.Accounts.Commands.ForgotPassword;
+using Application.Features.Accounts.Commands.GoogleLogin;
 using Application.Features.Accounts.Commands.Login;
 using Application.Features.Accounts.Commands.Register;
 using Application.Models.Account;
@@ -55,5 +56,23 @@ public class AccountController(IMediator mediator) : ControllerBase
         var result = await mediator.Send(command);
 
         return Ok(new { Token = result });
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> ForgotPassword([FromBody] AccountForgotPasswordModel model)
+    {
+        var command = new ForgotPasswordCommand(model);
+        var result = await mediator.Send(command);
+
+        if (result)
+            return Ok();
+        else
+            return BadRequest(new
+            {
+                Status = 400,
+                IsValid = false,
+                Errors = new { Email = "Користувача з такою поштою не існує" }
+            });
     }
 }
