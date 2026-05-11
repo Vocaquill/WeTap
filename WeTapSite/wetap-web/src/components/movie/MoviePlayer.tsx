@@ -115,9 +115,7 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
             const prevIsPlaying = isPlaying;
             setQuality(newQuality);
             setShowSettings(false);
-            
-            // The video source will change due to React re-render
-            // We need to restore time after it loads
+
             const handleCanPlay = () => {
                 if (videoRef.current) {
                     videoRef.current.currentTime = prevTime;
@@ -178,7 +176,6 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                 playsInline
             />
 
-            {/* Overlay Play Button (Center) */}
             {!isPlaying && (
                 <div 
                     className="absolute inset-0 flex items-center justify-center bg-black/20 cursor-pointer"
@@ -190,10 +187,8 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                 </div>
             )}
 
-            {/* Controls */}
             <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pt-8 pb-1 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
-                
-                {/* Buttons and Settings */}
+
                 <div className="flex items-center justify-between px-4 mb-2">
                     <div className="flex items-center gap-4">
                         <button onClick={togglePlay} className="text-white hover:text-red-500 transition-colors">
@@ -266,19 +261,15 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                     </div>
                 </div>
 
-                {/* Progress Bar (at the bottom) */}
                 <div className="px-4 pb-2 relative">
                     <div className="relative w-full h-1.5 flex items-center group/progress">
-                        {/* Сіра підкладка (фонова лінія) */}
                         <div className="absolute w-full h-1 bg-zinc-600 rounded-full" />
 
-                        {/* Червона лінія прогресу */}
                         <div
                             className="absolute h-1 bg-red-600 rounded-full pointer-events-none z-10"
                             style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
                         />
 
-                        {/* Сам інпут (невидимий, але функціональний) */}
                         <input
                             type="range"
                             min="0"
@@ -289,7 +280,6 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                             className="absolute w-full h-6 opacity-0 cursor-pointer z-20"
                         />
 
-                        {/* Кулька-повзунок (опціонально, з'являється при ховері) */}
                         <div
                             className="absolute h-3 w-3 bg-red-600 rounded-full shadow-lg opacity-0 group-hover/progress:opacity-100 transition-opacity pointer-events-none z-10"
                             style={{
