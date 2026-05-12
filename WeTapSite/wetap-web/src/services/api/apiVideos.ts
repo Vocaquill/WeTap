@@ -1,7 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { createBaseQuery } from "../../utils/createBaseQuery.ts";
 import { serialize } from "object-to-formdata";
-import type { IVideoItemResponse } from "../../types/Video/IVideoItemResponse.ts";
+import type { IVideoItemResponse, IVideoPrivacyItemResponse } from "../../types/Video/IVideoItemResponse.ts";
 import type { IVideoSearchRequest } from "../../types/Video/IVideoSearchRequest.ts";
 import type { IVideoCreateRequest } from "../../types/Video/IVideoCreateRequest.ts";
 import type { IVideoEditRequest } from "../../types/Video/IVideoEditRequest.ts";
@@ -69,6 +69,13 @@ export const apiVideos = createApi({
             }),
             invalidatesTags: ["Videos"],
         }),
+
+        getPrivacies: builder.query<IVideoPrivacyItemResponse[], void>({
+            query: () => ({
+                url: "privacies",
+                method: "GET",
+            }),
+        }),
     }),
 });
 
@@ -79,4 +86,5 @@ export const {
     useCreateVideoMutation,
     useEditVideoMutation,
     useDeleteVideoMutation,
+    useGetPrivaciesQuery,
 } = apiVideos;

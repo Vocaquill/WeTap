@@ -26,6 +26,7 @@ import SearchPage from './pages/SearchPage'
 import RequireLogin from "./components/ProtectedRoute/RequireLogin.tsx";
 import NotFoundPage from "./pages/NotFoundPage.tsx";
 import VideoUploadTest from './pages/VideoUploadTest.tsx';
+import CreateVideoPage from "./pages/CreateVideoPage.tsx";
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
                 <Route path="/" element={<UserHomePage />} />
                 <Route path="/movie/:slug" element={<MoviePage />} />
                 <Route path="/video/:slug" element={<VideoPage />} />
+                <Route path="/video/add" element={<CreateVideoPage />} />
                 <Route path="search" element={<SearchPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
