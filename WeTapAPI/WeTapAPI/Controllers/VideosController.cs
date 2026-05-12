@@ -11,6 +11,7 @@ using Application.Models.Search;
 using Application.Features.Videos.Queries.SearchVideos;
 using Application.Models.VideoProcessing;
 using Application.Features.Videos.Queries.GetByVideo;
+using Application.Features.Videos.Queries.GetVideoPrivacies;
 
 namespace WeTapAPI.Controllers;
 
@@ -87,5 +88,14 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
         var command = new DeleteVideoCommand(model);
         await mediator.Send(command);
         return Ok();
+    }
+
+    [HttpGet("privacies")]
+    [AllowAnonymous]
+    public async Task<ActionResult<IEnumerable<VideoPrivacyItemModel>>> GetPrivacies()
+    {
+        var query = new GetVideoPrivaciesQuery();
+        var result = await mediator.Send(query);
+        return Ok(result);
     }
 }
