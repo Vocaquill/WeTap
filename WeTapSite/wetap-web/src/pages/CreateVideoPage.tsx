@@ -8,7 +8,7 @@ import type { IVideoCreateRequest } from '../types/Video/IVideoCreateRequest';
 import type { IGenreItemResponse } from '../types/Genre/IGenreItemResponse';
 import type { ITagItemResponse } from '../types/Tag/ITagItemResponse';
 import { useVideoProgress } from '../hooks/useVideoProgress';
-import { Progress, Modal, Typography, Space } from 'antd';
+import { Progress, Modal } from 'antd';
 
 import { InputField } from '../components/form/InputField';
 import { TextAreaField } from '../components/form/TextAreaField';
@@ -189,11 +189,11 @@ export default function CreateVideoPage() {
     };
 
     useEffect(() => {
-        if (progress?.status === 'Completed') {
-            const timer = setTimeout(() => navigate('/admin/videos'), 2000);
+        if (progress?.status === 'Completed' || progress?.status === 'Завершено') {
+            const timer = setTimeout(() => navigate(`/video/${form.slug}`), 2000);
             return () => clearTimeout(timer);
         }
-    }, [progress?.status, navigate]);
+    }, [progress?.status, navigate, form.slug]);
 
     return (
         <>
@@ -204,55 +204,81 @@ export default function CreateVideoPage() {
                 footer={null}
                 closable={false}
                 centered
-                title="Завантаження та обробка відео"
                 styles={{
-                    mask: { backdropFilter: 'blur(10px)' },
-                    content: { backgroundColor: '#09090b', color: 'white', border: '1px solid #27272a' }
+                    mask: { backdropFilter: 'blur(10px)', backgroundColor: 'rgba(0,0,0,0.8)' }
                 }}
-            >
-                <Space direction="vertical" size="large" className="w-full py-4">
-                    <div className="flex justify-between items-center text-sm text-zinc-400">
-                        <span>Статус підключення:</span>
-                        <span className={isConnected ? "text-green-500" : "text-red-500"}>
-                            {isConnected ? "Підключено" : "Відключено"}
-                        </span>
-                    </div>
+                width={600}
+                modalRender={() => (
+                    <div className="bg-[#09090b] border border-zinc-800 rounded-[32px] p-8 shadow-2xl overflow-hidden">
+                        <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-800">
+                            <h2 className="text-white text-xl font-black uppercase tracking-tight">
+                                Завантаження та обробка відео
+                            </h2>
+                            <div className="flex items-center gap-2 px-3 py-1 bg-zinc-900 rounded-full border border-zinc-800">
+                                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 shadow-[0_0_10px_#22c55e]' : 'bg-red-500 animate-pulse'}`}></div>
+                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+                                    {isConnected ? "Connected" : "Disconnected"}
+                                </span>
+                            </div>
+                        </div>
 
-                    {progress ? (
-                        <div className="space-y-4">
-                            <Progress
-                                percent={Math.round(progress.percentage)}
-                                status={progress.status === 'Completed' ? 'success' : 'active'}
-                                strokeColor={progress.status === 'Completed' ? '#22c55e' : '#dc2626'}
-                                trailColor="#18181b"
-                                format={(percent) => <span className="text-white font-bold">{percent}%</span>}
-                            />
-                            
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <p className="text-xs text-zinc-500 uppercase font-bold">Статус</p>
-                                    <p className="text-sm font-medium text-white">{progress.status}</p>
+                        {progress ? (
+                            <div className="space-y-8">
+                                <div className="relative">
+                                    <Progress
+                                        percent={Math.round(progress.percentage)}
+                                        status={(progress.status === 'Completed' || progress.status === 'Завершено') ? 'success' : 'active'}
+                                        strokeColor={(progress.status === 'Completed' || progress.status === 'Завершено') ? '#22c55e' : '#dc2626'}
+                                        trailColor="#18181b"
+                                        format={(percent) => <span className="text-white text-lg font-black tracking-tighter">{percent}%</span>}
+                                        strokeWidth={14}
+                                    />
                                 </div>
-                                <div>
-                                    <p className="text-xs text-zinc-500 uppercase font-bold">Залишилось часу</p>
-                                    <p className="text-sm font-medium text-white">{progress.estimatedTimeRemaining || "рахуємо..."}</p>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="p-4 bg-zinc-900/40 rounded-2xl border border-zinc-800/50 backdrop-blur-sm">
+                                        <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest mb-1">Статус процесу</p>
+                                        <p className="text-sm font-bold text-zinc-100 flex items-center gap-2">
+                                            <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
+                                            {progress.status}
+                                        </p>
+                                    </div>
+                                    <div className="p-4 bg-zinc-900/40 rounded-2xl border border-zinc-800/50 backdrop-blur-sm">
+                                        <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest mb-1">Залишилось часу</p>
+                                        <p className="text-sm font-bold text-zinc-100 italic">
+                                            {progress.estimatedTimeRemaining || "Calculating..."}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {(progress.status === 'Completed' || progress.status === 'Завершено') && (
+                                    <div className="p-5 bg-green-500/5 border border-green-500/20 rounded-2xl text-green-500 text-sm text-center font-bold animate-in fade-in zoom-in duration-500">
+                                        <div className="mb-1 flex justify-center">
+                                            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-black">
+                                                ✓
+                                            </div>
+                                        </div>
+                                        Відео успішно завантажено та оброблено!<br />
+                                        <span className="text-zinc-500 font-medium text-xs">Перенаправлення на сторінку перегляду...</span>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center py-12 space-y-6">
+                                <div className="relative">
+                                    <div className="w-16 h-16 border-4 border-zinc-800 rounded-full"></div>
+                                    <div className="absolute top-0 left-0 w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-white font-bold tracking-tight">Ініціалізація завантаження</p>
+                                    <p className="text-zinc-500 text-xs mt-1">Очікуємо відповідь від сервера...</p>
                                 </div>
                             </div>
+                        )}
+                    </div>
+                )}
+            />
 
-                            {progress.status === 'Completed' && (
-                                <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-xl text-green-500 text-sm text-center font-bold">
-                                    Відео успішно завантажено та оброблено! Перенаправлення...
-                                </div>
-                            )}
-                        </div>
-                    ) : (
-                        <div className="flex flex-col items-center justify-center py-8 space-y-4">
-                            <div className="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-                            <p className="text-zinc-400 italic">Очікування оновлень прогресу...</p>
-                        </div>
-                    )}
-                </Space>
-            </Modal>
 
             <div className="p-6 bg-zinc-950 min-h-screen">
                 <h1 className="text-3xl font-black text-white mb-8">Створити відео</h1>
@@ -320,8 +346,8 @@ export default function CreateVideoPage() {
                                         type="button"
                                         onClick={() => handleGenreToggle(genre.id)}
                                         className={`px-3 py-1 rounded-xl border transition ${form.genreIds?.includes(genre.id)
-                                                ? 'bg-red-600 border-red-600 text-white'
-                                                : 'bg-zinc-900 border-zinc-800 text-zinc-400'
+                                            ? 'bg-red-600 border-red-600 text-white'
+                                            : 'bg-zinc-900 border-zinc-800 text-zinc-400'
                                             }`}
                                     >
                                         {genre.name}
@@ -348,8 +374,8 @@ export default function CreateVideoPage() {
                                         type="button"
                                         onClick={() => handleTagToggle(tag.id)}
                                         className={`px-3 py-1 rounded-xl border transition ${form.tagIds?.includes(tag.id)
-                                                ? 'bg-red-600 border-red-600 text-white'
-                                                : 'bg-zinc-900 border-zinc-800 text-zinc-400'
+                                            ? 'bg-red-600 border-red-600 text-white'
+                                            : 'bg-zinc-900 border-zinc-800 text-zinc-400'
                                             }`}
                                     >
                                         {tag.name}
