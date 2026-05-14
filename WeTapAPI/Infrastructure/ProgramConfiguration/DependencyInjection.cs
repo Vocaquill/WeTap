@@ -28,10 +28,25 @@ public static class DependencyInjection
         // FluentValidation Global Configuration
         ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("uk");
 
-        //services
+        services.AddHttpContextAccessor();
+
+        // CORS
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.SetIsOriginAllowed(_ => true)
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials();
+            });
+        });
+
+        // services
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<ISmtpService, SmtpService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ISeederService, SeederService>();
         services.AddScoped<IImageService, ImageService>();
@@ -110,6 +125,9 @@ public static class DependencyInjection
             options.MultipartBodyLengthLimit = long.MaxValue;
             options.MultipartHeadersLengthLimit = int.MaxValue;
         });
+
+        // Controllers
+        services.AddControllers();
 
         // SignalR
         services.AddSignalR(options =>

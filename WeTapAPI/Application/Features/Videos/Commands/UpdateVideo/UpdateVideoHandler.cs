@@ -14,20 +14,23 @@ public class UpdateVideoHandler(
     IMapper mapper,
     IImageService imageService,
     IVideoFileService videoFileService,
-    IBackgroundJobClient backgroundJobClient
+    IBackgroundJobClient backgroundJobClient,
+    ICurrentUserService currentUserService
 ) : IRequestHandler<UpdateVideoCommand, VideoProcessingResult>
 {
     public async Task<VideoProcessingResult> Handle(UpdateVideoCommand request, CancellationToken cancellationToken)
     {
         var model = request.Model;
+        var currentUserId = currentUserService.GetCurrentUserId();
 
         var entity = await repo.AsQurable()
             .Include(x => x.VideoGenres)
             .Include(x => x.VideoTags)
             .FirstOrDefaultAsync(x => x.Id == model.Id && !x.IsDeleted, cancellationToken);
 
-        if (entity == null)
-            throw new Exception("Відео не знайдено");
+
+        if (entity!.ChannelId != currentUserId)
+            throw new Exception("Ви не є власником цього відео");
 
         mapper.Map(model, entity);
 

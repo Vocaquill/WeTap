@@ -1,9 +1,9 @@
 using Application.Features.Videos.Queries.GetVideos;
 using Application.Features.Videos.Commands.CreateVideo;
 using Application.Interfaces;
-using Application.Models.Genre;
 using Application.Models.Video;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Videos.Commands.UpdateVideo;
 using Application.Features.Videos.Commands.DeleteVideo;
@@ -23,15 +23,17 @@ public class TestVideoSavingCommand : IRequest
 [Route("api/[controller]")]
 public class VideosController(IMediator mediator, IVideoFileService videoFileService) : ControllerBase
 {
-    [HttpPost("TestVideoSaving")] // для тесту
+    [HttpPost("TestVideoSaving")]
+    [Authorize]
     [Consumes("multipart/form-data")]
-    public async Task<ActionResult<string>> Create([FromForm] TestVideoSavingCommand model)
+    public async Task<ActionResult<string>> TestVideoSaving([FromForm] TestVideoSavingCommand model)
     {
         var result = await videoFileService.SaveVideoAsync(model.File);
         return Ok(result);
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<VideoItemModel>>> GetAll()
     {
         var query = new GetVideosQuery();
@@ -40,6 +42,7 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     }
 
     [HttpGet("get-by")]
+    [AllowAnonymous]
     public async Task<ActionResult<VideoItemModel>> GetById([FromQuery] GetByModel model)
     {
         var query = new GetByVideoQuery(model);
@@ -48,7 +51,9 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     }
 
     [HttpGet("search")]
-    public async Task<ActionResult<SearchResult<VideoItemModel>>> Search([FromQuery] VideoSearchModel model)
+    [AllowAnonymous]
+    public async Task<ActionResult<SearchResult<VideoItemModel>>> Search(
+        [FromQuery] VideoSearchModel model)
     {
         var query = new SearchVideosQuery(model);
         var result = await mediator.Send(query);
@@ -56,6 +61,7 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     }
 
     [HttpPost]
+    [Authorize]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<VideoProcessingResult>> Create([FromForm] VideoCreateModel model)
     {
@@ -65,6 +71,7 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     }
 
     [HttpPut]
+    [Authorize]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<VideoProcessingResult>> Update([FromForm] VideoUpdateModel model)
     {
@@ -74,6 +81,7 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     }
 
     [HttpDelete]
+    [Authorize]
     public async Task<ActionResult> Delete([FromBody] VideoDeleteModel model)
     {
         var command = new DeleteVideoCommand(model);

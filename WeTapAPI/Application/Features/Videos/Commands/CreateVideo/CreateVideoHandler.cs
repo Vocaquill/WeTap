@@ -13,13 +13,19 @@ public class CreateVideoHandler(IGenericRepository<VideoEntity, long> repo,
     IMapper mapper,
     IImageService imageService,
     IVideoFileService videoFileService,
-    IBackgroundJobClient backgroundJobClient
+    IBackgroundJobClient backgroundJobClient,
+    ICurrentUserService currentUserService
     )
     : IRequestHandler<CreateVideoCommand, VideoProcessingResult>
 {
     public async Task<VideoProcessingResult> Handle(CreateVideoCommand request, CancellationToken cancellationToken)
     {
         var entity = mapper.Map<VideoEntity>(request.Model);
+
+        if (!request.Model.ChannelId.HasValue || request.Model.ChannelId == 0)
+        {
+            entity.ChannelId = currentUserService.GetCurrentUserId();
+        }
 
         foreach (var genreId in request.Model.GenreIds.Distinct())
         {

@@ -14,18 +14,7 @@ public class DeleteTagHandler(IGenericRepository<TagEntity, long> repo, IMapper 
         DeleteTagCommand request,
         CancellationToken cancellationToken)
     {
-        TagEntity tag;
-
-        try
-        {
-            tag = await repo.AsQurable().Where(x => x.Id == request.Model.Id && !x.IsDeleted).FirstAsync();
-            if (tag == null)
-                throw new Exception();
-        }
-        catch (Exception)
-        {
-            throw new Exception("Тег не знайдено");
-        }
+        var tag = await repo.GetByIdAsync(request.Model.Id);
 
         await repo.DeleteAsync(tag.Id);
     }

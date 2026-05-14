@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using Application.Models.User;
+using Domain.Entities.Channel;
 
 namespace Application.Services;
 
@@ -68,12 +69,20 @@ public class SeederService(
             var privacies = await appDbContext.VideoPrivacies.ToListAsync();
             var publicPrivacy = privacies.FirstOrDefault(p => p.SystemCode == VideoPrivacyConstants.Public);
 
+            var channel = await appDbContext.Channels.FirstOrDefaultAsync();
+            if (channel == null)
+            {
+                Console.WriteLine("SeedVideosAsync: No channel found in the database. Skipping video seeding.");
+                return;
+            }
+
             foreach (var v in videosData)
             {
                 if (await appDbContext.Videos.AnyAsync(vid => vid.Slug == v.Slug))
                     continue;
 
                 var entity = mapper.Map<VideoEntity>(v);
+                entity.ChannelId = channel.Id;
 
                 var privacy = privacies.FirstOrDefault(p => p.SystemCode == v.PrivacySystemCode) ?? publicPrivacy;
                 if (privacy != null)
@@ -229,6 +238,18 @@ public class SeederService(
                     Console.WriteLine("Error Create User {0}", user.Email);
                     continue;
                 }
+
+                // Канал
+                var channel = new ChannelEntity
+                {
+                    Id = entity.Id,
+                    Name = $"{entity.FirstName} {entity.LastName}",
+                    NickName = entity.UserName ?? entity.Email.Split('@')[0],
+                    Author = entity
+                };
+                await appDbContext.Channels.AddAsync(channel);
+                await appDbContext.SaveChangesAsync();
+
                 foreach (var role in user.Roles)
                 {
                     if (await roleManager.RoleExistsAsync(role))
