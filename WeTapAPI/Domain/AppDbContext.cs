@@ -34,6 +34,7 @@ public class AppDbContext
     public DbSet<VideoLanguageEntity> VideoLanguages { get; set; }
     public DbSet<ChannelEntity> Channels { get; set; }
     public DbSet<ChannelSubscriberEntity> ChannelSubscribers { get; set; }
+    public DbSet<VideoReactionEntity> VideoReactions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

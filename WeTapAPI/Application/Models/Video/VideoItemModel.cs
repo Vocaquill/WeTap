@@ -1,6 +1,7 @@
 using Application.Models.Genre;
 using Application.Models.Tag;
 using Application.Models.Language;
+using Application.Models.Channel;
 
 namespace Application.Models.Video;
 
@@ -16,10 +17,21 @@ public class VideoItemModel
     public string? Image { get; set; }
     public string? Video { get; set; }
 
-    public Application.Models.Channel.ChannelItemModel? Channel { get; set; }
+    public ChannelItemModel? Channel { get; set; }
 
     public List<GenreItemModel> Genres { get; set; } = new();
     public List<TagItemModel> Tags { get; set; } = new();
     public VideoPrivacyItemModel? Privacy { get; set; }
     public LanguageItemModel? Language { get; set; }
+
+    public int LikesCount { get; set; }
+    public int DislikesCount { get; set; }
+
+    public int UserRatingPercent =>
+        LikesCount + DislikesCount == 0
+            ? 0
+            : (int)Math.Round(
+                (double)LikesCount /
+                (LikesCount + DislikesCount) * 100
+            );
 }

@@ -21,7 +21,11 @@ public class VideoMappingProfile : Profile
             .ForMember(x => x.Channel, opt => opt.MapFrom(src => src.Channel))
             .ForMember(dest => dest.DateCreated,
                 opt => opt.MapFrom(src =>
-                    src.DateCreated.ToString("d MMMM yyyy'р.' 'о' HH:mm", ukraineCulture)));
+                    src.DateCreated.ToString("d MMMM yyyy'р.' 'о' HH:mm", ukraineCulture)))
+            .ForMember(x => x.LikesCount,
+                opt => opt.MapFrom(x => x.VideoReactions.Count(r => r.IsLike)))
+            .ForMember(x => x.DislikesCount,
+                opt => opt.MapFrom(x => x.VideoReactions.Count(r => !r.IsLike)));
 
         CreateMap<VideoPrivacyEntity, VideoPrivacyItemModel>();
 
@@ -41,5 +45,7 @@ public class VideoMappingProfile : Profile
             .ForMember(dest => dest.Video, opt => opt.Ignore())
             .ForMember(dest => dest.VideoGenres, opt => opt.Ignore())
             .ForMember(dest => dest.VideoTags, opt => opt.Ignore());
+
+        CreateMap<VideoReactionModel, VideoReactionEntity>();
     }
 }

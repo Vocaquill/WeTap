@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 // import genresReducer from './slices/genresSlice';
-import {apiVideos} from "../services/api/apiVideos.ts";
+import { apiVideos } from "../services/api/apiVideos.ts";
 
-import {type TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
-import {apiGenres} from "../services/api/apiGenres.ts";
+import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { apiGenres } from "../services/api/apiGenres.ts";
 import { setupListeners } from "@reduxjs/toolkit/query/react";
-import {apiAccount} from "../services/api/apiAccount.ts";
-import {apiTags} from "../services/api/apiTags.ts";
-import {apiLanguages} from "../services/api/apiLanguages.ts";
+import { apiAccount } from "../services/api/apiAccount.ts";
+import { apiTags } from "../services/api/apiTags.ts";
+import { apiLanguages } from "../services/api/apiLanguages.ts";
 
 
 import authReducer from "./slices/authSlice.ts";

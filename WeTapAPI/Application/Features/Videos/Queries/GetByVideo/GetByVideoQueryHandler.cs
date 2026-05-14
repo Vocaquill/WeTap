@@ -2,6 +2,7 @@ using Application.Features.Videos.Queries.GetVideos;
 using Application.Interfaces;
 using Application.Models.Video;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Entities.Video;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,39 +14,31 @@ public class GetByVideoQueryHandler(IGenericRepository<VideoEntity, long> repo, 
 {
     public async Task<VideoItemModel> Handle(GetByVideoQuery request, CancellationToken cancellationToken)
     {
-        VideoItemModel model = new VideoItemModel();
-        VideoEntity? entity = null;
-        IQueryable<VideoEntity> query = repo.AsQurable()
-            .Include(x => x.Privacy)
-            .Include(x => x.VideoGenres!)
-                .ThenInclude(x => x.Genre)
-            .Include(x => x.VideoTags!)
-                .ThenInclude(x => x.Tag);
+        IQueryable<VideoEntity> query = repo.AsQurable();
 
-        if (request.Model.Id != null) 
+        if (request.Model.Id != null)
         {
-            entity = await query.FirstOrDefaultAsync(x => x.Id == request.Model.Id.Value);
-
-            if (entity == null)
-                throw new Exception($"Відео з id {request.Model.Id.Value} не знайдено");
-
-            model = mapper.Map<VideoItemModel>(entity);
+            query = query.Where(x => x.Id == request.Model.Id.Value);
         }
-        else if (request.Model.Slug != null) 
+        else if (!string.IsNullOrEmpty(request.Model.Slug))
         {
-            entity = await query.FirstOrDefaultAsync(x => x.Slug == request.Model.Slug);
-
-            if (entity == null)
-                throw new Exception($"Відео з slug {request.Model.Slug} не знайдено");
-
-            model = mapper.Map<VideoItemModel>(entity);
+            query = query.Where(x => x.Slug == request.Model.Slug);
+        }
+        else
+        {
+            throw new Exception("Необхідно вказати Id або Slug");
         }
 
-        if (entity == null)
+        var model = await query
+            .ProjectTo<VideoItemModel>(mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (model == null)
             throw new Exception("Відео не знайдено");
 
-        entity.ViewCount++;
-        await repo.UpdateAsync(entity);
+        await repo.AsQurable()
+            .Where(x => x.Id == model.Id)
+            .ExecuteUpdateAsync(s => s.SetProperty(b => b.ViewCount, b => b.ViewCount + 1), cancellationToken);
 
         return model;
     }
