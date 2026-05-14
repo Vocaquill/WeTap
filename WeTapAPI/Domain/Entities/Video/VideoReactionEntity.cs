@@ -1,7 +1,9 @@
 ﻿using Domain.Entities.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.Video;
 
+[Table("tbl_video_reactions")]
 public class VideoReactionEntity : BaseEntity<long>
 {
     public long VideoId { get; set; }
