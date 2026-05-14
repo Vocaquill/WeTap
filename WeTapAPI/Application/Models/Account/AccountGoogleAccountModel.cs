@@ -5,7 +5,7 @@ namespace Application.Models.Account;
 public class AccountGoogleAccountModel
 {
     [JsonPropertyName("id")]
-    public string GoogId { get; set; } = string.Empty;
+    public string GoogleId { get; set; } = string.Empty;
 
     [JsonPropertyName("email")]
     public string Email { get; set; } = string.Empty;
