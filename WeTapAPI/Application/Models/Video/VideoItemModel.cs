@@ -23,4 +23,15 @@ public class VideoItemModel
     public List<TagItemModel> Tags { get; set; } = new();
     public VideoPrivacyItemModel? Privacy { get; set; }
     public LanguageItemModel? Language { get; set; }
+
+    public int LikesCount { get; set; }
+    public int DislikesCount { get; set; }
+
+    public int UserRatingPercent =>
+        LikesCount + DislikesCount == 0
+            ? 0
+            : (int)Math.Round(
+                (double)LikesCount /
+                (LikesCount + DislikesCount) * 100
+            );
 }
