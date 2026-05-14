@@ -12,6 +12,8 @@ using Application.Features.Videos.Queries.SearchVideos;
 using Application.Models.VideoProcessing;
 using Application.Features.Videos.Queries.GetByVideo;
 using Application.Features.Videos.Queries.GetVideoPrivacies;
+using Application.Features.Videos.Commands.ReactVideo;
+
 
 namespace WeTapAPI.Controllers;
 
@@ -97,5 +99,14 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
         var query = new GetVideoPrivaciesQuery();
         var result = await mediator.Send(query);
         return Ok(result);
+    }
+
+    [HttpPost("react")]
+    [Authorize]
+    public async Task<ActionResult> React([FromBody] VideoReactionModel model)
+    {
+        var command = new ReactVideoCommand(model);
+        await mediator.Send(command);
+        return Ok();
     }
 }
