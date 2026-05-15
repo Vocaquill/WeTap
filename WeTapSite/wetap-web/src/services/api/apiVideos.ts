@@ -59,7 +59,7 @@ export const apiVideos = createApi({
                 method: "PUT",
                 body: serialize(body),
             }),
-            invalidatesTags: ["Videos"],
+            invalidatesTags: (result, error, { id }) => [{ type: "Video", id }, "Videos"],
         }),
 
         deleteVideo: builder.mutation<IVideoItemResponse[], IVideoDeleteRequest>({
@@ -68,7 +68,7 @@ export const apiVideos = createApi({
                 method: "DELETE",
                 body,
             }),
-            invalidatesTags: ["Videos"],
+            invalidatesTags: (result, error, { id }) => [{ type: "Video", id }, "Videos"],
         }),
 
         getPrivacies: builder.query<IVideoPrivacyItemResponse[], void>({
@@ -83,8 +83,7 @@ export const apiVideos = createApi({
                 method: "POST",
                 body,
             }),
-            //@ts-ignore
-            invalidatesTags: (result, error, { movieId }) => [{ type: "Movie", id: movieId }],
+            invalidatesTags: (result, error, { videoId }) => [{ type: "Video", id: videoId }, "Videos"],
         }),
     }),
 });

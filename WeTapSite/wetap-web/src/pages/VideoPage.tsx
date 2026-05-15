@@ -30,7 +30,7 @@ function VideoPage() {
         itemPerPage: 10
     });
 
-    const [reactVideo] = useReactVideoMutation();
+    const [reactVideo, { isLoading: isReacting }] = useReactVideoMutation();
 
     const handleReaction = async (isLike: boolean) => {
         try {
@@ -85,13 +85,17 @@ function VideoPage() {
                             <div className="flex items-center gap-2">
                                 <div className="flex items-center bg-zinc-800 rounded-full overflow-hidden">
                                     <button
-                                        className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors border-r border-zinc-700">
-                                        <ThumbsUp onClick={() => handleReaction(true)} size={18}/>
+                                        onClick={() => handleReaction(true)}
+                                        disabled={isReacting}
+                                        className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors border-r border-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                                        <ThumbsUp size={18}/>
                                         <span className="text-sm font-medium">{video.likesCount}</span>
                                     </button>
                                     <button
-                                        className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors border-r border-zinc-700">
-                                        <ThumbsDown onClick={() => handleReaction(false)} size={18}/>
+                                        onClick={() => handleReaction(false)}
+                                        disabled={isReacting}
+                                        className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                        <ThumbsDown size={18}/>
                                         <span className="text-sm font-medium">{video.dislikesCount}</span>
                                     </button>
                                 </div>
