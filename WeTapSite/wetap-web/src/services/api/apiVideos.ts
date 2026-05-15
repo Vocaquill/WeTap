@@ -85,6 +85,12 @@ export const apiVideos = createApi({
             }),
             invalidatesTags: (result, error, { videoId }) => [{ type: "Video", id: videoId }, "Videos"],
         }),
+        incrementView: builder.mutation<void, number>({
+            query: (id) => ({
+                url: `${id}/view`,
+                method: "POST",
+            }),
+        }),
     }),
 });
 
@@ -97,4 +103,5 @@ export const {
     useDeleteVideoMutation,
     useGetPrivaciesQuery,
     useReactVideoMutation,
+    useIncrementViewMutation,
 } = apiVideos;

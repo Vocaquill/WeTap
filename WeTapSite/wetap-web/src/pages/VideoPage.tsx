@@ -1,3 +1,4 @@
+import {useEffect} from 'react';
 import {
     Calendar,
     ThumbsUp,
@@ -14,7 +15,7 @@ import PageTransition from '../components/PageTransition';
 import {MoviePlayer} from "../components/movie/MoviePlayer.tsx";
 import {APP_ENV} from "../env";
 import LoadingOverlay from "../components/LoadingOverlay.tsx";
-import {useGetByQuery, useReactVideoMutation, useSearchVideosQuery} from "../services/api/apiVideos.ts";
+import {useGetByQuery, useIncrementViewMutation, useReactVideoMutation, useSearchVideosQuery} from "../services/api/apiVideos.ts";
 
 function VideoPage() {
     //const navigate = useNavigate();
@@ -31,6 +32,13 @@ function VideoPage() {
     });
 
     const [reactVideo, { isLoading: isReacting }] = useReactVideoMutation();
+    const [incrementView] = useIncrementViewMutation();
+
+    useEffect(() => {
+        if (video?.id) {
+            incrementView(video.id);
+        }
+    }, [video?.id, incrementView]);
 
     const handleReaction = async (isLike: boolean) => {
         try {

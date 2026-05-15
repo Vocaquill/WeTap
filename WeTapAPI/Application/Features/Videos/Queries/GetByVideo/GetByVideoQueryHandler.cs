@@ -36,10 +36,6 @@ public class GetByVideoQueryHandler(IGenericRepository<VideoEntity, long> repo, 
         if (model == null)
             throw new Exception("Відео не знайдено");
 
-        await repo.AsQurable()
-            .Where(x => x.Id == model.Id)
-            .ExecuteUpdateAsync(s => s.SetProperty(b => b.ViewCount, b => b.ViewCount + 1), cancellationToken);
-
         return model;
     }
 }

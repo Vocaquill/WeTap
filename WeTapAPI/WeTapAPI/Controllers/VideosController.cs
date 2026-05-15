@@ -13,6 +13,7 @@ using Application.Models.VideoProcessing;
 using Application.Features.Videos.Queries.GetByVideo;
 using Application.Features.Videos.Queries.GetVideoPrivacies;
 using Application.Features.Videos.Commands.ReactVideo;
+using Application.Features.Videos.Commands.IncrementView;
 
 
 namespace WeTapAPI.Controllers;
@@ -106,6 +107,15 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     public async Task<ActionResult> React([FromBody] VideoReactionModel model)
     {
         var command = new ReactVideoCommand(model);
+        await mediator.Send(command);
+        return Ok();
+    }
+
+    [HttpPost("{id}/view")]
+    [AllowAnonymous]
+    public async Task<ActionResult> IncrementView([FromRoute] long id)
+    {
+        var command = new IncrementViewCommand(id);
         await mediator.Send(command);
         return Ok();
     }
