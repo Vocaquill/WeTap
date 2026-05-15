@@ -9,6 +9,7 @@ import type { IVideoDeleteRequest } from "../../types/Video/IVideoDeleteRequest.
 import type { IVideoProcessingResult } from "../../types/Video/IVideoProcessingResult.ts";
 import type { IGetByRequest } from "../../types/Additional/IGetByRequest.ts";
 import type { IPagedResult } from "../../types/Additional/IPagedResult.ts";
+import type {IVideoReactionRequest} from "../../types/Video/IVideoReactionRequest.ts";
 
 export const apiVideos = createApi({
     reducerPath: "api/videos",
@@ -76,6 +77,15 @@ export const apiVideos = createApi({
                 method: "GET",
             }),
         }),
+        reactVideo: builder.mutation<void, IVideoReactionRequest>({
+            query: (body) => ({
+                url: "react",
+                method: "POST",
+                body,
+            }),
+            //@ts-ignore
+            invalidatesTags: (result, error, { movieId }) => [{ type: "Movie", id: movieId }],
+        }),
     }),
 });
 
@@ -87,4 +97,5 @@ export const {
     useEditVideoMutation,
     useDeleteVideoMutation,
     useGetPrivaciesQuery,
+    useReactVideoMutation,
 } = apiVideos;

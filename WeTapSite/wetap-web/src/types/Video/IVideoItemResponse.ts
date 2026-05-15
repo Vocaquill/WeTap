@@ -23,4 +23,6 @@ export interface IVideoItemResponse {
     tags: ITagItemResponse[];
     privacy?: IVideoPrivacyItemResponse;
     language?: ILanguageItemResponse;
+    likesCount: number;
+    dislikesCount: number;
 }

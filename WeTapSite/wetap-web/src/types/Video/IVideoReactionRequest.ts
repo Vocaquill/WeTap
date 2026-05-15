@@ -1,4 +1,4 @@
-export interface IVideoReaction {
-    movieId: number;
+export interface IVideoReactionRequest {
+    videoId: number;
     isLike: boolean;
 }
