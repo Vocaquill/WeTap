@@ -5,7 +5,7 @@ import { APP_ENV } from '../env';
 import { Play, Eye, TrendingUp } from 'lucide-react';
 
 function UserHomePage() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
     const { data, isLoading } = useSearchVideosQuery({
         page: 1,

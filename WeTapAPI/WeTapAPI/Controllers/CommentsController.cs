@@ -1,5 +1,7 @@
 using System.Security.Claims;
 using Application.Features.Comments.Commands.CreateComment;
+using Application.Features.Comments.Commands.DeleteComment;
+using Application.Features.Comments.Commands.UpdateComment;
 using Application.Features.Comments.Queries.GetCommentsReplies;
 using Application.Features.Comments.Queries.GetVideoComments;
 using Application.Models.Comments;
@@ -32,17 +34,34 @@ public class CommentsController(IMediator mediator) : ControllerBase
     [HttpPost]
     [Authorize]
     public async Task<ActionResult<CommentsItemModal>> Create(
-        [FromBody] CreateCommentRequest request)
+        [FromBody] CreateCommentRequest request
+    )
     {
-        var command = new CreateCommentCommand(
-            request.Content,
-            request.VideoId,
-            request.ParentId
-        );
+        var command = new CreateCommentCommand(request.Content, request.VideoId, request.ParentId);
 
         var result = await mediator.Send(command);
         return Ok(result);
     }
+
+    [HttpPut("{id:long}")]
+    [Authorize]
+    public async Task<ActionResult<CommentsItemModal>> Update(
+        long id,
+        [FromBody] UpdateCommentRequest request
+    )
+    {
+        var result = await mediator.Send(new UpdateCommentCommand(id, request.Content));
+        return Ok(result);
+    }
+
+    [HttpDelete("{id:long}")]
+    [Authorize]
+    public async Task<IActionResult> Delete([FromRoute] long id)
+    {
+        await mediator.Send(new DeleteCommentCommand(id));
+        return NoContent();
+    }
 }
 
 public record CreateCommentRequest(string Content, long VideoId, long? ParentId);
+
