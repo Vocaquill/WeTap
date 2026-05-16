@@ -5,7 +5,7 @@ import { useSearchMoviesQuery } from '../services/api/apiMovies';
 import { motion } from 'framer-motion';
 
 function UserHomePage() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { data, isLoading } = useSearchMoviesQuery({ page: 1, itemPerPage: 6 });
 

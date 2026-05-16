@@ -1,21 +1,21 @@
+using System.Text.Json;
 using Application.Constants;
 using Application.Interfaces;
 using Application.Models.Genre;
+using Application.Models.Language;
 using Application.Models.Tag;
+using Application.Models.User;
 using Application.Models.Video;
 using AutoMapper;
 using Domain;
+using Domain.Entities.Channel;
 using Domain.Entities.Genre;
 using Domain.Entities.Identity;
-using Domain.Entities.Tag;
 using Domain.Entities.Language;
-using Application.Models.Language;
+using Domain.Entities.Tag;
 using Domain.Entities.Video;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
-using Application.Models.User;
-using Domain.Entities.Channel;
 
 namespace Application.Services;
 
@@ -25,7 +25,8 @@ public class SeederService(
     UserManager<UserEntity> userManager,
     IMapper mapper,
     IImageService imageService,
-    IVideoFileService videoFileService) : ISeederService
+    IVideoFileService videoFileService
+) : ISeederService
 {
     public async Task SeedGenresAsync(string jsonPath)
     {
@@ -36,7 +37,10 @@ public class SeederService(
             throw new FileNotFoundException("Файл Genres.json не знайдено.", jsonPath);
 
         var json = await File.ReadAllTextAsync(jsonPath);
-        var genresData = JsonSerializer.Deserialize<List<GenreSeedModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var genresData = JsonSerializer.Deserialize<List<GenreSeedModel>>(
+            json,
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+        );
 
         if (genresData != null)
         {
@@ -62,17 +66,24 @@ public class SeederService(
             throw new FileNotFoundException("Файл Videos.json не знайдено.", jsonPath);
 
         var json = await File.ReadAllTextAsync(jsonPath);
-        var videosData = JsonSerializer.Deserialize<List<VideoSeedModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var videosData = JsonSerializer.Deserialize<List<VideoSeedModel>>(
+            json,
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+        );
 
         if (videosData != null)
         {
             var privacies = await appDbContext.VideoPrivacies.ToListAsync();
-            var publicPrivacy = privacies.FirstOrDefault(p => p.SystemCode == VideoPrivacyConstants.Public);
+            var publicPrivacy = privacies.FirstOrDefault(p =>
+                p.SystemCode == VideoPrivacyConstants.Public
+            );
 
             var channel = await appDbContext.Channels.FirstOrDefaultAsync();
             if (channel == null)
             {
-                Console.WriteLine("SeedVideosAsync: No channel found in the database. Skipping video seeding.");
+                Console.WriteLine(
+                    "SeedVideosAsync: No channel found in the database. Skipping video seeding."
+                );
                 return;
             }
 
@@ -84,7 +95,9 @@ public class SeederService(
                 var entity = mapper.Map<VideoEntity>(v);
                 entity.ChannelId = channel.Id;
 
-                var privacy = privacies.FirstOrDefault(p => p.SystemCode == v.PrivacySystemCode) ?? publicPrivacy;
+                var privacy =
+                    privacies.FirstOrDefault(p => p.SystemCode == v.PrivacySystemCode)
+                    ?? publicPrivacy;
                 if (privacy != null)
                 {
                     entity.PrivacyId = privacy.Id;
@@ -120,7 +133,9 @@ public class SeederService(
 
                 if (!string.IsNullOrEmpty(v.LanguageCode))
                 {
-                    var language = await appDbContext.VideoLanguages.FirstOrDefaultAsync(l => l.LanguageCode == v.LanguageCode);
+                    var language = await appDbContext.VideoLanguages.FirstOrDefaultAsync(l =>
+                        l.LanguageCode == v.LanguageCode
+                    );
                     if (language != null)
                     {
                         entity.LanguageId = language.Id;
@@ -129,7 +144,9 @@ public class SeederService(
 
                 if (entity.LanguageId == 0)
                 {
-                    var defaultLanguage = await appDbContext.VideoLanguages.FirstOrDefaultAsync(l => l.LanguageCode == "uk");
+                    var defaultLanguage = await appDbContext.VideoLanguages.FirstOrDefaultAsync(l =>
+                        l.LanguageCode == "uk"
+                    );
                     if (defaultLanguage != null)
                     {
                         entity.LanguageId = defaultLanguage.Id;
@@ -141,7 +158,7 @@ public class SeederService(
             }
         }
     }
-    
+
     public async Task SeedTagsAsync(string jsonPath)
     {
         if (await appDbContext.Tags.AnyAsync(t => !t.IsDeleted))
@@ -151,7 +168,10 @@ public class SeederService(
             throw new FileNotFoundException("Файл Tags.json не знайдено.", jsonPath);
 
         var json = await File.ReadAllTextAsync(jsonPath);
-        var tagsData = JsonSerializer.Deserialize<List<TagSeedModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var tagsData = JsonSerializer.Deserialize<List<TagSeedModel>>(
+            json,
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+        );
 
         if (tagsData != null)
         {
@@ -170,7 +190,7 @@ public class SeederService(
         {
             new() { Name = "Публічне", SystemCode = VideoPrivacyConstants.Public },
             new() { Name = "Приватне", SystemCode = VideoPrivacyConstants.Private },
-            new() { Name = "За посиланням", SystemCode = VideoPrivacyConstants.UrlOnly }
+            new() { Name = "За посиланням", SystemCode = VideoPrivacyConstants.UrlOnly },
         };
 
         await appDbContext.VideoPrivacies.AddRangeAsync(privacies);
@@ -186,7 +206,10 @@ public class SeederService(
             throw new FileNotFoundException("Файл Languages.json не знайдено.", jsonPath);
 
         var json = await File.ReadAllTextAsync(jsonPath);
-        var languagesData = JsonSerializer.Deserialize<List<LanguageSeedModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var languagesData = JsonSerializer.Deserialize<List<LanguageSeedModel>>(
+            json,
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+        );
 
         if (languagesData != null)
         {
@@ -202,10 +225,7 @@ public class SeederService(
         {
             if (!await roleManager.RoleExistsAsync(roleName))
             {
-                var result = await roleManager.CreateAsync(new RoleEntity
-                {
-                    Name = roleName
-                });
+                var result = await roleManager.CreateAsync(new RoleEntity { Name = roleName });
 
                 if (!result.Succeeded)
                 {
@@ -245,7 +265,7 @@ public class SeederService(
                     Id = entity.Id,
                     Name = $"{entity.FirstName} {entity.LastName}",
                     NickName = entity.UserName ?? entity.Email.Split('@')[0],
-                    Author = entity
+                    Author = entity,
                 };
                 await appDbContext.Channels.AddAsync(channel);
                 await appDbContext.SaveChangesAsync();
