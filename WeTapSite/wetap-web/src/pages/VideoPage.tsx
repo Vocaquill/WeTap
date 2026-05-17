@@ -5,6 +5,8 @@ import {
     ThumbsDown,
     Share2,
     MoreHorizontal,
+    Globe,
+    Shield,
 } from 'lucide-react';
 import {
     useParams,
@@ -118,22 +120,43 @@ function VideoPage() {
                             </div>
                         </div>
 
-                        <div className="mt-4 p-3 bg-zinc-800/50 rounded-xl hover:bg-zinc-800 transition-colors group">
-                            <div className="flex gap-3 text-sm font-bold mb-1">
+                        <div className="mt-4 p-4 bg-zinc-800/50 rounded-xl hover:bg-zinc-800 transition-colors group">
+                            <div className="flex flex-wrap gap-4 text-sm font-bold mb-3">
                                 <span>{video.viewCount} переглядів</span>
                                 <div className="flex items-center gap-1">
                                     <Calendar size={14}/>
                                     {video.dateCreated}
                                 </div>
+                                {video.language && (
+                                    <div className="flex items-center gap-1 text-zinc-300 font-medium">
+                                        <Globe size={14}/>
+                                        {video.language.name}
+                                    </div>
+                                )}
+                                {video.privacy && (
+                                    <div className="flex items-center gap-1 text-zinc-300 font-medium">
+                                        <Shield size={14}/>
+                                        {video.privacy.name}
+                                    </div>
+                                )}
                             </div>
-                            <div className="flex gap-2 mb-2">
-                                {video.genres.map((g) => (
-                                    <span key={g.id} className="text-blue-400 text-sm hover:underline cursor-pointer">
-                                        #{g.name.replace(/\s+/g, '')}
-                                    </span>
-                                ))}
-                            </div>
-                            <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                            
+                            {(video.genres?.length > 0 || video.tags?.length > 0) && (
+                                <div className="flex flex-wrap gap-2 mb-4 items-center">
+                                    {video.genres?.map((g) => (
+                                        <span key={`genre-${g.id}`} className="text-blue-400 text-sm font-medium hover:underline cursor-pointer">
+                                            #{g.name.replace(/\s+/g, '')}
+                                        </span>
+                                    ))}
+                                    {video.tags?.map((t) => (
+                                        <span key={`tag-${t.id}`} className="text-zinc-300 text-xs bg-zinc-700/50 border border-zinc-600 px-2.5 py-1 rounded-full hover:bg-zinc-600 cursor-pointer transition-colors">
+                                            {t.name}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+
+                            <p className="text-sm leading-relaxed whitespace-pre-wrap text-zinc-200">
                                 {video.description || "Опис відсутній."}
                             </p>
                         </div>
