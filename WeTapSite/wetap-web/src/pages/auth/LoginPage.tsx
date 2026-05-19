@@ -4,10 +4,10 @@ import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { message } from 'antd';
 
-import {useLoginByGoogleMutation, useLoginMutation} from "../services/api/apiAccount.ts";
-import type {ILogin, ServerError} from "../types/user.ts";
+import {useLoginByGoogleMutation, useLoginMutation} from "../../services/api/apiAccount";
+import type {ILogin, ServerError} from "../../types/user";
 import { useGoogleLogin } from '@react-oauth/google';
-import LoadingOverlay from "../components/ui/loading/LoadingOverlay.tsx";
+import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 
 function LoginPage() {
     const navigate = useNavigate();

@@ -4,10 +4,10 @@ import { Mail, Lock, User, Camera, ArrowRight, ChevronLeft } from 'lucide-react'
 import { motion } from 'framer-motion';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from "../store/slices/authSlice.ts";
-import { useRegisterMutation } from "../services/api/apiAccount.ts";
-import type { ServerError, IRegister } from "../types/user.ts";
-import LoadingOverlay from "../components/ui/loading/LoadingOverlay.tsx";
+import { loginSuccess } from "../../store/slices/authSlice";
+import { useRegisterMutation } from "../../services/api/apiAccount";
+import type { ServerError, IRegister } from "../../types/user";
+import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 
 function RegisterPage() {
     const navigate = useNavigate();

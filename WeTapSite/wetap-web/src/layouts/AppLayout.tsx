@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
-import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
-import Footer from '../components/Footer' // Імпортуємо наш новий футер
-import PageTransition from '../components/PageTransition';
+import Sidebar from '../components/layout/Sidebar'
+import Header from '../components/layout/Header'
+import Footer from '../components/layout/Footer' // Імпортуємо наш новий футер
+import PageTransition from '../components/layout/PageTransition';
 
 function AppLayout() {
   const [isOpen, setIsOpen] = useState(false)

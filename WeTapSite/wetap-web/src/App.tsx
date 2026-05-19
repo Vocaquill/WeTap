@@ -1,14 +1,14 @@
 //Program
 import { Routes, Route } from 'react-router-dom'
 //user
-import UserHomePage from './pages/UserHomePage.tsx'
-import VideoPage from './pages/VideoPage';
-import LoginPage from './pages/LoginPage.tsx';
-import ProfilePage from './pages/ProfilePage.tsx';
-import EditProfilePage from './pages/EditProfilePage.tsx';
-import RegisterPage from './pages/RegisterPage.tsx';
-import ForgotPasswordPage from './pages/ForgotPasswordPage.tsx';
-import ResetPasswordPage from './pages/ResetPasswordPage.tsx';
+import UserHomePage from './pages/home/UserHomePage'
+import VideoPage from './pages/video/VideoPage';
+import LoginPage from './pages/auth/LoginPage';
+import ProfilePage from './pages/profile/ProfilePage';
+import EditProfilePage from './pages/profile/EditProfilePage';
+import RegisterPage from './pages/auth/RegisterPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 //admin
 import AdminLayout from './layouts/AdminLayout.tsx'
 import GenresPage from './pages/Admin/GenresPage.tsx'
@@ -17,9 +17,9 @@ import Dashboard from './pages/Admin/Dashboard.tsx'
 import AppLayout from './layouts/AppLayout.tsx'
 //Rout
 // import RequireAdmin from "./components/ProtectedRoute/RequireAdmin.tsx";
-import RequireLogin from "./components/ProtectedRoute/RequireLogin.tsx";
-import NotFoundPage from "./pages/NotFoundPage.tsx";
-import CreateVideoPage from "./pages/CreateVideoPage.tsx";
+import RequireLogin from "./components/auth/RequireLogin";
+import NotFoundPage from "./pages/error/NotFoundPage";
+import CreateVideoPage from "./pages/video/CreateVideoPage";
 
 
 function App() {

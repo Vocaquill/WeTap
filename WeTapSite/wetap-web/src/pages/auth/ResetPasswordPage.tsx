@@ -2,7 +2,7 @@ import {ChevronLeft, ArrowRight, Lock} from 'lucide-react';
 import {motion} from 'framer-motion';
 import {useNavigate, useSearchParams} from "react-router-dom";
 import React, {useState} from "react";
-import {useResetPasswordMutation} from "../services/api/apiAccount.ts";
+import {useResetPasswordMutation} from "../../services/api/apiAccount";
 
 function ResetPasswordPage() {
     const [searchParams] = useSearchParams();

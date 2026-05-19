@@ -1,6 +1,6 @@
 import {Outlet, NavLink, useLocation, useNavigate} from 'react-router-dom';
 import {LayoutDashboard, Film, Tag, HomeIcon} from 'lucide-react';
-import PageTransition from '../components/PageTransition';
+import PageTransition from '../components/layout/PageTransition';
 
 function AdminLayout() {
     const location = useLocation();

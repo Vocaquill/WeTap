@@ -1,7 +1,8 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { createBaseQuery } from "../../utils/createBaseQuery.ts";
 import { serialize } from "object-to-formdata";
-import type { IVideoItemResponse, IVideoPrivacyItemResponse } from "../../types/Video/IVideoItemResponse.ts";
+import type { IVideoItemResponse } from "../../types/Video/IVideoItemResponse.ts";
+import type { IVideoPrivacyItemResponse } from "../../types/Video/IVideoPrivacyItemResponse.ts";
 import type { IVideoSearchRequest } from "../../types/Video/IVideoSearchRequest.ts";
 import type { IVideoCreateRequest } from "../../types/Video/IVideoCreateRequest.ts";
 import type { IVideoEditRequest } from "../../types/Video/IVideoEditRequest.ts";
@@ -59,7 +60,7 @@ export const apiVideos = createApi({
                 method: "PUT",
                 body: serialize(body),
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: "Video", id }, "Videos"],
+            invalidatesTags: (_result, _error, { id }) => [{ type: "Video", id }, "Videos"],
         }),
 
         deleteVideo: builder.mutation<IVideoItemResponse[], IVideoDeleteRequest>({
@@ -68,7 +69,7 @@ export const apiVideos = createApi({
                 method: "DELETE",
                 body,
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: "Video", id }, "Videos"],
+            invalidatesTags: (_result, _error, { id }) => [{ type: "Video", id }, "Videos"],
         }),
 
         getPrivacies: builder.query<IVideoPrivacyItemResponse[], void>({
@@ -83,7 +84,7 @@ export const apiVideos = createApi({
                 method: "POST",
                 body,
             }),
-            invalidatesTags: (result, error, { videoId }) => [{ type: "Video", id: videoId }, "Videos"],
+            invalidatesTags: (_result, _error, { videoId }) => [{ type: "Video", id: videoId }, "Videos"],
         }),
         incrementView: builder.mutation<void, number>({
             query: (id) => ({

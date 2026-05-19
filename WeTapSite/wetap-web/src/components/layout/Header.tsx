@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react';
 import {useNavigate, useLocation} from 'react-router-dom';
 import { Menu, X, Bell, User} from 'lucide-react';
-import {useAppSelector} from "../store";
-import {APP_ENV} from "../env";
+import {useAppSelector} from "../../store/index";
+import {APP_ENV} from "../../env/index";
 
 interface HeaderProps {
     isOpen: boolean;

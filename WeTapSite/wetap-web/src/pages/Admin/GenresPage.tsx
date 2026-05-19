@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { Search, Plus, Edit2, Trash2, Link2, X, Loader2 } from 'lucide-react';
 
-import AddGenreModal from '../../components/AddGenreModal';
-import EditGenreModal from '../../components/EditGenreModal';
+import AddGenreModal from '../../components/modal/AddGenreModal';
+import EditGenreModal from '../../components/modal/EditGenreModal';
 import DeleteModal from "../../components/ui/common/DeleteModal.tsx";
 
-import type { IGenreItem, IGenreSearch } from '../../types/genre';
+import type { IGenreItemResponse as IGenreItem } from '../../types/Genre/IGenreItemResponse';
+import type { IGenreSearchRequest as IGenreSearch } from '../../types/Genre/IGenreSearchRequest';
 import { useSearchGenresQuery, useDeleteGenreMutation } from '../../services/api/apiGenres';
 
-import { Pagination } from '../../components/Pagination';
+import { Pagination } from '../../components/ui/common/Pagination';
 import { APP_ENV } from "../../env";
 
 function GenresPage() {
@@ -28,7 +29,7 @@ function GenresPage() {
   const [deleteGenre, { isLoading: isDeleting }] = useDeleteGenreMutation();
 
   const handleSearchChange = <K extends keyof IGenreSearch>(key: K, value: IGenreSearch[K]) => {
-    setSearchParams((prev) => ({ ...prev, [key]: value, page: 1 }));
+    setSearchParams((prev: IGenreSearch) => ({ ...prev, [key]: value, page: 1 }));
   };
 
   const resetFilters = () => {
@@ -178,7 +179,7 @@ function GenresPage() {
                 <Pagination
                     currentPage={data.pagination.currentPage}
                     totalPages={data.pagination.totalPages}
-                    onChange={(page) => setSearchParams((prev) => ({ ...prev, page }))}
+                    onChange={(page) => setSearchParams((prev: IGenreSearch) => ({ ...prev, page }))}
                 />
               </div>
           )}

@@ -13,11 +13,11 @@ import {
     //useNavigate,
     Link
 } from 'react-router-dom';
-import PageTransition from '../components/PageTransition';
-import {MoviePlayer} from "../components/movie/MoviePlayer.tsx";
-import {APP_ENV} from "../env";
-import LoadingOverlay from "../components/LoadingOverlay.tsx";
-import {useGetByQuery, useIncrementViewMutation, useReactVideoMutation, useSearchVideosQuery} from "../services/api/apiVideos.ts";
+import PageTransition from '../../components/layout/PageTransition';
+import {MoviePlayer} from "../../components/movie/MoviePlayer";
+import {APP_ENV} from "../../env/index";
+import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
+import {useGetByQuery, useIncrementViewMutation, useReactVideoMutation, useSearchVideosQuery} from "../../services/api/apiVideos";
 
 function VideoPage() {
     //const navigate = useNavigate();

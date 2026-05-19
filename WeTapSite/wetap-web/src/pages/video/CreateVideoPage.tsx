@@ -1,23 +1,23 @@
 import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCreateVideoMutation, useGetPrivaciesQuery } from '../services/api/apiVideos';
-import { useSearchGenresQuery } from '../services/api/apiGenres';
-import { useSearchTagsQuery } from '../services/api/apiTags';
-import { useSearchLanguagesQuery } from '../services/api/apiLanguages';
-import type { IVideoCreateRequest } from '../types/Video/IVideoCreateRequest';
-import type { IGenreItemResponse } from '../types/Genre/IGenreItemResponse';
-import type { ITagItemResponse } from '../types/Tag/ITagItemResponse';
-import { useVideoProgress } from '../hooks/useVideoProgress';
+import { useCreateVideoMutation, useGetPrivaciesQuery } from '../../services/api/apiVideos';
+import { useSearchGenresQuery } from '../../services/api/apiGenres';
+import { useSearchTagsQuery } from '../../services/api/apiTags';
+import { useSearchLanguagesQuery } from '../../services/api/apiLanguages';
+import type { IVideoCreateRequest } from '../../types/Video/IVideoCreateRequest';
+import type { IGenreItemResponse } from '../../types/Genre/IGenreItemResponse';
+import type { ITagItemResponse } from '../../types/Tag/ITagItemResponse';
+import { useVideoProgress } from '../../hooks/useVideoProgress';
 import { Progress, Modal } from 'antd';
 
-import { InputField } from '../components/form/InputField';
-import { TextAreaField } from '../components/form/TextAreaField';
-import { FileUploadField } from '../components/form/FileUploadField';
-import { PrimaryButton } from '../components/form/PrimaryButton';
-import { useFormServerErrors } from "../utils/useFormServerErrors.ts";
-import LoadingOverlay from "../components/LoadingOverlay.tsx";
+import { InputField } from '../../components/form/InputField';
+import { TextAreaField } from '../../components/form/TextAreaField';
+import { FileUploadField } from '../../components/form/FileUploadField';
+import { PrimaryButton } from '../../components/form/PrimaryButton';
+import { useFormServerErrors } from "../../hooks/useFormServerErrors";
+import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 
-import { slugify } from '../utils/slugify';
+import { slugify } from '../../utils/slugify';
 
 interface SelectFieldProps {
     label: string;

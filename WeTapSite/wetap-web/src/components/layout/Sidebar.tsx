@@ -1,7 +1,7 @@
 import {Link, NavLink} from 'react-router-dom';
 // Якщо використовуєте іконки (наприклад, lucide-react)
 import {ShieldCheck, Home, Film, Star, Anvil} from 'lucide-react';
-import {useAppSelector} from "../store";
+import {useAppSelector} from "../../store/index";
 
 interface SidebarProps {
     isOpen: boolean;

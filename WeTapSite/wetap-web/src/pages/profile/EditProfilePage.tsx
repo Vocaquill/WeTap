@@ -1,13 +1,13 @@
 import {User, Mail, ChevronLeft, Camera, ArrowRight} from 'lucide-react';
 import {motion} from 'framer-motion';
-import LoadingOverlay from "../components/ui/loading/LoadingOverlay.tsx";
-import {useAppDispatch, useAppSelector} from "../store";
+import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
+import {useAppDispatch, useAppSelector} from "../../store/index";
 import React, {useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {APP_ENV} from "../env";
-import type {IUserEdit} from "../types/user.ts";
-import {useEditAccountMutation} from "../services/api/apiAccount.ts";
-import {loginSuccess} from "../store/slices/authSlice.ts";
+import {APP_ENV} from "../../env/index";
+import type {IUserEdit} from "../../types/user";
+import {useEditAccountMutation} from "../../services/api/apiAccount";
+import {loginSuccess} from "../../store/slices/authSlice";
 
 function EditProfilePage() {
     const {user} = useAppSelector(state => state.auth);

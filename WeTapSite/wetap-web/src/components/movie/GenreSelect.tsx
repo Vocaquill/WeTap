@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {useSearchGenresQuery} from "../../services/api/apiGenres.ts";
-import type { IGenreItem } from '../../types/genre.ts';
+import type { IGenreItemResponse as IGenreItem } from '../../types/Genre/IGenreItemResponse';
 interface Props {
     value?: number;
     onChange: (genreId?: number) => void;

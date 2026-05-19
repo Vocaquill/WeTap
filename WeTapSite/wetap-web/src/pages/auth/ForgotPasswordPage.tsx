@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Mail, ArrowLeft, Send, CheckCircle2} from 'lucide-react';
 import {motion, AnimatePresence} from 'framer-motion';
-import {useForgotPasswordMutation} from "../services/api/apiAccount.ts"; // Імпортуємо фон
+import {useForgotPasswordMutation} from "../../services/api/apiAccount"; // Імпортуємо фон
 function ForgotPasswordPage() {
     const [forgot] = useForgotPasswordMutation();
     const navigate = useNavigate();

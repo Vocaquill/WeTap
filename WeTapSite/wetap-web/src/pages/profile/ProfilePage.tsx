@@ -1,12 +1,12 @@
 import {User, Mail, Shield, Settings, LogOut, Edit2} from 'lucide-react';
 import {motion} from 'framer-motion';
-import {useAppSelector} from "../store";
-import {APP_ENV} from "../env";
-import {logout} from "../store/slices/authSlice.ts";
+import {useAppSelector} from "../../store/index";
+import {APP_ENV} from "../../env/index";
+import {logout} from "../../store/slices/authSlice";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
-import ChangePasswordModal from "../components/modal/ChangePasswordModal.tsx";
+import ChangePasswordModal from "../../components/modal/ChangePasswordModal";
 
 function ProfilePage() {
     const {user} = useAppSelector(state => state.auth);

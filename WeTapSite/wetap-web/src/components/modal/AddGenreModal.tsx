@@ -1,14 +1,14 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2 } from 'lucide-react';
-import { slugify } from '../utils/slugify';
+import { slugify } from '../../utils/slugify';
 
-import { useCreateGenreMutation } from '../services/api/apiGenres';
-import { useFormServerErrors } from "../utils/useFormServerErrors";
-import type { IGenreCreate } from '../types/genre';
-import {InputField} from "./form/InputField.tsx";
-import { FileUploadField } from './form/FileUploadField.tsx';
-import {PrimaryButton} from "./form/PrimaryButton.tsx";
+import { useCreateGenreMutation } from '../../services/api/apiGenres';
+import { useFormServerErrors } from "../../hooks/useFormServerErrors";
+import type { IGenreCreateRequest as IGenreCreate } from '../../types/Genre/IGenreCreateRequest';
+import {InputField} from "../form/InputField";
+import { FileUploadField } from '../form/FileUploadField';
+import {PrimaryButton} from "../form/PrimaryButton";
 
 interface Props {
   isOpen: boolean;

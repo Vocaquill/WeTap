@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useSearchVideosQuery } from '../services/api/apiVideos';
-import { APP_ENV } from '../env';
+import { useSearchVideosQuery } from '../../services/api/apiVideos';
+import { APP_ENV } from '../../env/index';
 import { Play, Eye, TrendingUp } from 'lucide-react';
 
 function UserHomePage() {

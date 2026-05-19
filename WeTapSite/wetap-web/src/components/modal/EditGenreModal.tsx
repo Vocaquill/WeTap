@@ -1,15 +1,16 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2 } from 'lucide-react';
-import { slugify } from '../utils/slugify';
+import { slugify } from '../../utils/slugify';
 
-import { useEditGenreMutation } from '../services/api/apiGenres';
-import { useFormServerErrors } from "../utils/useFormServerErrors";
-import type { IGenreItem, IGenreEdit } from '../types/genre';
-import { InputField } from '../components/form/InputField';
-import { FileUploadField } from '../components/form/FileUploadField';
-import { PrimaryButton } from '../components/form/PrimaryButton';
-import { APP_ENV } from '../env';
+import { useEditGenreMutation } from '../../services/api/apiGenres';
+import { useFormServerErrors } from "../../hooks/useFormServerErrors";
+import type { IGenreItemResponse as IGenreItem } from '../../types/Genre/IGenreItemResponse';
+import type { IGenreEditRequest as IGenreEdit } from '../../types/Genre/IGenreEditRequest';
+import { InputField } from '../form/InputField';
+import { FileUploadField } from '../form/FileUploadField';
+import { PrimaryButton } from '../form/PrimaryButton';
+import { APP_ENV } from '../../env/index';
 
 interface Props {
   isOpen: boolean;
