@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import * as signalR from "@microsoft/signalr";
 import { APP_ENV } from "../env";
-import type { IVideoProgressUpdate } from "../types/video.ts";
+import type {IVideoProcessingResponse} from "../types/Video/IVideoProcessingResponse.ts";
 
 export const useVideoProgress = (trackingId: string | null) => {
-    const [progress, setProgress] = useState<IVideoProgressUpdate | null>(null);
+    const [progress, setProgress] = useState<IVideoProcessingResponse | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const connectionRef = useRef<signalR.HubConnection | null>(null);
 
@@ -14,7 +14,7 @@ export const useVideoProgress = (trackingId: string | null) => {
             .withAutomaticReconnect()
             .build();
 
-        connection.on("ReceiveProgress", (update: IVideoProgressUpdate) => {
+        connection.on("ReceiveProgress", (update: IVideoProcessingResponse) => {
             console.log("Progress received:", update);
             setProgress(update);
         });
