@@ -1,4 +1,8 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { Play, CheckCircle2 } from 'lucide-react';
+import { useGetAllVideosQuery } from '../services/api/apiVideos';
 import { motion } from 'framer-motion';
 import { useSearchVideosQuery } from '../../services/api/apiVideos';
 import { APP_ENV } from '../../env/index';
@@ -6,95 +10,155 @@ import { Play, Eye, TrendingUp } from 'lucide-react';
 
 function UserHomePage() {
   const navigate = useNavigate();
+  const [activeTag, setActiveTag] = useState('All');
 
-    const { data, isLoading } = useSearchVideosQuery({
-        page: 1,
-        itemPerPage: 20
-    });
+  const { data: videos, isLoading } = useGetAllVideosQuery();
 
-    if (isLoading) {
-        return (
-            <div className="min-h-screen bg-[#050505] p-6 md:p-10">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-                    {[...Array(12)].map((_, i) => (
-                        <div key={i} className="space-y-4">
-                            <div className="aspect-video bg-zinc-900 rounded-2xl animate-pulse border border-white/5" />
-                            <div className="flex gap-3">
-                                <div className="w-10 h-10 rounded-full bg-zinc-900 animate-pulse flex-shrink-0" />
-                                <div className="flex-1 space-y-2">
-                                    <div className="h-4 bg-zinc-900 rounded w-full animate-pulse" />
-                                    <div className="h-3 bg-zinc-900 rounded w-2/3 animate-pulse" />
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+  const heroVideo = videos?.[0];
+  const gridVideos = videos?.slice(1) || [];
+  // Поки що теги статичні потім зроблю динамічні
+  const tags = ['All', 'Subscriptions', 'Posts', 'Music', 'Tech', 'Design', 'Comedy', 'Movies'];
+
+  return (
+    <div className="min-h-screen bg-[#0f0f11] text-white pb-12">
+
+      {/* --- HERO СЕКЦІЯ (Головне відео) --- */}
+      {heroVideo && (
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8 pt-2">
+          {/* Велике прев'ю відео */}
+          <div className="lg:col-span-7 aspect-video bg-zinc-900 rounded-[2rem] overflow-hidden relative group border border-white/5 shadow-2xl">
+            <img
+              src={heroVideo.image ? `${APP_ENV.IMAGES_400_URL}${heroVideo.image}` : '/placeholder.jpg'}
+              className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-700"
+              alt={heroVideo.title}
+            />
+            <div className="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <button
+                onClick={() => navigate(`/movie/${heroVideo.slug}`)}
+                className="w-16 h-16 bg-rose-600 rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-transform"
+              >
+                <Play size={26} fill="white" className="ml-1 text-white" />
+              </button>
             </div>
-        );
-    }
+          </div>
 
-    return (
-        <div className="min-h-screen bg-[#050505] text-white p-6 md:p-10 pb-20">
-            <header className="mb-12 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-red-600/10 rounded-xl">
-                        <TrendingUp className="text-red-600" size={24} />
+          {/* Інформація про головне відео праворуч */}
+          <div className="lg:col-span-5 space-y-4 pr-4">
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-zinc-100">
+              {heroVideo.title}
+            </h1>
+
+            <div className="flex items-center gap-2 group cursor-pointer">
+              <span className="font-bold text-zinc-300 hover:text-white transition-colors">
+                {heroVideo.channel?.name || 'Unknown Channel'}
+              </span>
+              <CheckCircle2 size={16} className="text-zinc-400" fill="currentColor" />
+            </div>
+
+            <p className="text-zinc-400 text-sm md:text-base font-medium leading-relaxed max-w-md line-clamp-3">
+              {heroVideo.description}
+            </p>
+
+            <div className="text-zinc-500 text-sm font-semibold">
+              {heroVideo.viewCount} views • {heroVideo.dateCreated}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* --- ХЕДЕР КАТЕГОРІЙ (ТЕГИ) --- */}
+      <section className="mb-8 flex items-center gap-3 overflow-x-auto pb-3 no-scrollbar">
+        <button className="p-3 bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors shrink-0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M4 6h16M4 12h10M4 18h7" />
+          </svg>
+        </button>
+
+        {tags.map((tag) => (
+          <button
+            key={tag}
+            onClick={() => setActiveTag(tag)}
+            className={`px-5 py-2.5 rounded-xl font-bold text-sm uppercase tracking-wider transition-all duration-300 whitespace-nowrap ${activeTag === tag
+              ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/20'
+              : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white'
+              }`}
+          >
+            {tag}
+          </button>
+        ))}
+      </section>
+
+      {/* --- СІТКА НИЖНІХ ВІДЕО (16:9 з аватарками каналів) --- */}
+      <section>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+          {isLoading ? (
+            // Скелетони під час завантаження
+            [...Array(6)].map((_, i) => (
+              <div key={i} className="space-y-4 animate-pulse">
+                <div className="aspect-video bg-zinc-900 rounded-[2rem] border border-white/5" />
+                <div className="flex gap-3">
+                  <div className="w-10 h-10 bg-zinc-900 rounded-full" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-zinc-900 rounded w-3/4" />
+                    <div className="h-3 bg-zinc-900 rounded w-1/2" />
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            gridVideos.map((video) => (
+              <motion.div
+                key={video.id}
+                whileHover={{ y: -4 }}
+                onClick={() => navigate(`/movie/${video.slug}`)}
+                className="group cursor-pointer space-y-4"
+              >
+                {/* Горизонтальна обкладинка відео 16:9 */}
+                <div className="relative aspect-video bg-zinc-900 rounded-[2rem] overflow-hidden border border-white/5 group-hover:border-rose-500/30 transition-colors duration-500">
+                  <img
+                    src={video.image ? `${APP_ENV.IMAGES_400_URL}${video.image}` : '/placeholder.jpg'}
+                    alt={video.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
+                    <div className="w-12 h-12 bg-rose-600 rounded-full flex items-center justify-center shadow-lg">
+                      <Play size={20} fill="white" className="ml-0.5 text-white" />
                     </div>
-                    <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tighter italic">
-                        Рекомендовані <span className="text-red-600">відео</span>
-                    </h1>
+                  </div>
                 </div>
-                <div className="hidden md:block">
-                    <span className="text-zinc-500 text-xs font-bold uppercase tracking-widest bg-zinc-900/50 px-4 py-2 rounded-full border border-white/5">
-                        {data?.pagination.totalCount || 0} відео знайдено
-                    </span>
+
+                {/* Інформація про відео: Аватарка + Тексти */}
+                <div className="flex gap-3 px-1">
+                  {/* Аватарка автора (каналу) */}
+                  <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-white/10">
+                    <img
+                      src={video.channel?.avatarImage ? `${APP_ENV.IMAGES_50_URL}${video.channel.avatarImage}` : '/images/user/default.png'}
+                      alt={video.channel?.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* Назва, Автор та Перегляди */}
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <h3 className="font-bold text-base text-zinc-100 group-hover:text-rose-500 transition-colors line-clamp-2 leading-snug">
+                      {video.title}
+                    </h3>
+
+                    <div className="flex items-center gap-1 text-zinc-400 hover:text-white text-sm font-medium transition-colors">
+                      <span className="truncate">{video.channel?.name}</span>
+                      <CheckCircle2 size={14} className="text-zinc-500 shrink-0" fill="currentColor" />
+                    </div>
+
+                    <p className="text-zinc-500 text-xs font-semibold">
+                      {video.viewCount} views • {video.dateCreated}
+                    </p>
+                  </div>
                 </div>
-            </header>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-12">
-                {data?.items.map((video, index) => (
-                    <motion.div
-                        key={video.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: Math.min(index * 0.05, 1) }}
-                        className="group cursor-pointer"
-                        onClick={() => navigate(`/video/${video.slug}`)}
-                    >
-                        <div className="relative aspect-video rounded-[1.5rem] overflow-hidden mb-4 bg-zinc-900 shadow-2xl ring-1 ring-white/5">
-                            <img
-                                src={video.image ? APP_ENV.IMAGES_800_URL + video.image : 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1974'}
-                                alt={video.title}
-                                className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1"
-                            />
-
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-[2px]">
-                                <motion.div
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.9 }}
-                                    className="bg-red-600 p-4 rounded-full shadow-[0_0_30px_rgba(220,38,38,0.5)]"
-                                >
-                                    <Play fill="white" size={28} className="ml-1" />
-                                </motion.div>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-4">
-                            <div className="flex-shrink-0 mt-1">
-                                <div className="relative group/avatar">
-                                    {video.channel?.avatarImage ? (
-                                        <img
-                                            src={APP_ENV.IMAGES_100_URL + video.channel.avatarImage}
-                                            alt={video.channel.name}
-                                            className="w-11 h-11 rounded-2xl object-cover ring-2 ring-zinc-800 transition-all group-hover:ring-red-600"
-                                        />
-                                    ) : (
-                                        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-zinc-700 to-zinc-900 flex items-center justify-center font-bold text-xs ring-2 ring-zinc-800">
-                                            {video.channel?.name?.charAt(0) || 'W'}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
+              </motion.div>
+            ))
+          )}
+        </div>
+      </section>
 
                             <div className="flex-1 min-w-0">
                                 <h3 className="font-bold text-[16px] leading-tight line-clamp-2 group-hover:text-red-500 transition-colors mb-1.5">

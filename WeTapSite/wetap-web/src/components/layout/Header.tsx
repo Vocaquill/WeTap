@@ -5,107 +5,116 @@ import {useAppSelector} from "../../store/index";
 import {APP_ENV} from "../../env/index";
 
 interface HeaderProps {
-    isOpen: boolean;
-    toggleSidebar: () => void;
+  isOpen: boolean;
+  toggleSidebar: () => void;
 }
 
-function Header({isOpen, toggleSidebar}: HeaderProps) {
-    const [scrolled, setScrolled] = useState(false);
-    const navigate = useNavigate();
-    const location = useLocation();
+function Header({ isOpen, toggleSidebar }: HeaderProps) {
+  const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    const isHomePage = location.pathname === '/';
+  const isHomePage = location.pathname === '/';
+  const { user } = useAppSelector(state => state.auth);
 
-    const {user} = useAppSelector(state => state.auth);
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-    // Слідкуємо за скролом, щоб міняти прозорість хедера
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 20);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    return (
-        <header
-            className={`h-16 sticky top-0 z-[40] px-6 flex items-center justify-between transition-all duration-500 border-b
-  ${scrolled
-                ? 'bg-zinc-950/30 backdrop-blur-2xl border-white/5 shadow-2xl shadow-black/40'
-                : 'bg-transparent border-transparent'
-            }`}
+  return (
+    <header
+      className={`h-14 sticky top-0 z-[40] px-4 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-[#0f0f11]/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'
+        }`}
+    >
+      {/* ЛІВА ЧАСТИНА: Бургер-кнопка */}
+      <div className="flex items-center gap-3">
+        <button
+          onClick={toggleSidebar}
+          className="p-2 hover:bg-zinc-900 rounded-xl text-zinc-300 hover:text-white transition-all active:scale-95"
         >
-            {/* Ліва частина */}
-            <div className="flex items-center gap-6">
-                <button
-                    onClick={toggleSidebar}
-                    className="p-2.5 hover:bg-zinc-800/50 rounded-xl text-zinc-400 hover:text-white transition-all group active:scale-95"
-                    title={isOpen ? "Закрити меню" : "Відкрити меню"}
-                >
-                    {isOpen ? <X size={22}/> : <Menu size={22}/>}
-                </button>
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
 
-                {/* Показуємо назву поточного розділу, якщо не на головній */}
-                {!isHomePage && (
-                    <h2 className="text-sm font-black uppercase tracking-widest text-zinc-500 hidden md:block animate-in fade-in slide-in-from-left-4 duration-500">
-                        Результати <span className="text-red-600">пошуку</span>
-                    </h2>
-                )}
+        {!isHomePage && (
+          <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400 hidden md:block">
+            Результати <span className="text-rose-500">пошуку</span>
+          </h2>
+        )}
+      </div>
+
+      {/* ЦЕНТРАЛЬНА ЧАСТИНА: Більший рядок пошуку, але щільніший відступ */}
+      <div className="flex-1 max-w-xl mx-4 flex items-center gap-2">
+        <div className="relative w-full">
+          <input
+            type="text"
+            placeholder="Search"
+            className="w-full bg-zinc-900/90 border border-zinc-800/60 rounded-xl py-2 pl-5 pr-12 text-sm font-medium focus:outline-none focus:border-rose-500/50 focus:bg-zinc-900 transition-all text-zinc-100 placeholder-zinc-500"
+          />
+          <button className="absolute right-4 top-2.5 text-zinc-400 hover:text-white transition-colors">
+            <Search size={20} strokeWidth={2.5} />
+          </button>
+        </div>
+
+        {/* Кнопка мікрофону (іконка 20px) */}
+        <button className="p-2 bg-zinc-900 hover:bg-zinc-800 rounded-xl text-zinc-300 hover:text-white transition-colors shrink-0">
+          <Mic size={20} />
+        </button>
+      </div>
+
+      {/* ПРАВА ЧАСТИНА: Більші іконки (22px) та компактна кнопка профілю */}
+      <div className="flex items-center gap-2">
+        <button className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl transition-all relative">
+          <Bell size={22} />
+          <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-[#0f0f11]"></span>
+        </button>
+
+        <button className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl transition-all">
+          <Settings size={22} />
+        </button>
+
+        <button className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl transition-all">
+          <Plus size={22} />
+        </button>
+
+        <span className="w-px h-6 bg-zinc-800 mx-1" />
+
+        <button className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl transition-all mr-1">
+          <Users size={22} />
+        </button>
+
+        {/* Користувацький блок або кнопка логіну */}
+        {user ? (
+          <button
+            onClick={() => navigate('/account')}
+            className="flex items-center gap-2.5 p-1 pr-3 bg-gradient-to-r from-zinc-900 to-rose-950/20 hover:to-rose-900/30 rounded-xl border border-zinc-800/60 transition-all group"
+          >
+            <div className="w-7 h-7 rounded-lg overflow-hidden border border-rose-500/30">
+              <img
+                src={user.image ? `${APP_ENV.IMAGES_50_URL}${user.image}` : '/images/user/default.png'}
+                alt={user.name}
+                className="w-full h-full object-cover"
+              />
             </div>
-
-            {/* Права частина: Повідомлення та Профіль */}
-            {user ? (
-                <div className="flex items-center gap-4">
-                    <button
-                        className="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-xl transition-all relative">
-                        <Bell size={20}/>
-                        {/* Індикатор нових повідомлень */}
-                        <span
-                            className="absolute top-2 right-2.5 w-2 h-2 bg-red-600 rounded-full border-2 border-zinc-950"></span>
-                    </button>
-
-                    <button
-                        onClick={() => navigate('/account')}
-                        className="group flex items-center gap-2 p-1 pr-3 hover:bg-zinc-900 rounded-2xl transition-all border border-transparent hover:border-zinc-800"
-                    >
-                        <div
-                            className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-red-900 flex items-center justify-center text-white shadow-lg shadow-red-900/20 group-hover:scale-105 transition-transform">
-                            <img
-                                src={user.image ? `${APP_ENV.IMAGES_50_URL}${user.image}` : '/images/user/default.png'}
-                                alt={user.name}
-                                className="w-10 h-10 object-cover rounded-xl overflow-hidden border-2 border-red-600 shadow-2xl shadow-red-600/20"
-                            />
-                        </div>
-
-                        <div className="hidden lg:block text-left">
-                            <p className="text-xs font-black uppercase tracking-tighter leading-none">{user.name}</p>
-                            {user?.role === "Admin" ? (
-                                <p className="text-[10px] text-zinc-500 font-bold uppercase leading-none mt-1">Premium</p>
-                            ) : (
-                                <p className="text-[10px] text-zinc-500 font-bold uppercase leading-none mt-1">Free</p>
-                            )}
-                        </div>
-                    </button>
-                </div>
-            ) : (
-                <div className="flex items-center gap-4">
-                    <button
-                        onClick={() => navigate('/login')}
-                        className="group flex items-center gap-2 p-1 pr-3 hover:bg-zinc-900 rounded-2xl transition-all border border-transparent hover:border-zinc-800"
-                    >
-                        <div
-                            className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-600 to-red-900 flex items-center justify-center text-white shadow-lg shadow-red-900/20 group-hover:scale-105 transition-transform">
-                            <User size={18} fill="currentColor"/>
-                        </div>
-                        <div className="hidden lg:block text-left">
-                            <p className="text-xs font-black uppercase tracking-tighter leading-none">Увійти в
-                                аккаунт</p>
-                        </div>
-                    </button>
-                </div>
-            )}
-        </header>
-    );
+            <span className="text-xs font-bold text-zinc-200 group-hover:text-white transition-colors">
+              {user.name}
+            </span>
+            <ChevronDown size={14} className="text-zinc-500" />
+          </button>
+        ) : (
+          <button
+            onClick={() => navigate('/login')}
+            className="flex items-center gap-2.5 p-2 px-4 bg-gradient-to-r from-rose-500 to-fuchsia-600 hover:opacity-90 rounded-xl font-black text-xs uppercase tracking-wider shadow-lg shadow-rose-500/20 active:scale-95 transition-all"
+          >
+            Sign In
+          </button>
+        )}
+      </div>
+    </header>
+  );
 }
 
 export default Header;
