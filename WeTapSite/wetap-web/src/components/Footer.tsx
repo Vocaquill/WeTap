@@ -11,10 +11,10 @@ function Footer() {
 
           <div className="space-y-4 col-span-1 md:col-span-1">
             <h2 className="text-2xl font-black tracking-tighter uppercase italic">
-              COUNTER<span className="text-red-600">WATCH</span>
+              WE<span className="text-red-600">TAP</span>
             </h2>
             <p className="text-zinc-500 text-sm leading-relaxed">
-              Найкращий досвід перегляду кіно онлайн. Твій власний кінотеатр у кишені.
+              Найкращий досвід перегляду відео онлайн. Твій власний сервісі у кишені.
             </p>
           </div>
 
@@ -23,7 +23,7 @@ function Footer() {
             <ul className="space-y-2 text-sm text-zinc-500 font-bold">
               <li><Link to="/" className="hover:text-red-500 transition-colors">Головна</Link></li>
               <li><Link to="/catalog" className="hover:text-red-500 transition-colors">Каталог</Link></li>
-              <li><Link to="/top" className="hover:text-red-500 transition-colors">Топ фільмів</Link></li>
+              <li><Link to="/top" className="hover:text-red-500 transition-colors">Топ відео</Link></li>
               <li>
                 <a
                   href="https://social.mtdv.me/videos/qugmbbq9LK"
@@ -64,11 +64,11 @@ function Footer() {
 
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5 gap-4">
           <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600">
-            © {currentYear} COUNTERWATCH. ВСІ ПРАВА ЗАХИЩЕНІ.
+            © {currentYear} WETAP. ВСІ ПРАВА ЗАХИЩЕНІ.
           </p>
           <div className="flex items-center gap-2 text-zinc-600 hover:text-zinc-400 transition-colors cursor-pointer group">
             <Mail size={14} className="group-hover:text-red-500 transition-colors" />
-            <span className="text-[10px] font-bold uppercase tracking-tighter">support@counterwatch.com</span>
+            <span className="text-[10px] font-bold uppercase tracking-tighter">support@wetap.com</span>
           </div>
         </div>
       </div>

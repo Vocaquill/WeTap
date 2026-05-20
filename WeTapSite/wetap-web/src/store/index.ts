@@ -13,32 +13,32 @@ import { apiLanguages } from "../services/api/apiLanguages.ts";
 import authReducer from "./slices/authSlice.ts";
 
 export const store = configureStore({
-    reducer: {
-        auth: authReducer,
-        // genres: genresReducer,
-        [apiVideos.reducerPath]: apiVideos.reducer,
+  reducer: {
+    auth: authReducer,
+    // genres: genresReducer,
+    [apiVideos.reducerPath]: apiVideos.reducer,
 
-        [apiGenres.reducerPath]: apiGenres.reducer,
-        [apiAccount.reducerPath]: apiAccount.reducer,
-        [apiTags.reducerPath]: apiTags.reducer,
-        [apiLanguages.reducerPath]: apiLanguages.reducer,
-
-
-        //[apiUser.reducerPath]: apiUser.reducer,
-    },
-
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(
-            apiVideos.middleware,
-
-            apiGenres.middleware,
-            apiAccount.middleware,
-            apiTags.middleware,
-            apiLanguages.middleware
+    [apiGenres.reducerPath]: apiGenres.reducer,
+    [apiAccount.reducerPath]: apiAccount.reducer,
+    [apiTags.reducerPath]: apiTags.reducer,
+    [apiLanguages.reducerPath]: apiLanguages.reducer,
 
 
-            //apiUser.middleware
-        )
+    //[apiUser.reducerPath]: apiUser.reducer,
+  },
+
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(
+      apiVideos.middleware,
+
+      apiGenres.middleware,
+      apiAccount.middleware,
+      apiTags.middleware,
+      apiLanguages.middleware
+
+
+      //apiUser.middleware
+    )
 });
 
 setupListeners(store.dispatch);
