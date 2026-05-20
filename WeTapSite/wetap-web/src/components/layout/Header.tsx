@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import {useNavigate, useLocation} from 'react-router-dom';
-import { Menu, X, Bell, User} from 'lucide-react';
+import {Menu, X, Bell, Search, Mic, Settings, Plus, Users, ChevronDown} from 'lucide-react';
 import {useAppSelector} from "../../store/index";
 import {APP_ENV} from "../../env/index";
 
@@ -77,7 +77,7 @@ function Header({ isOpen, toggleSidebar }: HeaderProps) {
         </button>
 
         <button className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl transition-all">
-          <Plus size={22} />
+          <Plus onClick={() => navigate('/video/add')} size={22} />
         </button>
 
         <span className="w-px h-6 bg-zinc-800 mx-1" />

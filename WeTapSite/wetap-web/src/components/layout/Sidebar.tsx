@@ -1,7 +1,7 @@
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { ShieldCheck, Home, Compass, Monitor, History, Clock, ThumbsUp, ListVideo, Users, FolderHeart, LogOut } from 'lucide-react';
-import { useAppSelector } from "../store";
-import logoImg from '../layouts/logo.png';
+import { ShieldCheck, Home, Compass, Monitor, History, Clock, ThumbsUp, ListVideo, LogOut } from 'lucide-react';
+import logoImg from '../../layouts/logo.png';
+import {useAppSelector} from "../../store";
 interface SidebarProps {
   isOpen: boolean;
 }
