@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { Play, CheckCircle2 } from 'lucide-react';
 import { useGetAllVideosQuery } from '../services/api/apiVideos';
 import { motion } from 'framer-motion';
@@ -157,8 +158,41 @@ function UserHomePage() {
         </div>
       </section>
 
-    </div>
-  );
+                            <div className="flex-1 min-w-0">
+                                <h3 className="font-bold text-[16px] leading-tight line-clamp-2 group-hover:text-red-500 transition-colors mb-1.5">
+                                    {video.title}
+                                </h3>
+
+                                <div className="flex flex-col gap-0.5">
+                                    <span className="text-zinc-400 text-[13px] font-bold hover:text-white transition-colors truncate">
+                                        {video.channel?.name || 'Невідомий канал'}
+                                    </span>
+
+                                    <div className="flex items-center gap-2 text-zinc-500 text-[12px] font-medium">
+                                        <span className="flex items-center gap-1">
+                                            <Eye size={12} strokeWidth={3} /> {video.viewCount.toLocaleString()}
+                                        </span>
+                                        <span className="w-1 h-1 bg-zinc-700 rounded-full" />
+                                        <span>{video.dateCreated}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                ))}
+            </div>
+
+            {!isLoading && (!data?.items || data.items.length === 0) && (
+                <div className="flex flex-col items-center justify-center py-40 text-center">
+                    <div className="w-20 h-20 bg-zinc-900 rounded-3xl flex items-center justify-center mb-6 border border-white/5">
+                        <Play size={40} className="text-zinc-700 opacity-20" />
+                    </div>
+                    <h2 className="text-2xl font-black text-zinc-400 uppercase italic tracking-tighter">Відео не знайдено</h2>
+                    <p className="text-zinc-600 mt-2 max-w-xs">Завітайте пізніше або спробуйте змінити фільтри пошуку.</p>
+                </div>
+            )}
+        </div>
+    );
 }
 
 export default UserHomePage;

@@ -1,3 +1,4 @@
+import {useEffect} from 'react';
 import {
     Calendar,
     ThumbsUp,
@@ -14,7 +15,7 @@ import PageTransition from '../components/PageTransition';
 import {MoviePlayer} from "../components/movie/MoviePlayer.tsx";
 import {APP_ENV} from "../env";
 import LoadingOverlay from "../components/LoadingOverlay.tsx";
-import {useGetByQuery, useSearchVideosQuery} from "../services/api/apiVideos.ts";
+import {useGetByQuery, useIncrementViewMutation, useReactVideoMutation, useSearchVideosQuery} from "../services/api/apiVideos.ts";
 
 function VideoPage() {
     //const navigate = useNavigate();
@@ -29,6 +30,23 @@ function VideoPage() {
         page: 1,
         itemPerPage: 10
     });
+
+    const [reactVideo, { isLoading: isReacting }] = useReactVideoMutation();
+    const [incrementView] = useIncrementViewMutation();
+
+    useEffect(() => {
+        if (video?.id) {
+            incrementView(video.id);
+        }
+    }, [video?.id, incrementView]);
+
+    const handleReaction = async (isLike: boolean) => {
+        try {
+            await reactVideo({ videoId: video!.id, isLike }).unwrap();
+        } catch (error) {
+            console.error('Помилка при відправці реакції', error);
+        }
+    };
 
     if (isVideoLoading) return <LoadingOverlay/>;
     if (!video) return null;
@@ -75,14 +93,18 @@ function VideoPage() {
                             <div className="flex items-center gap-2">
                                 <div className="flex items-center bg-zinc-800 rounded-full overflow-hidden">
                                     <button
-                                        className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors border-r border-zinc-700">
+                                        onClick={() => handleReaction(true)}
+                                        disabled={isReacting}
+                                        className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors border-r border-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed">
                                         <ThumbsUp size={18}/>
-                                        <span className="text-sm font-medium">0</span>
+                                        <span className="text-sm font-medium">{video.likesCount}</span>
                                     </button>
                                     <button
-                                        className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors border-r border-zinc-700">
+                                        onClick={() => handleReaction(false)}
+                                        disabled={isReacting}
+                                        className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                                         <ThumbsDown size={18}/>
-                                        <span className="text-sm font-medium">0</span>
+                                        <span className="text-sm font-medium">{video.dislikesCount}</span>
                                     </button>
                                 </div>
                                 <button
@@ -107,8 +129,8 @@ function VideoPage() {
                             <div className="flex gap-2 mb-2">
                                 {video.genres.map((g) => (
                                     <span key={g.id} className="text-blue-400 text-sm hover:underline cursor-pointer">
-                    #{g.name.replace(/\s+/g, '')}
-                  </span>
+                                        #{g.name.replace(/\s+/g, '')}
+                                    </span>
                                 ))}
                             </div>
                             <p className="text-sm leading-relaxed whitespace-pre-wrap">

@@ -9,6 +9,7 @@ import type { IVideoDeleteRequest } from "../../types/Video/IVideoDeleteRequest.
 import type { IVideoProcessingResult } from "../../types/Video/IVideoProcessingResult.ts";
 import type { IGetByRequest } from "../../types/Additional/IGetByRequest.ts";
 import type { IPagedResult } from "../../types/Additional/IPagedResult.ts";
+import type {IVideoReactionRequest} from "../../types/Video/IVideoReactionRequest.ts";
 
 export const apiVideos = createApi({
     reducerPath: "api/videos",
@@ -58,7 +59,7 @@ export const apiVideos = createApi({
                 method: "PUT",
                 body: serialize(body),
             }),
-            invalidatesTags: ["Videos"],
+            invalidatesTags: (result, error, { id }) => [{ type: "Video", id }, "Videos"],
         }),
 
         deleteVideo: builder.mutation<IVideoItemResponse[], IVideoDeleteRequest>({
@@ -67,13 +68,27 @@ export const apiVideos = createApi({
                 method: "DELETE",
                 body,
             }),
-            invalidatesTags: ["Videos"],
+            invalidatesTags: (result, error, { id }) => [{ type: "Video", id }, "Videos"],
         }),
 
         getPrivacies: builder.query<IVideoPrivacyItemResponse[], void>({
             query: () => ({
                 url: "privacies",
                 method: "GET",
+            }),
+        }),
+        reactVideo: builder.mutation<void, IVideoReactionRequest>({
+            query: (body) => ({
+                url: "react",
+                method: "POST",
+                body,
+            }),
+            invalidatesTags: (result, error, { videoId }) => [{ type: "Video", id: videoId }, "Videos"],
+        }),
+        incrementView: builder.mutation<void, number>({
+            query: (id) => ({
+                url: `${id}/view`,
+                method: "POST",
             }),
         }),
     }),
@@ -87,4 +102,6 @@ export const {
     useEditVideoMutation,
     useDeleteVideoMutation,
     useGetPrivaciesQuery,
+    useReactVideoMutation,
+    useIncrementViewMutation,
 } = apiVideos;
