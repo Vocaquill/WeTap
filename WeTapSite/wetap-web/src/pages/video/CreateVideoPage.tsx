@@ -13,7 +13,7 @@ import { Progress, Modal } from 'antd';
 import { InputField } from '../../components/form/InputField';
 import { TextAreaField } from '../../components/form/TextAreaField';
 import { FileUploadField } from '../../components/form/FileUploadField';
-import { PrimaryButton } from '../../components/form/PrimaryButton';
+import { Button } from '../../components/form/Button';
 import { SelectField } from '../../components/form/SelectField';
 import { useFormServerErrors } from "../../hooks/useFormServerErrors";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
@@ -361,9 +361,9 @@ export default function CreateVideoPage() {
                     </div>
 
                     <div className="col-span-2 flex justify-end mt-4">
-                        <PrimaryButton type="submit">
+                        <Button type="submit" variant="primary" size="md">
                             Створити
-                        </PrimaryButton>
+                        </Button>
                     </div>
                 </form>
             </div>

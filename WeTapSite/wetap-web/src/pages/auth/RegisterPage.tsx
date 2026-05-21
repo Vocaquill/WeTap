@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, Camera, ArrowRight, ChevronLeft } from 'lucide-react';
+import { Mail, Lock, User, Camera, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
@@ -9,6 +9,8 @@ import { useRegisterMutation } from "../../services/api/apiAccount";
 import type { ServerError, IRegister } from "../../types/user";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 import { InputField } from "../../components/form/InputField";
+import { Button } from "../../components/form/Button";
+import { BackButton } from "../../components/ui/common/BackButton";
 
 function RegisterPage() {
     const navigate = useNavigate();
@@ -83,13 +85,10 @@ function RegisterPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="w-full max-w-xl z-10 px-6"
             >
-                <button
+                <BackButton
+                    label="Назад до входу"
                     onClick={() => navigate('/login')}
-                    className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors mb-8 group"
-                >
-                    <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-                    Назад до входу
-                </button>
+                />
 
                 <div className="mb-10 text-center">
                     <h1 className="text-4xl font-black uppercase italic">
@@ -177,12 +176,15 @@ function RegisterPage() {
                         <p className="text-red-500 text-sm font-semibold">{errorMessage}</p>
                     )}
 
-                    <button
+                    <Button
                         type="submit"
-                        className="w-full bg-red-600 hover:bg-red-700 py-4 rounded-2xl font-black uppercase flex items-center justify-center gap-2"
+                        variant="primary"
+                        size="xl"
+                        fullWidth
+                        iconRight={<ArrowRight />}
                     >
-                        Створити акаунт <ArrowRight />
-                    </button>
+                        Створити акаунт
+                    </Button>
                 </form>
             </motion.div>
         </div>

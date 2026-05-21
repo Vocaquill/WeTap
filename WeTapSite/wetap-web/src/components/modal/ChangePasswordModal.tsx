@@ -3,6 +3,7 @@ import {X, Lock} from "lucide-react";
 import React, {useState} from "react";
 import {useChangePasswordMutation} from "../../services/api/apiAccount.ts";
 import { InputField } from "../form/InputField";
+import { Button } from "../form/Button";
 
 interface Props {
     isOpen: boolean;
@@ -113,12 +114,15 @@ export default function ChangePasswordModal({isOpen, onClose}: Props) {
                                 <p className="text-red-500 text-sm font-semibold">{errorMessage}</p>
                             )}
 
-                            <button
+                            <Button
                                 type="submit"
-                                className="w-full mt-4 bg-red-600 py-3 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-red-700 transition"
+                                variant="primary"
+                                size="lg"
+                                fullWidth
+                                className="mt-4"
                             >
                                 Змінити пароль
-                            </button>
+                            </Button>
                         </form>
                     </motion.div>
                 </motion.div>

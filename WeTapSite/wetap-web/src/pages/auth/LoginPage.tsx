@@ -9,6 +9,7 @@ import type {ILogin, ServerError} from "../../types/user";
 import { useGoogleLogin } from '@react-oauth/google';
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 import { InputField } from "../../components/form/InputField";
+import { Button } from "../../components/form/Button";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -130,20 +131,29 @@ function LoginPage() {
                         </button>
                     </div>
 
-                    <button type="submit"
-                            className="w-full bg-red-600 hover:bg-red-700 py-4 rounded-2xl font-black uppercase flex items-center justify-center gap-2">
-                        Увійти <ArrowRight />
-                    </button>
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        size="xl"
+                        fullWidth
+                        iconRight={<ArrowRight />}
+                    >
+                        Увійти
+                    </Button>
                 </form>
 
                 {/* GOOGLE */}
-                <button
+                <Button
                     type="button"
+                    variant="google"
+                    size="xl"
+                    fullWidth
+                    className="mt-6"
+                    icon={<GoogleIcon />}
                     onClick={() => loginUseGoogle()}
-                    className="w-full bg-white text-black mt-6 py-4 rounded-2xl flex items-center justify-center gap-3"
                 >
-                    <GoogleIcon /> Google
-                </button>
+                    Google
+                </Button>
 
                 {/* REGISTER */}
                 <p className="text-center mt-6 text-zinc-500">

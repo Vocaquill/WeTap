@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Loader2 } from 'lucide-react';
+import { X } from 'lucide-react';
 import { slugify } from '../../utils/slugify';
 
 import { useCreateGenreMutation } from '../../services/api/apiGenres';
@@ -8,7 +8,7 @@ import { useFormServerErrors } from "../../hooks/useFormServerErrors";
 import type { IGenreCreateRequest as IGenreCreate } from '../../types/Genre/IGenreCreateRequest';
 import {InputField} from "../form/InputField";
 import { FileUploadField } from '../form/FileUploadField';
-import {PrimaryButton} from "../form/PrimaryButton";
+import { Button } from "../form/Button";
 
 interface Props {
   isOpen: boolean;
@@ -82,10 +82,24 @@ function AddGenreModal({ isOpen, onClose }: Props) {
               )}
 
               <div className="pt-4 flex gap-3">
-                <button type="button" onClick={onClose} className="flex-1 py-3 rounded-xl bg-zinc-900 text-white font-bold hover:bg-zinc-800 transition-all">Скасувати</button>
-                <PrimaryButton type="submit">
-                  {isLoading ? <Loader2 className="animate-spin mx-auto" /> : 'Створити'}
-                </PrimaryButton>
+                <Button
+                    type="button"
+                    variant="secondary"
+                    size="md"
+                    className="flex-1"
+                    onClick={onClose}
+                >
+                    Скасувати
+                </Button>
+                <Button
+                    type="submit"
+                    variant="primary"
+                    size="md"
+                    className="flex-1"
+                    isLoading={isLoading}
+                >
+                    Створити
+                </Button>
               </div>
             </form>
           </motion.div>

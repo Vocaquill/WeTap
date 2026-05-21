@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Loader2 } from 'lucide-react';
+import { X } from 'lucide-react';
 import { slugify } from '../../utils/slugify';
 
 import { useEditGenreMutation } from '../../services/api/apiGenres';
@@ -9,7 +9,7 @@ import type { IGenreItemResponse as IGenreItem } from '../../types/Genre/IGenreI
 import type { IGenreEditRequest as IGenreEdit } from '../../types/Genre/IGenreEditRequest';
 import { InputField } from '../form/InputField';
 import { FileUploadField } from '../form/FileUploadField';
-import { PrimaryButton } from '../form/PrimaryButton';
+import { Button } from '../form/Button';
 import { APP_ENV } from '../../env/index';
 
 interface Props {
@@ -96,10 +96,24 @@ function EditGenreModal({ isOpen, onClose, genre }: Props) {
               </div>
 
               <div className="pt-4 flex gap-3">
-                <button type="button" onClick={onClose} className="flex-1 py-3 rounded-xl bg-zinc-900 text-white font-bold transition-all">Скасувати</button>
-                <PrimaryButton type="submit">
-                  {isLoading ? <Loader2 className="animate-spin mx-auto" /> : 'Оновити'}
-                </PrimaryButton>
+                <Button
+                    type="button"
+                    variant="secondary"
+                    size="md"
+                    className="flex-1"
+                    onClick={onClose}
+                >
+                    Скасувати
+                </Button>
+                <Button
+                    type="submit"
+                    variant="primary"
+                    size="md"
+                    className="flex-1"
+                    isLoading={isLoading}
+                >
+                    Оновити
+                </Button>
               </div>
             </form>
           </motion.div>

@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Mail, ArrowLeft, Send, CheckCircle2} from 'lucide-react';
+import {Mail, Send, CheckCircle2} from 'lucide-react';
 import {motion, AnimatePresence} from 'framer-motion';
 import {useForgotPasswordMutation} from "../../services/api/apiAccount"; // Імпортуємо фон
 import { InputField } from "../../components/form/InputField";
+import { Button } from "../../components/form/Button";
+import { BackButton } from "../../components/ui/common/BackButton";
 
 function ForgotPasswordPage() {
     const [forgot] = useForgotPasswordMutation();
@@ -44,13 +46,11 @@ function ForgotPasswordPage() {
                             exit={{opacity: 0, x: 20}}
                             className="space-y-8"
                         >
-                            <button
+                            <BackButton
+                                label="Назад до входу"
                                 onClick={() => navigate('/login')}
-                                className="group flex items-center gap-2 text-zinc-500 hover:text-white transition-colors mb-4"
-                            >
-                                <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform"/>
-                                <span className="text-[10px] font-black uppercase tracking-widest">Назад до входу</span>
-                            </button>
+                                className="mb-4"
+                            />
 
                             <div className="space-y-2">
                                 <h1 className="text-4xl font-black uppercase italic tracking-tighter">
@@ -76,12 +76,15 @@ function ForgotPasswordPage() {
                                     wrapperClassName="space-y-2 group"
                                 />
 
-                                <button
+                                <Button
                                     type="submit"
-                                    className="w-full bg-red-600 hover:bg-red-700 text-white font-black uppercase py-4 rounded-2xl shadow-xl shadow-red-600/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                                    variant="primary"
+                                    size="xl"
+                                    fullWidth
+                                    iconRight={<Send size={18} />}
                                 >
-                                    Надіслати посилання <Send size={18}/>
-                                </button>
+                                    Надіслати посилання
+                                </Button>
                             </form>
                         </motion.div>
                     ) : (
@@ -111,12 +114,15 @@ function ForgotPasswordPage() {
                                 Не отримали листа? Спробувати знову
                             </button>
                             <div className="pt-4">
-                                <button
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="xl"
+                                    fullWidth
                                     onClick={() => navigate('/login')}
-                                    className="w-full py-4 bg-white/5 hover:bg-white/10 text-white font-black uppercase rounded-2xl border border-white/10 transition-all"
                                 >
                                     Повернутися до входу
-                                </button>
+                                </Button>
                             </div>
                         </motion.div>
                     )}
