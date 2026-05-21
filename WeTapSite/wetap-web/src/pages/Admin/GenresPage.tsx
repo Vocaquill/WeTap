@@ -11,6 +11,7 @@ import { useSearchGenresQuery, useDeleteGenreMutation } from '../../services/api
 
 import { Pagination } from '../../components/ui/common/Pagination';
 import { APP_ENV } from "../../env";
+import { InputField } from "../../components/form/InputField";
 
 function GenresPage() {
   const [searchParams, setSearchParams] = useState<IGenreSearch>({
@@ -66,25 +67,23 @@ function GenresPage() {
         </div>
 
         <div className="bg-zinc-950 p-4 rounded-[2rem] border border-zinc-800 flex flex-wrap items-center gap-4 shadow-xl">
-          <div className="relative flex-[2] min-w-[240px]">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
-            <input
-                value={searchParams.name || ''}
-                onChange={(e) => handleSearchChange('name', e.target.value)}
-                placeholder="Пошук за назвою..."
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pl-12 pr-4 text-zinc-200 focus:border-red-600/50 outline-none transition-all"
-            />
-          </div>
+          <InputField
+              value={searchParams.name || ''}
+              onChange={(e) => handleSearchChange('name', e.target.value)}
+              placeholder="Пошук за назвою..."
+              icon={<Search size={18} />}
+              inputClassName="text-zinc-200 border-zinc-800 bg-zinc-900 focus:border-red-600/50"
+              wrapperClassName="flex-[2] min-w-[240px]"
+          />
 
-          <div className="relative flex-1 min-w-[180px]">
-            <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={16} />
-            <input
-                value={searchParams.slug || ''}
-                onChange={(e) => handleSearchChange('slug', e.target.value)}
-                placeholder="Фільтр по slug..."
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pl-12 pr-4 text-xs text-zinc-400 font-mono italic outline-none focus:border-red-600/50 transition-all"
-            />
-          </div>
+          <InputField
+              value={searchParams.slug || ''}
+              onChange={(e) => handleSearchChange('slug', e.target.value)}
+              placeholder="Фільтр по slug..."
+              icon={<Link2 size={16} />}
+              inputClassName="text-xs text-zinc-400 font-mono italic border-zinc-800 bg-zinc-900 focus:border-red-600/50"
+              wrapperClassName="flex-1 min-w-[180px]"
+          />
 
           {(searchParams.name || searchParams.slug) && (
               <button

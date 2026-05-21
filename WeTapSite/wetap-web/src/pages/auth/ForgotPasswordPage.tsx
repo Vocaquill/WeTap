@@ -3,6 +3,8 @@ import {useNavigate} from 'react-router-dom';
 import {Mail, ArrowLeft, Send, CheckCircle2} from 'lucide-react';
 import {motion, AnimatePresence} from 'framer-motion';
 import {useForgotPasswordMutation} from "../../services/api/apiAccount"; // Імпортуємо фон
+import { InputField } from "../../components/form/InputField";
+
 function ForgotPasswordPage() {
     const [forgot] = useForgotPasswordMutation();
     const navigate = useNavigate();
@@ -61,23 +63,18 @@ function ForgotPasswordPage() {
                             </div>
 
                             <form onSubmit={handleSubmit} className="space-y-6">
-                                <div className="space-y-2">
-                                    <label
-                                        className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Email</label>
-                                    <div className="relative group">
-                                        <Mail
-                                            className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-red-600 transition-colors"
-                                            size={20}/>
-                                        <input
-                                            type="email"
-                                            required
-                                            placeholder="example@mail.com"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            className="w-full bg-zinc-900/40 border border-white/5 focus:border-red-600 focus:ring-4 focus:ring-red-600/10 rounded-2xl py-4 pl-12 pr-4 outline-none transition-all placeholder:text-zinc-700"
-                                        />
-                                    </div>
-                                </div>
+                                <InputField
+                                    label="Email"
+                                    type="email"
+                                    required
+                                    placeholder="example@mail.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    icon={<Mail className="text-zinc-600 group-focus-within:text-red-600 transition-colors" size={20} />}
+                                    inputClassName="bg-zinc-900/40 border border-white/5 focus:border-red-600 focus:ring-4 focus:ring-red-600/10 rounded-2xl py-4 pr-4 outline-none transition-all placeholder:text-zinc-700"
+                                    labelClassName="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1"
+                                    wrapperClassName="space-y-2 group"
+                                />
 
                                 <button
                                     type="submit"

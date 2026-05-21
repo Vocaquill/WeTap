@@ -3,6 +3,7 @@ import {motion} from 'framer-motion';
 import {useNavigate, useSearchParams} from "react-router-dom";
 import React, {useState} from "react";
 import {useResetPasswordMutation} from "../../services/api/apiAccount";
+import { InputField } from "../../components/form/InputField";
 
 function ResetPasswordPage() {
     const [searchParams] = useSearchParams();
@@ -71,37 +72,29 @@ function ResetPasswordPage() {
                     onSubmit={handleSubmit}
                     className="space-y-6 bg-zinc-900/30 p-8 rounded-[2.5rem] border border-white/5 backdrop-blur-md"
                 >
-                    <div>
-                        <label className="text-[10px] uppercase text-zinc-500 ml-1">
-                            Новий пароль
-                        </label>
-                        <div className="relative">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600"/>
-                            <input
-                                type="password"
-                                required
-                                className="w-full bg-black/40 rounded-2xl py-3.5 pl-12"
-                                onChange={(e) =>
-                                    setFormData({...formData, newPassword: e.target.value})}
-                            />
-                        </div>
-                    </div>
+                    <InputField
+                        label="Новий пароль"
+                        type="password"
+                        required
+                        value={formData.newPassword}
+                        onChange={(e) =>
+                            setFormData({...formData, newPassword: e.target.value})}
+                        icon={<Lock className="text-zinc-600" size={20} />}
+                        inputClassName="w-full bg-black/40 rounded-2xl py-3.5"
+                        labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
+                    />
 
-                    <div>
-                        <label className="text-[10px] uppercase text-zinc-500 ml-1">
-                            Повторіть пароль
-                        </label>
-                        <div className="relative">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600"/>
-                            <input
-                                type="password"
-                                required
-                                className="w-full bg-black/40 rounded-2xl py-3.5 pl-12"
-                                onChange={(e) =>
-                                    setFormData({...formData, confirmPassword: e.target.value})}
-                            />
-                        </div>
-                    </div>
+                    <InputField
+                        label="Повторіть пароль"
+                        type="password"
+                        required
+                        value={formData.confirmPassword}
+                        onChange={(e) =>
+                            setFormData({...formData, confirmPassword: e.target.value})}
+                        icon={<Lock className="text-zinc-600" size={20} />}
+                        inputClassName="w-full bg-black/40 rounded-2xl py-3.5"
+                        labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
+                    />
 
                     {errorMessage && (
                         <p className="text-red-500 text-sm font-semibold">{errorMessage}</p>

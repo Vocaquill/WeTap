@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import {useSearchGenresQuery} from "../../services/api/apiGenres.ts";
 import type { IGenreItemResponse as IGenreItem } from '../../types/Genre/IGenreItemResponse';
+import { InputField } from '../form/InputField';
+
 interface Props {
     value?: number;
     onChange: (genreId?: number) => void;
@@ -19,12 +21,11 @@ export function GenreSelect({ value, onChange }: Props) {
 
     return (
         <div className="relative">
-            <input
+            <InputField
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={selectedGenre?.name ?? 'Жанр'}
-                className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800
-                   focus:border-red-600 outline-none text-white"
+                inputClassName="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 focus:border-red-600 outline-none text-white"
             />
 
             {search && (

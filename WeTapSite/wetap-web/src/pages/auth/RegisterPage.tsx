@@ -8,6 +8,7 @@ import { loginSuccess } from "../../store/slices/authSlice";
 import { useRegisterMutation } from "../../services/api/apiAccount";
 import type { ServerError, IRegister } from "../../types/user";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
+import { InputField } from "../../components/form/InputField";
 
 function RegisterPage() {
     const navigate = useNavigate();
@@ -128,59 +129,49 @@ function RegisterPage() {
                     {/* NAMES */}
                     <div className="grid md:grid-cols-2 gap-4">
                         {['firstName', 'lastName'].map((field, i) => (
-                            <div key={field}>
-                                <label className="text-[10px] uppercase text-zinc-500 ml-1">
-                                    {i === 0 ? "Ім'я" : 'Прізвище'}
-                                </label>
-                                <div className="relative">
-                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" />
-                                    <input
-                                        required
-                                        className="w-full bg-black/40 rounded-2xl py-3.5 pl-12"
-                                        onChange={(e) =>
-                                            setFormData({ ...formData, [field]: e.target.value })
-                                        }
-                                    />
-                                </div>
-                            </div>
+                            <InputField
+                                key={field}
+                                label={i === 0 ? "Ім'я" : 'Прізвище'}
+                                name={field}
+                                required
+                                value={formData[field as 'firstName' | 'lastName']}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, [field]: e.target.value })
+                                }
+                                icon={<User className="text-zinc-600" size={20} />}
+                                inputClassName="bg-black/40 rounded-2xl py-3.5"
+                                labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
+                            />
                         ))}
                     </div>
 
                     {/* EMAIL */}
-                    <div>
-                        <label className="text-[10px] uppercase text-zinc-500 ml-1">
-                            Email
-                        </label>
-                        <div className="relative">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" />
-                            <input
-                                type="email"
-                                required
-                                className="w-full bg-black/40 rounded-2xl py-3.5 pl-12"
-                                onChange={(e) =>
-                                    setFormData({ ...formData, email: e.target.value })
-                                }
-                            />
-                        </div>
-                    </div>
+                    <InputField
+                        label="Email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) =>
+                            setFormData({ ...formData, email: e.target.value })
+                        }
+                        icon={<Mail className="text-zinc-600" size={20} />}
+                        inputClassName="bg-black/40 rounded-2xl py-3.5"
+                        labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
+                    />
 
                     {/* PASSWORD */}
-                    <div>
-                        <label className="text-[10px] uppercase text-zinc-500 ml-1">
-                            Пароль
-                        </label>
-                        <div className="relative">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" />
-                            <input
-                                type="password"
-                                required
-                                className="w-full bg-black/40 rounded-2xl py-3.5 pl-12"
-                                onChange={(e) =>
-                                    setFormData({ ...formData, password: e.target.value })
-                                }
-                            />
-                        </div>
-                    </div>
+                    <InputField
+                        label="Пароль"
+                        type="password"
+                        required
+                        value={formData.password}
+                        onChange={(e) =>
+                            setFormData({ ...formData, password: e.target.value })
+                        }
+                        icon={<Lock className="text-zinc-600" size={20} />}
+                        inputClassName="bg-black/40 rounded-2xl py-3.5"
+                        labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
+                    />
 
                     {errorMessage && (
                         <p className="text-red-500 text-sm font-semibold">{errorMessage}</p>

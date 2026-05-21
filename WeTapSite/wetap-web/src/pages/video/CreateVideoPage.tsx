@@ -14,58 +14,11 @@ import { InputField } from '../../components/form/InputField';
 import { TextAreaField } from '../../components/form/TextAreaField';
 import { FileUploadField } from '../../components/form/FileUploadField';
 import { PrimaryButton } from '../../components/form/PrimaryButton';
+import { SelectField } from '../../components/form/SelectField';
 import { useFormServerErrors } from "../../hooks/useFormServerErrors";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 
 import { slugify } from '../../utils/slugify';
-
-interface SelectFieldProps {
-    label: string;
-    name: string;
-    value?: string | number;
-    options: { id: string | number; name: string }[];
-    required?: boolean;
-    error?: string[];
-    onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
-}
-
-const SelectField = ({
-    label,
-    name,
-    value,
-    options,
-    required = false,
-    error,
-    onChange,
-}: SelectFieldProps) => (
-    <div className="flex flex-col">
-        <label className="text-zinc-400 mb-1 font-semibold">{label}</label>
-
-        <select
-            name={name}
-            value={value}
-            required={required}
-            onChange={onChange}
-            className={`bg-zinc-900 text-white rounded-xl px-4 py-3 border transition appearance-none
-                ${error ? 'border-red-500' : 'border-zinc-800'}
-                cursor-pointer focus:border-red-500 outline-none
-            `}
-        >
-            <option value="" disabled>Оберіть...</option>
-            {options.map(option => (
-                <option key={option.id} value={option.id}>
-                    {option.name}
-                </option>
-            ))}
-        </select>
-
-        {error && (
-            <span className="text-red-500 text-sm mt-1">
-                {error[0]}
-            </span>
-        )}
-    </div>
-);
 
 export default function CreateVideoPage() {
     const navigate = useNavigate();

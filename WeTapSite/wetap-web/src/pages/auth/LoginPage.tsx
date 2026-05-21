@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { message } from 'antd';
 
@@ -8,11 +8,11 @@ import {useLoginByGoogleMutation, useLoginMutation} from "../../services/api/api
 import type {ILogin, ServerError} from "../../types/user";
 import { useGoogleLogin } from '@react-oauth/google';
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
+import { InputField } from "../../components/form/InputField";
 
 function LoginPage() {
     const navigate = useNavigate();
 
-    const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState<ILogin>({
         email: '',
         password: '',
@@ -93,41 +93,28 @@ function LoginPage() {
                 {/* FORM */}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* EMAIL */}
-                    <div>
-                        <label className="text-xs text-zinc-400 uppercase">Email</label>
-                        <div className="relative">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
-                            <input
-                                type="email"
-                                required
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                className="w-full bg-zinc-900 rounded-2xl py-4 pl-12"
-                            />
-                        </div>
-                    </div>
+                    <InputField
+                        label="Email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        icon={<Mail className="text-zinc-500" size={20} />}
+                        inputClassName="bg-zinc-900 rounded-2xl py-4"
+                        labelClassName="text-xs text-zinc-400 uppercase ml-1"
+                    />
 
                     {/* PASSWORD */}
-                    <div>
-                        <label className="text-xs text-zinc-400 uppercase">Пароль</label>
-                        <div className="relative">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
-                            <input
-                                type={showPassword ? 'text' : 'password'}
-                                required
-                                value={formData.password}
-                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                className="w-full bg-zinc-900 rounded-2xl py-4 pl-12 pr-12"
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-4 top-1/2 -translate-y-1/2"
-                            >
-                                {showPassword ? <EyeOff /> : <Eye />}
-                            </button>
-                        </div>
-                    </div>
+                    <InputField
+                        label="Пароль"
+                        type="password"
+                        required
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        icon={<Lock className="text-zinc-500" size={20} />}
+                        inputClassName="bg-zinc-900 rounded-2xl py-4"
+                        labelClassName="text-xs text-zinc-400 uppercase ml-1"
+                    />
 
                     {isError && (
                         <p className="text-red-500 text-sm">Неправильний логін або пароль</p>

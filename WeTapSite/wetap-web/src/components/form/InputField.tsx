@@ -1,54 +1,97 @@
-import type {ChangeEvent} from "react";
+import React, { useState, type InputHTMLAttributes } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
-interface InputFieldProps {
-    label: string;
-    name: string;
-    value?: string;
-    placeholder?: string;
-    type?: string;
-    required?: boolean;
-    error?: string[];
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+interface InputFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'error'> {
+    label?: string;
+    error?: string | string[];
+    icon?: React.ReactNode;
+    inputClassName?: string;
+    wrapperClassName?: string;
+    labelClassName?: string;
 }
 
-export const InputField = ({
-                               label,
-                               name,
-                               value,
-                               placeholder,
-                               type = 'text',
-                               required = false,
-                               error,
-                               onChange,
-                           }: InputFieldProps) => (
-    <div className="flex flex-col">
-        <label className="text-zinc-400 mb-1 font-semibold">{label}</label>
+export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
+    ({
+         label,
+         name,
+         value,
+         placeholder,
+         type = 'text',
+         required = false,
+         error,
+         onChange,
+         icon,
+         className = '',
+         inputClassName = '',
+         wrapperClassName = '',
+         labelClassName = '',
+         ...props
+     }, ref) => {
+         const [showPassword, setShowPassword] = useState(false);
+         const isPassword = type === 'password';
+         const currentType = isPassword ? (showPassword ? 'text' : 'password') : type;
 
-        <input
-            type={type}
-            name={name}
-            value={value}
-            placeholder={placeholder}
-            required={required}
-            onChange={onChange}
-            className={`bg-zinc-900 text-white rounded-xl px-4 py-3 border transition
-                ${error ? 'border-red-500' : 'border-zinc-800'}
-                [color-scheme:dark]
-        
-                [&::-webkit-calendar-picker-indicator]:filter
-                [&::-webkit-calendar-picker-indicator]:invert
-                [&::-webkit-calendar-picker-indicator]:sepia
-                [&::-webkit-calendar-picker-indicator]:saturate-[500%]
-                [&::-webkit-calendar-picker-indicator]:hue-rotate-[-10deg]
-                [&::-webkit-calendar-picker-indicator]:opacity-90
-                [&::-webkit-calendar-picker-indicator]:cursor-pointer
-            `}
-        />
+         const errorMessage = Array.isArray(error) ? error[0] : error;
 
-        {error && (
-            <span className="text-red-500 text-sm mt-1">
-                {error[0]}
-            </span>
-        )}
-    </div>
+         return (
+             <div className={`flex flex-col ${wrapperClassName}`}>
+                 {label && (
+                     <label className={`text-zinc-400 mb-1 font-semibold ${labelClassName}`}>
+                         {label}
+                     </label>
+                 )}
+
+                 <div className="relative w-full">
+                     {icon && (
+                         <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 flex items-center justify-center pointer-events-none">
+                             {icon}
+                         </div>
+                     )}
+
+                     <input
+                         ref={ref}
+                         type={currentType}
+                         name={name}
+                         value={value}
+                         placeholder={placeholder}
+                         required={required}
+                         onChange={onChange}
+                         className={`w-full bg-zinc-900 text-white rounded-xl py-3 px-4 border transition outline-none [color-scheme:dark]
+                             ${icon ? 'pl-12' : ''}
+                             ${isPassword ? 'pr-12' : ''}
+                             ${errorMessage ? 'border-red-500' : 'border-zinc-800 focus:border-red-600'}
+                             [&::-webkit-calendar-picker-indicator]:filter
+                             [&::-webkit-calendar-picker-indicator]:invert
+                             [&::-webkit-calendar-picker-indicator]:sepia
+                             [&::-webkit-calendar-picker-indicator]:saturate-[500%]
+                             [&::-webkit-calendar-picker-indicator]:hue-rotate-[-10deg]
+                             [&::-webkit-calendar-picker-indicator]:opacity-90
+                             [&::-webkit-calendar-picker-indicator]:cursor-pointer
+                             ${inputClassName}
+                         `}
+                         {...props}
+                     />
+
+                     {isPassword && (
+                         <button
+                             type="button"
+                             onClick={() => setShowPassword(!showPassword)}
+                             className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors"
+                         >
+                             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                         </button>
+                     )}
+                 </div>
+
+                 {errorMessage && (
+                     <span className="text-red-500 text-sm mt-1 font-semibold">
+                         {errorMessage}
+                     </span>
+                 )}
+             </div>
+         );
+     }
 );
+
+InputField.displayName = "InputField";
+
