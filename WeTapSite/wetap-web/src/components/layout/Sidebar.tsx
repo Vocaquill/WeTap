@@ -25,7 +25,7 @@ function Sidebar({ isOpen }: SidebarProps) {
 
   return (
     <aside
-      className={`bg-[#0f0f11] p-4 transition-all duration-300 ${isOpen ? 'w-52' : 'w-24'
+      className={`bg-[#121213] p-4 transition-all duration-300 ${isOpen ? 'w-52' : 'w-24'
         } sticky top-0 h-screen flex flex-col justify-between select-none z-[50]`}
     >
       <div>

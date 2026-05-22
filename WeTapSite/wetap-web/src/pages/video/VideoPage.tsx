@@ -55,7 +55,7 @@ function VideoPage() {
 
     return (
         <PageTransition>
-            <div className="min-h-screen bg-black text-white">
+            <div className="min-h-screen bg-[#121213] text-white">
                 <div className="max-w-[1700px] mx-auto flex flex-col lg:flex-row gap-6 p-4 md:p-6">
 
                     <div className="flex-1 lg:max-w-[calc(100%-400px)]">

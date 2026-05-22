@@ -162,7 +162,7 @@ export default function CreateVideoPage() {
                 }}
                 width={600}
                 modalRender={() => (
-                    <div className="bg-[#09090b] border border-zinc-800 rounded-[32px] p-8 shadow-2xl overflow-hidden">
+                    <div className="bg-[#121213] border border-zinc-800 rounded-[32px] p-8 shadow-2xl overflow-hidden">
                         <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-800">
                             <h2 className="text-white text-xl font-black uppercase tracking-tight">
                                 Завантаження та обробка відео
@@ -233,7 +233,7 @@ export default function CreateVideoPage() {
             />
 
 
-            <div className="p-6 bg-zinc-950 min-h-screen">
+            <div className="p-6 bg-[#121213] min-h-screen">
                 <h1 className="text-3xl font-black text-white mb-8">Створити відео</h1>
 
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">

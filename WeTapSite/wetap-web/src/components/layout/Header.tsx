@@ -27,7 +27,7 @@ function Header({ isOpen, toggleSidebar }: HeaderProps) {
 
   return (
     <header
-      className={`h-14 sticky top-0 z-[40] px-4 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-[#0f0f11]/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'
+      className={`h-14 sticky top-0 z-[40] px-4 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-[#121213]/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'
         }`}
     >
       {/* ЛІВА ЧАСТИНА: Бургер-кнопка */}
@@ -69,7 +69,7 @@ function Header({ isOpen, toggleSidebar }: HeaderProps) {
       <div className="flex items-center gap-2">
         <button className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl transition-all relative">
           <Bell size={22} />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-[#0f0f11]"></span>
+          <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-[#121213]"></span>
         </button>
 
         <button className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl transition-all">

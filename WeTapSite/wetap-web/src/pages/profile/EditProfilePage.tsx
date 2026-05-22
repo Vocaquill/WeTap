@@ -60,7 +60,7 @@ function EditProfilePage() {
 
     return (
         <div
-            className="min-h-screen bg-black text-white flex items-center justify-center relative overflow-hidden py-12">
+            className="min-h-screen bg-[#121213] text-white flex items-center justify-center relative overflow-hidden py-12">
             {isLoading && <LoadingOverlay/>}
 
             {/* Background */}

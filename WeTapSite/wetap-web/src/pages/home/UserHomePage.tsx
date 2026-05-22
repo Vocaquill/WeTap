@@ -18,7 +18,7 @@ function UserHomePage() {
     const tags = ['All', 'Subscriptions', 'Posts', 'Music', 'Tech', 'Design', 'Comedy', 'Movies'];
 
     return (
-        <div className="min-h-screen bg-[#0f0f11] text-white pb-12">
+        <div className="min-h-screen bg-[#121213] text-white pb-12">
 
             {heroVideo && (
                 <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8 pt-2">
