@@ -6,12 +6,11 @@ using Microsoft.AspNetCore.Identity;
 namespace Application.Features.Accounts.Commands.ChangePassword;
 
 public class ChangePasswordHandler(UserManager<UserEntity> userManager,
-    IAuthService authService) : IRequestHandler<ChangePasswordCommand>
+    ICurrentUserService authService) : IRequestHandler<ChangePasswordCommand>
 {
     public async Task Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await userManager.FindByIdAsync((await authService.GetUserId()).ToString());
-
+        var user = await userManager.FindByIdAsync((authService.GetCurrentUserId()).ToString());
 
         if (user != null)
         {
