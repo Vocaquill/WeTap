@@ -72,7 +72,7 @@ function VideoPage() {
                         </h1>
 
                         <div
-                            className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-4 pb-4 border-b border-zinc-800">
+                            className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-16 mt-4 pb-4 border-b border-zinc-800">
                             <div className="flex items-center gap-3">
                                 {video.channel?.avatarImage ? (
                                     <img
@@ -91,7 +91,7 @@ function VideoPage() {
                                     <p className="text-xs text-zinc-400 mt-1">{video.channel?.subscriberCount}</p>
                                 </div>
                                 <button
-                                    className="ml-4 bg-[#FF2D7A] text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-[#FF2D7A]/90 transition-colors">
+                                    className="ml-2 bg-[#FF2D7A] text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-[#FF2D7A]/90 transition-colors">
                                     Підписатися
                                 </button>
                             </div>
