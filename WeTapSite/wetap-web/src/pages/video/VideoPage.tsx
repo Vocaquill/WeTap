@@ -1,12 +1,12 @@
-import {useEffect} from 'react';
+import { useEffect, useState } from 'react';
 import {
     Calendar,
     ThumbsUp,
     ThumbsDown,
-    Share2,
     MoreHorizontal,
     Globe,
     Shield,
+    Eye,
 } from 'lucide-react';
 import {
     useParams,
@@ -14,21 +14,23 @@ import {
     Link
 } from 'react-router-dom';
 import PageTransition from '../../components/layout/PageTransition';
-import {MoviePlayer} from "../../components/movie/MoviePlayer";
-import {APP_ENV} from "../../env/index";
+import { MoviePlayer } from "../../components/movie/MoviePlayer";
+import { APP_ENV } from "../../env/index";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
-import {useGetByQuery, useIncrementViewMutation, useReactVideoMutation, useSearchVideosQuery} from "../../services/api/apiVideos";
+import { useGetByQuery, useIncrementViewMutation, useReactVideoMutation, useSearchVideosQuery } from "../../services/api/apiVideos";
 
 function VideoPage() {
     //const navigate = useNavigate();
-    const {slug} = useParams<{ slug: string }>();
+    const { slug } = useParams<{ slug: string }>();
+    const [activeTab, setActiveTab] = useState<'suggestions' | 'channel'>('suggestions');
+    const [isDescExpanded, setIsDescExpanded] = useState(false);
 
-    const {data: video, isLoading: isVideoLoading} = useGetByQuery(
-        {slug: slug!},
-        {skip: !slug}
+    const { data: video, isLoading: isVideoLoading } = useGetByQuery(
+        { slug: slug! },
+        { skip: !slug }
     );
 
-    const {data: recommendations, isLoading: isRecsLoading} = useSearchVideosQuery({
+    const { data: recommendations, isLoading: isRecsLoading } = useSearchVideosQuery({
         page: 1,
         itemPerPage: 10
     });
@@ -50,7 +52,7 @@ function VideoPage() {
         }
     };
 
-    if (isVideoLoading) return <LoadingOverlay/>;
+    if (isVideoLoading) return <LoadingOverlay />;
     if (!video) return null;
 
     return (
@@ -59,13 +61,13 @@ function VideoPage() {
                 <div className="max-w-[1700px] mx-auto flex flex-col lg:flex-row gap-6 p-4 md:p-6">
 
                     <div className="flex-1 lg:max-w-[calc(100%-400px)]">
-                        <div className="w-full bg-zinc-900 rounded-xl overflow-hidden shadow-2xl">
+                        <div className="w-full max-w-[1024px] bg-zinc-900 rounded-[24px] overflow-hidden shadow-2xl">
                             {video.video && (
-                                <MoviePlayer videoName={video.video}/>
+                                <MoviePlayer videoName={video.video} />
                             )}
                         </div>
 
-                        <h1 className="text-xl md:text-2xl font-bold mt-4 line-clamp-2">
+                        <h1 className="video-title mt-4 line-clamp-2">
                             {video.title}
                         </h1>
 
@@ -80,67 +82,74 @@ function VideoPage() {
                                     />
                                 ) : (
                                     <div
-                                        className="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-purple-700 flex-shrink-0"/>
+                                        className="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-purple-700 flex-shrink-0" />
                                 )}
-                                <div>
-                                    <p className="font-bold text-zinc-100">{video.channel?.name}</p>
-                                    <p className="text-xs text-zinc-400">{video.channel?.subscriberCount}</p>
+                                <div className="flex flex-col justify-center min-w-0">
+                                    <p className="channel-name text-zinc-100">
+                                        {video.channel?.name}
+                                    </p>
+                                    <p className="text-xs text-zinc-400 mt-1">{video.channel?.subscriberCount}</p>
                                 </div>
                                 <button
-                                    className="ml-4 bg-white text-black px-4 py-2 rounded-full text-sm font-bold hover:bg-zinc-200 transition-colors">
+                                    className="ml-4 bg-[#FF2D7A] text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-[#FF2D7A]/90 transition-colors">
                                     Підписатися
                                 </button>
                             </div>
 
-                            <div className="flex items-center gap-2">
-                                <div className="flex items-center bg-zinc-800 rounded-full overflow-hidden">
-                                    <button
-                                        onClick={() => handleReaction(true)}
-                                        disabled={isReacting}
-                                        className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors border-r border-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed">
-                                        <ThumbsUp size={18}/>
-                                        <span className="text-sm font-medium">{video.likesCount}</span>
-                                    </button>
-                                    <button
-                                        onClick={() => handleReaction(false)}
-                                        disabled={isReacting}
-                                        className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                                        <ThumbsDown size={18}/>
-                                        <span className="text-sm font-medium">{video.dislikesCount}</span>
+                            <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
+                                <div className="views-and-date flex items-center gap-4 text-zinc-400 mr-2 flex-nowrap">
+                                    <div className="flex items-center gap-1.5">
+                                        <Eye size={18} />
+                                        <span>{video.viewCount}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5 whitespace-nowrap">
+                                        <Calendar size={16} />
+                                        <span>{video.dateCreated}</span>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <div className="flex items-center bg-zinc-800 rounded-full overflow-hidden">
+                                        <button
+                                            onClick={() => handleReaction(true)}
+                                            disabled={isReacting}
+                                            className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors border-r border-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                                            <ThumbsUp size={18} />
+                                            <span className="text-sm font-medium">{video.likesCount}</span>
+                                        </button>
+                                        <button
+                                            onClick={() => handleReaction(false)}
+                                            disabled={isReacting}
+                                            className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                            <ThumbsDown size={18} />
+                                            <span className="text-sm font-medium">{video.dislikesCount}</span>
+                                        </button>
+                                    </div>
+
+                                    <button className="p-2 bg-zinc-800 rounded-full hover:bg-zinc-700">
+                                        <MoreHorizontal size={18} />
                                     </button>
                                 </div>
-                                <button
-                                    className="flex items-center gap-2 bg-zinc-800 px-4 py-2 rounded-full hover:bg-zinc-700 transition-colors">
-                                    <Share2 size={18}/>
-                                    <span className="hidden sm:inline text-sm font-medium">Поділитися</span>
-                                </button>
-                                <button className="p-2 bg-zinc-800 rounded-full hover:bg-zinc-700">
-                                    <MoreHorizontal size={18}/>
-                                </button>
                             </div>
                         </div>
 
                         <div className="mt-4 p-4 bg-zinc-800/50 rounded-xl hover:bg-zinc-800 transition-colors group">
-                            <div className="flex flex-wrap gap-4 text-sm font-bold mb-3">
-                                <span>{video.viewCount} переглядів</span>
-                                <div className="flex items-center gap-1">
-                                    <Calendar size={14}/>
-                                    {video.dateCreated}
+                            {(video.language || video.privacy) && (
+                                <div className="flex flex-wrap gap-4 text-sm font-bold mb-3">
+                                    {video.language && (
+                                        <div className="flex items-center gap-1 text-zinc-300 font-medium">
+                                            <Globe size={14} />
+                                            {video.language.name}
+                                        </div>
+                                    )}
+                                    {video.privacy && (
+                                        <div className="flex items-center gap-1 text-zinc-300 font-medium">
+                                            <Shield size={14} />
+                                            {video.privacy.name}
+                                        </div>
+                                    )}
                                 </div>
-                                {video.language && (
-                                    <div className="flex items-center gap-1 text-zinc-300 font-medium">
-                                        <Globe size={14}/>
-                                        {video.language.name}
-                                    </div>
-                                )}
-                                {video.privacy && (
-                                    <div className="flex items-center gap-1 text-zinc-300 font-medium">
-                                        <Shield size={14}/>
-                                        {video.privacy.name}
-                                    </div>
-                                )}
-                            </div>
-                            
+                            )}
+
                             {(video.genres?.length > 0 || video.tags?.length > 0) && (
                                 <div className="flex flex-wrap gap-2 mb-4 items-center">
                                     {video.genres?.map((g) => (
@@ -156,23 +165,59 @@ function VideoPage() {
                                 </div>
                             )}
 
-                            <p className="text-sm leading-relaxed whitespace-pre-wrap text-zinc-200">
-                                {video.description || "Опис відсутній."}
-                            </p>
+                            <div>
+                                <p className="text-sm leading-relaxed whitespace-pre-wrap text-zinc-200">
+                                    {isDescExpanded
+                                        ? (video.description || "Опис відсутній.")
+                                        : (video.description
+                                            ? (video.description.length > 150
+                                                ? `${video.description.slice(0, 150)}...`
+                                                : video.description)
+                                            : "Опис відсутній.")
+                                    }
+                                </p>
+                                {video.description && video.description.length > 150 && (
+                                    <button
+                                        onClick={() => setIsDescExpanded(!isDescExpanded)}
+                                        className="text-xs text-[#FF2D7A] font-bold mt-2 hover:underline focus:outline-none"
+                                    >
+                                        {isDescExpanded ? "Show less" : "Show more"}
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
 
                     <div className="w-full lg:w-[400px] flex-shrink-0 space-y-3">
-                        <h3 className="font-bold text-sm mb-4 uppercase tracking-wider text-zinc-400">Рекомендації</h3>
+                        <div className="flex gap-2 mb-4">
+                            <button
+                                onClick={() => setActiveTab('suggestions')}
+                                className={`custom-tab-btn ${activeTab === 'suggestions'
+                                    ? 'bg-[#FF2D7A] text-white shadow-lg shadow-[#FF2D7A]/20'
+                                    : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white'
+                                    }`}
+                            >
+                                Suggestions
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('channel')}
+                                className={`custom-tab-btn ${activeTab === 'channel'
+                                    ? 'bg-[#FF2D7A] text-white shadow-lg shadow-[#FF2D7A]/20'
+                                    : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white'
+                                    }`}
+                            >
+                                From this channel
+                            </button>
+                        </div>
 
                         {isRecsLoading ? (
                             <div className="animate-pulse space-y-4">
                                 {[...Array(5)].map((_, i) => (
                                     <div key={i} className="flex gap-2">
-                                        <div className="w-40 h-24 bg-zinc-800 rounded-lg"/>
+                                        <div className="w-40 h-24 bg-zinc-800 rounded-lg" />
                                         <div className="flex-1 space-y-2 py-1">
-                                            <div className="h-4 bg-zinc-800 rounded w-3/4"/>
-                                            <div className="h-3 bg-zinc-800 rounded w-1/2"/>
+                                            <div className="h-4 bg-zinc-800 rounded w-3/4" />
+                                            <div className="h-3 bg-zinc-800 rounded w-1/2" />
                                         </div>
                                     </div>
                                 ))}
