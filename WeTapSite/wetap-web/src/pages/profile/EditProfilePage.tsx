@@ -1,4 +1,4 @@
-import {User, Mail, ChevronLeft, Camera, ArrowRight} from 'lucide-react';
+import {User, Mail, Camera, ArrowRight} from 'lucide-react';
 import {motion} from 'framer-motion';
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 import {useAppDispatch, useAppSelector} from "../../store/index";
@@ -8,6 +8,9 @@ import {APP_ENV} from "../../env/index";
 import type {IUserEdit} from "../../types/user";
 import {useEditAccountMutation} from "../../services/api/apiAccount";
 import {loginSuccess} from "../../store/slices/authSlice";
+import { InputField } from "../../components/form/InputField";
+import { Button } from "../../components/form/Button";
+import { BackButton } from "../../components/ui/common/BackButton";
 
 function EditProfilePage() {
     const {user} = useAppSelector(state => state.auth);
@@ -57,7 +60,7 @@ function EditProfilePage() {
 
     return (
         <div
-            className="min-h-screen bg-black text-white flex items-center justify-center relative overflow-hidden py-12">
+            className="min-h-screen bg-[#121213] text-white flex items-center justify-center relative overflow-hidden py-12">
             {isLoading && <LoadingOverlay/>}
 
             {/* Background */}
@@ -68,13 +71,10 @@ function EditProfilePage() {
                 animate={{opacity: 1, scale: 1}}
                 className="w-full max-w-xl z-10 px-6"
             >
-                <button
+                <BackButton
+                    label="Назад до акаунту"
                     onClick={() => navigate('/account')}
-                    className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors mb-8 group"
-                >
-                    <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform"/>
-                    Назад до акаунту
-                </button>
+                />
 
                 <div className="mb-10 text-center">
                     <h1 className="text-4xl font-black uppercase italic">
@@ -111,66 +111,54 @@ function EditProfilePage() {
                     </div>
 
                     {/* NAMES */}
-                    <div>
-                        <label className="text-[10px] uppercase text-zinc-500 ml-1">
-                            Ім'я
-                        </label>
-                        <div className="relative">
-                            <User className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600"/>
-                            <input
-                                required
-                                value={formData.firstName}
-                                className="w-full bg-black/40 rounded-2xl py-3.5 pl-12"
-                                onChange={(e) =>
-                                    setFormData({...formData, firstName: e.target.value})
-                                }
-                            />
-                        </div>
-                    </div>
+                    <InputField
+                        label="Ім'я"
+                        required
+                        value={formData.firstName}
+                        onChange={(e) =>
+                            setFormData({...formData, firstName: e.target.value})
+                        }
+                        icon={<User className="text-zinc-600" size={20} />}
+                        inputClassName="w-full bg-black/40 rounded-2xl py-3.5"
+                        labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
+                    />
 
                     {/* LASTNAME */}
-                    <div>
-                        <label className="text-[10px] uppercase text-zinc-500 ml-1">
-                            Прізвище
-                        </label>
-                        <div className="relative">
-                            <User className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600"/>
-                            <input
-                                required
-                                value={formData.lastName}
-                                className="w-full bg-black/40 rounded-2xl py-3.5 pl-12"
-                                onChange={(e) =>
-                                    setFormData({...formData, lastName: e.target.value})
-                                }
-                            />
-                        </div>
-                    </div>
+                    <InputField
+                        label="Прізвище"
+                        required
+                        value={formData.lastName}
+                        onChange={(e) =>
+                            setFormData({...formData, lastName: e.target.value})
+                        }
+                        icon={<User className="text-zinc-600" size={20} />}
+                        inputClassName="w-full bg-black/40 rounded-2xl py-3.5"
+                        labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
+                    />
 
                     {/* EMAIL */}
-                    <div>
-                        <label className="text-[10px] uppercase text-zinc-500 ml-1">
-                            Email
-                        </label>
-                        <div className="relative">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600"/>
-                            <input
-                                type="email"
-                                value={formData.email}
-                                required
-                                className="w-full bg-black/40 rounded-2xl py-3.5 pl-12"
-                                onChange={(e) =>
-                                    setFormData({...formData, email: e.target.value})
-                                }
-                            />
-                        </div>
-                    </div>
+                    <InputField
+                        label="Email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) =>
+                            setFormData({...formData, email: e.target.value})
+                        }
+                        icon={<Mail className="text-zinc-600" size={20} />}
+                        inputClassName="w-full bg-black/40 rounded-2xl py-3.5"
+                        labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
+                    />
 
-                    <button
+                    <Button
                         type="submit"
-                        className="w-full bg-red-600 hover:bg-red-700 py-4 rounded-2xl font-black uppercase flex items-center justify-center gap-2"
+                        variant="primary"
+                        size="xl"
+                        fullWidth
+                        iconRight={<ArrowRight />}
                     >
-                        Підтвердити <ArrowRight/>
-                    </button>
+                        Підтвердити
+                    </Button>
                 </form>
             </motion.div>
         </div>

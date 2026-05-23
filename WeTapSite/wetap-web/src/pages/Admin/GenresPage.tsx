@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Search, Plus, Edit2, Trash2, Link2, X, Loader2 } from 'lucide-react';
+import { Button } from '../../components/form/Button';
 
 import AddGenreModal from '../../components/modal/AddGenreModal';
 import EditGenreModal from '../../components/modal/EditGenreModal';
@@ -11,6 +12,7 @@ import { useSearchGenresQuery, useDeleteGenreMutation } from '../../services/api
 
 import { Pagination } from '../../components/ui/common/Pagination';
 import { APP_ENV } from "../../env";
+import { InputField } from "../../components/form/InputField";
 
 function GenresPage() {
   const [searchParams, setSearchParams] = useState<IGenreSearch>({
@@ -56,43 +58,46 @@ function GenresPage() {
             <p className="text-zinc-500 mt-1">Керування категоріями фільмів та їх відображенням</p>
           </div>
 
-          <button
+          <Button
+              type="button"
+              variant="primary"
+              size="md"
+              className="rounded-2xl"
+              icon={<Plus size={20} strokeWidth={3} />}
               onClick={() => setIsAddOpen(true)}
-              className="px-6 py-3 bg-red-600 hover:bg-red-700 rounded-2xl text-white font-black flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-red-600/20"
           >
-            <Plus size={20} strokeWidth={3} />
             ДОДАТИ ЖАНР
-          </button>
+          </Button>
         </div>
 
         <div className="bg-zinc-950 p-4 rounded-[2rem] border border-zinc-800 flex flex-wrap items-center gap-4 shadow-xl">
-          <div className="relative flex-[2] min-w-[240px]">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
-            <input
-                value={searchParams.name || ''}
-                onChange={(e) => handleSearchChange('name', e.target.value)}
-                placeholder="Пошук за назвою..."
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pl-12 pr-4 text-zinc-200 focus:border-red-600/50 outline-none transition-all"
-            />
-          </div>
+          <InputField
+              value={searchParams.name || ''}
+              onChange={(e) => handleSearchChange('name', e.target.value)}
+              placeholder="Пошук за назвою..."
+              icon={<Search size={18} />}
+              inputClassName="text-zinc-200 border-zinc-800 bg-zinc-900 focus:border-red-600/50"
+              wrapperClassName="flex-[2] min-w-[240px]"
+          />
 
-          <div className="relative flex-1 min-w-[180px]">
-            <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={16} />
-            <input
-                value={searchParams.slug || ''}
-                onChange={(e) => handleSearchChange('slug', e.target.value)}
-                placeholder="Фільтр по slug..."
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pl-12 pr-4 text-xs text-zinc-400 font-mono italic outline-none focus:border-red-600/50 transition-all"
-            />
-          </div>
+          <InputField
+              value={searchParams.slug || ''}
+              onChange={(e) => handleSearchChange('slug', e.target.value)}
+              placeholder="Фільтр по slug..."
+              icon={<Link2 size={16} />}
+              inputClassName="text-xs text-zinc-400 font-mono italic border-zinc-800 bg-zinc-900 focus:border-red-600/50"
+              wrapperClassName="flex-1 min-w-[180px]"
+          />
 
           {(searchParams.name || searchParams.slug) && (
-              <button
+              <Button
+                  type="button"
+                  variant="secondary"
+                  className="w-12 h-12 p-0 flex items-center justify-center rounded-xl"
                   onClick={resetFilters}
-                  className="w-12 h-12 flex items-center justify-center bg-zinc-900 hover:bg-zinc-800 text-zinc-400 rounded-xl transition-colors border border-zinc-800"
               >
                 <X size={20} />
-              </button>
+              </Button>
           )}
         </div>
 
@@ -153,18 +158,22 @@ function GenresPage() {
 
                         <td className="p-5 text-right">
                           <div className="flex justify-end gap-2">
-                            <button
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                className="w-10 h-10 p-0 rounded-xl"
                                 onClick={() => { setSelectedGenre(genre); setIsEditOpen(true); }}
-                                className="w-10 h-10 flex items-center justify-center bg-zinc-900 hover:bg-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-all border border-zinc-800"
                             >
                               <Edit2 size={16} />
-                            </button>
-                            <button
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                className="w-10 h-10 p-0 rounded-xl hover:bg-red-950/40 text-zinc-500 hover:text-red-500 hover:border-red-950/40"
                                 onClick={() => { setSelectedGenre(genre); setIsDeleteOpen(true); }}
-                                className="w-10 h-10 flex items-center justify-center bg-zinc-900 hover:bg-red-950/40 rounded-xl text-zinc-500 hover:text-red-500 transition-all border border-zinc-800"
                             >
                               <Trash2 size={16} />
-                            </button>
+                            </Button>
                           </div>
                         </td>
                       </tr>

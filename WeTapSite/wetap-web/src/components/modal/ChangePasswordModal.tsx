@@ -2,6 +2,8 @@ import {motion, AnimatePresence} from "framer-motion";
 import {X, Lock} from "lucide-react";
 import React, {useState} from "react";
 import {useChangePasswordMutation} from "../../services/api/apiAccount.ts";
+import { InputField } from "../form/InputField";
+import { Button } from "../form/Button";
 
 interface Props {
     isOpen: boolean;
@@ -83,38 +85,44 @@ export default function ChangePasswordModal({isOpen, onClose}: Props) {
                         <form
                             onSubmit={handleSubmit}
                             className="space-y-4">
-                            <input
+                            <InputField
                                 type="password"
                                 placeholder="Поточний пароль"
-                                className="w-full rounded-xl bg-black/40 border border-white/10 px-4 py-3 text-sm focus:outline-none focus:border-red-600"
+                                value={formData.oldPassword}
                                 onChange={(e) =>
                                     setFormData({...formData, oldPassword: e.target.value})}
+                                inputClassName="w-full rounded-xl bg-black/40 border border-white/10 px-4 py-3 text-sm focus:outline-none focus:border-red-600"
                             />
-                            <input
+                            <InputField
                                 type="password"
                                 placeholder="Новий пароль"
-                                className="w-full rounded-xl bg-black/40 border border-white/10 px-4 py-3 text-sm focus:outline-none focus:border-red-600"
+                                value={formData.newPassword}
                                 onChange={(e) =>
                                     setFormData({...formData, newPassword: e.target.value})}
+                                inputClassName="w-full rounded-xl bg-black/40 border border-white/10 px-4 py-3 text-sm focus:outline-none focus:border-red-600"
                             />
-                            <input
+                            <InputField
                                 type="password"
                                 placeholder="Підтвердіть пароль"
-                                className="w-full rounded-xl bg-black/40 border border-white/10 px-4 py-3 text-sm focus:outline-none focus:border-red-600"
+                                value={formData.confirmPassword}
                                 onChange={(e) =>
                                     setFormData({...formData, confirmPassword: e.target.value})}
+                                inputClassName="w-full rounded-xl bg-black/40 border border-white/10 px-4 py-3 text-sm focus:outline-none focus:border-red-600"
                             />
 
                             {errorMessage && (
                                 <p className="text-red-500 text-sm font-semibold">{errorMessage}</p>
                             )}
 
-                            <button
+                            <Button
                                 type="submit"
-                                className="w-full mt-4 bg-red-600 py-3 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-red-700 transition"
+                                variant="primary"
+                                size="lg"
+                                fullWidth
+                                className="mt-4"
                             >
                                 Змінити пароль
-                            </button>
+                            </Button>
                         </form>
                     </motion.div>
                 </motion.div>

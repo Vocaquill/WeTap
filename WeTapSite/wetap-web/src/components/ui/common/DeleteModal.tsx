@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import type {FC} from "react";
+import { Button } from '../../form/Button';
 
 interface DeleteModalProps {
     isOpen: boolean;
@@ -56,21 +57,27 @@ const DeleteModal: FC<DeleteModalProps> = ({
                         </div>
 
                         <div className="mt-8 flex flex-col gap-3">
-                            <button
+                            <Button
+                                type="button"
+                                variant="primary"
+                                size="xl"
+                                fullWidth
+                                isLoading={isLoading}
                                 onClick={onConfirm}
-                                disabled={isLoading}
-                                className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl transition-all active:scale-[0.97] disabled:opacity-50 shadow-lg shadow-red-600/20"
                             >
-                                {isLoading ? 'ВИДАЛЕННЯ...' : 'ТАК, ВИДАЛИТИ'}
-                            </button>
+                                ТАК, ВИДАЛИТИ
+                            </Button>
 
-                            <button
-                                onClick={onClose}
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                size="xl"
+                                fullWidth
                                 disabled={isLoading}
-                                className="w-full py-4 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 font-bold rounded-2xl transition-all active:scale-[0.97]"
+                                onClick={onClose}
                             >
                                 СКАСУВАТИ
-                            </button>
+                            </Button>
                         </div>
                     </motion.div>
                 </div>

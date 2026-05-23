@@ -23,7 +23,7 @@ function ProfilePage() {
     }
 
     return (
-        <div className="min-h-screen bg-black text-white p-6 md:p-12">
+        <div className="min-h-screen bg-[#121213] text-white p-6 md:p-12">
             <div className="max-w-4xl mx-auto">
 
                 {/* --- HEADER PROFILE --- */}

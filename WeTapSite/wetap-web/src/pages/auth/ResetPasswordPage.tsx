@@ -1,8 +1,11 @@
-import {ChevronLeft, ArrowRight, Lock} from 'lucide-react';
+import {ArrowRight, Lock} from 'lucide-react';
 import {motion} from 'framer-motion';
 import {useNavigate, useSearchParams} from "react-router-dom";
 import React, {useState} from "react";
 import {useResetPasswordMutation} from "../../services/api/apiAccount";
+import { InputField } from "../../components/form/InputField";
+import { Button } from "../../components/form/Button";
+import { BackButton } from "../../components/ui/common/BackButton";
 
 function ResetPasswordPage() {
     const [searchParams] = useSearchParams();
@@ -53,13 +56,10 @@ function ResetPasswordPage() {
                 animate={{opacity: 1, scale: 1}}
                 className="w-full max-w-xl z-10 px-6"
             >
-                <button
+                <BackButton
+                    label="Назад до головного меню"
                     onClick={() => navigate('/account')}
-                    className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors mb-8 group"
-                >
-                    <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform"/>
-                    Назад до головного меню
-                </button>
+                />
 
                 <div className="mb-10 text-center">
                     <h1 className="text-4xl font-black uppercase italic">
@@ -71,48 +71,43 @@ function ResetPasswordPage() {
                     onSubmit={handleSubmit}
                     className="space-y-6 bg-zinc-900/30 p-8 rounded-[2.5rem] border border-white/5 backdrop-blur-md"
                 >
-                    <div>
-                        <label className="text-[10px] uppercase text-zinc-500 ml-1">
-                            Новий пароль
-                        </label>
-                        <div className="relative">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600"/>
-                            <input
-                                type="password"
-                                required
-                                className="w-full bg-black/40 rounded-2xl py-3.5 pl-12"
-                                onChange={(e) =>
-                                    setFormData({...formData, newPassword: e.target.value})}
-                            />
-                        </div>
-                    </div>
+                    <InputField
+                        label="Новий пароль"
+                        type="password"
+                        required
+                        value={formData.newPassword}
+                        onChange={(e) =>
+                            setFormData({...formData, newPassword: e.target.value})}
+                        icon={<Lock className="text-zinc-600" size={20} />}
+                        inputClassName="w-full bg-black/40 rounded-2xl py-3.5"
+                        labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
+                    />
 
-                    <div>
-                        <label className="text-[10px] uppercase text-zinc-500 ml-1">
-                            Повторіть пароль
-                        </label>
-                        <div className="relative">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600"/>
-                            <input
-                                type="password"
-                                required
-                                className="w-full bg-black/40 rounded-2xl py-3.5 pl-12"
-                                onChange={(e) =>
-                                    setFormData({...formData, confirmPassword: e.target.value})}
-                            />
-                        </div>
-                    </div>
+                    <InputField
+                        label="Повторіть пароль"
+                        type="password"
+                        required
+                        value={formData.confirmPassword}
+                        onChange={(e) =>
+                            setFormData({...formData, confirmPassword: e.target.value})}
+                        icon={<Lock className="text-zinc-600" size={20} />}
+                        inputClassName="w-full bg-black/40 rounded-2xl py-3.5"
+                        labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
+                    />
 
                     {errorMessage && (
                         <p className="text-red-500 text-sm font-semibold">{errorMessage}</p>
                     )}
 
-                    <button
+                    <Button
                         type="submit"
-                        className="w-full bg-red-600 hover:bg-red-700 py-4 rounded-2xl font-black uppercase flex items-center justify-center gap-2"
+                        variant="primary"
+                        size="xl"
+                        fullWidth
+                        iconRight={<ArrowRight />}
                     >
-                        Підтвердити <ArrowRight/>
-                    </button>
+                        Підтвердити
+                    </Button>
                 </form>
             </motion.div>
         </div>

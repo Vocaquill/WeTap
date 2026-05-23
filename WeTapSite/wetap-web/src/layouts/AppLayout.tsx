@@ -11,12 +11,12 @@ function AppLayout() {
   const location = useLocation();
 
   return (
-    <div className="flex min-h-screen bg-[#0f0f11] text-zinc-100 antialiased font-sans">
+    <div className="flex min-h-screen bg-[#121213] text-zinc-100 antialiased font-sans">
       {/* Сайдбар ліворуч */}
       <Sidebar isOpen={isOpen} />
 
       {/* Основна контентна зона праворуч */}
-      <main className="flex-1 flex flex-col min-w-0 bg-[#0f0f11]">
+      <main className="flex-1 flex flex-col min-w-0 bg-[#121213]">
         <Header isOpen={isOpen} toggleSidebar={toggleSidebar} />
 
         {/* Контент сторінки з точними відступами як на скриншоті */}

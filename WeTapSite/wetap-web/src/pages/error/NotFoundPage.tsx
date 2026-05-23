@@ -6,7 +6,7 @@ function NotFoundPage() {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-black text-white flex items-center justify-center p-6 overflow-hidden relative">
+        <div className="min-h-screen bg-[#121213] text-white flex items-center justify-center p-6 overflow-hidden relative">
 
             <div className="absolute inset-0 z-0 opacity-5 select-none pointer-events-none">
                 <div className="whitespace-nowrap text-[20rem] font-black italic uppercase tracking-tighter leading-none">

@@ -181,7 +181,7 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                     className="absolute inset-0 flex items-center justify-center bg-black/20 cursor-pointer"
                     onClick={togglePlay}
                 >
-                    <div className="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center shadow-2xl transform hover:scale-110 transition-transform">
+                    <div className="w-20 h-20 bg-[#FF2D7A] rounded-full flex items-center justify-center shadow-2xl transform hover:scale-110 transition-transform">
                         <Play fill="white" size={40} className="ml-1" />
                     </div>
                 </div>
@@ -190,23 +190,35 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
             <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pt-8 pb-1 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
 
                 <div className="flex items-center justify-between px-4 mb-2">
-                    <div className="flex items-center gap-4">
-                        <button onClick={togglePlay} className="text-white hover:text-red-500 transition-colors">
-                            {isPlaying ? <Pause fill="currentColor" /> : <Play fill="currentColor" />}
+                    <div className="flex items-center gap-3">
+                        <button 
+                            onClick={togglePlay} 
+                            className="w-8 h-8 flex items-center justify-center rounded-full text-white hover:bg-white/10 hover:text-[#FF2D7A] transition-colors"
+                        >
+                            {isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
                         </button>
                         
-                        <div className="flex items-center gap-2">
-                             <button onClick={() => skip(-10)} className="text-white/70 hover:text-white">
-                                <RotateCcw size={20} />
+                        <div className="flex items-center gap-1">
+                             <button 
+                                 onClick={() => skip(-10)} 
+                                 className="w-8 h-8 flex items-center justify-center rounded-full text-white/70 hover:bg-white/10 hover:text-[#FF2D7A] transition-colors"
+                             >
+                                <RotateCcw size={16} />
                              </button>
-                             <button onClick={() => skip(10)} className="text-white/70 hover:text-white">
-                                <RotateCw size={20} />
+                             <button 
+                                 onClick={() => skip(10)} 
+                                 className="w-8 h-8 flex items-center justify-center rounded-full text-white/70 hover:bg-white/10 hover:text-[#FF2D7A] transition-colors"
+                             >
+                                <RotateCw size={16} />
                              </button>
                         </div>
 
-                        <div className="flex items-center gap-2 group/volume ml-2">
-                            <button onClick={toggleMute} className="text-white hover:text-red-500 transition-colors">
-                                {isMuted || volume === 0 ? <VolumeX /> : <Volume2 />}
+                        <div className="flex items-center group/volume ml-1">
+                            <button 
+                                onClick={toggleMute} 
+                                className="w-8 h-8 flex items-center justify-center rounded-full text-white hover:bg-white/10 hover:text-[#FF2D7A] transition-colors"
+                            >
+                                {isMuted || volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
                             </button>
                             <div className="w-0 overflow-hidden group-hover/volume:w-24 group-hover/volume:ml-2 transition-all duration-300 flex items-center">
                                 <input
@@ -216,7 +228,7 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                                     step="0.1"
                                     value={isMuted ? 0 : volume}
                                     onChange={handleVolumeChange}
-                                    className="w-24 h-1 bg-zinc-600 rounded-lg appearance-none cursor-pointer accent-red-600"
+                                    className="w-24 h-1 bg-zinc-600 rounded-lg appearance-none cursor-pointer accent-[#FF2D7A]"
                                 />
                             </div>
                         </div>
@@ -226,14 +238,14 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-4 relative">
+                    <div className="flex items-center gap-3 relative">
                         {!src && (
                             <div className="relative">
                                 <button 
                                     onClick={() => setShowSettings(!showSettings)}
-                                    className={`text-white hover:text-red-500 transition-all duration-300 ${showSettings ? 'rotate-90 text-red-500' : ''}`}
+                                    className={`w-8 h-8 flex items-center justify-center rounded-full text-white hover:bg-white/10 hover:text-[#FF2D7A] transition-all duration-300 ${showSettings ? 'rotate-90 text-[#FF2D7A]' : ''}`}
                                 >
-                                    <Settings size={24} />
+                                    <Settings size={16} />
                                 </button>
 
                                 {showSettings && (
@@ -245,7 +257,7 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                                             <button
                                                 key={q}
                                                 onClick={() => changeQuality(q)}
-                                                className={`w-full text-left px-4 py-2 text-sm hover:bg-zinc-800 transition-colors ${quality === q ? 'text-red-500 font-bold' : 'text-white'}`}
+                                                className={`w-full text-left px-4 py-2 text-sm hover:bg-zinc-800 transition-colors ${quality === q ? 'text-[#FF2D7A] font-bold' : 'text-white'}`}
                                             >
                                                 {q}p
                                             </button>
@@ -255,8 +267,11 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                             </div>
                         )}
 
-                        <button onClick={toggleFullscreen} className="text-white hover:text-red-500 transition-colors">
-                            <Maximize />
+                        <button 
+                            onClick={toggleFullscreen} 
+                            className="w-8 h-8 flex items-center justify-center rounded-full text-white hover:bg-white/10 hover:text-[#FF2D7A] transition-colors"
+                        >
+                            <Maximize size={16} />
                         </button>
                     </div>
                 </div>
@@ -266,7 +281,7 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                         <div className="absolute w-full h-1 bg-zinc-600 rounded-full" />
 
                         <div
-                            className="absolute h-1 bg-red-600 rounded-full pointer-events-none z-10"
+                            className="absolute h-1 bg-[#FF2D7A] rounded-full pointer-events-none z-10"
                             style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
                         />
 
@@ -281,7 +296,7 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                         />
 
                         <div
-                            className="absolute h-3 w-3 bg-red-600 rounded-full shadow-lg opacity-0 group-hover/progress:opacity-100 transition-opacity pointer-events-none z-10"
+                            className="absolute h-3 w-3 bg-[#FF2D7A] rounded-full shadow-lg opacity-0 group-hover/progress:opacity-100 transition-opacity pointer-events-none z-10"
                             style={{
                                 left: `calc(${(currentTime / (duration || 1)) * 100}% - 6px)`
                             }}
