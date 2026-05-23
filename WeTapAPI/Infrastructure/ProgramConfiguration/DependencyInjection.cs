@@ -47,7 +47,6 @@ public static class DependencyInjection
         services.AddScoped<ISmtpService, SmtpService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
-        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ISeederService, SeederService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IVideoFileService, VideoFileService>();

@@ -18,7 +18,6 @@ namespace WeTapAPI.Controllers;
 public class UsersController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
-    //[Authorize(Roles = Roles.Admin)]
     public async Task<IActionResult> GetAllUsers()
     {
         var query = new GetUsersQuery();
@@ -28,7 +27,6 @@ public class UsersController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost]
-    //[Authorize(Roles = Roles.Admin)]
     public async Task<IActionResult> SearchUsers([FromBody] UserSearchModel model)
     {
         var query = new SearchUsersQuery(model);
@@ -38,7 +36,6 @@ public class UsersController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut]
-    //[Authorize(Roles = Roles.Admin)]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> EditUser([FromForm] UserEditModel model)
     {
@@ -56,7 +53,6 @@ public class UsersController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet]
-    //[Authorize(Roles = Roles.Admin)]
     public async Task<IActionResult> GetUserById(int id)
     {
         var query = new GetUserByIdQuery(id);
@@ -70,7 +66,6 @@ public class UsersController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete]
-    //[Authorize(Roles = Roles.Admin)]
     public async Task<IActionResult> DeleteUser([FromBody] UserDeleteModel model)
     {
         var command = new DeleteUserCommand(model.Id);
