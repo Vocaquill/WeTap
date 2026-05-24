@@ -133,6 +133,14 @@ export const apiAccount = createApi({
                 };
             },
             providesTags: ['AccountPassword']
+        }),
+        refreshToken: builder.mutation<{token: string}, void>({
+            query: () => ({
+                url: 'RefreshToken',
+                method: 'POST'
+            }),
+            onQueryStarted: async (_arg, { dispatch, queryFulfilled }) =>
+                handleAuthSuccess(queryFulfilled, dispatch)
         })
     })
 });
@@ -148,4 +156,5 @@ export const {
     useDeleteAccountMutation,
     useEditAccountMutation,
     useHasPasswordQuery,
+    useRefreshTokenMutation,
 } = apiAccount;
