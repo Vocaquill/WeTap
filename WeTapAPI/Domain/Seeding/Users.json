@@ -13,7 +13,7 @@
     "Email": "andrii.kovalenko@example.com",
     "Password": "Andrii123!",
     "ImagePath": "https://thispersondoesnotexist.com",
-    "Roles": [ "User" ]
+    "Roles": [ "User", "Author" ]
   },
   {
     "FirstName": "Марія",
@@ -21,6 +21,6 @@
     "Email": "mariia.savchuk@example.com",
     "Password": "Mariia123!",
     "ImagePath": "https://thispersondoesnotexist.com",
-    "Roles": [ "User" ]
+    "Roles": [ "User", "Author" ]
   }
 ]
