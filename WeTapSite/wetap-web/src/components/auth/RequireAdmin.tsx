@@ -1,14 +1,5 @@
-// import { Navigate, Outlet } from "react-router-dom";
-// import {useAppSelector} from "../../store";
-//
-// const RequireAdmin = () => {
-//     const {user} = useAppSelector(state => state.auth);
-//
-//     if (!user || user.role != "Admin") {
-//         return <Navigate to="/login" replace />;
-//     }
-//
-//     return <Outlet />;
-// };
-//
-// export default RequireAdmin;
+import RequireRole from './RequireRole';
+
+const RequireAdmin = () => <RequireRole allowedRoles={['Admin']} fallback="/" />;
+
+export default RequireAdmin;
