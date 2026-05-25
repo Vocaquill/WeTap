@@ -14,7 +14,7 @@ const RequireRole = ({ allowedRoles = [], fallback = '/' }: RequireRoleProps) =>
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+    if (allowedRoles.length > 0 && !user.roles.some(role => allowedRoles.includes(role))) {
         return <Navigate to={fallback} replace />;
     }
 

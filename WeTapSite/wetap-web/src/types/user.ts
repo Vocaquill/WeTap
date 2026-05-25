@@ -18,7 +18,7 @@ export interface User {
     email: string;
     image: string;
     token: string;
-    role: string;
+    roles: string[];
 }
 
 export interface IUserEdit {
