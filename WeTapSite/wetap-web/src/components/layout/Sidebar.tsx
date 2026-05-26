@@ -1,5 +1,5 @@
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { ShieldCheck, Home, Compass, Monitor, History, Clock, ThumbsUp, ListVideo, LogOut } from 'lucide-react';
+import { ShieldCheck, Home, Compass, Monitor, History, Clock, ThumbsUp, ListVideo, LogOut, Film } from 'lucide-react';
 import logoImg from '../../layouts/logo.png';
 import {useAppSelector} from "../../store";
 interface SidebarProps {
@@ -108,8 +108,39 @@ function Sidebar({ isOpen }: SidebarProps) {
           ))}
         </nav>
 
+        {/* СТУДІЯ АВТОРА */}
+        {(user?.roles?.includes("Author") || user?.roles?.includes("Admin")) && (
+          <div className="pt-4 mt-4 border-t border-zinc-900 space-y-1">
+            {isOpen && (
+              <p className="px-3 mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600">
+                Творча студія
+              </p>
+            )}
+            <NavLink
+              to="/studio"
+              className={({ isActive }) => `
+                flex items-center p-3 rounded-xl transition-all relative
+                ${isActive
+                  ? 'bg-gradient-to-r from-rose-500/20 to-transparent text-white font-bold'
+                  : 'text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200'
+                }
+              `}
+            >
+              {({ isActive }) => (
+                <>
+                  {isActive && <span className="absolute right-0 top-3 bottom-3 w-1 bg-rose-500 rounded-l-full" />}
+                  <span className={`min-w-[24px] ${isActive ? 'text-rose-500' : 'text-zinc-400'}`}><Film size={18} /></span>
+                  <span className={`ml-4 text-sm transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'}`}>
+                    Мої відео
+                  </span>
+                </>
+              )}
+            </NavLink>
+          </div>
+        )}
+
         {/* АДМІН ПАНЕЛЬ */}
-        {user?.role === "Admin" && (
+        {user?.roles?.includes("Admin") && (
           <div className="pt-4 mt-4 border-t border-zinc-900 space-y-1">
             {isOpen && (
               <p className="px-3 mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-600">

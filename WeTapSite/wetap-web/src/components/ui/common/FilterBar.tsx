@@ -8,7 +8,7 @@ interface FilterBarProps<T> {
   onReset: () => void;
 }
 
-const EXCLUDED_KEYS = ['page', 'itemPerPage', 'sortBy', 'q'];
+const EXCLUDED_KEYS = ['page', 'itemPerPage', 'sortBy', 'q', 'channelId'];
 
 export function FilterBar<T extends Record<string, any>>({
   searchParams,

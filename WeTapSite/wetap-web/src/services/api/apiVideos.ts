@@ -10,7 +10,7 @@ import type { IVideoDeleteRequest } from "../../types/Video/IVideoDeleteRequest.
 import type { IVideoProcessingResult } from "../../types/Video/IVideoProcessingResult.ts";
 import type { IGetByRequest } from "../../types/Additional/IGetByRequest.ts";
 import type { IPagedResult } from "../../types/Additional/IPagedResult.ts";
-import type {IVideoReactionRequest} from "../../types/Video/IVideoReactionRequest.ts";
+import type { IVideoReactionRequest } from "../../types/Video/IVideoReactionRequest.ts";
 
 export const apiVideos = createApi({
     reducerPath: "api/videos",
