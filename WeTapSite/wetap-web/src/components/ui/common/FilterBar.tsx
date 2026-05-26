@@ -15,14 +15,12 @@ export function FilterBar<T extends Record<string, any>>({
   onSearchChange,
   onReset,
 }: FilterBarProps<T>) {
-  // Дістаємо ключі пошуку, виключаючи пагінацію та метадані сортування
   const activeKeys = Object.keys(searchParams).filter(
     (key) => !EXCLUDED_KEYS.includes(key)
   );
 
   const hasActiveFilters = activeKeys.some((key) => !!searchParams[key]);
 
-  // Функція для автоматичного визначення параметрів введення на основі ключа
   const getFieldConfig = (key: string) => {
     switch (key.toLowerCase()) {
       case 'name':
@@ -41,7 +39,6 @@ export function FilterBar<T extends Record<string, any>>({
           wrapperClassName: 'flex-1 min-w-[180px]',
         };
       default:
-        // Універсальний дефолтний конфіг для будь-яких інших майбутніх полів
         return {
           placeholder: `Пошук за ${key}...`,
           icon: <Search size={18} />,

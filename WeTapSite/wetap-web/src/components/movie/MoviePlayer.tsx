@@ -9,14 +9,14 @@ import {
     RotateCcw,
     RotateCw,
 } from 'lucide-react';
-import { APP_ENV } from "../../env";
+import { APP_ENV, VIDEO_QUALITIES, type VideoQuality } from "../../env";
 
 interface MoviePlayerProps {
     videoName?: string;
     src?: string;
 }
 
-type Quality = '1080' | '720' | '480' | '360';
+type Quality = VideoQuality;
 
 export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -33,7 +33,7 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
 
     const controlsTimeoutRef = useRef<number | null>(null);
 
-    const qualities: Quality[] = ['1080', '720', '480', '360'];
+    const qualities = VIDEO_QUALITIES;
 
     const getUrlForQuality = (q: Quality) => {
         if (src) return src;

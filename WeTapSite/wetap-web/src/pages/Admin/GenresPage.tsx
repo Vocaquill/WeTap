@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '../../components/form/Button';
+import type { GenreSortField } from '../../env';
 
 import AddGenreModal from '../../components/modal/AddGenreModal';
 import EditGenreModal from '../../components/modal/EditGenreModal';
@@ -57,7 +58,7 @@ function GenresPage() {
   const handleSortChange = (key: string | undefined) => {
     setSearchParams((prev: IGenreSearch) => ({
       ...prev,
-      sortBy: key as "name" | "slug" | undefined,
+      sortBy: key as GenreSortField | undefined,
       page: 1,
     }));
   };

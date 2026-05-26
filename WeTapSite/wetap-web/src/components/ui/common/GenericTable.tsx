@@ -5,14 +5,12 @@ import type { IColumnConfig } from '../../../types/Additional/IColumnConfig';
 
 interface GenericTableProps<T> {
   data: T[] | undefined;
-  columns?: IColumnConfig<T>[]; // Тепер необов'язкові!
+  columns?: IColumnConfig<T>[]; 
   isFetching?: boolean;
   isError?: boolean;
   emptyMessage?: string;
-  // Sorting
   sortBy?: string;
   onSortChange?: (key: string | undefined) => void;
-  // Actions
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
 }
@@ -28,11 +26,9 @@ export function GenericTable<T extends { id: string | number }>({
   onEdit,
   onDelete,
 }: GenericTableProps<T>) {
-  // Функція для автоматичного визначення колонок на основі властивостей об'єкта
   const getAutoColumns = (): IColumnConfig<T>[] => {
     if (!data || data.length === 0) return [];
 
-    // Беремо властивості першого елемента
     const firstItem = data[0];
     const keys = Object.keys(firstItem);
 
@@ -98,7 +94,6 @@ export function GenericTable<T extends { id: string | number }>({
           };
 
         default:
-          // Універсальний рендерер за замовчуванням
           return {
             key,
             label: key.charAt(0).toUpperCase() + key.slice(1),
@@ -112,7 +107,6 @@ export function GenericTable<T extends { id: string | number }>({
     });
   };
 
-  // Використовуємо кастомні колонки, якщо вони передані, інакше авто-генеровані
   const activeColumns = customColumns || getAutoColumns();
 
   const hasActions = !!onEdit || !!onDelete;
