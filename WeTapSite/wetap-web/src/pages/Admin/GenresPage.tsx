@@ -14,6 +14,14 @@ import { Pagination } from '../../components/ui/common/Pagination';
 
 import { FilterBar } from '../../components/ui/common/FilterBar';
 import { GenericTable } from '../../components/ui/common/GenericTable';
+import { SelectField } from '../../components/form/SelectField';
+
+const perPageOptions = [
+  { id: 5, name: '5' },
+  { id: 10, name: '10' },
+  { id: 20, name: '20' },
+  { id: 50, name: '50' },
+];
 
 function GenresPage() {
   const [searchParams, setSearchParams] = useState<IGenreSearch>({
@@ -110,11 +118,24 @@ function GenresPage() {
 
       {data && (
         <div className="p-6 border border-zinc-800 bg-zinc-950/20 rounded-[2rem] shadow-xl">
-          <Pagination
-            currentPage={data.pagination.currentPage}
-            totalPages={data.pagination.totalPages}
-            onChange={(page) => setSearchParams((prev: IGenreSearch) => ({ ...prev, page }))}
-          />
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <Pagination
+              currentPage={data.pagination.currentPage}
+              totalPages={data.pagination.totalPages}
+              onChange={(page) => setSearchParams((prev: IGenreSearch) => ({ ...prev, page }))}
+            />
+            <div className="flex items-center gap-2 text-zinc-500 text-xs uppercase tracking-wider font-black">
+              <span>Елементів на сторінці:</span>
+              <SelectField
+                name="itemPerPage"
+                value={searchParams.itemPerPage}
+                options={perPageOptions}
+                onChange={(e) => handleSearchChange('itemPerPage', Number(e.target.value))}
+                selectClassName="py-2 text-xs font-bold border-zinc-800 focus:border-red-600/50 hover:border-zinc-700 w-20 shrink-0"
+                wrapperClassName="shrink-0"
+              />
+            </div>
+          </div>
         </div>
       )}
 
