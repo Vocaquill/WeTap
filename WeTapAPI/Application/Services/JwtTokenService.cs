@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace Application.Services;
 
@@ -22,10 +23,11 @@ public class JwtTokenService(IConfiguration configuration,
             new Claim("name", $"{user.LastName} {user.FirstName}"),
             new Claim("image", $"{user.Image}")
         };
-        foreach (var role in await userManager.GetRolesAsync(user))
-        {
-            claims.Add(new Claim("roles", role));
-        }
+
+        var roles = await userManager.GetRolesAsync(user);
+        var rolesJson = JsonSerializer.Serialize(roles);
+
+        claims.Add(new Claim("roles", rolesJson, JsonClaimValueTypes.JsonArray));
 
         var keyBytes = System.Text.Encoding.UTF8.GetBytes(key);
 

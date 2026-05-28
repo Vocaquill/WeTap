@@ -1,8 +1,8 @@
-import { useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
+import {useState, useEffect, type ChangeEvent, type FormEvent} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCreateVideoMutation, useGetPrivaciesQuery } from '../../services/api/apiVideos';
 import { useSearchGenresQuery } from '../../services/api/apiGenres';
-import { useSearchTagsQuery } from '../../services/api/apiTags';
+import {useCreateTagMutation, useSearchTagsQuery} from '../../services/api/apiTags';
 import { useSearchLanguagesQuery } from '../../services/api/apiLanguages';
 import type { IVideoCreateRequest } from '../../types/Video/IVideoCreateRequest';
 import type { IGenreItemResponse } from '../../types/Genre/IGenreItemResponse';
@@ -24,9 +24,15 @@ export default function CreateVideoPage() {
     const navigate = useNavigate();
     const [trackingId, setTrackingId] = useState<string | null>(null);
     const [createVideo, { isLoading }] = useCreateVideoMutation();
+    const [createTag, { isLoading: isLoadingTag }] = useCreateTagMutation();
     const { progress, isConnected } = useVideoProgress(trackingId);
     const { data: genresData } = useSearchGenresQuery({ page: 1, itemPerPage: 100 });
-    const { data: tagsData } = useSearchTagsQuery({ page: 1, itemPerPage: 100 });
+    const [tagInput, setTagInput] = useState('');
+    const { data: tagsData } = useSearchTagsQuery({
+        page: 1,
+        itemPerPage: 10,
+        name: tagInput.trim() || undefined,
+    });
     const { data: languagesData } = useSearchLanguagesQuery({ page: 1, itemPerPage: 100 });
     const { data: privaciesData } = useGetPrivaciesQuery();
 
@@ -45,9 +51,11 @@ export default function CreateVideoPage() {
         tagIds: [],
         image: undefined,
         video: undefined,
-        languageId: 0,
-        privacyId: 0,
+        languageId: 1,
+        privacyId: 1,
     });
+
+    const [knownTags, setKnownTags] = useState<ITagItemResponse[]>([]);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -71,6 +79,10 @@ export default function CreateVideoPage() {
 
         setForm(prev => ({ ...prev, [name]: files?.[0] }));
         clearError(name);
+    };
+
+    const handleTagChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setTagInput(e.target.value);
     };
 
     const handleGenreToggle = (id: number) => {
@@ -141,6 +153,33 @@ export default function CreateVideoPage() {
         }
     };
 
+    const handleTagSubmit = async (e: any) => {
+        e.preventDefault();
+        const name = tagInput.trim();
+        if (!name) return;
+
+        const createdTag = await createTag({
+            name,
+            slug: slugify(name),
+        }).unwrap();
+
+        setKnownTags(prev =>
+            prev.some(t => t.id === createdTag.id) ? prev : [...prev, createdTag]
+        );
+        handleTagToggle(createdTag.id);
+        setTagInput('');
+    }
+
+    useEffect(() => {
+        if (!tagsData?.items?.length) return;
+
+        setKnownTags(prev => {
+            const map = new Map(prev.map(tag => [tag.id, tag]));
+            tagsData.items.forEach(tag => map.set(tag.id, tag));
+            return Array.from(map.values());
+        });
+    }, [tagsData]);
+
     useEffect(() => {
         if (progress?.status === 'Completed' || progress?.status === 'Завершено') {
             const timer = setTimeout(() => navigate(`/video/${form.slug}`), 2000);
@@ -150,7 +189,7 @@ export default function CreateVideoPage() {
 
     return (
         <>
-            {isLoading && <LoadingOverlay />}
+            {isLoading || isLoadingTag && <LoadingOverlay />}
 
             <Modal
                 open={!!trackingId}
@@ -320,6 +359,23 @@ export default function CreateVideoPage() {
                                 Теги
                             </label>
 
+                            {!!form.tagIds?.length && (
+                                <div className="flex flex-wrap gap-2 mb-2">
+                                    {knownTags
+                                        .filter(tag => form.tagIds?.includes(tag.id))
+                                        .map((tag: ITagItemResponse) => (
+                                            <button
+                                                key={`selected-${tag.id}`}
+                                                type="button"
+                                                onClick={() => handleTagToggle(tag.id)}
+                                                className="px-3 py-1 rounded-xl border transition bg-red-600 border-red-600 text-white"
+                                            >
+                                                {tag.name}
+                                            </button>
+                                        ))}
+                                </div>
+                            )}
+
                             <div className="flex flex-wrap gap-2">
                                 {tagsData?.items.map((tag: ITagItemResponse) => (
                                     <button
@@ -335,6 +391,21 @@ export default function CreateVideoPage() {
                                     </button>
                                 ))}
                             </div>
+
+                            <label className="text-zinc-400 mb-1 font-semibold block">
+                                Пошук або створення тегу
+                            </label>
+
+                            <InputField
+                                label="Тег"
+                                name="tag"
+                                value={tagInput}
+                                onChange={handleTagChange}
+                            />
+
+                            <Button onClick={handleTagSubmit} variant="primary" size="md">
+                                Створити тег
+                            </Button>
 
                             {errors.tagIds && (
                                 <span className="text-red-500 text-sm mt-1 block">

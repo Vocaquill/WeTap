@@ -6,6 +6,7 @@ import { setupListeners } from "@reduxjs/toolkit/query/react";
 import { apiAccount } from "../services/api/apiAccount.ts";
 import { apiTags } from "../services/api/apiTags.ts";
 import { apiLanguages } from "../services/api/apiLanguages.ts";
+import { apiChannels } from "../services/api/apiChannels.ts";
 
 
 import authReducer from "./slices/authSlice.ts";
@@ -18,6 +19,7 @@ export const store = configureStore({
         [apiAccount.reducerPath]: apiAccount.reducer,
         [apiTags.reducerPath]: apiTags.reducer,
         [apiLanguages.reducerPath]: apiLanguages.reducer,
+        [apiChannels.reducerPath]: apiChannels.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -26,7 +28,8 @@ export const store = configureStore({
             apiGenres.middleware,
             apiAccount.middleware,
             apiTags.middleware,
-            apiLanguages.middleware
+            apiLanguages.middleware,
+            apiChannels.middleware
         )
 });
 

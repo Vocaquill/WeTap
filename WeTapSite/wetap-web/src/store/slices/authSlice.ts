@@ -10,12 +10,29 @@ interface AuthState {
 const getUserFromToken = (token: string): User | null => {
     try {
         const decoded: any = jwtDecode(token);
+        
+        let roles: string[] = [];
+        if (decoded["roles"]) {
+            if (Array.isArray(decoded["roles"])) {
+                roles = decoded["roles"];
+            } else if (typeof decoded["roles"] === 'string') {
+                try {
+                    roles = JSON.parse(decoded["roles"]);
+                } catch {
+                    roles = [decoded["roles"]];
+                }
+            }
+        }
+
+        const idVal = decoded["nameid"] ?? decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+
         return {
+            id: idVal ? Number(idVal) : undefined,
             name: decoded["name"] ?? decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] ?? "",
             email: decoded["email"] ?? decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] ?? "",
             image: decoded["image"] ?? "",
             token,
-            role: decoded["roles"] ?? null,
+            roles,
         };
     } catch (e) {
         console.error("Invalid token", e);

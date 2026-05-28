@@ -60,6 +60,11 @@ public class SearchVideosQueryHandler(
                 x.VideoTags != null && x.VideoTags.Any(vt => vt.TagId == request.Model.TagId));
         }
 
+        if (request.Model.ChannelId.HasValue)
+        {
+            query = query.Where(x => x.ChannelId == request.Model.ChannelId.Value);
+        }
+
         if (int.TryParse(request.Model.CreateYearFrom, out int fromYear))
         {
             query = query.Where(x => x.DateCreated.Year >= fromYear);

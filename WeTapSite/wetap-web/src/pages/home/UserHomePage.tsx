@@ -127,7 +127,7 @@ function UserHomePage() {
                                     <div
                                         className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-white/10">
                                         <img
-                                            src={video.channel?.avatarImage ? `${APP_ENV.IMAGES_50_URL}${video.channel.avatarImage}` : '/images/user/default.png'}
+                                            src={video.channel?.avatarImage ? `${APP_ENV.IMAGES_50_URL}${video.channel.avatarImage}` : '/images/user/default.jpg'}
                                             alt={video.channel?.name}
                                             className="w-full h-full object-cover"
                                         />

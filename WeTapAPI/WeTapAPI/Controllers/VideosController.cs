@@ -1,3 +1,4 @@
+using Application.Constants;
 using Application.Features.Videos.Queries.GetVideos;
 using Application.Features.Videos.Commands.CreateVideo;
 using Application.Interfaces;
@@ -15,7 +16,6 @@ using Application.Features.Videos.Queries.GetVideoPrivacies;
 using Application.Features.Videos.Commands.ReactVideo;
 using Application.Features.Videos.Commands.IncrementView;
 
-
 namespace WeTapAPI.Controllers;
 
 public class TestVideoSavingCommand : IRequest
@@ -28,7 +28,7 @@ public class TestVideoSavingCommand : IRequest
 public class VideosController(IMediator mediator, IVideoFileService videoFileService) : ControllerBase
 {
     [HttpPost("TestVideoSaving")]
-    [Authorize]
+    [Authorize(Roles = Roles.Author)]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<string>> TestVideoSaving([FromForm] TestVideoSavingCommand model)
     {
@@ -65,7 +65,7 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = Roles.Author)]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<VideoProcessingResult>> Create([FromForm] VideoCreateModel model)
     {
@@ -75,7 +75,7 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     }
 
     [HttpPut]
-    [Authorize]
+    [Authorize(Roles = Roles.Author)]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<VideoProcessingResult>> Update([FromForm] VideoUpdateModel model)
     {
@@ -85,7 +85,7 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     }
 
     [HttpDelete]
-    [Authorize]
+    [Authorize(Roles = Roles.Author)]
     public async Task<ActionResult> Delete([FromBody] VideoDeleteModel model)
     {
         var command = new DeleteVideoCommand(model);
@@ -103,7 +103,7 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
     }
 
     [HttpPost("react")]
-    [Authorize]
+    [Authorize(Roles = Roles.User)]
     public async Task<ActionResult> React([FromBody] VideoReactionModel model)
     {
         var command = new ReactVideoCommand(model);

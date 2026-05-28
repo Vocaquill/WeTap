@@ -15,6 +15,12 @@ const VIDEO_720_URL = API_BASE_URL + '/videos/720_';
 const VIDEO_480_URL = API_BASE_URL + '/videos/480_';
 const VIDEO_360_URL = API_BASE_URL + '/videos/360_';
 
+export const VIDEO_QUALITIES = ['1080', '720', '480', '360'] as const;
+export type VideoQuality = typeof VIDEO_QUALITIES[number];
+
+export const GENRE_SORT_FIELDS = ['name', 'slug'] as const;
+export type GenreSortField = typeof GENRE_SORT_FIELDS[number];
+
 const APP_ENV = {
     API_BASE_URL,
     IMAGES_50_URL,

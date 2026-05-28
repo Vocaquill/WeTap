@@ -1,10 +1,11 @@
-﻿using Application.Features.Accounts.Commands.ChangePassword;
+using Application.Features.Accounts.Commands.ChangePassword;
 using Application.Features.Accounts.Commands.ForgotPassword;
 using Application.Features.Accounts.Commands.GoogleLogin;
 using Application.Features.Accounts.Commands.Login;
 using Application.Features.Accounts.Commands.Register;
 using Application.Features.Accounts.Commands.ResetPassword;
 using Application.Features.Accounts.Queries.ValidateResetToken;
+using Application.Features.Accounts.Commands.RefreshToken;
 using Application.Features.Users.Commands.EditUser;
 using Application.Interfaces;
 using Application.Models.Account;
@@ -124,5 +125,23 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
         var result = await mediator.Send(command);
 
         return Ok(new { Token = result });
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> RefreshToken()
+    {
+        try
+        {
+            var userId = currentUserService.GetCurrentUserId();
+            var command = new RefreshTokenCommand(userId);
+            var result = await mediator.Send(command);
+
+            return Ok(new { Token = result });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }

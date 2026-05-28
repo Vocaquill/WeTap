@@ -1,8 +1,11 @@
+using Application.Constants;
 using Application.Interfaces;
 using Application.Models.Channel;
 using AutoMapper;
 using Domain.Entities.Channel;
+using Domain.Entities.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Features.Channel.Commands.CreateChannel;
 
@@ -10,7 +13,8 @@ public class CreateChannelHandler(
     IGenericRepository<ChannelEntity, long> repo,
     IMapper mapper,
     IImageService imageService,
-    ICurrentUserService currentUserService
+    ICurrentUserService currentUserService,
+    UserManager<UserEntity> userManager
 ) : IRequestHandler<CreateChannelCommand, ChannelItemModel>
 {
     public async Task<ChannelItemModel> Handle(CreateChannelCommand request, CancellationToken cancellationToken)
@@ -21,7 +25,7 @@ public class CreateChannelHandler(
 
         if(repo.AsQurable().FirstOrDefault(x => x.Id == userId) != null)
         {
-            throw new Exception(" ‡Ì‡Î Á Ú‡ÍËÏ Id ‚ÊÂ ≥ÒÌÛ∫");
+            throw new Exception("–ö–∞–Ω–∞–ª –∑ —Ç–∞–∫–∏–º Id –≤–∂–µ —ñ—Å–Ω—É—î");
         }
 
         if (request.Model.AvatarImage != null)
@@ -36,6 +40,12 @@ public class CreateChannelHandler(
 
         await repo.AddAsync(entity);
         await repo.SaveChangesAsync();
+
+        var user = await userManager.FindByIdAsync(userId.ToString());
+        if (user != null)
+        {
+            await userManager.AddToRoleAsync(user, Roles.Author);
+        }
 
         return mapper.Map<ChannelItemModel>(entity);
     }

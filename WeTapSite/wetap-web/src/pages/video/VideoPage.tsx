@@ -8,22 +8,21 @@ import {
     Shield,
     Eye,
 } from 'lucide-react';
-import {
-    useParams,
-    //useNavigate,
-    Link
-} from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import PageTransition from '../../components/layout/PageTransition';
 import { MoviePlayer } from "../../components/movie/MoviePlayer";
 import { APP_ENV } from "../../env/index";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 import { useGetByQuery, useIncrementViewMutation, useReactVideoMutation, useSearchVideosQuery } from "../../services/api/apiVideos";
+import { useAppSelector } from '../../store/index';
 
 function VideoPage() {
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
     const { slug } = useParams<{ slug: string }>();
     const [activeTab, setActiveTab] = useState<'suggestions' | 'channel'>('suggestions');
     const [isDescExpanded, setIsDescExpanded] = useState(false);
+
+    const { user } = useAppSelector((state) => state.auth);
 
     const { data: video, isLoading: isVideoLoading } = useGetByQuery(
         { slug: slug! },
@@ -45,11 +44,23 @@ function VideoPage() {
     }, [video?.id, incrementView]);
 
     const handleReaction = async (isLike: boolean) => {
+        if (!user) {
+            navigate('/login');
+            return;
+        }
         try {
             await reactVideo({ videoId: video!.id, isLike }).unwrap();
         } catch (error) {
             console.error('Помилка при відправці реакції', error);
         }
+    };
+
+    const handleSubscribe = () => {
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+        // TODO: implement subscribe logic
     };
 
     if (isVideoLoading) return <LoadingOverlay />;
@@ -58,10 +69,10 @@ function VideoPage() {
     return (
         <PageTransition>
             <div className="min-h-screen bg-[#121213] text-white">
-                <div className="max-w-[1700px] mx-auto flex flex-col lg:flex-row gap-6 p-4 md:p-6">
+                <div className="max-w-[1700px] mx-auto flex flex-col xl:flex-row gap-6 p-4 md:p-6">
 
-                    <div className="flex-1 lg:max-w-[calc(100%-400px)]">
-                        <div className="w-full max-w-[1024px] bg-zinc-900 rounded-[24px] overflow-hidden shadow-2xl">
+                    <div className="flex-1 xl:max-w-[calc(100%-400px)]">
+                        <div className="w-full bg-zinc-900 rounded-[24px] overflow-hidden shadow-2xl">
                             {video.video && (
                                 <MoviePlayer videoName={video.video} />
                             )}
@@ -72,25 +83,24 @@ function VideoPage() {
                         </h1>
 
                         <div
-                            className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-16 mt-4 pb-4 border-b border-zinc-800">
+                            className="flex flex-col 2xl:flex-row xl:items-center justify-between gap-8 md:gap-12 mt-4 pb-4 border-b border-zinc-800">
                             <div className="flex items-center gap-3">
-                                {video.channel?.avatarImage ? (
+                                <div
+                                    className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-white/10">
                                     <img
+                                        src={video.channel?.avatarImage ? `${APP_ENV.IMAGES_200_URL}${video.channel.avatarImage}` : '/images/user/default.jpg'}
                                         alt={video.channel?.name}
-                                        src={APP_ENV.IMAGES_200_URL + video.channel?.avatarImage}
-                                        className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                                        className="w-full h-full object-cover"
                                     />
-                                ) : (
-                                    <div
-                                        className="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-purple-700 flex-shrink-0" />
-                                )}
+                                </div>
                                 <div className="flex flex-col justify-center min-w-0">
                                     <p className="channel-name text-zinc-100">
                                         {video.channel?.name}
                                     </p>
-                                    <p className="text-xs text-zinc-400 mt-1">{video.channel?.subscriberCount}</p>
+                                    <p className="text-xs text-zinc-400 mt-1">{video.channel?.subscriberCount} підписників</p>
                                 </div>
                                 <button
+                                    onClick={handleSubscribe}
                                     className="ml-2 bg-[#FF2D7A] text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-[#FF2D7A]/90 transition-colors">
                                     Підписатися
                                 </button>

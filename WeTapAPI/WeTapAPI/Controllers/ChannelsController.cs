@@ -1,3 +1,4 @@
+using Application.Constants;
 using Application.Features.Channel.Commands.CreateChannel;
 using Application.Features.Channel.Commands.DeleteChannel;
 using Application.Features.Channel.Commands.ToggleChannelSubscription;
@@ -26,7 +27,7 @@ public class ChannelsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = Roles.User)]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<ChannelItemModel>> Create([FromForm] ChannelCreateModel model)
     {
@@ -36,7 +37,7 @@ public class ChannelsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut]
-    [Authorize]
+    [Authorize(Roles = Roles.Author)]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<ChannelItemModel>> Update([FromForm] ChannelUpdateModel model)
     {
@@ -46,7 +47,7 @@ public class ChannelsController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete]
-    [Authorize]
+    [Authorize(Roles = Roles.Author)]
     public async Task<IActionResult> Delete([FromBody] ChannelDeleteModel model)
     {
         var command = new DeleteChannelCommand(model);
@@ -55,7 +56,7 @@ public class ChannelsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost("subscribe")]
-    [Authorize]
+    [Authorize(Roles = Roles.User)]
     public async Task<IActionResult> Subscribe([FromBody] ChannelSubscriptionModel model)
     {
         var command = new ToggleChannelSubscriptionCommand(model);
