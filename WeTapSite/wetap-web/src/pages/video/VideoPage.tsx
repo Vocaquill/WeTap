@@ -69,10 +69,10 @@ function VideoPage() {
     return (
         <PageTransition>
             <div className="min-h-screen bg-[#121213] text-white">
-                <div className="max-w-[1700px] mx-auto flex flex-col lg:flex-row gap-6 p-4 md:p-6">
+                <div className="max-w-[1700px] mx-auto flex flex-col xl:flex-row gap-6 p-4 md:p-6">
 
-                    <div className="flex-1 lg:max-w-[calc(100%-400px)]">
-                        <div className="w-full max-w-[1024px] bg-zinc-900 rounded-[24px] overflow-hidden shadow-2xl">
+                    <div className="flex-1 xl:max-w-[calc(100%-400px)]">
+                        <div className="w-full bg-zinc-900 rounded-[24px] overflow-hidden shadow-2xl">
                             {video.video && (
                                 <MoviePlayer videoName={video.video} />
                             )}
@@ -83,7 +83,7 @@ function VideoPage() {
                         </h1>
 
                         <div
-                            className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-16 mt-4 pb-4 border-b border-zinc-800">
+                            className="flex flex-col 2xl:flex-row xl:items-center justify-between gap-8 md:gap-12 mt-4 pb-4 border-b border-zinc-800">
                             <div className="flex items-center gap-3">
                                 <div
                                     className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-white/10">
@@ -97,7 +97,7 @@ function VideoPage() {
                                     <p className="channel-name text-zinc-100">
                                         {video.channel?.name}
                                     </p>
-                                    <p className="text-xs text-zinc-400 mt-1">{video.channel?.subscriberCount}</p>
+                                    <p className="text-xs text-zinc-400 mt-1">{video.channel?.subscriberCount} підписників</p>
                                 </div>
                                 <button
                                     onClick={handleSubscribe}
