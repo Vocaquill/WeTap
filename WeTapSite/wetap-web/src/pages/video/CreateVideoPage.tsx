@@ -45,8 +45,8 @@ export default function CreateVideoPage() {
         tagIds: [],
         image: undefined,
         video: undefined,
-        languageId: 0,
-        privacyId: 0,
+        languageId: 1,
+        privacyId: 1,
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
