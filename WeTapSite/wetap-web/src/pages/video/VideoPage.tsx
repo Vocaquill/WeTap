@@ -15,11 +15,11 @@ import { APP_ENV } from "../../env/index";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 import { useGetByQuery, useIncrementViewMutation, useReactVideoMutation, useSearchVideosQuery } from "../../services/api/apiVideos";
 import { useAppSelector } from '../../store/index';
+import {TabButtons} from "../../components/ui/common/TabButton.tsx";
 
 function VideoPage() {
     const navigate = useNavigate();
     const { slug } = useParams<{ slug: string }>();
-    const [activeTab, setActiveTab] = useState<'suggestions' | 'channel'>('suggestions');
     const [isDescExpanded, setIsDescExpanded] = useState(false);
 
     const { user } = useAppSelector((state) => state.auth);
@@ -54,6 +54,11 @@ function VideoPage() {
             console.error('Помилка при відправці реакції', error);
         }
     };
+
+    const handleTabChange = (tab: string) => {
+        console.log('Tab changed to:', tab);
+        // TODO: implement tab switching logic
+    }
 
     const handleSubscribe = () => {
         if (!user) {
@@ -199,26 +204,7 @@ function VideoPage() {
                     </div>
 
                     <div className="w-full lg:w-[400px] flex-shrink-0 space-y-3">
-                        <div className="flex gap-2 mb-4">
-                            <button
-                                onClick={() => setActiveTab('suggestions')}
-                                className={`custom-tab-btn ${activeTab === 'suggestions'
-                                    ? 'bg-[#FF2D7A] text-white shadow-lg shadow-[#FF2D7A]/20'
-                                    : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white'
-                                    }`}
-                            >
-                                Suggestions
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('channel')}
-                                className={`custom-tab-btn ${activeTab === 'channel'
-                                    ? 'bg-[#FF2D7A] text-white shadow-lg shadow-[#FF2D7A]/20'
-                                    : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white'
-                                    }`}
-                            >
-                                From this channel
-                            </button>
-                        </div>
+                        <TabButtons tabList={["Suggestions", "From this channel"]} onTabChange={handleTabChange} />
 
                         {isRecsLoading ? (
                             <div className="animate-pulse space-y-4">
