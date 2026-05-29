@@ -1,21 +1,25 @@
-import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 
 import {Play, CheckCircle2} from 'lucide-react';
 import {motion} from 'framer-motion';
 import {APP_ENV} from '../../env';
 import {useGetAllVideosQuery} from '../../services/api/apiVideos';
+import {TabButtons} from "../../components/ui/common/TabButton.tsx";
 
 function UserHomePage() {
     const navigate = useNavigate();
-    const [activeTag, setActiveTag] = useState('All');
 
     const {data: videos, isLoading} = useGetAllVideosQuery();
 
     const heroVideo = videos?.[0];
     const gridVideos = videos?.slice(1) || [];
-    // Поки що теги статичні потім зроблю динамічні
+
     const tags = ['All', 'Subscriptions', 'Posts', 'Music', 'Tech', 'Design', 'Comedy', 'Movies'];
+
+    const handleTabChange = (tab: string) => {
+        console.log('Tab changed to:', tab);
+        // TODO: implement tab switching logic
+    }
 
     return (
         <div className="min-h-screen bg-[#121213] text-white pb-12">
@@ -64,24 +68,7 @@ function UserHomePage() {
             )}
 
             <section className="mb-8 flex items-center gap-3 overflow-x-auto pb-3 no-scrollbar">
-                <button className="p-3 bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors shrink-0">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                        <path d="M4 6h16M4 12h10M4 18h7"/>
-                    </svg>
-                </button>
-
-                {tags.map((tag) => (
-                    <button
-                        key={tag}
-                        onClick={() => setActiveTag(tag)}
-                        className={`px-5 py-2.5 rounded-xl font-bold text-sm uppercase tracking-wider transition-all duration-300 whitespace-nowrap ${activeTag === tag
-                            ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/20'
-                            : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white'
-                        }`}
-                    >
-                        {tag}
-                    </button>
-                ))}
+                <TabButtons tabList={tags} onTabChange={handleTabChange} />
             </section>
 
             <section>
