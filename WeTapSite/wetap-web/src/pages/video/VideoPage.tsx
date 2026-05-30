@@ -16,6 +16,7 @@ import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 import { useGetByQuery, useIncrementViewMutation, useReactVideoMutation, useSearchVideosQuery } from "../../services/api/apiVideos";
 import { useAppSelector } from '../../store/index';
 import {TabButtons} from "../../components/ui/common/TabButton.tsx";
+import {Button} from "../../components/form/Button.tsx";
 
 function VideoPage() {
     const navigate = useNavigate();
@@ -104,11 +105,10 @@ function VideoPage() {
                                     </p>
                                     <p className="text-xs text-zinc-400 mt-1">{video.channel?.subscriberCount} підписників</p>
                                 </div>
-                                <button
-                                    onClick={handleSubscribe}
-                                    className="ml-2 bg-[#FF2D7A] text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-[#FF2D7A]/90 transition-colors">
+
+                                <Button onClick={handleSubscribe} size={"sm"}>
                                     Підписатися
-                                </button>
+                                </Button>
                             </div>
 
                             <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">

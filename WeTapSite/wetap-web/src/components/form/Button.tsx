@@ -28,10 +28,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         },
         ref
     ) => {
-        // Base styles
         const baseStyles = 'inline-flex items-center justify-center font-bold transition-all duration-300 focus:outline-none focus:ring-2 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100';
 
-        // Size variations
         const sizeStyles = {
             sm: 'px-4 py-2 text-xs rounded-xl gap-1.5',
             md: 'px-6 py-3 text-sm rounded-xl gap-2',
@@ -39,9 +37,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             xl: 'px-8 py-4 text-base rounded-2xl gap-2.5 font-black uppercase tracking-widest',
         };
 
-        // Variant styles
         const variantStyles = {
-            primary: 'bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-600/10 hover:shadow-red-600/25 focus:ring-red-600/30',
+            primary: 'bg-[#FF2D7A] hover:bg-[#FF2D7A]/90 text-white focus:ring-[#FF2D7A]/30',
             secondary: 'bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-700 focus:ring-zinc-800/30',
             outline: 'bg-transparent border border-white/10 hover:bg-white/5 text-white focus:ring-white/10',
             google: 'bg-white hover:bg-zinc-100 text-black shadow-md focus:ring-white/30',
