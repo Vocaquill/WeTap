@@ -5,6 +5,7 @@ import {motion} from 'framer-motion';
 import {APP_ENV} from '../../env';
 import {useGetAllVideosQuery} from '../../services/api/apiVideos';
 import {TabButtons} from "../../components/ui/common/TabButton.tsx";
+import { Button } from '../../components/form/Button';
 
 function UserHomePage() {
     const navigate = useNavigate();
@@ -35,12 +36,12 @@ function UserHomePage() {
                         />
                         <div
                             className="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <button
+                            <Button
+                                variant="play"
                                 onClick={() => navigate(`/video/${heroVideo.slug}`)}
-                                className="w-16 h-16 bg-rose-600 rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-transform"
                             >
                                 <Play size={26} fill="white" className="ml-1 text-white"/>
-                            </button>
+                            </Button>
                         </div>
                     </div>
 

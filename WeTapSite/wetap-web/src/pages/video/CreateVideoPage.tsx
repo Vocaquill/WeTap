@@ -333,17 +333,15 @@ export default function CreateVideoPage() {
 
                             <div className="flex flex-wrap gap-2">
                                 {genresData?.items.map((genre: IGenreItemResponse) => (
-                                    <button
+                                    <Button
                                         key={genre.id}
                                         type="button"
+                                        variant="chip"
+                                        active={form.genreIds?.includes(genre.id)}
                                         onClick={() => handleGenreToggle(genre.id)}
-                                        className={`px-3 py-1 rounded-xl border transition ${form.genreIds?.includes(genre.id)
-                                            ? 'bg-red-600 border-red-600 text-white'
-                                            : 'bg-zinc-900 border-zinc-800 text-zinc-400'
-                                            }`}
                                     >
                                         {genre.name}
-                                    </button>
+                                    </Button>
                                 ))}
                             </div>
 
@@ -364,31 +362,30 @@ export default function CreateVideoPage() {
                                     {knownTags
                                         .filter(tag => form.tagIds?.includes(tag.id))
                                         .map((tag: ITagItemResponse) => (
-                                            <button
+                                            <Button
                                                 key={`selected-${tag.id}`}
                                                 type="button"
+                                                variant="chip"
+                                                active
                                                 onClick={() => handleTagToggle(tag.id)}
-                                                className="px-3 py-1 rounded-xl border transition bg-red-600 border-red-600 text-white"
                                             >
                                                 {tag.name}
-                                            </button>
+                                            </Button>
                                         ))}
                                 </div>
                             )}
 
                             <div className="flex flex-wrap gap-2">
                                 {tagsData?.items.map((tag: ITagItemResponse) => (
-                                    <button
+                                    <Button
                                         key={tag.id}
                                         type="button"
+                                        variant="chip"
+                                        active={form.tagIds?.includes(tag.id)}
                                         onClick={() => handleTagToggle(tag.id)}
-                                        className={`px-3 py-1 rounded-xl border transition ${form.tagIds?.includes(tag.id)
-                                            ? 'bg-red-600 border-red-600 text-white'
-                                            : 'bg-zinc-900 border-zinc-800 text-zinc-400'
-                                            }`}
                                     >
                                         {tag.name}
-                                    </button>
+                                    </Button>
                                 ))}
                             </div>
 

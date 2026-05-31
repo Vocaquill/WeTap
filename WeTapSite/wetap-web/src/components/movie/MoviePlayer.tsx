@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Button } from '../form/Button';
 import {
     Play,
     Pause,
@@ -191,35 +192,35 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
 
                 <div className="flex items-center justify-between px-4 mb-2">
                     <div className="flex items-center gap-3">
-                        <button 
-                            onClick={togglePlay} 
-                            className="w-8 h-8 flex items-center justify-center rounded-full text-white hover:bg-white/10 hover:text-[#FF2D7A] transition-colors"
+                        <Button
+                            variant="player"
+                            onClick={togglePlay}
                         >
                             {isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
-                        </button>
+                        </Button>
                         
                         <div className="flex items-center gap-1">
-                             <button 
-                                 onClick={() => skip(-10)} 
-                                 className="w-8 h-8 flex items-center justify-center rounded-full text-white/70 hover:bg-white/10 hover:text-[#FF2D7A] transition-colors"
+                             <Button
+                                 variant="playerMuted"
+                                 onClick={() => skip(-10)}
                              >
                                 <RotateCcw size={16} />
-                             </button>
-                             <button 
-                                 onClick={() => skip(10)} 
-                                 className="w-8 h-8 flex items-center justify-center rounded-full text-white/70 hover:bg-white/10 hover:text-[#FF2D7A] transition-colors"
+                             </Button>
+                             <Button
+                                 variant="playerMuted"
+                                 onClick={() => skip(10)}
                              >
                                 <RotateCw size={16} />
-                             </button>
+                             </Button>
                         </div>
 
                         <div className="flex items-center group/volume ml-1">
-                            <button 
-                                onClick={toggleMute} 
-                                className="w-8 h-8 flex items-center justify-center rounded-full text-white hover:bg-white/10 hover:text-[#FF2D7A] transition-colors"
+                            <Button
+                                variant="player"
+                                onClick={toggleMute}
                             >
                                 {isMuted || volume === 0 ? <VolumeX size={16} /> : <Volume2 size={16} />}
-                            </button>
+                            </Button>
                             <div className="w-0 overflow-hidden group-hover/volume:w-24 group-hover/volume:ml-2 transition-all duration-300 flex items-center">
                                 <input
                                     type="range"
@@ -241,12 +242,13 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                     <div className="flex items-center gap-3 relative">
                         {!src && (
                             <div className="relative">
-                                <button 
+                                <Button
+                                    variant="player"
                                     onClick={() => setShowSettings(!showSettings)}
-                                    className={`w-8 h-8 flex items-center justify-center rounded-full text-white hover:bg-white/10 hover:text-[#FF2D7A] transition-all duration-300 ${showSettings ? 'rotate-90 text-[#FF2D7A]' : ''}`}
+                                    className={`transition-all duration-300 ${showSettings ? 'rotate-90 text-[#FF2D7A]' : ''}`}
                                 >
                                     <Settings size={16} />
-                                </button>
+                                </Button>
 
                                 {showSettings && (
                                     <div className="absolute bottom-full right-0 mb-4 bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow-2xl min-w-[120px]">
@@ -254,25 +256,26 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                                             Якість
                                         </div>
                                         {qualities.map((q) => (
-                                            <button
+                                            <Button
                                                 key={q}
+                                                variant="menuItem"
+                                                active={quality === q}
                                                 onClick={() => changeQuality(q)}
-                                                className={`w-full text-left px-4 py-2 text-sm hover:bg-zinc-800 transition-colors ${quality === q ? 'text-[#FF2D7A] font-bold' : 'text-white'}`}
                                             >
                                                 {q}p
-                                            </button>
+                                            </Button>
                                         ))}
                                     </div>
                                 )}
                             </div>
                         )}
 
-                        <button 
-                            onClick={toggleFullscreen} 
-                            className="w-8 h-8 flex items-center justify-center rounded-full text-white hover:bg-white/10 hover:text-[#FF2D7A] transition-colors"
+                        <Button
+                            variant="player"
+                            onClick={toggleFullscreen}
                         >
                             <Maximize size={16} />
-                        </button>
+                        </Button>
                     </div>
                 </div>
 

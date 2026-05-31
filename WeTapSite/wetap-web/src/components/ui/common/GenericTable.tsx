@@ -212,8 +212,7 @@ export function GenericTable<T extends { id: string | number }>({
                                             {onEdit && (
                                                 <Button
                                                     type="button"
-                                                    variant="secondary"
-                                                    className="w-10 h-10 p-0 rounded-xl hover:border-zinc-700"
+                                                    variant="action"
                                                     onClick={() => onEdit(item)}
                                                 >
                                                     <Edit2 size={16}/>
@@ -222,8 +221,7 @@ export function GenericTable<T extends { id: string | number }>({
                                             {onDelete && (
                                                 <Button
                                                     type="button"
-                                                    variant="secondary"
-                                                    className="w-10 h-10 p-0 rounded-xl hover:bg-red-950/40 text-zinc-500 hover:text-red-500 hover:border-red-950/40"
+                                                    variant="actionDanger"
                                                     onClick={() => onDelete(item)}
                                                 >
                                                     <Trash2 size={16}/>

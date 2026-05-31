@@ -1,4 +1,5 @@
 import { Film, Tag, Users, PlayCircle, TrendingUp, Clock } from 'lucide-react';
+import { Button } from '../../components/form/Button';
 
 function Dashboard() {
   // Тимчасові дані для статистики
@@ -44,7 +45,7 @@ function Dashboard() {
               <Clock size={18} className="text-red-500" />
               Останні додані фільми
             </h3>
-            <button className="text-xs text-zinc-400 hover:text-white transition-colors">Дивитися всі</button>
+            <Button variant="link">Дивитися всі</Button>
           </div>
           <div className="p-0">
             <table className="w-full text-left text-sm">
@@ -78,12 +79,12 @@ function Dashboard() {
           <div>
             <h3 className="font-bold mb-4">Швидкі дії</h3>
             <div className="space-y-3">
-              <button className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 py-3 rounded-xl text-sm font-medium transition-colors text-left px-4 flex justify-between items-center">
+              <Button variant="surfaceDark" fullWidth>
                 Додати новий фільм <span>→</span>
-              </button>
-              <button className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 py-3 rounded-xl text-sm font-medium transition-colors text-left px-4 flex justify-between items-center">
+              </Button>
+              <Button variant="surfaceDark" fullWidth>
                 Налаштувати жанри <span>→</span>
-              </button>
+              </Button>
             </div>
           </div>
           <div className="mt-8 p-4 bg-red-600/5 border border-red-600/20 rounded-xl text-xs text-zinc-400">

@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
+import { Button } from '../../form/Button';
 
 interface PaginationProps {
     currentPage: number;
@@ -48,13 +49,13 @@ export const Pagination: React.FC<PaginationProps> = ({
 
     return (
         <nav className="flex items-center justify-center gap-3">
-            <button
+            <Button
+                variant="paginationNav"
                 onClick={() => currentPage > 1 && onChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="w-10 h-10 flex items-center justify-center rounded-xl border border-zinc-800 text-zinc-500 hover:bg-zinc-800 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-all"
             >
                 <ChevronLeft size={20} />
-            </button>
+            </Button>
 
             <div className="flex items-center gap-1">
                 {paginationRange.map((item, index) => {
@@ -69,30 +70,25 @@ export const Pagination: React.FC<PaginationProps> = ({
                     const isSelected = item === currentPage;
 
                     return (
-                        <button
+                        <Button
                             key={index}
+                            variant="paginationPage"
+                            active={isSelected}
                             onClick={() => onChange(item)}
-                            className={`
-                                w-10 h-10 flex items-center justify-center rounded-xl text-sm font-bold transition-all
-                                ${isSelected
-                                ? 'bg-red-600 text-white ring-2 ring-white ring-inset'
-                                : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800'
-                                }
-                            `}
                         >
                             {item}
-                        </button>
+                        </Button>
                     );
                 })}
             </div>
 
-            <button
+            <Button
+                variant="paginationNav"
                 onClick={() => currentPage < totalPages && onChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="w-10 h-10 flex items-center justify-center rounded-xl border border-zinc-800 text-zinc-500 hover:bg-zinc-800 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-all"
             >
                 <ChevronRight size={20} />
-            </button>
+            </Button>
         </nav>
     );
 };

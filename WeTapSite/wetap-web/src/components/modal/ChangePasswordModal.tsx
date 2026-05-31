@@ -73,12 +73,12 @@ export default function ChangePasswordModal({isOpen, onClose}: Props) {
                                 </h2>
                             </div>
 
-                            <button
+                            <Button
+                                variant="ghostIconDanger"
                                 onClick={onClose}
-                                className="text-zinc-500 hover:text-red-500 transition"
                             >
                                 <X size={20}/>
-                            </button>
+                            </Button>
                         </div>
 
                         {/* Form */}

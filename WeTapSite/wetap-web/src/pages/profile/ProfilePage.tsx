@@ -7,6 +7,7 @@ import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import ChangePasswordModal from "../../components/modal/ChangePasswordModal";
+import { Button } from "../../components/form/Button";
 
 function ProfilePage() {
     const {user} = useAppSelector(state => state.auth);
@@ -60,11 +61,15 @@ function ProfilePage() {
                         </div>
                     </div>
 
-                    <button
-                        className="md:ml-auto flex items-center gap-2 bg-white text-black px-6 py-3 rounded-2xl font-black uppercase text-xs tracking-tighter hover:bg-red-600 hover:text-white transition-all"
-                        onClick={() => navigate('/edit-account')}>
-                        <Edit2 size={16}/> Редагувати
-                    </button>
+                    <Button
+                        variant="inverse"
+                        size="sm"
+                        className="md:ml-auto gap-2"
+                        icon={<Edit2 size={16}/>}
+                        onClick={() => navigate('/edit-account')}
+                    >
+                        Редагувати
+                    </Button>
                 </section>
 
                 {/* --- GRID SETTINGS --- */}
@@ -97,20 +102,25 @@ function ProfilePage() {
                                 </div>
                                 <h2 className="text-lg font-black uppercase italic tracking-tight">Безпека</h2>
                             </div>
-                            <button
-                                className="w-full text-left p-4 rounded-2xl border border-white/5 hover:bg-white/5 transition-all flex items-center justify-between group"
-                                onClick={() => setIsOpenPasswordForm(!isOpenPasswordForm)}>
+                            <Button
+                                variant="surface"
+                                className="justify-between group"
+                                onClick={() => setIsOpenPasswordForm(!isOpenPasswordForm)}
+                            >
                                 <span className="text-sm font-bold text-zinc-300">Змінити пароль</span>
                                 <Settings size={18} className="text-zinc-600 group-hover:text-red-500"/>
-                            </button>
+                            </Button>
                         </motion.div>
 
-                        <button
-                            className="w-full flex items-center justify-center gap-3 p-6 rounded-[2rem] border border-red-600/20 text-red-500 font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all group"
-                            onClick={() => logoutHandler()}>
-                            <LogOut size={20} className="group-hover:-translate-x-1 transition-transform"/>
+                        <Button
+                            variant="danger"
+                            fullWidth
+                            className="p-6 rounded-[2rem] tracking-widest gap-3 group"
+                            icon={<LogOut size={20} className="group-hover:-translate-x-1 transition-transform"/>}
+                            onClick={() => logoutHandler()}
+                        >
                             Вийти з системи
-                        </button>
+                        </Button>
                     </div>
 
                 </div>

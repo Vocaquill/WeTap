@@ -2,6 +2,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { ShieldCheck, Home, Compass, Monitor, History, Clock, ThumbsUp, ListVideo, LogOut, Film } from 'lucide-react';
 import logoImg from '../../layouts/logo.png';
 import {useAppSelector} from "../../store";
+import { Button } from '../form/Button';
 interface SidebarProps {
   isOpen: boolean;
 }
@@ -162,10 +163,10 @@ function Sidebar({ isOpen }: SidebarProps) {
       </div>
 
       {/* КНОПКА ВИХОДУ ЗНИЗУ */}
-      <button className="flex items-center p-3 rounded-xl text-zinc-500 hover:bg-zinc-900/60 hover:text-rose-400 transition-all w-full mt-auto">
+      <Button variant="navItem" className="mt-auto">
         <span className="min-w-[24px]"><LogOut size={18} /></span>
         {isOpen && <span className="ml-4 text-sm font-bold">Log Out</span>}
-      </button>
+      </Button>
     </aside>
   );
 }

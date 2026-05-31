@@ -3,6 +3,7 @@ import {useNavigate, useLocation} from 'react-router-dom';
 import {Menu, X, Bell, Search, Mic, Settings, Plus, Users, ChevronDown} from 'lucide-react';
 import {useAppSelector} from "../../store/index";
 import {APP_ENV} from "../../env/index";
+import { Button } from '../form/Button';
 
 interface HeaderProps {
   isOpen: boolean;
@@ -32,12 +33,12 @@ function Header({ isOpen, toggleSidebar }: HeaderProps) {
     >
       {/* ЛІВА ЧАСТИНА: Бургер-кнопка */}
       <div className="flex items-center gap-3">
-        <button
+        <Button
+          variant="icon"
           onClick={toggleSidebar}
-          className="p-2 hover:bg-zinc-900 rounded-xl text-zinc-300 hover:text-white transition-all active:scale-95"
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        </Button>
 
         {!isHomePage && (
           <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400 hidden md:block">
@@ -54,43 +55,42 @@ function Header({ isOpen, toggleSidebar }: HeaderProps) {
             placeholder="Search"
             className="w-full bg-zinc-900/90 border border-zinc-800/60 rounded-xl py-2 pl-5 pr-12 text-sm font-medium focus:outline-none focus:border-rose-500/50 focus:bg-zinc-900 transition-all text-zinc-100 placeholder-zinc-500"
           />
-          <button className="absolute right-4 top-2.5 text-zinc-400 hover:text-white transition-colors">
+          <Button variant="iconInline" className="absolute right-4 top-2.5">
             <Search size={20} strokeWidth={2.5} />
-          </button>
+          </Button>
         </div>
 
-        {/* Кнопка мікрофону (іконка 20px) */}
-        <button className="p-2 bg-zinc-900 hover:bg-zinc-800 rounded-xl text-zinc-300 hover:text-white transition-colors shrink-0">
+        <Button variant="iconFilled">
           <Mic size={20} />
-        </button>
+        </Button>
       </div>
 
       {/* ПРАВА ЧАСТИНА: Більші іконки (22px) та компактна кнопка профілю */}
       <div className="flex items-center gap-2">
-        <button className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl transition-all relative">
+        <Button variant="icon" className="relative">
           <Bell size={22} />
           <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-[#121213]"></span>
-        </button>
+        </Button>
 
-        <button className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl transition-all">
+        <Button variant="icon">
           <Settings size={22} />
-        </button>
+        </Button>
 
-        <button className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl transition-all">
-          <Plus onClick={() => navigate('/video/add')} size={22} />
-        </button>
+        <Button variant="icon" onClick={() => navigate('/video/add')}>
+          <Plus size={22} />
+        </Button>
 
         <span className="w-px h-6 bg-zinc-800 mx-1" />
 
-        <button className="p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl transition-all mr-1">
+        <Button variant="icon" className="mr-1">
           <Users size={22} />
-        </button>
+        </Button>
 
-        {/* Користувацький блок або кнопка логіну */}
         {user ? (
-          <button
+          <Button
+            variant="profile"
             onClick={() => navigate('/account')}
-            className="flex items-center gap-2.5 p-1 pr-3 bg-gradient-to-r from-zinc-900 to-rose-950/20 hover:to-rose-900/30 rounded-xl border border-zinc-800/60 transition-all group"
+            className="group"
           >
             <div className="w-7 h-7 rounded-lg overflow-hidden border border-rose-500/30">
               <img
@@ -103,14 +103,14 @@ function Header({ isOpen, toggleSidebar }: HeaderProps) {
               {user.name}
             </span>
             <ChevronDown size={14} className="text-zinc-500" />
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button
+            variant="gradient"
             onClick={() => navigate('/login')}
-            className="flex items-center gap-2.5 p-2 px-4 bg-gradient-to-r from-rose-500 to-fuchsia-600 hover:opacity-90 rounded-xl font-black text-xs uppercase tracking-wider shadow-lg shadow-rose-500/20 active:scale-95 transition-all"
           >
             Sign In
-          </button>
+          </Button>
         )}
       </div>
     </header>

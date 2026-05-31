@@ -1,6 +1,7 @@
 import {Outlet, NavLink, useLocation, useNavigate} from 'react-router-dom';
 import {LayoutDashboard, Film, Tag, HomeIcon} from 'lucide-react';
 import PageTransition from '../components/layout/PageTransition';
+import { Button } from '../components/form/Button';
 
 function AdminLayout() {
     const location = useLocation();
@@ -60,10 +61,14 @@ function AdminLayout() {
 
                 </nav>
 
-                <button className="flex items-center gap-3 p-3 text-zinc-500 hover:text-white transition-colors"
-                        onClick={() => navigate('/')}>
-                    <HomeIcon size={20}/> Додому
-                </button>
+                <Button
+                    variant="ghost"
+                    className="gap-3 p-3 justify-start w-full"
+                    icon={<HomeIcon size={20}/>}
+                    onClick={() => navigate('/')}
+                >
+                    Додому
+                </Button>
             </aside>
 
             {/* Контент адмінки */}

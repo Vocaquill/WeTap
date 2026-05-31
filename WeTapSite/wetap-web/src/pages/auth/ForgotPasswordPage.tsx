@@ -107,12 +107,12 @@ function ForgotPasswordPage() {
                                     className="text-white font-bold">{email}</span>.
                                 </p>
                             </div>
-                            <button
+                            <Button
+                                variant="linkSubtle"
                                 onClick={() => setIsSubmitted(false)}
-                                className="text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-red-600 transition-colors"
                             >
                                 Не отримали листа? Спробувати знову
-                            </button>
+                            </Button>
                             <div className="pt-4">
                                 <Button
                                     type="button"

@@ -69,7 +69,7 @@ function AddGenreModal({ isOpen, onClose }: Props) {
           <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} className="relative z-10 w-full max-w-lg bg-zinc-950 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl">
             <div className="p-6 border-b border-zinc-800 flex justify-between items-center">
               <h3 className="text-2xl font-black text-white">Новий жанр</h3>
-              <button onClick={onClose} className="text-zinc-500 hover:text-white"><X size={24} /></button>
+              <Button variant="ghostIcon" onClick={onClose}><X size={24} /></Button>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
