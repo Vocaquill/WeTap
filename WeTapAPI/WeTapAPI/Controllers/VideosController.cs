@@ -15,6 +15,7 @@ using Application.Features.Videos.Queries.GetByVideo;
 using Application.Features.Videos.Queries.GetVideoPrivacies;
 using Application.Features.Videos.Commands.ReactVideo;
 using Application.Features.Videos.Commands.IncrementView;
+using Microsoft.Extensions.Logging;
 
 namespace WeTapAPI.Controllers;
 
@@ -25,7 +26,11 @@ public class TestVideoSavingCommand : IRequest
 
 [ApiController]
 [Route("api/[controller]")]
-public class VideosController(IMediator mediator, IVideoFileService videoFileService) : ControllerBase
+public class VideosController(
+    IMediator mediator,
+    IVideoFileService videoFileService,
+    IVideoProgressStore progressStore,
+    ILogger<VideosController> logger) : ControllerBase
 {
     [HttpPost("TestVideoSaving")]
     [Authorize(Roles = Roles.Author)]
@@ -118,5 +123,21 @@ public class VideosController(IMediator mediator, IVideoFileService videoFileSer
         var command = new IncrementViewCommand(id);
         await mediator.Send(command);
         return Ok();
+    }
+
+    [HttpGet("progress/{trackingId}")]
+    [AllowAnonymous]
+    public ActionResult<VideoProgressUpdate> GetProcessingProgress([FromRoute] string trackingId)
+    {
+        logger.LogInformation("[VideoProgress] API GET progress trackingId={TrackingId}", trackingId);
+
+        var progress = progressStore.Get(trackingId);
+        if (progress is null)
+        {
+            logger.LogWarning("[VideoProgress] API GET progress NOT FOUND trackingId={TrackingId}", trackingId);
+            return NotFound();
+        }
+
+        return Ok(progress);
     }
 }

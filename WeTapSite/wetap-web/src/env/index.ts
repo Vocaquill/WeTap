@@ -1,6 +1,8 @@
 export const GOOGLE_AUTH_KEY = import.meta.env.VITE_GOOGLE_AUTH;
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_ROOT_URL = API_BASE_URL.replace(/\/api\/?$/, "");
+export const SIGNALR_HUB_URL = `${API_ROOT_URL}/videoProgressHub`;
 export const APP_IMAGE_URL = API_BASE_URL + import.meta.env.VITE_APP_IMAGE_URL;
 
 const IMAGES_50_URL = APP_IMAGE_URL + '/50_';
@@ -23,6 +25,7 @@ export type GenreSortField = typeof GENRE_SORT_FIELDS[number];
 
 const APP_ENV = {
     API_BASE_URL,
+    SIGNALR_HUB_URL,
     IMAGES_50_URL,
     IMAGES_100_URL,
     IMAGES_200_URL,

@@ -50,6 +50,7 @@ public static class DependencyInjection
         services.AddScoped<ISeederService, SeederService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IVideoFileService, VideoFileService>();
+        services.AddSingleton<IVideoProgressStore, VideoProgressStore>();
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
         services.AddScoped<VideoProcessingJob>();
 
@@ -132,6 +133,8 @@ public static class DependencyInjection
         services.AddSignalR(options =>
         {
             options.EnableDetailedErrors = true;
+            options.ClientTimeoutInterval = TimeSpan.FromMinutes(10);
+            options.KeepAliveInterval = TimeSpan.FromSeconds(15);
         });
 
         // Hangfire

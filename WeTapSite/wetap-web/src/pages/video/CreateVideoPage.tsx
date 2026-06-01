@@ -1,5 +1,4 @@
-import {useState, useEffect, type ChangeEvent, type FormEvent} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useCreateVideoMutation, useGetPrivaciesQuery } from '../../services/api/apiVideos';
 import { useSearchGenresQuery } from '../../services/api/apiGenres';
 import {useCreateTagMutation, useSearchTagsQuery} from '../../services/api/apiTags';
@@ -7,8 +6,7 @@ import { useSearchLanguagesQuery } from '../../services/api/apiLanguages';
 import type { IVideoCreateRequest } from '../../types/Video/IVideoCreateRequest';
 import type { IGenreItemResponse } from '../../types/Genre/IGenreItemResponse';
 import type { ITagItemResponse } from '../../types/Tag/ITagItemResponse';
-import { useVideoProgress } from '../../hooks/useVideoProgress';
-import { Progress, Modal } from 'antd';
+import { VideoProcessingModal } from '../../components/modal/VideoProcessingModal';
 
 import { InputField } from '../../components/form/InputField';
 import { TextAreaField } from '../../components/form/TextAreaField';
@@ -21,11 +19,9 @@ import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 import { slugify } from '../../utils/slugify';
 
 export default function CreateVideoPage() {
-    const navigate = useNavigate();
     const [trackingId, setTrackingId] = useState<string | null>(null);
     const [createVideo, { isLoading }] = useCreateVideoMutation();
     const [createTag, { isLoading: isLoadingTag }] = useCreateTagMutation();
-    const { progress, isConnected } = useVideoProgress(trackingId);
     const { data: genresData } = useSearchGenresQuery({ page: 1, itemPerPage: 100 });
     const [tagInput, setTagInput] = useState('');
     const { data: tagsData } = useSearchTagsQuery({
@@ -55,7 +51,13 @@ export default function CreateVideoPage() {
         privacyId: 1,
     });
 
-    const [knownTags, setKnownTags] = useState<ITagItemResponse[]>([]);
+    const [extraTags, setExtraTags] = useState<ITagItemResponse[]>([]);
+
+    const knownTags = useMemo(() => {
+        const map = new Map(extraTags.map(tag => [tag.id, tag]));
+        tagsData?.items?.forEach(tag => map.set(tag.id, tag));
+        return Array.from(map.values());
+    }, [extraTags, tagsData?.items]);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -100,15 +102,24 @@ export default function CreateVideoPage() {
     };
 
     const handleTagToggle = (id: number) => {
+        const tagFromSearch = tagsData?.items?.find(tag => tag.id === id);
+        const isSelected = form.tagIds?.includes(id);
+
         setForm(prev => {
             const current = prev.tagIds || [];
             return {
                 ...prev,
-                tagIds: current.includes(id)
+                tagIds: isSelected
                     ? current.filter(g => g !== id)
                     : [...current, id],
             };
         });
+
+        if (!isSelected && tagFromSearch) {
+            setExtraTags(prev =>
+                prev.some(tag => tag.id === id) ? prev : [...prev, tagFromSearch],
+            );
+        }
 
         clearError('tagIds');
     };
@@ -144,6 +155,7 @@ export default function CreateVideoPage() {
 
         try {
             const result = await createVideo(form).unwrap();
+            console.log("[VideoProgress] CreateVideo: trackingId received", result.trackingId);
             setTrackingId(result.trackingId);
         }
         catch (err: any) {
@@ -163,113 +175,18 @@ export default function CreateVideoPage() {
             slug: slugify(name),
         }).unwrap();
 
-        setKnownTags(prev =>
-            prev.some(t => t.id === createdTag.id) ? prev : [...prev, createdTag]
+        setExtraTags(prev =>
+            prev.some(t => t.id === createdTag.id) ? prev : [...prev, createdTag],
         );
         handleTagToggle(createdTag.id);
         setTagInput('');
     }
 
-    useEffect(() => {
-        if (!tagsData?.items?.length) return;
-
-        setKnownTags(prev => {
-            const map = new Map(prev.map(tag => [tag.id, tag]));
-            tagsData.items.forEach(tag => map.set(tag.id, tag));
-            return Array.from(map.values());
-        });
-    }, [tagsData]);
-
-    useEffect(() => {
-        if (progress?.status === 'Completed' || progress?.status === 'Завершено') {
-            const timer = setTimeout(() => navigate(`/video/${form.slug}`), 2000);
-            return () => clearTimeout(timer);
-        }
-    }, [progress?.status, navigate, form.slug]);
-
     return (
         <>
-            {isLoading || isLoadingTag && <LoadingOverlay />}
+            {(isLoading || isLoadingTag) && <LoadingOverlay />}
 
-            <Modal
-                open={!!trackingId}
-                footer={null}
-                closable={false}
-                centered
-                styles={{
-                    mask: { backdropFilter: 'blur(10px)', backgroundColor: 'rgba(0,0,0,0.8)' }
-                }}
-                width={600}
-                modalRender={() => (
-                    <div className="bg-[#121213] border border-zinc-800 rounded-[32px] p-8 shadow-2xl overflow-hidden">
-                        <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-800">
-                            <h2 className="text-white text-xl font-black uppercase tracking-tight">
-                                Завантаження та обробка відео
-                            </h2>
-                            <div className="flex items-center gap-2 px-3 py-1 bg-zinc-900 rounded-full border border-zinc-800">
-                                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 shadow-[0_0_10px_#22c55e]' : 'bg-red-500 animate-pulse'}`}></div>
-                                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-                                    {isConnected ? "Connected" : "Disconnected"}
-                                </span>
-                            </div>
-                        </div>
-
-                        {progress ? (
-                            <div className="space-y-8">
-                                <div className="relative">
-                                    <Progress
-                                        percent={Math.round(progress.percentage)}
-                                        status={(progress.status === 'Completed' || progress.status === 'Завершено') ? 'success' : 'active'}
-                                        strokeColor={(progress.status === 'Completed' || progress.status === 'Завершено') ? '#22c55e' : '#dc2626'}
-                                        trailColor="#18181b"
-                                        format={(percent) => <span className="text-white text-lg font-black tracking-tighter">{percent}%</span>}
-                                        strokeWidth={14}
-                                    />
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="p-4 bg-zinc-900/40 rounded-2xl border border-zinc-800/50 backdrop-blur-sm">
-                                        <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest mb-1">Статус процесу</p>
-                                        <p className="text-sm font-bold text-zinc-100 flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
-                                            {progress.status}
-                                        </p>
-                                    </div>
-                                    <div className="p-4 bg-zinc-900/40 rounded-2xl border border-zinc-800/50 backdrop-blur-sm">
-                                        <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest mb-1">Залишилось часу</p>
-                                        <p className="text-sm font-bold text-zinc-100 italic">
-                                            {progress.estimatedTimeRemaining || "Calculating..."}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {(progress.status === 'Completed' || progress.status === 'Завершено') && (
-                                    <div className="p-5 bg-green-500/5 border border-green-500/20 rounded-2xl text-green-500 text-sm text-center font-bold animate-in fade-in zoom-in duration-500">
-                                        <div className="mb-1 flex justify-center">
-                                            <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-black">
-                                                ✓
-                                            </div>
-                                        </div>
-                                        Відео успішно завантажено та оброблено!<br />
-                                        <span className="text-zinc-500 font-medium text-xs">Перенаправлення на сторінку перегляду...</span>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center py-12 space-y-6">
-                                <div className="relative">
-                                    <div className="w-16 h-16 border-4 border-zinc-800 rounded-full"></div>
-                                    <div className="absolute top-0 left-0 w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-                                </div>
-                                <div className="text-center">
-                                    <p className="text-white font-bold tracking-tight">Ініціалізація завантаження</p>
-                                    <p className="text-zinc-500 text-xs mt-1">Очікуємо відповідь від сервера...</p>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                )}
-            />
+            <VideoProcessingModal trackingId={trackingId} videoSlug={form.slug} />
 
 
             <div className="p-6 bg-[#121213] min-h-screen">
@@ -429,7 +346,7 @@ export default function CreateVideoPage() {
                     </div>
 
                     <div className="col-span-2 flex justify-end mt-4">
-                        <Button type="submit" variant="primary" size="md">
+                        <Button type="submit" variant="primary" size="md" isLoading={isLoading}>
                             Створити
                         </Button>
                     </div>

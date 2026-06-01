@@ -6,6 +6,7 @@ using AutoMapper.QueryableExtensions;
 using Domain.Entities.Video;
 using Hangfire;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Videos.Commands.CreateVideo;
 
@@ -14,7 +15,9 @@ public class CreateVideoHandler(IGenericRepository<VideoEntity, long> repo,
     IImageService imageService,
     IVideoFileService videoFileService,
     IBackgroundJobClient backgroundJobClient,
-    ICurrentUserService currentUserService
+    ICurrentUserService currentUserService,
+    IVideoProgressStore progressStore,
+    ILogger<CreateVideoHandler> logger
     )
     : IRequestHandler<CreateVideoCommand, VideoProcessingResult>
 {
@@ -49,6 +52,18 @@ public class CreateVideoHandler(IGenericRepository<VideoEntity, long> repo,
         await repo.SaveChangesAsync();
 
         var trackingId = Guid.NewGuid().ToString();
+
+        progressStore.Set(trackingId, new VideoProgressUpdate
+        {
+            Percentage = 0,
+            Status = "В черзі",
+            EstimatedTimeRemaining = "Розрахунок..."
+        });
+
+        logger.LogInformation(
+            "[VideoProgress] CreateVideo queued trackingId={TrackingId} videoId={VideoId}",
+            trackingId,
+            entity.Id);
 
         if (request.Model.Video != null)
         {
