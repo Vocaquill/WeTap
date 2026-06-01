@@ -7,7 +7,7 @@ import { buildApiUrl } from "../../utils/buildApiUrl";
 import { errorVideoProgress, logVideoProgress, warnVideoProgress } from "../../utils/videoProgressLogger";
 import type { IVideoProcessingResponse } from "../../types/Video/IVideoProcessingResponse.ts";
 
-const POLL_INTERVAL_MS = 2000;
+const POLL_INTERVAL_MS = 5000;
 
 const isCompletedStatus = (status?: string) =>
     status === "Completed" || status === "Завершено";
@@ -36,7 +36,7 @@ function buildHubConnection(): signalR.HubConnection {
                 | signalR.HttpTransportType.LongPolling,
         })
         .withAutomaticReconnect([0, 2000, 5000, 10000, 30000])
-        .configureLogging(signalR.LogLevel.Information)
+        .configureLogging(signalR.LogLevel.Warning)
         .build();
 }
 
@@ -188,11 +188,10 @@ function useVideoProgress(trackingId: string | null, videoSlug: string) {
                 && prev.status === update.status
                 && prev.estimatedTimeRemaining === update.estimatedTimeRemaining
             ) {
-                logVideoProgress("Progress: unchanged (skip render)", { source, update });
                 return prev;
             }
 
-            logVideoProgress("Progress: updated", { source, prev, update });
+            logVideoProgress("Progress: updated", { source, update });
             return update;
         });
     }, []);

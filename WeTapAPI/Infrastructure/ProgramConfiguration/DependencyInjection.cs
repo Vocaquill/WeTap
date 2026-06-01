@@ -145,7 +145,10 @@ public static class DependencyInjection
             .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString))
         );
 
-        services.AddHangfireServer();
+        services.AddHangfireServer(options =>
+        {
+            options.WorkerCount = configuration.GetValue("VideoProcessing:HangfireWorkerCount", 1);
+        });
 
         return services;
     }

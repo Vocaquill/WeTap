@@ -1,6 +1,9 @@
 const PREFIX = "[VideoProgress]";
+const DEBUG = import.meta.env.DEV && import.meta.env.VITE_VIDEO_PROGRESS_DEBUG === "true";
 
 export function logVideoProgress(step: string, data?: unknown) {
+    if (!DEBUG) return;
+
     if (data === undefined) {
         console.log(`${PREFIX} ${step}`);
         return;

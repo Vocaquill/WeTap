@@ -134,7 +134,7 @@ public class VideosController(
         var progress = progressStore.Get(trackingId);
         if (progress is null)
         {
-            logger.LogWarning("[VideoProgress] API GET progress NOT FOUND trackingId={TrackingId}", trackingId);
+            logger.LogDebug("[VideoProgress] API GET progress NOT FOUND trackingId={TrackingId}", trackingId);
             return NotFound();
         }
 

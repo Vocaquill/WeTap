@@ -155,7 +155,6 @@ export default function CreateVideoPage() {
 
         try {
             const result = await createVideo(form).unwrap();
-            console.log("[VideoProgress] CreateVideo: trackingId received", result.trackingId);
             setTrackingId(result.trackingId);
         }
         catch (err: any) {
