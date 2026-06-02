@@ -1,3 +1,4 @@
+using Application.Constants;
 using Application.Interfaces;
 using Application.Models.Search;
 using Application.Models.Video;
@@ -11,7 +12,8 @@ namespace Application.Features.Videos.Queries.SearchVideos;
 
 public class SearchVideosQueryHandler(
         IGenericRepository<VideoEntity, long> repo,
-        IMapper mapper
+        IMapper mapper,
+        ICurrentUserService currentUser
     )
     : IRequestHandler<SearchVideosQuery, SearchResult<VideoItemModel>>
 {
@@ -23,6 +25,8 @@ public class SearchVideosQueryHandler(
         IQueryable<VideoEntity> query = repo.AsQurable()
             .AsNoTracking()
             .Where(x => !x.IsDeleted && x.Video != "processing...");
+
+        query = query.ForCurrentUser(currentUser);
 
         if (!string.IsNullOrWhiteSpace(request.Model.Q))
         {

@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Constants;
+using Application.Interfaces;
 using Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +28,10 @@ public class JwtTokenService(IConfiguration configuration,
         var roles = await userManager.GetRolesAsync(user);
         var rolesJson = JsonSerializer.Serialize(roles);
 
-        claims.Add(new Claim("roles", rolesJson, JsonClaimValueTypes.JsonArray));
+        claims.Add(new Claim(AuthConstants.RolesClaim, rolesJson, JsonClaimValueTypes.JsonArray));
+
+        foreach (var role in roles)
+            claims.Add(new Claim(ClaimTypes.Role, role));
 
         var keyBytes = System.Text.Encoding.UTF8.GetBytes(key);
 

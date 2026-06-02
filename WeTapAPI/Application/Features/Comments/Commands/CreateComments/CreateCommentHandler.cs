@@ -1,3 +1,4 @@
+using Application.Constants;
 using Application.Interfaces;
 using Application.Models.Comments;
 using AutoMapper;
@@ -9,7 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Comments.Commands.CreateComment;
 
-public class CreateCommentCommandHandler(AppDbContext context, IMapper mapper, ICurrentUserService currentUserService)
+public class CreateCommentCommandHandler(
+    AppDbContext context,
+    IMapper mapper,
+    ICurrentUserService currentUser)
     : IRequestHandler<CreateCommentCommand, CommentsItemModal>
 {
     public async Task<CommentsItemModal> Handle(
@@ -17,12 +21,20 @@ public class CreateCommentCommandHandler(AppDbContext context, IMapper mapper, I
         CancellationToken cancellationToken
     )
     {
+        var videoExists = await context.Videos
+            .Where(x => x.Id == request.VideoId && !x.IsDeleted)
+            .ForCurrentUser(currentUser)
+            .AnyAsync(cancellationToken);
+
+        if (!videoExists)
+            throw new Exception("Відео не знайдено");
+
         var comment = new CommentsEntity
         {
             Content = request.Content,
             VideoId = request.VideoId,
             ParentId = request.ParentId,
-            UserId = currentUserService.GetCurrentUserId(),
+            UserId = currentUser.GetCurrentUserId(),
         };
 
         if (request.ParentId.HasValue)
