@@ -26,7 +26,7 @@ try
     );
 
     builder.Services.AddInfrastructureServices(builder.Configuration);
-    builder.Services.AddIdentityConfiguration(builder.Configuration);
+    builder.Services.AddIdentityConfiguration(builder.Configuration, builder.Environment);
     builder.Services.AddSwaggerDocumentation();
 
     var app = builder.Build();
