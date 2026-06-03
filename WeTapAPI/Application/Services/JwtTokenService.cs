@@ -15,24 +15,30 @@ public class JwtTokenService(IConfiguration configuration,
 {
     public async Task<string> CreateTokenAsync(UserEntity user)
     {
-        var key = configuration["Jwt:Key"]
-            ?? throw new InvalidOperationException("Jwt:Key is not configured");
+        var key = configuration["Jwt:Key"];
 
-        var roles = await userManager.GetRolesAsync(user);
-
-        // Короткі імена claim-ів — без дублікатів після MapInboundClaims.
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
-            new(JwtRegisteredClaimNames.Name, $"{user.LastName} {user.FirstName}".Trim()),
-            new("image", user.Image ?? string.Empty),
-            new(AuthConstants.RolesClaim, JsonSerializer.Serialize(roles)),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim("email", user.Email),
+            new Claim("name", $"{user.LastName} {user.FirstName}"),
+            new Claim("image", $"{user.Image}")
         };
 
+        var roles = await userManager.GetRolesAsync(user);
+        var rolesJson = JsonSerializer.Serialize(roles);
+
+        claims.Add(new Claim(AuthConstants.RolesClaim, rolesJson, JsonClaimValueTypes.JsonArray));
+
+        foreach (var role in roles)
+            claims.Add(new Claim(ClaimTypes.Role, role));
+
         var keyBytes = System.Text.Encoding.UTF8.GetBytes(key);
+
+        var symmetricSecurityKey = new SymmetricSecurityKey(keyBytes);
+
         var signingCredentials = new SigningCredentials(
-            new SymmetricSecurityKey(keyBytes),
+            symmetricSecurityKey,
             SecurityAlgorithms.HmacSha256);
 
         var jwtSecurityToken = new JwtSecurityToken(
@@ -40,6 +46,8 @@ public class JwtTokenService(IConfiguration configuration,
             expires: DateTime.UtcNow.AddDays(7),
             signingCredentials: signingCredentials);
 
-        return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+        string token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+
+        return token;
     }
 }

@@ -8,57 +8,54 @@ namespace Application.Services;
 
 public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICurrentUserService
 {
-    private ClaimsPrincipal? Principal => httpContextAccessor.HttpContext?.User;
-
-    public bool IsAuthenticated => Principal?.Identity?.IsAuthenticated == true;
-
     public long GetCurrentUserId()
     {
         var userId = TryGetCurrentUserId();
 
         if (userId is null)
             throw new UnauthorizedAccessException(
-                "Користувач не пройшов автентифікацію або відсутній claim sub.");
+                "Користувач не пройшов автентифікацію або відсутня заявка NameIdentifier.");
 
         return userId.Value;
     }
 
     public long? TryGetCurrentUserId()
     {
-        var user = Principal;
-        if (user is null || user.Identity?.IsAuthenticated != true)
+        var claim = httpContextAccessor.HttpContext?
+            .User
+            .FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (claim is null)
             return null;
 
-        foreach (var claimType in AuthConstants.UserIdClaimTypes)
-        {
-            var value = user.FindFirstValue(claimType);
-            if (long.TryParse(value, out var id))
-                return id;
-        }
-
-        return null;
+        return long.TryParse(claim, out var id) ? id : null;
     }
 
     public bool IsInRole(string role)
     {
-        var user = Principal;
-        if (user is null || user.Identity?.IsAuthenticated != true)
+        var user = httpContextAccessor.HttpContext?.User;
+        if (user is null)
             return false;
 
-        return GetRoles(user).Contains(role, StringComparer.OrdinalIgnoreCase);
-    }
+        if (user.IsInRole(role))
+            return true;
 
-    private static IReadOnlyList<string> GetRoles(ClaimsPrincipal user)
-    {
+        foreach (var claim in user.FindAll(ClaimTypes.Role))
+        {
+            if (string.Equals(claim.Value, role, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+
         var rolesClaim = user.FindFirstValue(AuthConstants.RolesClaim);
         if (string.IsNullOrWhiteSpace(rolesClaim))
-            return [];
+            return false;
 
         if (rolesClaim.StartsWith('['))
         {
-            return JsonSerializer.Deserialize<List<string>>(rolesClaim) ?? [];
+            var roles = JsonSerializer.Deserialize<List<string>>(rolesClaim) ?? [];
+            return roles.Contains(role, StringComparer.OrdinalIgnoreCase);
         }
 
-        return [rolesClaim];
+        return string.Equals(rolesClaim, role, StringComparison.OrdinalIgnoreCase);
     }
 }

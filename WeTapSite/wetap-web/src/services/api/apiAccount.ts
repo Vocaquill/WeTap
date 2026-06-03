@@ -29,20 +29,14 @@ export interface IValidateResetToken {
     isValid: boolean;
 }
 
-type AuthTokenResponse = { token?: string; Token?: string };
-
-const extractToken = (data: AuthTokenResponse | undefined): string | undefined =>
-    data?.token ?? data?.Token;
-
 const handleAuthSuccess = async (
-    queryFulfilled: Promise<{ data: AuthTokenResponse }>,
+    queryFulfilled: Promise<{ data: {token: string} }>,
     dispatch: Dispatch
 ) => {
     try {
         const { data } = await queryFulfilled;
-        const token = extractToken(data);
-        if (token) {
-            dispatch(loginSuccess(token));
+        if (data?.token) {
+            dispatch(loginSuccess(data.token));
         }
     } catch (error) {
         console.error('Auth error:', error);
@@ -109,9 +103,7 @@ export const apiAccount = createApi({
                     url: 'register',
                     method: 'POST',
                     body: formData};
-            },
-            onQueryStarted: async (_arg, { dispatch, queryFulfilled }) =>
-                handleAuthSuccess(queryFulfilled, dispatch)
+            }
         }),
         deleteAccount: builder.mutation<void, void>({
             query: () => {
@@ -131,8 +123,6 @@ export const apiAccount = createApi({
                     body: formData,
                 };
             },
-            onQueryStarted: async (_arg, { dispatch, queryFulfilled }) =>
-                handleAuthSuccess(queryFulfilled, dispatch),
             invalidatesTags: ['AccountPassword']
         }),
         hasPassword: builder.query<IUserHasPasswordResponse, void>({

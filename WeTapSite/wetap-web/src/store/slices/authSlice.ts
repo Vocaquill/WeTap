@@ -24,10 +24,7 @@ const getUserFromToken = (token: string): User | null => {
             }
         }
 
-        const idVal =
-            decoded["sub"] ??
-            decoded["nameid"] ??
-            decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+        const idVal = decoded["nameid"] ?? decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
 
         return {
             id: idVal ? Number(idVal) : undefined,

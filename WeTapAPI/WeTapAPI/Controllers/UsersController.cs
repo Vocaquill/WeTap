@@ -44,7 +44,7 @@ public class UsersController(IMediator mediator) : ControllerBase
             var command = new EditUserCommand(model);
             var result = await mediator.Send(command);
 
-            return Ok(new { token = result });
+            return Ok(new { Token = result });
         }
         catch (Exception ex)
         {
