@@ -20,6 +20,22 @@ namespace WeTapAPI.Controllers;
 [Route("api/[controller]/[action]")]
 public class AccountController(IMediator mediator, ICurrentUserService currentUserService) : ControllerBase
 {
+    /// <summary>
+    /// Перевірка JWT після Login: в Scalar → Authenticate → Bearer → встав token → виклич цей endpoint.
+    /// </summary>
+    [Authorize]
+    [HttpGet]
+    public IActionResult Me()
+    {
+        return Ok(new
+        {
+            isAuthenticated = User.Identity?.IsAuthenticated ?? false,
+            userId = currentUserService.TryGetCurrentUserId(),
+            roles = User.FindAll("roles").Select(c => c.Value).ToList(),
+            claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList(),
+        });
+    }
+
     [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] AccountLoginModel model)
@@ -29,7 +45,7 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
             var command = new LoginCommand(model);
             var result = await mediator.Send(command);
 
-            return Ok(new { Token = result });
+            return Ok(new { token = result });
         }
         catch (Exception ex)
         {
@@ -47,7 +63,7 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
             var command = new RegisterCommand(model);
             var result = await mediator.Send(command);
 
-            return Ok(new { Token = result });
+            return Ok(new { token = result });
         }
         catch (Exception ex)
         {
@@ -62,7 +78,7 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
         var command = new GoogleLoginCommand(model);
         var result = await mediator.Send(command);
 
-        return Ok(new { Token = result });
+        return Ok(new { token = result });
     }
 
     [HttpPost]
@@ -124,7 +140,7 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
         var command = new EditUserCommand(model);
         var result = await mediator.Send(command);
 
-        return Ok(new { Token = result });
+        return Ok(new { token = result });
     }
 
     [Authorize]
@@ -137,7 +153,7 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
             var command = new RefreshTokenCommand(userId);
             var result = await mediator.Send(command);
 
-            return Ok(new { Token = result });
+            return Ok(new { token = result });
         }
         catch (Exception ex)
         {
