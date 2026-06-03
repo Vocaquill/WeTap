@@ -47,23 +47,23 @@ public static class SwaggerConfigurator
                 bool hasAllowAnonymous = metadata.OfType<IAllowAnonymous>().Any();
                 bool hasAuthorize      = metadata.OfType<IAuthorizeData>().Any();
 
+                operation.Security =
+                [
+                    new OpenApiSecurityRequirement
+                    {
+                        {
+                            new OpenApiSecuritySchemeReference("Bearer"),
+                            []
+                        }
+                    }
+                ];
+
                 if (hasAuthorize && !hasAllowAnonymous)
                 {
                     operation.Responses.TryAdd("401", new OpenApiResponse
                         { Description = "Unauthorized — valid JWT required" });
                     operation.Responses.TryAdd("403", new OpenApiResponse
                         { Description = "Forbidden — insufficient permissions" });
-
-                    operation.Security =
-                    [
-                        new OpenApiSecurityRequirement
-                        {
-                            {
-                                new OpenApiSecuritySchemeReference("Bearer"),
-                                []
-                            }
-                        }
-                    ];
                 }
 
                 return Task.CompletedTask;
