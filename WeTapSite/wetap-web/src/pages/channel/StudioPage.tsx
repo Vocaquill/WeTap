@@ -195,6 +195,7 @@ function StudioPage() {
                 emptyMessage="Відео не знайдено"
                 sortBy={searchParams.sortBy}
                 onSortChange={handleSortChange}
+                onEdit={(video) => navigate(`/video/edit/${video.id}`)}
                 onDelete={(video) => {
                     setSelectedVideo(video);
                     setIsDeleteOpen(true);
