@@ -33,7 +33,7 @@ public class VideosController(
     ILogger<VideosController> logger) : ControllerBase
 {
     [HttpPost("TestVideoSaving")]
-    [Authorize(Roles = Roles.Author)]
+    [Authorize(Roles = Roles.Author + "," + Roles.Admin)]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<string>> TestVideoSaving([FromForm] TestVideoSavingCommand model)
     {
@@ -70,7 +70,7 @@ public class VideosController(
     }
 
     [HttpPost]
-    [Authorize(Roles = Roles.Author)]
+    [Authorize(Roles = Roles.Author + "," + Roles.Admin)]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<VideoProcessingResult>> Create([FromForm] VideoCreateModel model)
     {
@@ -80,7 +80,7 @@ public class VideosController(
     }
 
     [HttpPut]
-    [Authorize(Roles = Roles.Author)]
+    [Authorize(Roles = Roles.Author + "," + Roles.Admin)]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<VideoProcessingResult>> Update([FromForm] VideoUpdateModel model)
     {
@@ -90,7 +90,7 @@ public class VideosController(
     }
 
     [HttpDelete]
-    [Authorize(Roles = Roles.Author)]
+    [Authorize(Roles = Roles.Author + "," + Roles.Admin)]
     public async Task<ActionResult> Delete([FromBody] VideoDeleteModel model)
     {
         var command = new DeleteVideoCommand(model);
