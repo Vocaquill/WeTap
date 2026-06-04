@@ -122,13 +122,13 @@ function LoginPage() {
                     )}
 
                     <div className="text-right">
-                        <button
+                        <Button
                             type="button"
+                            variant="linkDanger"
                             onClick={() => navigate('/forgot-password')}
-                            className="text-sm text-red-500 hover:underline"
                         >
                             Забули пароль?
-                        </button>
+                        </Button>
                     </div>
 
                     <Button
@@ -158,9 +158,9 @@ function LoginPage() {
                 {/* REGISTER */}
                 <p className="text-center mt-6 text-zinc-500">
                     Немає акаунту?{' '}
-                    <button onClick={() => navigate('/register')} className="text-white">
+                    <Button variant="linkPlain" onClick={() => navigate('/register')}>
                         Створити
-                    </button>
+                    </Button>
                 </p>
             </motion.div>
         </div>

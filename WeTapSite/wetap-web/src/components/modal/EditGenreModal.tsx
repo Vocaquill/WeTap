@@ -79,7 +79,7 @@ function EditGenreModal({ isOpen, onClose, genre }: Props) {
                 <h3 className="text-2xl font-black text-white">Редагувати</h3>
                 <p className="text-xs text-zinc-500 font-mono italic">ID: #{genre.id}</p>
               </div>
-              <button onClick={onClose} className="text-zinc-500 hover:text-white"><X size={24} /></button>
+              <Button variant="ghostIcon" onClick={onClose}><X size={24} /></Button>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">

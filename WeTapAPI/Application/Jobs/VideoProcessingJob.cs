@@ -11,6 +11,7 @@ public class VideoProcessingJob(
     IHubContext<VideoProgressHub> hubContext,
     IVideoFileService videoFileService,
     IGenericRepository<VideoEntity, long> repo,
+    IVideoProgressStore progressStore,
     ILogger<VideoProcessingJob> logger
 )
 {
@@ -26,7 +27,7 @@ public class VideoProcessingJob(
                 throw new FileNotFoundException("Тимчасовий файл для обробки відео не знайдено", tempFilePath);
             }
 
-            await hubContext.Clients.Group(trackingId).SendAsync("ReceiveProgress", new VideoProgressUpdate
+            await SendProgressAsync(trackingId, new VideoProgressUpdate
             {
                 Percentage = 0,
                 Status = "Початок",
@@ -36,7 +37,8 @@ public class VideoProcessingJob(
             logger.LogInformation("Calling VideoFileService to process video...");
             
             var baseFileName = await videoFileService.SaveVideoWithProgressAsync(tempFilePath, (progress) => {
-                hubContext.Clients.Group(trackingId).SendAsync("ReceiveProgress", progress);
+                progressStore.Set(trackingId, progress);
+                _ = hubContext.Clients.Group(trackingId).SendAsync("ReceiveProgress", progress);
             });
 
             logger.LogInformation("Video processing finished. BaseFileName: {FileName}. Updating database...", baseFileName);
@@ -54,7 +56,7 @@ public class VideoProcessingJob(
                 logger.LogWarning("Video entity with Id {VideoId} not found in database after processing", videoId);
             }
 
-            await hubContext.Clients.Group(trackingId).SendAsync("ReceiveProgress", new VideoProgressUpdate
+            await SendProgressAsync(trackingId, new VideoProgressUpdate
             {
                 Percentage = 100,
                 Status = "Завершено",
@@ -65,7 +67,7 @@ public class VideoProcessingJob(
         {
             logger.LogError(ex, "Error while processing video for TrackingId: {TrackingId}", trackingId);
             
-            await hubContext.Clients.Group(trackingId).SendAsync("ReceiveProgress", new VideoProgressUpdate
+            await SendProgressAsync(trackingId, new VideoProgressUpdate
             {
                 Percentage = 0,
                 Status = $"Помилка: {ex.Message}",
@@ -89,5 +91,16 @@ public class VideoProcessingJob(
                 }
             }
         }
+    }
+
+    private async Task SendProgressAsync(string trackingId, VideoProgressUpdate update)
+    {
+        progressStore.Set(trackingId, update);
+        logger.LogInformation(
+            "[VideoProgress] Job SendProgress trackingId={TrackingId} status={Status} percentage={Percentage}",
+            trackingId,
+            update.Status,
+            update.Percentage);
+        await hubContext.Clients.Group(trackingId).SendAsync("ReceiveProgress", update);
     }
 }

@@ -8,4 +8,6 @@ export interface IVideoEditRequest {
     image?: File;
     video?: File;
     languageId: number;
+    privacyId: number;
+    channelId?: number;
 }

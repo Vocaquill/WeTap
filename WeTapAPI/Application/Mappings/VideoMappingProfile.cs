@@ -44,7 +44,8 @@ public class VideoMappingProfile : Profile
             .ForMember(dest => dest.Image, opt => opt.Ignore())
             .ForMember(dest => dest.Video, opt => opt.Ignore())
             .ForMember(dest => dest.VideoGenres, opt => opt.Ignore())
-            .ForMember(dest => dest.VideoTags, opt => opt.Ignore());
+            .ForMember(dest => dest.VideoTags, opt => opt.Ignore())
+            .ForMember(dest => dest.ChannelId, opt => opt.Ignore());
 
         CreateMap<VideoReactionModel, VideoReactionEntity>();
     }

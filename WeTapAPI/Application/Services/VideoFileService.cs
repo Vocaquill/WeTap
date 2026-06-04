@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Application.Models.VideoProcessing;
+using Application.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Concurrent;
@@ -14,12 +15,19 @@ public class VideoFileService : IVideoFileService
     private readonly string _videosDir;
     private readonly string _ffmpegPath;
     private readonly List<int> _videoSizes;
+    private readonly int _ffmpegThreads;
+    private readonly TimeSpan _progressUpdateInterval;
+    private readonly double _minProgressPercentDelta;
 
     public VideoFileService(IConfiguration configuration)
     {
         _videosDir = Path.Combine(Directory.GetCurrentDirectory(), configuration["VideosDir"]!);
         _videoSizes = configuration.GetSection("VideoSizes").Get<List<int>>()!;
         _ffmpegPath = Path.Combine(Directory.GetCurrentDirectory(), "FFmpeg");
+        _ffmpegThreads = configuration.GetValue("VideoProcessing:FfmpegThreads", 2);
+        _progressUpdateInterval = TimeSpan.FromSeconds(
+            configuration.GetValue("VideoProcessing:ProgressUpdateIntervalSeconds", 3));
+        _minProgressPercentDelta = configuration.GetValue("VideoProcessing:MinProgressPercentDelta", 2);
 
         Directory.CreateDirectory(_videosDir);
 
@@ -52,72 +60,60 @@ public class VideoFileService : IVideoFileService
 
     public async Task<string> SaveVideoWithProgressAsync(string filePath, Action<VideoProgressUpdate> onProgress)
     {
-        // Визначаємо ім'я файлу залежно від ОС (Windows використовує .exe)
         string ffmpegFileName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "ffmpeg.exe" : "ffmpeg";
         string ffmpegFullExecutablePath = Path.Combine(_ffmpegPath, ffmpegFileName);
 
-        // Перевіряємо, чи існує файл FFmpeg, щоб не завантажувати його щоразу
+        var throttler = new ProgressThrottler(onProgress, _progressUpdateInterval, _minProgressPercentDelta);
+
         if (!File.Exists(ffmpegFullExecutablePath))
         {
-            // Повідомляємо про початок завантаження
-            onProgress?.Invoke(new VideoProgressUpdate { Status = "Downloading FFmpeg...", Percentage = 0 });
-
-            // Завантаження FFmpeg
+            throttler.Report(new VideoProgressUpdate { Status = "Downloading FFmpeg...", Percentage = 0 }, force: true);
             await FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official, _ffmpegPath);
         }
 
-        // Вказуємо бібліотеці шлях до завантажених файлів
         FFmpeg.SetExecutablesPath(_ffmpegPath);
 
         var mediaInfo = await FFmpeg.GetMediaInfo(filePath);
         string baseFileName = $"{Guid.NewGuid()}.mp4";
-
-        // Фіксуємо час початку обробки
         var startTime = DateTime.UtcNow;
+        var totalSizes = _videoSizes.Count;
 
-        // Словник, де ми зберігаємо прогрес для кожного розміру (напр: 720: 15%, 1080: 10%)
-        var progressDict = new ConcurrentDictionary<int, double>();
-        foreach (var size in _videoSizes) progressDict[size] = 0;
-
-        // Створюємо список задач для одночасної обробки відео в різних розмірах
-        var tasks = _videoSizes.Select(size => ProcessVideoAsync(filePath, baseFileName, size, mediaInfo, (percent) =>
+        for (var index = 0; index < totalSizes; index++)
         {
-            // цей лямбда-вираз виконується кожного разу, коли FFmpeg повідомить про прогрес
+            var size = _videoSizes[index];
+            var completedSizes = index;
 
-            // Оновлюємо відсоток саме для цієї роздільної здатності
-            progressDict[size] = percent;
-
-            // Рахуємо середній прогрес по всіх задачах разом
-            var totalProgress = progressDict.Values.Average();
-
-            // Розрахунок часу
-            string remainingTimeText = "Calculating...";
-            if (totalProgress > 0)
+            await ProcessVideoAsync(filePath, baseFileName, size, mediaInfo, (sizePercent) =>
             {
-                // Скільки часу вже пройшло
-                var elapsed = DateTime.UtcNow - startTime;
+                var totalProgress = ((completedSizes + sizePercent / 100.0) / totalSizes) * 100;
 
-                // Пропорція: якщо X відсотків зайняло Y часу, то 100% займе (Y / X) * 100
-                // Залишок часу = [загальний очікуваний час] - [той, що вже пройшов]
-                var totalEstimatedTime = TimeSpan.FromTicks((long)(elapsed.Ticks / (totalProgress / 100)));
-                var remaining = totalEstimatedTime - elapsed;
+                string remainingTimeText = "Calculating...";
+                if (totalProgress > 0)
+                {
+                    var elapsed = DateTime.UtcNow - startTime;
+                    var totalEstimatedTime = TimeSpan.FromTicks((long)(elapsed.Ticks / (totalProgress / 100)));
+                    var remaining = totalEstimatedTime - elapsed;
 
-                remainingTimeText = remaining.TotalHours >= 1
-                    ? remaining.ToString(@"hh\:mm\:ss")
-                    : remaining.ToString(@"mm\:ss");
-            }
+                    remainingTimeText = remaining.TotalHours >= 1
+                        ? remaining.ToString(@"hh\:mm\:ss")
+                        : remaining.ToString(@"mm\:ss");
+                }
 
-            // Викликаємо зовнішній колбек
-            onProgress(new VideoProgressUpdate
-            {
-                Percentage = Math.Round(totalProgress, 2),
-                Status = "Processing",
-                EstimatedTimeRemaining = remainingTimeText
+                throttler.Report(new VideoProgressUpdate
+                {
+                    Percentage = Math.Round(totalProgress, 2),
+                    Status = $"Processing {size}p",
+                    EstimatedTimeRemaining = remainingTimeText,
+                });
             });
-        }));
+        }
 
-        // Чекаємо, поки розміри відео будуть готові
-        await Task.WhenAll(tasks);
+        throttler.Report(new VideoProgressUpdate
+        {
+            Percentage = 100,
+            Status = "Processing",
+            EstimatedTimeRemaining = "00:00:00",
+        }, force: true);
 
         return baseFileName;
     }
@@ -130,7 +126,6 @@ public class VideoFileService : IVideoFileService
 
         if (videoStream == null) return;
 
-        // Математика для збереження пропорцій сторін
         double ratio = (double)videoStream.Width / videoStream.Height;
         int width = (int)(height * ratio);
         if (width % 2 != 0) width++;
@@ -139,20 +134,20 @@ public class VideoFileService : IVideoFileService
             .SetSize(width, height)
             .SetCodec(VideoCodec.h264);
 
-        // Створюємо команду для конвертації
-        var conversion = FFmpeg.Conversions.New().AddStream(vStream);
-        if (audioStream != null) conversion.AddStream(audioStream.SetCodec(AudioCodec.aac));
+        var conversion = FFmpeg.Conversions.New()
+            .AddStream(vStream)
+            .UseMultiThread(_ffmpegThreads);
+
+        if (audioStream != null)
+        {
+            conversion.AddStream(audioStream.SetCodec(AudioCodec.aac));
+        }
 
         if (onProgress != null)
         {
-            // conversion.OnProgress — це подія всередині бібліотеки Xabe.FFmpeg.
-            // Вона спрацьовує, коли FFmpeg виводить у консоль рядок типу "frame= 123 fps=..."
-            // Бібліотека парсить цей рядок, рахує відсоток (оброблені кадри / загальні кадри)
-            // і віддає нам готове число 'args.Percent'.
-            conversion.OnProgress += (sender, args) => onProgress(args.Percent);
+            conversion.OnProgress += (_, args) => onProgress(args.Percent);
         }
 
-        // Запуск процесу FFmpeg.exe
         await conversion.SetOutput(outputPath).Start();
     }
 

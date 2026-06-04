@@ -9,6 +9,7 @@ using Application.Features.Tags.Queries.GetByTag;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Application.Constants;
 
 namespace WeTapAPI.Controllers;
 
@@ -18,7 +19,6 @@ public class TagsController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
     [Authorize]
-    //[Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult<TagItemModel>> Create([FromBody] TagCreateModel model)
     {
         var command = new CreateTagCommand(model);
@@ -46,7 +46,7 @@ public class TagsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut]
-    //[Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult<TagItemModel>> Update([FromBody] TagUpdateModel model)
     {
         var command = new UpdateTagCommand(model);
@@ -55,7 +55,7 @@ public class TagsController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete]
-    //[Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult> Delete([FromBody] TagDeleteModel model)
     {
         var command = new DeleteTagCommand(model);

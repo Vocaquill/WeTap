@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Home, ArrowLeft, Film } from 'lucide-react';
+import { Button } from '../../components/form/Button';
 
 function NotFoundPage() {
     const navigate = useNavigate();
@@ -59,21 +60,25 @@ function NotFoundPage() {
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mt-12">
-                        <button
+                        <Button
+                            variant="inverse"
+                            size="xl"
+                            className="w-full sm:w-auto group"
+                            icon={<Home size={20} className="group-hover:scale-110 transition-transform" />}
                             onClick={() => navigate('/')}
-                            className="w-full sm:w-auto bg-white text-black px-10 py-5 rounded-2xl font-black uppercase text-sm hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-2 group shadow-2xl"
                         >
-                            <Home size={20} className="group-hover:scale-110 transition-transform" />
                             На головну
-                        </button>
+                        </Button>
 
-                        <button
+                        <Button
+                            variant="secondary"
+                            size="xl"
+                            className="w-full sm:w-auto"
+                            icon={<ArrowLeft size={20} />}
                             onClick={() => navigate(-1)}
-                            className="w-full sm:w-auto bg-zinc-900 text-white border border-zinc-800 px-10 py-5 rounded-2xl font-black uppercase text-sm hover:bg-zinc-800 transition-all flex items-center justify-center gap-2"
                         >
-                            <ArrowLeft size={20} />
                             Повернутися
-                        </button>
+                        </Button>
                     </div>
                 </motion.div>
 

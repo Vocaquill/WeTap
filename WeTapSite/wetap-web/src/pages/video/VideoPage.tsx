@@ -15,11 +15,12 @@ import { APP_ENV } from "../../env/index";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 import { useGetByQuery, useIncrementViewMutation, useReactVideoMutation, useSearchVideosQuery } from "../../services/api/apiVideos";
 import { useAppSelector } from '../../store/index';
+import {TabButtons} from "../../components/ui/common/TabButton.tsx";
+import {Button} from "../../components/form/Button.tsx";
 
 function VideoPage() {
     const navigate = useNavigate();
     const { slug } = useParams<{ slug: string }>();
-    const [activeTab, setActiveTab] = useState<'suggestions' | 'channel'>('suggestions');
     const [isDescExpanded, setIsDescExpanded] = useState(false);
 
     const { user } = useAppSelector((state) => state.auth);
@@ -54,6 +55,11 @@ function VideoPage() {
             console.error('Помилка при відправці реакції', error);
         }
     };
+
+    const handleTabChange = (tab: string) => {
+        console.log('Tab changed to:', tab);
+        // TODO: implement tab switching logic
+    }
 
     const handleSubscribe = () => {
         if (!user) {
@@ -99,11 +105,10 @@ function VideoPage() {
                                     </p>
                                     <p className="text-xs text-zinc-400 mt-1">{video.channel?.subscriberCount} підписників</p>
                                 </div>
-                                <button
-                                    onClick={handleSubscribe}
-                                    className="ml-2 bg-[#FF2D7A] text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-[#FF2D7A]/90 transition-colors">
+
+                                <Button onClick={handleSubscribe} size={"sm"}>
                                     Підписатися
-                                </button>
+                                </Button>
                             </div>
 
                             <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
@@ -119,25 +124,28 @@ function VideoPage() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <div className="flex items-center bg-zinc-800 rounded-full overflow-hidden">
-                                        <button
+                                        <Button
+                                            variant="reaction"
                                             onClick={() => handleReaction(true)}
                                             disabled={isReacting}
-                                            className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors border-r border-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed">
-                                            <ThumbsUp size={18} />
-                                            <span className="text-sm font-medium">{video.likesCount}</span>
-                                        </button>
-                                        <button
+                                            className="border-r border-zinc-700"
+                                            icon={<ThumbsUp size={18} />}
+                                        >
+                                            <span>{video.likesCount}</span>
+                                        </Button>
+                                        <Button
+                                            variant="reaction"
                                             onClick={() => handleReaction(false)}
                                             disabled={isReacting}
-                                            className="flex items-center gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                                            <ThumbsDown size={18} />
-                                            <span className="text-sm font-medium">{video.dislikesCount}</span>
-                                        </button>
+                                            icon={<ThumbsDown size={18} />}
+                                        >
+                                            <span>{video.dislikesCount}</span>
+                                        </Button>
                                     </div>
 
-                                    <button className="p-2 bg-zinc-800 rounded-full hover:bg-zinc-700">
+                                    <Button variant="iconRound">
                                         <MoreHorizontal size={18} />
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -187,38 +195,20 @@ function VideoPage() {
                                     }
                                 </p>
                                 {video.description && video.description.length > 150 && (
-                                    <button
+                                    <Button
+                                        variant="linkAccent"
+                                        className="mt-2"
                                         onClick={() => setIsDescExpanded(!isDescExpanded)}
-                                        className="text-xs text-[#FF2D7A] font-bold mt-2 hover:underline focus:outline-none"
                                     >
                                         {isDescExpanded ? "Show less" : "Show more"}
-                                    </button>
+                                    </Button>
                                 )}
                             </div>
                         </div>
                     </div>
 
                     <div className="w-full lg:w-[400px] flex-shrink-0 space-y-3">
-                        <div className="flex gap-2 mb-4">
-                            <button
-                                onClick={() => setActiveTab('suggestions')}
-                                className={`custom-tab-btn ${activeTab === 'suggestions'
-                                    ? 'bg-[#FF2D7A] text-white shadow-lg shadow-[#FF2D7A]/20'
-                                    : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white'
-                                    }`}
-                            >
-                                Suggestions
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('channel')}
-                                className={`custom-tab-btn ${activeTab === 'channel'
-                                    ? 'bg-[#FF2D7A] text-white shadow-lg shadow-[#FF2D7A]/20'
-                                    : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white'
-                                    }`}
-                            >
-                                From this channel
-                            </button>
-                        </div>
+                        <TabButtons tabList={["Suggestions", "From this channel"]} onTabChange={handleTabChange} />
 
                         {isRecsLoading ? (
                             <div className="animate-pulse space-y-4">

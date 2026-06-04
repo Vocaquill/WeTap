@@ -50,6 +50,7 @@ public static class DependencyInjection
         services.AddScoped<ISeederService, SeederService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IVideoFileService, VideoFileService>();
+        services.AddSingleton<IVideoProgressStore, VideoProgressStore>();
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
         services.AddScoped<VideoProcessingJob>();
 
@@ -132,6 +133,8 @@ public static class DependencyInjection
         services.AddSignalR(options =>
         {
             options.EnableDetailedErrors = true;
+            options.ClientTimeoutInterval = TimeSpan.FromMinutes(10);
+            options.KeepAliveInterval = TimeSpan.FromSeconds(15);
         });
 
         // Hangfire
@@ -142,7 +145,10 @@ public static class DependencyInjection
             .UsePostgreSqlStorage(options => options.UseNpgsqlConnection(connectionString))
         );
 
-        services.AddHangfireServer();
+        services.AddHangfireServer(options =>
+        {
+            options.WorkerCount = configuration.GetValue("VideoProcessing:HangfireWorkerCount", 1);
+        });
 
         return services;
     }

@@ -1,3 +1,4 @@
+using Application.Constants;
 using Application.Interfaces;
 using Application.Models.Video;
 using AutoMapper;
@@ -11,18 +12,20 @@ namespace Application.Features.Videos.Commands.ReactVideo;
 public class ReactVideoHandler(
     AppDbContext context,
     IMapper mapper,
-    ICurrentUserService currentUserService)
+    ICurrentUserService currentUser)
     : IRequestHandler<ReactVideoCommand>
 {
     public async Task Handle(ReactVideoCommand request, CancellationToken cancellationToken)
     {
-        var userId = currentUserService.GetCurrentUserId();
+        var userId = currentUser.GetCurrentUserId();
 
         var videoExists = await context.Videos
-            .AnyAsync(x => x.Id == request.Model.VideoId && !x.IsDeleted, cancellationToken);
+            .Where(x => x.Id == request.Model.VideoId && !x.IsDeleted)
+            .ForCurrentUser(currentUser)
+            .AnyAsync(cancellationToken);
 
         if (!videoExists)
-            throw new Exception("Video not found");
+            throw new Exception("Відео не знайдено");
 
         var reaction = await context.VideoReactions
             .FirstOrDefaultAsync(x =>

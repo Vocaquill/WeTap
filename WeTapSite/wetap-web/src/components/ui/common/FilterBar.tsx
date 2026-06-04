@@ -70,7 +70,8 @@ export function FilterBar<T extends Record<string, any>>({
         <Button
           type="button"
           variant="secondary"
-          className="w-12 h-12 p-0 flex items-center justify-center rounded-xl animate-in fade-in zoom-in duration-300"
+          size="iconLg"
+          className="animate-in fade-in zoom-in duration-300"
           onClick={onReset}
         >
           <X size={20} />

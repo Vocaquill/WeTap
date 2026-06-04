@@ -12,6 +12,7 @@ import ProfilePage from './pages/profile/ProfilePage';
 import EditProfilePage from './pages/profile/EditProfilePage';
 
 import CreateVideoPage from './pages/video/CreateVideoPage';
+import EditVideoPage from './pages/video/EditVideoPage';
 import CreateChannelPage from './pages/channel/CreateChannelPage';
 import StudioPage from './pages/channel/StudioPage.tsx';
 
@@ -44,6 +45,7 @@ function App() {
 
                 <Route element={<RequireAuthor />}>
                     <Route path="/video/add" element={<CreateVideoPage />} />
+                    <Route path="/video/edit/:id" element={<EditVideoPage />} />
                     <Route path="/studio" element={<StudioPage />} />
                 </Route>
 

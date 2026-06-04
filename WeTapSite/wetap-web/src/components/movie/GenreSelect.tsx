@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {useSearchGenresQuery} from "../../services/api/apiGenres.ts";
 import type { IGenreItemResponse as IGenreItem } from '../../types/Genre/IGenreItemResponse';
 import { InputField } from '../form/InputField';
+import { Button } from '../form/Button';
 
 interface Props {
     value?: number;
@@ -31,16 +32,16 @@ export function GenreSelect({ value, onChange }: Props) {
             {search && (
                 <div className="absolute z-10 w-full mt-2 bg-zinc-900 border border-zinc-800 rounded-xl max-h-60 overflow-auto">
                     {genres.map((genre : IGenreItem) => (
-                        <button
+                        <Button
                             key={genre.id}
+                            variant="menuItem"
                             onClick={() => {
                                 onChange(genre.id);
                                 setSearch('');
                             }}
-                            className="w-full text-left px-4 py-2 hover:bg-zinc-800 transition"
                         >
                             {genre.name}
-                        </button>
+                        </Button>
                     ))}
 
                     {genres.length === 0 && (

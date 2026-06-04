@@ -1,5 +1,6 @@
 import React, { useState, type InputHTMLAttributes } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { Button } from "./Button";
 
 interface InputFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'error'> {
     label?: string;
@@ -73,13 +74,14 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
                      />
 
                      {isPassword && (
-                         <button
+                         <Button
                              type="button"
+                             variant="iconInline"
+                             className="absolute right-4 top-1/2 -translate-y-1/2"
                              onClick={() => setShowPassword(!showPassword)}
-                             className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors"
                          >
                              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                         </button>
+                         </Button>
                      )}
                  </div>
 
