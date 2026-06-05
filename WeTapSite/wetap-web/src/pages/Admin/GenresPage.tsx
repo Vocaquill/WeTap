@@ -3,9 +3,9 @@ import {Plus} from 'lucide-react';
 import {Button} from '../../components/form/Button';
 import type {GenreSortField} from '../../env';
 
-import AddGenreModal from '../../components/modal/AddGenreModal';
-import EditGenreModal from '../../components/modal/EditGenreModal';
-import DeleteModal from "../../components/ui/common/DeleteModal.tsx";
+import AddGenreModal from '../../components/modal/genre/AddGenreModal';
+import EditGenreModal from '../../components/modal/genre/EditGenreModal';
+import DeleteModal from "../../components/modal/common/DeleteModal.tsx";
 
 import type {IGenreItemResponse as IGenreItem} from '../../types/Genre/IGenreItemResponse';
 import type {IGenreSearchRequest as IGenreSearch} from '../../types/Genre/IGenreSearchRequest';

@@ -6,7 +6,7 @@ import {logout} from "../../store/slices/authSlice";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
-import ChangePasswordModal from "../../components/modal/ChangePasswordModal";
+import ChangePasswordModal from "../../components/modal/account/ChangePasswordModal";
 import { Button } from "../../components/form/Button";
 
 function ProfilePage() {

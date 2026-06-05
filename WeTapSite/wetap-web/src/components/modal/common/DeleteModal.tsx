@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertCircle, Loader2 } from 'lucide-react';
-import type {FC} from "react";
+import type { FC } from "react";
 import { Button } from '../../form/Button';
 
 interface DeleteModalProps {
@@ -13,13 +13,13 @@ interface DeleteModalProps {
 }
 
 const DeleteModal: FC<DeleteModalProps> = ({
-                                               isOpen,
-                                               onClose,
-                                               onConfirm,
-                                               title,
-                                               description,
-                                               isLoading = false,
-                                           }) => {
+    isOpen,
+    onClose,
+    onConfirm,
+    title,
+    description,
+    isLoading = false,
+}) => {
     return (
         <AnimatePresence>
             {isOpen && (

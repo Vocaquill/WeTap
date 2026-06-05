@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useGetByQuery, useEditVideoMutation } from '../../services/api/apiVideos';
 import type { IVideoEditRequest } from '../../types/Video/IVideoEditRequest';
-import { VideoProcessingModal } from '../../components/modal/VideoProcessingModal';
+import { VideoProcessingModal } from '../../components/modal/video/VideoProcessingModal';
 import { VideoForm } from '../../components/video/VideoForm';
 import LoadingOverlay from '../../components/ui/loading/LoadingOverlay';
 

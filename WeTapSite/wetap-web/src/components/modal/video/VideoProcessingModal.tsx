@@ -2,10 +2,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as signalR from "@microsoft/signalr";
 import { Modal, Progress } from "antd";
-import { APP_ENV } from "../../env";
-import { buildApiUrl } from "../../utils/buildApiUrl";
-import { errorVideoProgress, logVideoProgress, warnVideoProgress } from "../../utils/videoProgressLogger";
-import type { IVideoProcessingResponse } from "../../types/Video/IVideoProcessingResponse.ts";
+import { APP_ENV } from "../../../env";
+import { buildApiUrl } from "../../../utils/buildApiUrl";
+import { errorVideoProgress, logVideoProgress, warnVideoProgress } from "../../../utils/videoProgressLogger";
+import type { IVideoProcessingResponse } from "../../../types/Video/IVideoProcessingResponse.ts";
 
 const POLL_INTERVAL_MS = 5000;
 
@@ -459,3 +459,5 @@ export function VideoProcessingModal({ trackingId, videoSlug }: VideoProcessingM
         />
     );
 }
+
+export default VideoProcessingModal;

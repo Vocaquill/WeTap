@@ -5,7 +5,7 @@ import {Button} from '../../components/form/Button';
 import {useAppSelector} from '../../store';
 import {APP_ENV} from '../../env';
 
-import DeleteModal from "../../components/ui/common/DeleteModal.tsx";
+import DeleteModal from "../../components/modal/common/DeleteModal.tsx";
 
 import type {IVideoItemResponse} from '../../types/Video/IVideoItemResponse';
 import type {IVideoSearchRequest} from '../../types/Video/IVideoSearchRequest';
