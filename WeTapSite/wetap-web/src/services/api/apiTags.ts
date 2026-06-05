@@ -51,7 +51,7 @@ export const apiTags = createApi({
             invalidatesTags: ["Tags"],
         }),
 
-        deleteTag: builder.mutation<ITagItemResponse[], ITagDeleteRequest>({
+        deleteTag: builder.mutation<void, ITagDeleteRequest>({
             query: (body) => ({
                 url: "",
                 method: "DELETE",
