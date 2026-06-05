@@ -5,10 +5,14 @@ import { Pagination } from '../../components/ui/common/Pagination';
 import { FilterBar } from '../../components/ui/common/FilterBar';
 import { GenericTable } from '../../components/ui/common/GenericTable';
 import { SelectField } from '../../components/form/SelectField';
-import { useSearchTagsQuery } from "../../services/api/apiTags.ts";
+import { useDeleteTagMutation, useSearchTagsQuery } from "../../services/api/apiTags.ts";
 import type { ITagSearchRequest } from "../../types/Tag/ITagSearchRequest.ts";
 import type { ITagItemResponse } from "../../types/Tag/ITagItemResponse.ts";
 import type { IColumnConfig } from '../../types/Additional/IColumnConfig';
+
+import AddTagModal from '../../components/modal/tag/AddTagModal';
+import EditTagModal from '../../components/modal/tag/EditTagModal';
+import DeleteModal from '../../components/modal/common/DeleteModal';
 
 const perPageOptions = [
     { id: 5, name: '5' },
@@ -24,7 +28,13 @@ function TagsPage() {
         itemPerPage: 10,
     });
 
+    const [isAddOpen, setIsAddOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [selectedTag, setSelectedTag] = useState<ITagItemResponse | null>(null);
+
     const { data, isFetching, isError } = useSearchTagsQuery(searchParams);
+    const [deleteTag, { isLoading: isDeleting }] = useDeleteTagMutation();
 
     const handleSearchChange = <K extends keyof ITagSearchRequest>(key: K, value: ITagSearchRequest[K]) => {
         setSearchParams((prev) => ({ ...prev, [key]: value, page: 1 }));
@@ -38,16 +48,15 @@ function TagsPage() {
         });
     };
 
-    const handleCreateStub = () => {
-        alert("Створення тегів тимчасово недоступне (заглушка)");
-    };
-
-    const handleEditStub = (tag: ITagItemResponse) => {
-        alert(`Редагування тегу "${tag.name}" тимчасово недоступне (заглушка)`);
-    };
-
-    const handleDeleteStub = (tag: ITagItemResponse) => {
-        alert(`Видалення тегу "${tag.name}" тимчасово недоступне (заглушка)`);
+    const handleDelete = async () => {
+        if (!selectedTag) return;
+        try {
+            await deleteTag({ id: selectedTag.id }).unwrap();
+            setIsDeleteOpen(false);
+            setSelectedTag(null);
+        } catch (e) {
+            console.error('Помилка видалення тегу:', e);
+        }
     };
 
     const columns: IColumnConfig<ITagItemResponse>[] = [
@@ -61,6 +70,8 @@ function TagsPage() {
         {
             key: 'name',
             label: 'Назва тегу',
+            sortable: true,
+            sortKey: 'name',
             render: (item) => (
                 <span className="font-bold text-zinc-200 group-hover:text-white transition-colors">
                     {item.name}
@@ -92,7 +103,7 @@ function TagsPage() {
                     size="md"
                     className="rounded-2xl"
                     icon={<Plus size={20} strokeWidth={3} />}
-                    onClick={handleCreateStub}
+                    onClick={() => setIsAddOpen(true)}
                 >
                     ДОДАТИ ТЕГ
                 </Button>
@@ -110,8 +121,14 @@ function TagsPage() {
                 isFetching={isFetching}
                 isError={isError}
                 emptyMessage="Тегів не знайдено"
-                onEdit={handleEditStub}
-                onDelete={handleDeleteStub}
+                onEdit={(tag) => {
+                    setSelectedTag(tag);
+                    setIsEditOpen(true);
+                }}
+                onDelete={(tag) => {
+                    setSelectedTag(tag);
+                    setIsDeleteOpen(true);
+                }}
             />
 
             {data && (
@@ -122,8 +139,7 @@ function TagsPage() {
                             totalPages={data.pagination.totalPages}
                             onChange={(page) => setSearchParams((prev) => ({ ...prev, page }))}
                         />
-                        <div
-                            className="flex items-center gap-2 text-zinc-500 text-xs uppercase tracking-wider font-black">
+                        <div className="flex items-center gap-2 text-zinc-500 text-xs uppercase tracking-wider font-black">
                             <span>Елементів на сторінці:</span>
                             <SelectField
                                 name="itemPerPage"
@@ -137,6 +153,29 @@ function TagsPage() {
                     </div>
                 </div>
             )}
+
+            <AddTagModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} />
+
+            <EditTagModal
+                isOpen={isEditOpen}
+                tag={selectedTag}
+                onClose={() => {
+                    setIsEditOpen(false);
+                    setSelectedTag(null);
+                }}
+            />
+
+            <DeleteModal
+                isOpen={isDeleteOpen}
+                title="Видалити тег?"
+                description={`Ви впевнені, що хочете видалити "${selectedTag?.name}"? Всі відео втратять цей тег.`}
+                isLoading={isDeleting}
+                onConfirm={handleDelete}
+                onClose={() => {
+                    setIsDeleteOpen(false);
+                    setSelectedTag(null);
+                }}
+            />
         </div>
     );
 }
