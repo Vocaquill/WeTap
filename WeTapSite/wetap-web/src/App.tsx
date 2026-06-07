@@ -19,6 +19,7 @@ import StudioPage from './pages/channel/StudioPage.tsx';
 import Dashboard from './pages/Admin/Dashboard.tsx';
 import GenresPage from './pages/Admin/GenresPage.tsx';
 import TagsPage from './pages/Admin/TagsPage.tsx';
+import LanguagesPage from './pages/Admin/LanguagesPage.tsx';
 
 import AppLayout from './layouts/AppLayout.tsx';
 import AdminLayout from './layouts/AdminLayout.tsx';
@@ -57,6 +58,7 @@ function App() {
                     <Route index element={<Dashboard />} />
                     <Route path="genres" element={<GenresPage />} />
                     <Route path="tags" element={<TagsPage />} />
+                    <Route path="languages" element={<LanguagesPage />} />
                 </Route>
             </Route>
 

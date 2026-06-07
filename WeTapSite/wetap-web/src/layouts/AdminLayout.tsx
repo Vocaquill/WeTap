@@ -1,5 +1,5 @@
 import {Outlet, NavLink, useLocation, useNavigate} from 'react-router-dom';
-import {LayoutDashboard, Film, Tag, Hash, HomeIcon} from 'lucide-react';
+import {LayoutDashboard, Film, Tag, Hash, HomeIcon, Globe} from 'lucide-react';
 import PageTransition from '../components/layout/PageTransition';
 import { Button } from '../components/form/Button';
 
@@ -47,6 +47,7 @@ function AdminLayout() {
                             <AdminNavLink to="/admin/movies" icon={<Film size={20}/>} label="Усі фільми"/>
                             <AdminNavLink to="/admin/genres" icon={<Tag size={20}/>} label="Жанри"/>
                             <AdminNavLink to="/admin/tags" icon={<Hash size={20}/>} label="Теги"/>
+                            <AdminNavLink to="/admin/languages" icon={<Globe size={20}/>} label="Мови"/>
                         </div>
                     </div>
 
