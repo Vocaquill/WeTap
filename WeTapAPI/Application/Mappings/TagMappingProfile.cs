@@ -1,16 +1,16 @@
 using Application.Models.Tag;
-using AutoMapper;
+using Riok.Mapperly.Abstractions;
 using Domain.Entities.Tag;
 
 namespace Application.Mappings;
 
-public class TagMappingProfile : Profile
+[Mapper]
+public partial class TagMappingProfile
 {
-    public TagMappingProfile()
-    {
-        CreateMap<TagEntity, TagItemModel>();
-        CreateMap<TagCreateModel, TagEntity>();
-        CreateMap<TagUpdateModel, TagEntity>();
-        CreateMap<TagSeedModel, TagEntity>();
-    }
+    public partial TagItemModel MapToItemModel(TagEntity entity);
+    public partial TagEntity MapToEntity(TagCreateModel model);
+    public partial void MapToEntity(TagUpdateModel model, TagEntity entity);
+    public partial TagEntity MapToEntity(TagSeedModel model);
+    
+    public partial IQueryable<TagItemModel> ProjectToItemModel(IQueryable<TagEntity> query);
 }

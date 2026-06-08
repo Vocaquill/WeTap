@@ -1,8 +1,7 @@
 using Application.Constants;
 using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.Comments;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain;
 using Domain.Entities.Comments;
 using MediatR;
@@ -12,7 +11,7 @@ namespace Application.Features.Comments.Commands.CreateComment;
 
 public class CreateCommentCommandHandler(
     AppDbContext context,
-    IMapper mapper,
+    CommentMappingProfile mapper,
     ICurrentUserService currentUser)
     : IRequestHandler<CreateCommentCommand, CommentsItemModal>
 {
@@ -53,10 +52,9 @@ public class CreateCommentCommandHandler(
         context.Comments.Add(comment);
         await context.SaveChangesAsync(cancellationToken);
 
-        return await context
-            .Comments.AsNoTracking()
-            .Where(x => x.Id == comment.Id)
-            .ProjectTo<CommentsItemModal>(mapper.ConfigurationProvider)
+        return await mapper.ProjectToItemModel(
+            context.Comments.AsNoTracking()
+                .Where(x => x.Id == comment.Id))
             .FirstAsync(cancellationToken);
     }
 }

@@ -1,6 +1,5 @@
 using Application.Interfaces;
 using Application.Models.Genre;
-using AutoMapper;
 using Domain;
 using Domain.Entities.Genre;
 using MediatR;

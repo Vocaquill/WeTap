@@ -1,6 +1,6 @@
 using Application.Interfaces;
 using Application.Models.Genre;
-using AutoMapper;
+using Application.Mappings;
 using Domain.Entities.Genre;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ namespace Application.Features.Genres.Queries.GetByGenre;
 
 public class GetByGenreHandler(
     IGenericRepository<GenreEntity, long> repo,
-    IMapper mapper
+    GenreMappingProfile genreMapper
 ) : IRequestHandler<GetByGenreQuery, GenreItemModel?>
 {
     public async Task<GenreItemModel?> Handle(GetByGenreQuery request, CancellationToken cancellationToken)
@@ -32,6 +32,6 @@ public class GetByGenreHandler(
         if(entity == null)
             throw new KeyNotFoundException("Жанр не знайдено");
 
-        return entity == null ? null : mapper.Map<GenreItemModel>(entity);
+        return entity == null ? null : genreMapper.MapToItemModel(entity);
     }
 }

@@ -1,33 +1,33 @@
-﻿using Application.Models.Account;
+using Application.Models.Account;
 using Application.Models.User;
-using AutoMapper;
 using Domain.Entities.Identity;
+using Riok.Mapperly.Abstractions;
 
 namespace Application.Mappings;
 
-public class UserMapping: Profile
+[Mapper]
+public partial class UserMapping
 {
-    public UserMapping()
-    {
-        CreateMap<UserEntity, UserItemModel>()
-            .ForMember(dest => dest.IsLoginGoogle, opt => opt.MapFrom(src => src.UserLogins!.Any(l => l.LoginProvider == "Google")))
-            .ForMember(dest => dest.IsLoginPassword, opt => opt.MapFrom(src => !string.IsNullOrEmpty(src.PasswordHash)))
-            .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.UserRoles!.Select(ur => ur.Role.Name).ToList()))
-            .ForMember(dest => dest.LoginTypes, opt => opt.Ignore());
+    [MapperIgnoreTarget(nameof(UserItemModel.IsLoginGoogle))]
+    [MapperIgnoreTarget(nameof(UserItemModel.IsLoginPassword))]
+    [MapperIgnoreTarget(nameof(UserItemModel.Roles))]
+    [MapperIgnoreTarget(nameof(UserItemModel.LoginTypes))]
+    public partial UserItemModel MapToItemModel(UserEntity entity);
 
-        CreateMap<AccountRegisterModel, UserEntity>()
-            .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.Email))
-            .ForMember(x => x.Image, opt => opt.Ignore());
+    [MapProperty(nameof(AccountRegisterModel.Email), nameof(UserEntity.UserName))]
+    [MapperIgnoreTarget(nameof(UserEntity.Image))]
+    public partial UserEntity MapToEntity(AccountRegisterModel model);
 
-        CreateMap<AccountGoogleAccountModel, UserEntity>()
-            .ForMember(x => x.Image, opt => opt.Ignore())
-            .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.Email));
+    [MapProperty(nameof(AccountGoogleAccountModel.Email), nameof(UserEntity.UserName))]
+    [MapperIgnoreTarget(nameof(UserEntity.Image))]
+    public partial UserEntity MapToEntity(AccountGoogleAccountModel model);
 
-        CreateMap<UserSeedModel, UserEntity>()
-            .ForMember(opt => opt.UserName, opt => opt.MapFrom(x => x.Email))
-            .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.ImagePath));
+    [MapProperty(nameof(UserSeedModel.Email), nameof(UserEntity.UserName))]
+    [MapProperty(nameof(UserSeedModel.ImagePath), nameof(UserEntity.Image))]
+    public partial UserEntity MapToEntity(UserSeedModel model);
 
-        CreateMap<UserEditModel, UserEntity>()
-            .ForMember(dest => dest.Image, opt => opt.Ignore());
-    }
+    [MapperIgnoreTarget(nameof(UserEntity.Image))]
+    public partial void MapToEntity(UserEditModel model, UserEntity entity);
+
+    public partial IQueryable<UserItemModel> ProjectToItemModel(IQueryable<UserEntity> query);
 }

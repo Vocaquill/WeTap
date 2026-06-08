@@ -1,13 +1,12 @@
+using Application.Mappings;
 using Application.Models.Comments;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Comments.Queries.GetCommentsReplies;
 
-public class GetCommentRepliesQueryHandler(AppDbContext context, IMapper mapper)
+public class GetCommentRepliesQueryHandler(AppDbContext context, CommentMappingProfile mapper)
     : IRequestHandler<GetCommentRepliesQuery, List<CommentsItemModal>>
 {
     public async Task<List<CommentsItemModal>> Handle(
@@ -15,11 +14,10 @@ public class GetCommentRepliesQueryHandler(AppDbContext context, IMapper mapper)
         CancellationToken cancellationToken
     )
     {
-        return await context
-            .Comments.AsNoTracking()
-            .Where(x => x.ParentId == request.ParentId && !x.IsDeleted)
-            .OrderBy(x => x.DateCreated)
-            .ProjectTo<CommentsItemModal>(mapper.ConfigurationProvider)
+        return await mapper.ProjectToItemModel(
+            context.Comments.AsNoTracking()
+                .Where(x => x.ParentId == request.ParentId && !x.IsDeleted)
+                .OrderBy(x => x.DateCreated))
             .ToListAsync(cancellationToken);
     }
 }

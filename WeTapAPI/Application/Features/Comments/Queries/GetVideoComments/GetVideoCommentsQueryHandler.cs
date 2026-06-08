@@ -1,8 +1,7 @@
 using Application.Constants;
 using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.Comments;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,7 @@ namespace Application.Features.Comments.Queries.GetVideoComments;
 
 public class GetVideoCommentsQueryHandler(
     AppDbContext context,
-    IMapper mapper,
+    CommentMappingProfile mapper,
     ICurrentUserService currentUser)
     : IRequestHandler<GetVideoCommentsQuery, List<CommentsItemModal>>
 {
@@ -28,11 +27,10 @@ public class GetVideoCommentsQueryHandler(
         if (!videoExists)
             throw new Exception("Відео не знайдено");
 
-        return await context
-            .Comments.AsNoTracking()
-            .Where(x => x.VideoId == request.VideoId && x.ParentId == null && !x.IsDeleted)
-            .OrderByDescending(x => x.DateCreated)
-            .ProjectTo<CommentsItemModal>(mapper.ConfigurationProvider)
+        return await mapper.ProjectToItemModel(
+            context.Comments.AsNoTracking()
+                .Where(x => x.VideoId == request.VideoId && x.ParentId == null && !x.IsDeleted)
+                .OrderByDescending(x => x.DateCreated))
             .ToListAsync(cancellationToken);
     }
 }

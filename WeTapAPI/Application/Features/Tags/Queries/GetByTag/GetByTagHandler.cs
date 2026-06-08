@@ -1,6 +1,6 @@
 using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.Tag;
-using AutoMapper;
 using Domain.Entities.Tag;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ namespace Application.Features.Tags.Queries.GetByTag;
 
 public class GetByTagHandler(
     IGenericRepository<TagEntity, long> repo,
-    IMapper mapper
+    TagMappingProfile mapper
 ) : IRequestHandler<GetByTagQuery, TagItemModel?>
 {
     public async Task<TagItemModel?> Handle(GetByTagQuery request, CancellationToken cancellationToken)
@@ -32,6 +32,6 @@ public class GetByTagHandler(
         if (entity == null)
             throw new KeyNotFoundException("Тег не знайдено");
 
-        return entity == null ? null : mapper.Map<TagItemModel>(entity);
+        return entity == null ? null : mapper.MapToItemModel(entity);
     }
 }

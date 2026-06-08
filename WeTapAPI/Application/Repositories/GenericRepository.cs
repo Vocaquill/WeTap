@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using Application.Interfaces;
@@ -7,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Repositories;
 
-public class GenericRepository<TEntity, TKey>(AppDbContext context, IMapper mapper, IImageService? imageService) :
+public class GenericRepository<TEntity, TKey>(AppDbContext context, IImageService? imageService) :
     IGenericRepository<TEntity, TKey>
     where TEntity : class, IEntity<TKey>, new()
 {

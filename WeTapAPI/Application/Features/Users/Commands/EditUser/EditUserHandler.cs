@@ -1,6 +1,6 @@
 using Application.Interfaces;
+using Application.Mappings;
 using Application.Services;
-using AutoMapper;
 using Domain;
 using Domain.Entities.Identity;
 using MediatR;
@@ -11,7 +11,7 @@ namespace Application.Features.Users.Commands.EditUser;
 
 public class EditUserHandler(UserManager<UserEntity> userManager,
     AppDbContext context,
-    IMapper mapper,
+    UserMapping mapper,
     IImageService imageService,
     IJwtTokenService tokenService) : IRequestHandler<EditUserCommand, string>
 {
@@ -24,7 +24,7 @@ public class EditUserHandler(UserManager<UserEntity> userManager,
         if (userLogins != null && userLogins.LoginProvider == "Google" && existing!.Email != request.Model.Email)
             throw new InvalidOperationException("Cannot edit email for Google login user");
 
-        existing = mapper.Map(request.Model, existing);
+        mapper.MapToEntity(request.Model, existing);
 
         if (request.Model.Image != null)
         {

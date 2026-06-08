@@ -1,15 +1,14 @@
-﻿using Application.Features.Users.Queries.GetUsers;
 using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.User;
-using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Users.Queries.GetUserById;
 
-public class GetUserByIdQueryHandler(AppDbContext context, 
-    IMapper mapper,
+public class GetUserByIdQueryHandler(AppDbContext context,
+    UserMapping mapper,
     IUserService userService) : IRequestHandler<GetUserByIdQuery, UserItemModel>
 {
     public async Task<UserItemModel> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
@@ -18,7 +17,7 @@ public class GetUserByIdQueryHandler(AppDbContext context,
         if (user == null)
             return null;
 
-        var adminUser = mapper.Map<UserItemModel>(user);
+        var adminUser = mapper.MapToItemModel(user);
 
         await userService.LoadLoginsAndRolesAsync(new List<UserItemModel> { adminUser });
 

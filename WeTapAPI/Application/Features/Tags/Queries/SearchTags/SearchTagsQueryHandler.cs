@@ -1,8 +1,7 @@
 using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.Search;
 using Application.Models.Tag;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain.Entities.Tag;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,7 @@ namespace Application.Features.Tags.Queries.SearchTags;
 
 public class SearchTagsQueryHandler(
         IGenericRepository<TagEntity, long> repo,
-        IMapper mapper
+        TagMappingProfile mapper
     )
     : IRequestHandler<SearchTagsQuery, SearchResult<TagItemModel>>
 {
@@ -34,10 +33,10 @@ public class SearchTagsQueryHandler(
 
         query = query.OrderByDescending(x => x.Id);
 
-        var items = await query
-            .Skip((currentPage - 1) * itemsPerPage)
-            .Take(itemsPerPage)
-            .ProjectTo<TagItemModel>(mapper.ConfigurationProvider)
+        var items = await mapper.ProjectToItemModel(
+                query
+                    .Skip((currentPage - 1) * itemsPerPage)
+                    .Take(itemsPerPage))
             .ToListAsync();
 
         return new SearchResult<TagItemModel>

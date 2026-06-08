@@ -1,8 +1,7 @@
 using Application.Interfaces;
 using Application.Models.Language;
 using Application.Models.Search;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using Application.Mappings;
 using Domain.Entities.Language;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,7 @@ namespace Application.Features.Languages.Queries.SearchLanguages;
 
 public class SearchLanguagesHandler(
     IGenericRepository<VideoLanguageEntity, long> repo,
-    IMapper mapper
+    LanguageMappingProfile languageMapper
 ) : IRequestHandler<SearchLanguagesQuery, SearchResult<LanguageItemModel>>
 {
     public async Task<SearchResult<LanguageItemModel>> Handle(SearchLanguagesQuery request, CancellationToken cancellationToken)
@@ -33,10 +32,11 @@ public class SearchLanguagesHandler(
 
         query = query.OrderBy(x => x.Name);
 
-        var items = await query
+        var pagedQuery = query
             .Skip((currentPage - 1) * itemsPerPage)
-            .Take(itemsPerPage)
-            .ProjectTo<LanguageItemModel>(mapper.ConfigurationProvider)
+            .Take(itemsPerPage);
+
+        var items = await languageMapper.ProjectToItemModel(pagedQuery)
             .ToListAsync(cancellationToken);
 
         return new SearchResult<LanguageItemModel>

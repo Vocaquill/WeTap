@@ -1,12 +1,12 @@
 using Application.Interfaces;
 using Application.Models.Genre;
-using AutoMapper;
+using Application.Mappings;
 using Domain.Entities.Genre;
 using MediatR;
 
 namespace Application.Features.Genres.Queries.GetGenres;
 
-public class GetGenresQueryHandler(IGenericRepository<GenreEntity, long> repo, IMapper mapper)
+public class GetGenresQueryHandler(IGenericRepository<GenreEntity, long> repo, GenreMappingProfile genreMapper)
     : IRequestHandler<GetGenresQuery, IEnumerable<GenreItemModel>>
 {
     public async Task<IEnumerable<GenreItemModel>> Handle(
@@ -16,6 +16,6 @@ public class GetGenresQueryHandler(IGenericRepository<GenreEntity, long> repo, I
     {
         var genres = await repo.ListAllAsync();
 
-        return mapper.Map<IEnumerable<GenreItemModel>>(genres);
+        return genres.Select(genreMapper.MapToItemModel);
     }
 }

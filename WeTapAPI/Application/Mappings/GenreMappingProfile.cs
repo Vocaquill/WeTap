@@ -1,18 +1,21 @@
 using Application.Models.Genre;
-using AutoMapper;
+using Riok.Mapperly.Abstractions;
 using Domain.Entities.Genre;
 
 namespace Application.Mappings;
 
-public class GenreMappingProfile : Profile
+[Mapper]
+public partial class GenreMappingProfile
 {
-    public GenreMappingProfile()
-    {
-        CreateMap<GenreEntity, GenreItemModel>();
-        CreateMap<GenreSeedModel, GenreEntity>();
-        CreateMap<GenreUpdateModel, GenreEntity>()
-            .ForMember(x => x.Image, opt => opt.Ignore());
-        CreateMap<GenreCreateModel, GenreEntity>()
-            .ForMember(x => x.Image, opt => opt.Ignore());
-    }
+    public partial GenreItemModel MapToItemModel(GenreEntity entity);
+    
+    public partial GenreEntity MapToEntity(GenreSeedModel model);
+    
+    [MapperIgnoreTarget(nameof(GenreEntity.Image))]
+    public partial void MapToEntity(GenreUpdateModel model, GenreEntity entity);
+    
+    [MapperIgnoreTarget(nameof(GenreEntity.Image))]
+    public partial GenreEntity MapToEntity(GenreCreateModel model);
+    
+    public partial IQueryable<GenreItemModel> ProjectToItemModel(IQueryable<GenreEntity> query);
 }

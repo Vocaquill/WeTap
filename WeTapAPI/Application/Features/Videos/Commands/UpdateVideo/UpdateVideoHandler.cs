@@ -1,5 +1,5 @@
 using Application.Models.VideoProcessing;
-using AutoMapper;
+using Application.Mappings;
 using Domain.Entities.Video;
 using Hangfire;
 using MediatR;
@@ -11,7 +11,7 @@ namespace Application.Features.Videos.Commands.UpdateVideo;
 
 public class UpdateVideoHandler(
     IGenericRepository<VideoEntity, long> repo,
-    IMapper mapper,
+    VideoMappingProfile mapper,
     IImageService imageService,
     IVideoFileService videoFileService,
     IBackgroundJobClient backgroundJobClient,
@@ -32,7 +32,7 @@ public class UpdateVideoHandler(
         if (entity!.ChannelId != currentUserId)
             throw new Exception("Ви не є власником цього відео");
 
-        mapper.Map(model, entity);
+        mapper.MapToEntity(model, entity);
 
         entity.VideoGenres.Clear();
         foreach (var genreId in model.GenreIds.Distinct())

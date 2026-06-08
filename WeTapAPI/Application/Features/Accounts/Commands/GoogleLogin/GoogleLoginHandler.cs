@@ -1,6 +1,6 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.Account;
-using AutoMapper;
 using Domain.Entities.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +12,7 @@ namespace Application.Features.Accounts.Commands.GoogleLogin;
 
 public class GoogleLoginHandler(UserManager<UserEntity> userManager,
     IJwtTokenService tokenService,
-    IMapper mapper,
+    UserMapping mapper,
     IImageService imageService, 
     IConfiguration configuration) : IRequestHandler<GoogleLoginCommand, string>
 {
@@ -47,7 +47,7 @@ public class GoogleLoginHandler(UserManager<UserEntity> userManager,
         }
         else
         {
-            var user = mapper.Map<UserEntity>(googleUser);
+            var user = mapper.MapToEntity(googleUser);
 
             if (!String.IsNullOrEmpty(googleUser.Picture))
             {

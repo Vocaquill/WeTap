@@ -65,11 +65,13 @@ public static class DependencyInjection
             cfg.RegisterServicesFromAssembly(typeof(GetGenresQuery).Assembly);
         });
 
-        // AutoMapper
         services.AddSingleton<Application.Mappings.ChannelMappingProfile>();
-        services.AddAutoMapper(cfg => {
-            cfg.AddMaps(typeof(GetGenresQuery).Assembly);
-        });
+        services.AddSingleton<Application.Mappings.LanguageMappingProfile>();
+        services.AddSingleton<Application.Mappings.GenreMappingProfile>();
+        services.AddSingleton<Application.Mappings.TagMappingProfile>();
+        services.AddSingleton<Application.Mappings.CommentMappingProfile>();
+        services.AddSingleton<Application.Mappings.UserMapping>();
+        services.AddSingleton<Application.Mappings.VideoMappingProfile>();
 
         // Quartz
         services.AddQuartz(q =>

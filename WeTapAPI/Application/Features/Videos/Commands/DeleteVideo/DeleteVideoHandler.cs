@@ -1,6 +1,5 @@
 using Application.Interfaces;
 using Application.Models.Video;
-using AutoMapper;
 using Domain.Entities.Video;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

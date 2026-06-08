@@ -1,8 +1,7 @@
 using Application.Interfaces;
 using Application.Models.Genre;
 using Application.Models.Search;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using Application.Mappings;
 using Domain.Entities.Genre;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,7 @@ namespace Application.Features.Genres.Queries.SearchGenres;
 
 public class SearchGenresQueryHandler(
         IGenericRepository<GenreEntity, long> repo,
-        IMapper mapper
+        GenreMappingProfile genreMapper
     )
     : IRequestHandler<SearchGenresQuery, SearchResult<GenreItemModel>>
 {
@@ -21,7 +20,8 @@ public class SearchGenresQueryHandler(
         int itemsPerPage = request.Model.ItemPerPage < 1 ? 10 : request.Model.ItemPerPage;
 
         IQueryable<GenreEntity> query = repo.AsQurable()
-            .AsNoTracking();
+            .AsNoTracking()
+            .Where(x => !x.IsDeleted);
 
         if (!string.IsNullOrWhiteSpace(request.Model.Q))
         {
@@ -44,7 +44,7 @@ public class SearchGenresQueryHandler(
             query = query.Where(x => x.Slug.ToLower().Contains(slug));
         }
 
-        int totalCount = await query.CountAsync();
+        int totalCount = await query.CountAsync(cancellationToken);
         int totalPages = (int)Math.Ceiling(totalCount / (double)itemsPerPage);
 
         if (request.Model.SortBy == "name")
@@ -60,11 +60,12 @@ public class SearchGenresQueryHandler(
             query = query.OrderByDescending(x => x.Id);
         }
 
-        var items = await query
+        var pagedQuery = query
             .Skip((currentPage - 1) * itemsPerPage)
-            .Take(itemsPerPage)
-            .ProjectTo<GenreItemModel>(mapper.ConfigurationProvider)
-            .ToListAsync();
+            .Take(itemsPerPage);
+
+        var items = await genreMapper.ProjectToItemModel(pagedQuery)
+            .ToListAsync(cancellationToken);
 
         return new SearchResult<GenreItemModel>
         {
