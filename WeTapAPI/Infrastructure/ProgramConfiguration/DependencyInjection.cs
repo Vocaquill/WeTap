@@ -66,6 +66,7 @@ public static class DependencyInjection
         });
 
         // AutoMapper
+        services.AddSingleton<Application.Mappings.ChannelMappingProfile>();
         services.AddAutoMapper(cfg => {
             cfg.AddMaps(typeof(GetGenresQuery).Assembly);
         });

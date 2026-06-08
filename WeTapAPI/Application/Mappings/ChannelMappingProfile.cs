@@ -1,23 +1,27 @@
 using Application.Models.Channel;
-using AutoMapper;
 using Domain.Entities.Channel;
+using Riok.Mapperly.Abstractions;
 
 namespace Application.Mappings;
 
-public class ChannelMappingProfile : Profile
+[Mapper]
+public partial class ChannelMappingProfile
 {
-    public ChannelMappingProfile()
-    {
-        CreateMap<ChannelEntity, ChannelItemModel>()
-            .ForMember(dest => dest.SubscriberCount, opt => opt.MapFrom(x => x.Subscribers!.Count(x => x.User!.IsDeleted == false)));
+    [MapProperty(nameof(ChannelEntity.Subscribers), nameof(ChannelItemModel.SubscriberCount))]
+    public partial ChannelItemModel MapToItemModel(ChannelEntity entity);
 
-        CreateMap<ChannelCreateModel, ChannelEntity>()
-            .ForMember(dest => dest.AvatarImage, opt => opt.Ignore())
-            .ForMember(dest => dest.BannerImage, opt => opt.Ignore());
+    private int MapSubscribersToCount(ICollection<ChannelSubscriberEntity>? subscribers) 
+        => subscribers?.Count(x => x.User!.IsDeleted == false) ?? 0;
 
-        CreateMap<ChannelUpdateModel, ChannelEntity>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore())
-            .ForMember(dest => dest.AvatarImage, opt => opt.Ignore())
-            .ForMember(dest => dest.BannerImage, opt => opt.Ignore());
-    }
+    [MapperIgnoreTarget(nameof(ChannelEntity.AvatarImage))]
+    [MapperIgnoreTarget(nameof(ChannelEntity.BannerImage))]
+    public partial ChannelEntity MapToEntity(ChannelCreateModel model);
+
+    [MapperIgnoreTarget(nameof(ChannelEntity.Id))]
+    [MapperIgnoreTarget(nameof(ChannelEntity.AvatarImage))]
+    [MapperIgnoreTarget(nameof(ChannelEntity.BannerImage))]
+    public partial void MapToEntity(ChannelUpdateModel model, ChannelEntity entity);
+    
+    [MapProperty(nameof(ChannelEntity.Subscribers), nameof(ChannelItemModel.SubscriberCount))]
+    public partial IQueryable<ChannelItemModel> ProjectToItemModel(IQueryable<ChannelEntity> query);
 }
