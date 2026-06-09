@@ -1,17 +1,25 @@
 using Application.Models.Video;
+using Application.Models.Genre;
+using Application.Models.Tag;
 using Domain.Entities.Video;
+using Domain.Entities.Genre;
+using Domain.Entities.Tag;
 using Riok.Mapperly.Abstractions;
 using System.Globalization;
 
 namespace Application.Mappings;
 
 [Mapper]
-public partial class VideoMappingProfile
+public partial class VideoMappingProfile(
+    GenreMappingProfile genreMapper,
+    TagMappingProfile tagMapper)
 {
     private readonly ChannelMappingProfile _channelMapper = new();
-    private readonly GenreMappingProfile _genreMapper = new();
-    private readonly TagMappingProfile _tagMapper = new();
+    private readonly GenreMappingProfile _genreMapper = genreMapper;
+    private readonly TagMappingProfile _tagMapper = tagMapper;
 
+
+    [UserMapping(Default = true)]
     [MapProperty(nameof(VideoEntity.Channel), nameof(VideoItemModel.Channel))]
     [MapperIgnoreTarget(nameof(VideoItemModel.DateCreated))]
     [MapperIgnoreTarget(nameof(VideoItemModel.Genres))]
@@ -56,48 +64,29 @@ public partial class VideoMappingProfile
 
     public partial IQueryable<VideoPrivacyItemModel> ProjectToItemModel(IQueryable<VideoPrivacyEntity> query);
 
-    public IQueryable<VideoItemModel> ProjectToItemModel(IQueryable<VideoEntity> query)
-    {
-        var ukraineCulture = new CultureInfo("uk-UA");
-        return query.Select(x => new VideoItemModel
-        {
-            Id = x.Id,
-            Title = x.Title,
-            Slug = x.Slug,
-            Description = x.Description,
-            Video = x.Video,
-            Image = x.Image,
-            ViewCount = x.ViewCount,
-            DateCreated = x.DateCreated.ToString("d MMM yyyy'р.'", ukraineCulture),
-            Channel = new Application.Models.Channel.ChannelItemModel
-            {
-                Id = x.Channel.Id,
-                Name = x.Channel.Name,
-                NickName = x.Channel.NickName,
-                Description = x.Channel.Description,
-                AvatarImage = x.Channel.AvatarImage,
-                BannerImage = x.Channel.BannerImage,
-                SubscriberCount = x.Channel.Subscribers.Count(s => !s.User.IsDeleted)
-            },
-            Privacy = new VideoPrivacyItemModel
-            {
-                Id = x.Privacy.Id,
-                Name = x.Privacy.Name
-            },
-            LikesCount = x.VideoReactions.Count(r => r.IsLike),
-            DislikesCount = x.VideoReactions.Count(r => !r.IsLike),
-            Genres = x.VideoGenres.Select(mg => new Application.Models.Genre.GenreItemModel
-            {
-                Id = mg.Genre.Id,
-                Name = mg.Genre.Name,
-                Slug = mg.Genre.Slug,
-                Image = mg.Genre.Image
-            }).ToList(),
-            Tags = x.VideoTags.Select(mt => new Application.Models.Tag.TagItemModel
-            {
-                Id = mt.Tag.Id,
-                Name = mt.Tag.Name
-            }).ToList()
-        });
-    }
+    [MapProperty(nameof(VideoEntity.VideoReactions), nameof(VideoItemModel.LikesCount))]
+    [MapProperty(nameof(VideoEntity.VideoReactions), nameof(VideoItemModel.DislikesCount))]
+    [MapProperty(nameof(VideoEntity.VideoGenres), nameof(VideoItemModel.Genres))]
+    [MapProperty(nameof(VideoEntity.VideoTags), nameof(VideoItemModel.Tags))]
+    public partial IQueryable<VideoItemModel> ProjectToItemModel(IQueryable<VideoEntity> query);
+
+    private static int MapLikesCount(ICollection<VideoReactionEntity> reactions)
+        => reactions.Count(r => r.IsLike);
+
+    private static int MapDislikesCount(ICollection<VideoReactionEntity> reactions)
+        => reactions.Count(r => !r.IsLike);
+
+    private static string MapDateCreated(DateTime dateCreated)
+        => dateCreated.ToString("d MMM yyyy'р.'", new CultureInfo("uk-UA"));
+
+    [MapProperty($"{nameof(VideoGenreEntity.Genre)}.{nameof(GenreEntity.Id)}", nameof(GenreItemModel.Id))]
+    [MapProperty($"{nameof(VideoGenreEntity.Genre)}.{nameof(GenreEntity.Name)}", nameof(GenreItemModel.Name))]
+    [MapProperty($"{nameof(VideoGenreEntity.Genre)}.{nameof(GenreEntity.Slug)}", nameof(GenreItemModel.Slug))]
+    [MapProperty($"{nameof(VideoGenreEntity.Genre)}.{nameof(GenreEntity.Image)}", nameof(GenreItemModel.Image))]
+    private partial GenreItemModel MapGenre(VideoGenreEntity videoGenre);
+
+    [MapProperty($"{nameof(VideoTagEntity.Tag)}.{nameof(TagEntity.Id)}", nameof(TagItemModel.Id))]
+    [MapProperty($"{nameof(VideoTagEntity.Tag)}.{nameof(TagEntity.Name)}", nameof(TagItemModel.Name))]
+    [MapProperty($"{nameof(VideoTagEntity.Tag)}.{nameof(TagEntity.Slug)}", nameof(TagItemModel.Slug))]
+    private partial TagItemModel MapTag(VideoTagEntity videoTag);
 }

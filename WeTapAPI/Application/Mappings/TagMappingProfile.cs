@@ -12,5 +12,8 @@ public partial class TagMappingProfile
     public partial void MapToEntity(TagUpdateModel model, TagEntity entity);
     public partial TagEntity MapToEntity(TagSeedModel model);
     
+    [MapperIgnoreSource(nameof(TagEntity.VideoTags))]
+    [MapperIgnoreSource(nameof(TagEntity.IsDeleted))]
+    [MapperIgnoreSource(nameof(TagEntity.DateCreated))]
     public partial IQueryable<TagItemModel> ProjectToItemModel(IQueryable<TagEntity> query);
 }

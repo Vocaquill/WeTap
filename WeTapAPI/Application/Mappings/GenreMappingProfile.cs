@@ -17,5 +17,8 @@ public partial class GenreMappingProfile
     [MapperIgnoreTarget(nameof(GenreEntity.Image))]
     public partial GenreEntity MapToEntity(GenreCreateModel model);
     
+    [MapperIgnoreSource(nameof(GenreEntity.VideoGenres))]
+    [MapperIgnoreSource(nameof(GenreEntity.IsDeleted))]
+    [MapperIgnoreSource(nameof(GenreEntity.DateCreated))]
     public partial IQueryable<GenreItemModel> ProjectToItemModel(IQueryable<GenreEntity> query);
 }

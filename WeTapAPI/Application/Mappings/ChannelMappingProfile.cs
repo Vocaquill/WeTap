@@ -10,7 +10,7 @@ public partial class ChannelMappingProfile
     [MapProperty(nameof(ChannelEntity.Subscribers), nameof(ChannelItemModel.SubscriberCount))]
     public partial ChannelItemModel MapToItemModel(ChannelEntity entity);
 
-    private int MapSubscribersToCount(ICollection<ChannelSubscriberEntity>? subscribers) 
+    private static int MapSubscribersToCount(ICollection<ChannelSubscriberEntity>? subscribers)
         => subscribers?.Count(x => x.User!.IsDeleted == false) ?? 0;
 
     [MapperIgnoreTarget(nameof(ChannelEntity.AvatarImage))]
