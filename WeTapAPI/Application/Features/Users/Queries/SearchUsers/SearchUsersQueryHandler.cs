@@ -26,15 +26,15 @@ public class SearchUsersQueryHandler(UserManager<UserEntity> userManager,
                 u.LastName.ToLower().Contains(nameFilter));
         }
 
-        if (request.SearchModel.StartDate != null)
-        {
-            query = query.Where(u => u.DateCreated >= request.SearchModel.StartDate);
-        }
+        //if (request.SearchModel.StartDate != null)
+        //{
+        //    query = query.Where(u => u.DateCreated >= request.SearchModel.StartDate);
+        //}
 
-        if (request.SearchModel.EndDate != null)
-        {
-            query = query.Where(u => u.DateCreated <= request.SearchModel.EndDate);
-        }
+        //if (request.SearchModel.EndDate != null)
+        //{
+        //    query = query.Where(u => u.DateCreated <= request.SearchModel.EndDate);
+        //}
 
         if (request.SearchModel.Roles != null && request.SearchModel.Roles.Any())
         {
