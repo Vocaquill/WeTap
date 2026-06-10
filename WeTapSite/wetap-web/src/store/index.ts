@@ -10,6 +10,7 @@ import { apiChannels } from "../services/api/apiChannels.ts";
 
 
 import authReducer from "./slices/authSlice.ts";
+import {apiUsers} from "../services/api/apiUsers.ts";
 
 export const store = configureStore({
     reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
         [apiVideos.reducerPath]: apiVideos.reducer,
         [apiGenres.reducerPath]: apiGenres.reducer,
         [apiAccount.reducerPath]: apiAccount.reducer,
+        [apiUsers.reducerPath]: apiUsers.reducer,
         [apiTags.reducerPath]: apiTags.reducer,
         [apiLanguages.reducerPath]: apiLanguages.reducer,
         [apiChannels.reducerPath]: apiChannels.reducer,
@@ -27,6 +29,7 @@ export const store = configureStore({
             apiVideos.middleware,
             apiGenres.middleware,
             apiAccount.middleware,
+            apiUsers.middleware,
             apiTags.middleware,
             apiLanguages.middleware,
             apiChannels.middleware

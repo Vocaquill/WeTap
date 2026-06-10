@@ -7,6 +7,7 @@ import type { IGenreSearchRequest as IGenreSearch } from '../../types/Genre/IGen
 import { FilterBar } from '../../components/ui/common/FilterBar';
 import { GenericTable } from '../../components/ui/common/GenericTable';
 import {useSearchGenresQuery} from "../../services/api/apiGenres.ts";
+import {useSearchUsersQuery} from "../../services/api/apiUsers.ts";
 
 function UsersPage() {
     const [searchParams, setSearchParams] = useState<IGenreSearch>({
@@ -18,8 +19,11 @@ function UsersPage() {
     });
 
     const [isAddOpen, setIsAddOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [selectedGenre, setSelectedGenre] = useState<IGenreItem | null>(null);
 
-    const { data, isFetching, isError } = useSearchGenresQuery(searchParams);
+    const { data, isFetching, isError } = useSearchUsersQuery(searchParams);
 
     const handleSearchChange = <K extends keyof IGenreSearch>(key: K, value: IGenreSearch[K]) => {
         setSearchParams((prev: IGenreSearch) => ({ ...prev, [key]: value, page: 1 }));
@@ -36,6 +40,18 @@ function UsersPage() {
         });
     };
 
+    const handleSortChange = (key: string | undefined) => {
+        // setSearchParams((prev: IGenreSearch) => ({
+        //     ...prev,
+        //     sortBy: key as GenreSortField | undefined,
+        //     page: 1,
+        // }));
+    };
+
+    const test=()=>{
+        console.log("Test");
+        console.log(data?.items);
+    }
 
     return (
         <div className="p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -51,7 +67,8 @@ function UsersPage() {
                     size="md"
                     className="rounded-2xl"
                     icon={<Plus size={20} strokeWidth={3}/>}
-                    onClick={() => setIsAddOpen(true)}
+                    // onClick={() => setIsAddOpen(true)}
+                    onClick = {test}
                 >
                     ДОДАТИ КОРИСТУВАЧА
                 </Button>
@@ -63,22 +80,22 @@ function UsersPage() {
                 onReset={resetFilters}
             />
 
-            {/*<GenericTable*/}
-            {/*    data={data?.items}*/}
-            {/*    isFetching={isFetching}*/}
-            {/*    isError={isError}*/}
-            {/*    emptyMessage="Користувачів не знайдено"*/}
-            {/*    sortBy={searchParams.sortBy}*/}
-            {/*    onSortChange={handleSortChange}*/}
-            {/*    onEdit={(genre) => {*/}
-            {/*        setSelectedGenre(genre);*/}
-            {/*        setIsEditOpen(true);*/}
-            {/*    }}*/}
-            {/*    onDelete={(genre) => {*/}
-            {/*        setSelectedGenre(genre);*/}
-            {/*        setIsDeleteOpen(true);*/}
-            {/*    }}*/}
-            {/*/>*/}
+            <GenericTable
+                data={data?.items}
+                isFetching={isFetching}
+                isError={isError}
+                emptyMessage="Користувачів не знайдено"
+                sortBy={searchParams.sortBy}
+                onSortChange={handleSortChange}
+                onEdit={(genre) => {
+                    setSelectedGenre(genre);
+                    setIsEditOpen(true);
+                }}
+                onDelete={(genre) => {
+                    setSelectedGenre(genre);
+                    setIsDeleteOpen(true);
+                }}
+            />
 
             {/*{data && (*/}
             {/*    <div className="p-6 border border-zinc-800 bg-zinc-950/20 rounded-[2rem] shadow-xl">*/}
