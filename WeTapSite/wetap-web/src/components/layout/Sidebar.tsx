@@ -149,7 +149,7 @@ function Sidebar({ isOpen }: SidebarProps) {
               </p>
             )}
             <Link
-              to="/admin/genres"
+              to="/admin"
               className={`flex items-center p-3 rounded-xl transition-all ${location.pathname.startsWith('/admin')
                 ? 'bg-zinc-900 text-white border border-zinc-800'
                 : 'text-zinc-500 hover:bg-rose-500/5 hover:text-rose-400'
