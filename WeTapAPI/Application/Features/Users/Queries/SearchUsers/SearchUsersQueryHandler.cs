@@ -26,6 +26,28 @@ public class SearchUsersQueryHandler(UserManager<UserEntity> userManager,
                 u.LastName.ToLower().Contains(nameFilter));
         }
 
+        if (request.SearchModel.Roles != null && request.SearchModel.Roles.Any())
+        {
+            query = query.Where(u => u.UserRoles.Any(ur => request.SearchModel.Roles.Contains(ur.Role.Name)));
+        }
+
+        if (request.SearchModel.SortBy == "email")
+        {
+            query = query.OrderBy(x => x.Email);
+        }
+        else if (request.SearchModel.SortBy == "firstName")
+        {
+            query = query.OrderBy(x => x.FirstName.ToLower());
+        }
+        else if (request.SearchModel.SortBy == "lastName")
+        {
+            query = query.OrderBy(x => x.LastName.ToLower());
+        }
+        else
+        {
+            query = query.OrderBy(x => x.Id);
+        }
+
         //if (request.SearchModel.StartDate != null)
         //{
         //    query = query.Where(u => u.DateCreated >= request.SearchModel.StartDate);
@@ -36,11 +58,6 @@ public class SearchUsersQueryHandler(UserManager<UserEntity> userManager,
         //    query = query.Where(u => u.DateCreated <= request.SearchModel.EndDate);
         //}
 
-        if (request.SearchModel.Roles != null && request.SearchModel.Roles.Any())
-        {
-            query = query.Where(u => u.UserRoles.Any(ur => request.SearchModel.Roles.Contains(ur.Role.Name)));
-        }
-
         var totalCount = await query.CountAsync();
 
         var safeItemsPerPage = request.SearchModel.ItemPerPage < 1 ? 10 : request.SearchModel.ItemPerPage;
@@ -48,7 +65,6 @@ public class SearchUsersQueryHandler(UserManager<UserEntity> userManager,
         var safePage = Math.Min(Math.Max(1, request.SearchModel.Page), Math.Max(1, totalPages));
 
         var users = await query
-            .OrderBy(u => u.Id)
             .Skip((safePage - 1) * safeItemsPerPage)
             .Take(safeItemsPerPage)
             .ProjectTo<UserItemModel>(mapper.ConfigurationProvider)
