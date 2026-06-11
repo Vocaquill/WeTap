@@ -35,7 +35,7 @@ public class UpdateVideoHandler(
         mapper.MapToEntity(model, entity);
 
         entity.VideoGenres.Clear();
-        foreach (var genreId in model.GenreIds.Distinct())
+        foreach (var genreId in model.GenreIds?.Distinct() ?? [])
         {
             entity.VideoGenres.Add(new VideoGenreEntity { GenreId = genreId });
         }

@@ -25,8 +25,11 @@ public partial class VideoMappingProfile
     public partial VideoPrivacyItemModel MapToItemModel(VideoPrivacyEntity entity);
     public partial IQueryable<VideoPrivacyItemModel> ProjectToItemModel(IQueryable<VideoPrivacyEntity> query);
 
-    protected partial GenreItemModel MapVideoGenreToGenreModel(VideoGenreEntity videoGenre);
-    protected partial TagItemModel MapVideoTagToTagModel(VideoTagEntity videoTag);
+    private GenreItemModel MapVideoGenreToGenreModel(VideoGenreEntity videoGenre)
+        => new GenreMappingProfile().MapToItemModel(videoGenre.Genre);
+
+    private TagItemModel MapVideoTagToTagModel(VideoTagEntity videoTag)
+        => new TagMappingProfile().MapToItemModel(videoTag.Tag);
 
     [MapperIgnoreTarget(nameof(VideoEntity.Image))]
     [MapperIgnoreTarget(nameof(VideoEntity.Video))]

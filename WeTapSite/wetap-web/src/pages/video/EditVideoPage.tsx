@@ -76,11 +76,12 @@ export default function EditVideoPage() {
                     title: video.title,
                     slug: video.slug,
                     description: video.description,
-                    genreIds: video.genres.map(g => g.id),
-                    tagIds: video.tags.map(t => t.id),
+                    genreIds: video.genres?.map(g => g.id) ?? [],
+                    tagIds: video.tags?.map(t => t.id) ?? [],
                     languageId: video.language?.id ?? 1,
                     privacyId: video.privacy?.id ?? 1,
                 }}
+                initialTags={video.tags ?? []}
             />
         </>
     );
