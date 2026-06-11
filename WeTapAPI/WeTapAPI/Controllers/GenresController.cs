@@ -9,6 +9,7 @@ using Application.Features.Genres.Commands.DeleteGenre;
 using Application.Models.Search;
 using Application.Features.Genres.Queries.SearchGenres;
 using Application.Features.Genres.Queries.GetByGenre;
+using Application.Constants;
 
 namespace WeTapAPI.Controllers;
 
@@ -17,7 +18,7 @@ namespace WeTapAPI.Controllers;
 public class GenresController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
-    //[Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult<GenreItemModel>> Create([FromForm] GenreCreateModel model)
     {
         var command = new CreateGenreCommand(model);
@@ -45,7 +46,7 @@ public class GenresController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut]
-    //[Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult<GenreItemModel>> Update([FromForm] GenreUpdateModel model)
     {
         var command = new UpdateGenreCommand(model);
@@ -54,7 +55,7 @@ public class GenresController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete]
-    //[Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult> Delete([FromBody] GenreDeleteModel model)
     {
         var command = new DeleteGenreCommand(model);
