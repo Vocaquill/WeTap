@@ -6,13 +6,23 @@ import type { IGenreSearchRequest as IGenreSearch } from '../../types/Genre/IGen
 
 import { FilterBar } from '../../components/ui/common/FilterBar';
 import { GenericTable } from '../../components/ui/common/GenericTable';
-import {useSearchGenresQuery} from "../../services/api/apiGenres.ts";
 import {useSearchUsersQuery} from "../../services/api/apiUsers.ts";
+import type {IBaseSearch} from "../../types/Additional/IBaseSearch.ts";
+import type {UserSortField} from "../../env";
+
+export interface IUserSearchTest extends IBaseSearch {
+    id?: number;
+    firstName?: string;
+    lastName?: string;
+    image?: string;
+    roles?: string[];
+    sortBy?: UserSortField;
+}
 
 function UsersPage() {
-    const [searchParams, setSearchParams] = useState<IGenreSearch>({
-        name: '',
-        slug: '',
+    const [searchParams, setSearchParams] = useState<IUserSearchTest>({
+        firstName: '',
+        lastName: '',
         page: 1,
         itemPerPage: 10,
         sortBy: undefined,
@@ -41,9 +51,9 @@ function UsersPage() {
     };
 
     const handleSortChange = (key: string | undefined) => {
-        // setSearchParams((prev: IGenreSearch) => ({
+        // setSearchParams((prev: IUserSearchTest) => ({
         //     ...prev,
-        //     sortBy: key as GenreSortField | undefined,
+        //     sortBy: key as UserSortField | undefined,
         //     page: 1,
         // }));
     };
