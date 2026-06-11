@@ -113,19 +113,17 @@ async function stopHubConnection(connection: signalR.HubConnection) {
 }
 
 function authHeaders(): HeadersInit {
-    const headers: HeadersInit = {};
-    const token = localStorage.getItem("token");
-    if (token) {
-        headers.Authorization = `Bearer ${token}`;
-    }
-    return headers;
+    return {};
 }
 
 async function fetchProgressFromApi(trackingId: string): Promise<IVideoProcessingResponse | null> {
     const url = buildApiUrl(`Videos/progress/${encodeURIComponent(trackingId)}`);
     logVideoProgress("Poll: GET progress", { url, trackingId });
 
-    const response = await fetch(url, { headers: authHeaders() });
+    const response = await fetch(url, { 
+        headers: authHeaders(),
+        credentials: 'include'
+    });
 
     logVideoProgress("Poll: GET progress response", {
         status: response.status,
@@ -154,7 +152,10 @@ async function fetchVideoReadyBySlug(videoSlug: string): Promise<boolean> {
     const url = buildApiUrl(`Videos/get-by?slug=${encodeURIComponent(videoSlug)}`);
     logVideoProgress("Poll: GET video by slug", { url, videoSlug });
 
-    const response = await fetch(url, { headers: authHeaders() });
+    const response = await fetch(url, { 
+        headers: authHeaders(),
+        credentials: 'include'
+    });
 
     logVideoProgress("Poll: GET video by slug response", {
         status: response.status,

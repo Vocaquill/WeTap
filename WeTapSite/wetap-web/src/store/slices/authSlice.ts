@@ -40,11 +40,8 @@ const getUserFromToken = (token: string): User | null => {
     }
 };
 
-const token = localStorage.getItem('token');
-const initialUser = token ? getUserFromToken(token) : null;
-
 const initialState: AuthState = {
-    user: initialUser,
+    user: null,
 };
 
 const authSlice = createSlice({
@@ -55,12 +52,10 @@ const authSlice = createSlice({
             const user = getUserFromToken(action.payload);
             if (user) {
                 state.user = user;
-                localStorage.setItem('token', action.payload);
             }
         },
         logout: (state) => {
             state.user = null;
-            localStorage.removeItem('token');
         },
     },
 });

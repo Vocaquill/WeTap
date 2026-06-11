@@ -27,8 +27,37 @@ import AdminLayout from './layouts/AdminLayout.tsx';
 import RequireLogin from './components/auth/RequireLogin';
 import RequireAuthor from './components/auth/RequireAuthor';
 import RequireAdmin from './components/auth/RequireAdmin';
+import { useEffect, useState } from 'react';
+import { useRefreshTokenMutation } from './services/api/apiAccount';
 
 function App() {
+    const [refreshToken] = useRefreshTokenMutation();
+    const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                await refreshToken().unwrap();
+            } catch (e) {
+                // Ignore auth failures on startup
+            } finally {
+                setIsCheckingAuth(false);
+            }
+        };
+        checkAuth();
+    }, [refreshToken]);
+
+    if (isCheckingAuth) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-[#121213] text-zinc-100 font-sans">
+                <div className="relative">
+                    <div className="w-12 h-12 border-4 border-zinc-800 rounded-full" />
+                    <div className="absolute top-0 left-0 w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin" />
+                </div>
+            </div>
+        );
+    }
+
     return (
         <Routes>
             <Route element={<AppLayout />}>
