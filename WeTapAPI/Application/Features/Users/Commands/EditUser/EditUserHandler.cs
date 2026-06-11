@@ -13,7 +13,9 @@ public class EditUserHandler(UserManager<UserEntity> userManager,
     AppDbContext context,
     UserMapping mapper,
     IImageService imageService,
-    IJwtTokenService tokenService) : IRequestHandler<EditUserCommand, string>
+    IJwtTokenService tokenService,
+    ICookieAuthService cookieAuthService,
+    ICurrentUserService currentUserService) : IRequestHandler<EditUserCommand, string>
 {
     public async Task<string> Handle(EditUserCommand request, CancellationToken cancellationToken)
     {
@@ -42,6 +44,13 @@ public class EditUserHandler(UserManager<UserEntity> userManager,
         await userManager.UpdateAsync(existing);
 
         var jwtToken = await tokenService.CreateTokenAsync(existing);
+
+        var currentUserId = currentUserService.TryGetCurrentUserId();
+        if (currentUserId.HasValue && currentUserId.Value == existing.Id)
+        {
+            cookieAuthService.SetAuthCookie(jwtToken);
+        }
+
         return jwtToken;
     }
 }

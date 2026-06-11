@@ -14,7 +14,8 @@ public class GoogleLoginHandler(UserManager<UserEntity> userManager,
     IJwtTokenService tokenService,
     UserMapping mapper,
     IImageService imageService, 
-    IConfiguration configuration) : IRequestHandler<GoogleLoginCommand, string>
+    IConfiguration configuration,
+    ICookieAuthService cookieAuthService) : IRequestHandler<GoogleLoginCommand, string>
 {
     public async Task<string> Handle(GoogleLoginCommand request, CancellationToken cancellationToken)
     {
@@ -43,6 +44,7 @@ public class GoogleLoginHandler(UserManager<UserEntity> userManager,
                 await userManager.AddLoginAsync(existingUser, new UserLoginInfo("Google", googleUser.GoogleId, "Google"));
             }
             var jwtToken = await tokenService.CreateTokenAsync(existingUser);
+            cookieAuthService.SetAuthCookie(jwtToken);
             return jwtToken;
         }
         else
@@ -66,6 +68,7 @@ public class GoogleLoginHandler(UserManager<UserEntity> userManager,
 
                 await userManager.AddToRoleAsync(user, "User");
                 var jwtToken = await tokenService.CreateTokenAsync(user);
+                cookieAuthService.SetAuthCookie(jwtToken);
                 return jwtToken;
             }
         }

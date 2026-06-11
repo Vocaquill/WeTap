@@ -10,7 +10,8 @@ namespace Application.Features.Accounts.Commands.Register;
 public class RegisterHandler(UserManager<UserEntity> userManager,
     IJwtTokenService jwtTokenService,
     UserMapping mapper,
-    IImageService imageService) : IRequestHandler<RegisterCommand, string>
+    IImageService imageService,
+    ICookieAuthService cookieAuthService) : IRequestHandler<RegisterCommand, string>
 {
     public async Task<string> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
@@ -22,7 +23,9 @@ public class RegisterHandler(UserManager<UserEntity> userManager,
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(user, Roles.User);
-            return await jwtTokenService.CreateTokenAsync(user);
+            var token = await jwtTokenService.CreateTokenAsync(user);
+            cookieAuthService.SetAuthCookie(token);
+            return token;
         }
         throw new Exception("Registration failed");
     }
