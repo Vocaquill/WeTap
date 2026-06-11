@@ -15,9 +15,9 @@ public class SearchUsersQueryHandler(UserManager<UserEntity> userManager,
     {
         var query = userManager.Users.Where(x => !x.IsDeleted).AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(request.SearchModel.Name))
+        if (!string.IsNullOrWhiteSpace(request.SearchModel.Query))
         {
-            string nameFilter = request.SearchModel.Name.Trim().ToLower().Normalize();
+            string nameFilter = request.SearchModel.Query.Trim().ToLower().Normalize();
 
             query = query.Where(u =>
                 (u.FirstName + " " + u.LastName).ToLower().Contains(nameFilter) ||
@@ -25,20 +25,59 @@ public class SearchUsersQueryHandler(UserManager<UserEntity> userManager,
                 u.LastName.ToLower().Contains(nameFilter));
         }
 
-        if (request.SearchModel.StartDate != null)
+        if (!string.IsNullOrWhiteSpace(request.SearchModel.FirstName))
         {
-            query = query.Where(u => u.DateCreated >= request.SearchModel.StartDate);
+            string firstNameFilter = request.SearchModel.FirstName?.Trim().ToLower().Normalize();
+
+            if (!string.IsNullOrWhiteSpace(firstNameFilter))
+            {
+                query = query.Where(u =>
+                    u.FirstName.ToLower().Contains(firstNameFilter));
+            }
         }
 
-        if (request.SearchModel.EndDate != null)
+        if (!string.IsNullOrWhiteSpace(request.SearchModel.LastName))
         {
-            query = query.Where(u => u.DateCreated <= request.SearchModel.EndDate);
+            string lastNameFilter = request.SearchModel.LastName?.Trim().ToLower().Normalize();
+
+            if (!string.IsNullOrWhiteSpace(lastNameFilter))
+            {
+                query = query.Where(u =>
+                    u.LastName.ToLower().Contains(lastNameFilter));
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.SearchModel.Email))
+        {
+            string emailFilter = request.SearchModel.Email.Trim().ToLower().Normalize();
+
+            query = query.Where(u =>
+                u.Email.ToLower().Contains(emailFilter));
         }
 
         if (request.SearchModel.Roles != null && request.SearchModel.Roles.Any())
         {
             query = query.Where(u => u.UserRoles.Any(ur => request.SearchModel.Roles.Contains(ur.Role.Name)));
         }
+
+
+        if (request.SearchModel.SortBy == "email")
+        {
+            query = query.OrderBy(x => x.Email);
+        }
+        else if (request.SearchModel.SortBy == "firstName")
+        {
+            query = query.OrderBy(x => x.FirstName);
+        }
+        else if (request.SearchModel.SortBy == "lastName")
+        {
+            query = query.OrderBy(x => x.LastName);
+        }
+        else
+        {
+            query = query.OrderBy(x => x.Id);
+        }
+
 
         var totalCount = await query.CountAsync();
 
@@ -48,7 +87,6 @@ public class SearchUsersQueryHandler(UserManager<UserEntity> userManager,
 
         var users = await mapper.ProjectToItemModel(
             query
-                .OrderBy(u => u.Id)
                 .Skip((safePage - 1) * safeItemsPerPage)
                 .Take(safeItemsPerPage))
             .ToListAsync();

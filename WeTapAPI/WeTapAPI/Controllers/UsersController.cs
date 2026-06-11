@@ -4,11 +4,13 @@ using Application.Features.Users.Commands.EditUser;
 using Application.Features.Users.Queries.GetUserById;
 using Application.Features.Users.Queries.GetUsers;
 using Application.Features.Users.Queries.SearchUsers;
+using Application.Models.Genre;
 using Application.Models.Search;
 using Application.Models.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi;
 
 namespace WeTapAPI.Controllers;
 
@@ -26,8 +28,8 @@ public class UsersController(IMediator mediator) : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> SearchUsers([FromBody] UserSearchModel model)
+    [HttpGet]
+    public async Task<ActionResult<SearchResult<UserItemModel>>> SearchUsers([FromQuery] UserSearchModel model)
     {
         var query = new SearchUsersQuery(model);
         var result = await mediator.Send(query);

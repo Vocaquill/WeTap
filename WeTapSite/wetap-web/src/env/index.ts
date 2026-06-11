@@ -23,6 +23,9 @@ export type VideoQuality = typeof VIDEO_QUALITIES[number];
 export const GENRE_SORT_FIELDS = ['name', 'slug'] as const;
 export type GenreSortField = typeof GENRE_SORT_FIELDS[number];
 
+export const USER_SORT_FIELDS = ['email', 'firstName', 'lastName'] as const;
+export type UserSortField = typeof USER_SORT_FIELDS[number];
+
 const APP_ENV = {
     API_BASE_URL,
     SIGNALR_HUB_URL,
