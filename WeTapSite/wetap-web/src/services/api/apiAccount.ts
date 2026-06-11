@@ -103,7 +103,9 @@ export const apiAccount = createApi({
                     url: 'register',
                     method: 'POST',
                     body: formData};
-            }
+            },
+            onQueryStarted: async (_arg, { dispatch, queryFulfilled }) =>
+                handleAuthSuccess(queryFulfilled, dispatch)
         }),
         deleteAccount: builder.mutation<void, void>({
             query: () => {

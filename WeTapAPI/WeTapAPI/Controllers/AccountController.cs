@@ -28,9 +28,9 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
         try
         {
             var command = new LoginCommand(model);
-            await mediator.Send(command);
+            var token = await mediator.Send(command);
 
-            return Ok();
+            return Ok(new { token });
         }
         catch (Exception ex)
         {
@@ -46,9 +46,9 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
         try
         {
             var command = new RegisterCommand(model);
-            await mediator.Send(command);
+            var token = await mediator.Send(command);
 
-            return Ok();
+            return Ok(new { token });
         }
         catch (Exception ex)
         {
@@ -61,9 +61,9 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
     public async Task<IActionResult> GoogleLogin([FromBody] AccountGoogleLoginRequestModel model)
     {
         var command = new GoogleLoginCommand(model);
-        await mediator.Send(command);
+        var token = await mediator.Send(command);
 
-        return Ok();
+        return Ok(new { token });
     }
 
     [HttpPost]
@@ -123,9 +123,9 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
         model.Id = userId;
 
         var command = new EditUserCommand(model);
-        await mediator.Send(command);
+        var token = await mediator.Send(command);
 
-        return Ok();
+        return Ok(new { token });
     }
 
     [Authorize]
@@ -136,9 +136,9 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
         {
             var userId = currentUserService.GetCurrentUserId();
             var command = new RefreshTokenCommand(userId);
-            await mediator.Send(command);
+            var token = await mediator.Send(command);
 
-            return Ok();
+            return Ok(new { token });
         }
         catch (Exception ex)
         {
