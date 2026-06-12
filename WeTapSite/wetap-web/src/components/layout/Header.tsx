@@ -1,16 +1,11 @@
-import {useState, useEffect} from 'react';
-import {useNavigate, useLocation} from 'react-router-dom';
-import {Menu, X, Bell, Search, Mic, Settings, Plus, Users, ChevronDown} from 'lucide-react';
-import {useAppSelector} from "../../store/index";
-import {APP_ENV} from "../../env/index";
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Bell, Search, Mic, Settings, Plus, Users, ChevronDown } from 'lucide-react';
+import { useAppSelector } from "../../store/index";
+import { APP_ENV } from "../../env/index";
 import { Button } from '../form/Button';
 
-interface HeaderProps {
-  isOpen: boolean;
-  toggleSidebar: () => void;
-}
-
-function Header({ isOpen, toggleSidebar }: HeaderProps) {
+function Header() {
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,18 +23,10 @@ function Header({ isOpen, toggleSidebar }: HeaderProps) {
 
   return (
     <header
-      className={`h-14 sticky top-0 z-[40] px-4 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-[#121213]/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'
-        }`}
+      className={`h-14 sticky top-0 z-[40] px-4 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-[#121213]/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'}`}
     >
-      {/* ЛІВА ЧАСТИНА: Бургер-кнопка */}
-      <div className="flex items-center gap-3">
-        <Button
-          variant="icon"
-          onClick={toggleSidebar}
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </Button>
-
+      {/* ЛІВА ЧАСТИНА: Відображає заголовок пошуку, якщо це не головна сторінка */}
+      <div className="flex items-center min-w-[50px]">
         {!isHomePage && (
           <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400 hidden md:block">
             Результати <span className="text-rose-500">пошуку</span>
@@ -47,7 +34,7 @@ function Header({ isOpen, toggleSidebar }: HeaderProps) {
         )}
       </div>
 
-      {/* ЦЕНТРАЛЬНА ЧАСТИНА: Більший рядок пошуку, але щільніший відступ */}
+      {/* ЦЕНТРАЛЬНА ЧАСТИНА: Рядок пошуку */}
       <div className="flex-1 max-w-xl mx-4 flex items-center gap-2">
         <div className="relative w-full">
           <input
@@ -65,34 +52,34 @@ function Header({ isOpen, toggleSidebar }: HeaderProps) {
         </Button>
       </div>
 
-      {/* ПРАВА ЧАСТИНА: Більші іконки (22px) та компактна кнопка профілю */}
-      <div className="flex items-center gap-2">
-        <Button variant="icon" className="relative">
-          <Bell size={22} />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-[#121213]"></span>
-        </Button>
+      {/* ПРАВА ЧАСТИНА: Панель користувача та додаткові кнопки */}
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1 bg-[#1c1c1e] p-0.5 rounded-full border border-zinc-800/40">
+          <Button variant="icon" className="relative hover:bg-zinc-800/50 rounded-full p-2 text-zinc-300 hover:text-white transition-all">
+            <Bell size={20} />
+            <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-rose-500 rounded-full"></span>
+          </Button>
 
-        <Button variant="icon">
-          <Settings size={22} />
-        </Button>
+          <Button variant="icon" className="hover:bg-zinc-800/50 rounded-full p-2 text-zinc-300 hover:text-white transition-all">
+            <Settings size={20} />
+          </Button>
 
-        <Button variant="icon" onClick={() => navigate('/video/add')}>
-          <Plus size={22} />
-        </Button>
+          <Button variant="icon" onClick={() => navigate('/video/add')} className="hover:bg-zinc-800/50 rounded-full p-2 text-zinc-300 hover:text-white transition-all">
+            <Plus size={20} />
+          </Button>
+        </div>
 
-        <span className="w-px h-6 bg-zinc-800 mx-1" />
-
-        <Button variant="icon" className="mr-1">
-          <Users size={22} />
+        <Button variant="icon" className="flex items-center justify-center bg-[#1c1c1e] p-3 rounded-full border border-zinc-800/40 text-zinc-300 hover:text-white hover:bg-zinc-800 transition-all">
+          <Users size={20} />
         </Button>
 
         {user ? (
           <Button
             variant="profile"
             onClick={() => navigate('/account')}
-            className="group"
+            className="group flex items-center gap-2 bg-[#1c1c1e] hover:bg-zinc-800 py-1.5 px-3 rounded-full border border-zinc-800 transition-all"
           >
-            <div className="w-7 h-7 rounded-lg overflow-hidden border border-rose-500/30">
+            <div className="w-6 h-6 rounded-md overflow-hidden border border-rose-500/30">
               <img
                 src={user.image ? `${APP_ENV.IMAGES_50_URL}${user.image}` : '/images/user/default.png'}
                 alt={user.name}
@@ -105,12 +92,19 @@ function Header({ isOpen, toggleSidebar }: HeaderProps) {
             <ChevronDown size={14} className="text-zinc-500" />
           </Button>
         ) : (
-          <Button
-            variant="gradient"
+          <button
             onClick={() => navigate('/login')}
+            className="relative text-xs font-extrabold tracking-wider uppercase px-5 py-2.5 rounded-full text-white overflow-hidden transition-all duration-300 active:scale-95 group shadow-[0_0_15px_rgba(236,72,153,0.15)] hover:shadow-[0_0_25px_rgba(236,72,153,0.35)]"
+            style={{
+              background: '#121213',
+              padding: '3px',
+              backgroundImage: 'linear-gradient(to right, #f43f5e, #ec4899, #a855f7)',
+            }}
           >
-            Sign In
-          </Button>
+            <span className="block px-5 py-2 rounded-full bg-[#121213] text-zinc-200 group-hover:text-white group-hover:bg-[#121213]/80 transition-all duration-300">
+              Sign In
+            </span>
+          </button>
         )}
       </div>
     </header>
