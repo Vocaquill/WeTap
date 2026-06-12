@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Plus} from 'lucide-react';
 import {Button} from '../../components/form/Button';
-import type {GenreSortField} from '../../env';
+import {GENRE_SORT_FIELDS, type GenreSortField} from '../../env';
 
 import AddGenreModal from '../../components/modal/genre/AddGenreModal';
 import EditGenreModal from '../../components/modal/genre/EditGenreModal';
@@ -106,6 +106,7 @@ function GenresPage() {
                 isError={isError}
                 emptyMessage="Жанрів не знайдено"
                 sortBy={searchParams.sortBy}
+                sortableFields={[...GENRE_SORT_FIELDS]}
                 onSortChange={handleSortChange}
                 onEdit={(genre) => {
                     setSelectedGenre(genre);

@@ -8,7 +8,7 @@ import { FilterBar } from '../../components/ui/common/FilterBar';
 import { GenericTable } from '../../components/ui/common/GenericTable';
 import {useSearchUsersQuery} from "../../services/api/apiUsers.ts";
 import type {IBaseSearch} from "../../types/Additional/IBaseSearch.ts";
-import type {UserSortField} from "../../env";
+import { USER_SORT_FIELDS, type UserSortField} from "../../env";
 
 export interface IUserSearchTest extends IBaseSearch {
     id?: number;
@@ -96,6 +96,7 @@ function UsersPage() {
                 isError={isError}
                 emptyMessage="Користувачів не знайдено"
                 sortBy={searchParams.sortBy}
+                sortableFields={[...USER_SORT_FIELDS]}
                 onSortChange={handleSortChange}
                 onEdit={(genre) => {
                     setSelectedGenre(genre);
