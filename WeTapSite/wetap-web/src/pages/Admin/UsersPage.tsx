@@ -7,8 +7,6 @@ import AddGenreModal from '../../components/modal/AddGenreModal';
 import EditGenreModal from '../../components/modal/EditGenreModal';
 import DeleteModal from "../../components/ui/common/DeleteModal.tsx";
 
-import {useDeleteGenreMutation} from '../../services/api/apiGenres';
-
 import {Pagination} from '../../components/ui/common/Pagination';
 
 import {FilterBar} from '../../components/ui/common/FilterBar';
@@ -16,7 +14,7 @@ import {GenericTable} from '../../components/ui/common/GenericTable';
 import {SelectField} from '../../components/form/SelectField';
 import type {IUserSearchRequest} from "../../types/User/IUserSearchRequest.ts";
 import type {IUserItemResponse} from "../../types/User/IUserItemResponse.ts";
-import {useSearchUsersQuery} from "../../services/api/apiUsers.ts";
+import {useDeleteUserMutation, useSearchUsersQuery} from "../../services/api/apiUsers.ts";
 
 const perPageOptions = [
     {id: 5, name: '5'},
@@ -41,7 +39,7 @@ function UsersPage() {
     const [selectedGenre, setSelectedGenre] = useState<IUserItemResponse | null>(null);
 
     const {data, isFetching, isError} = useSearchUsersQuery(searchParams);
-    const [deleteGenre, {isLoading: isDeleting}] = useDeleteGenreMutation();
+    const [deleteGenre, {isLoading: isDeleting}] = useDeleteUserMutation();
 
     const handleSearchChange = <K extends keyof IUserSearchRequest>(key: K, value: IUserSearchRequest[K]) => {
         setSearchParams((prev: IUserSearchRequest) => ({...prev, [key]: value, page: 1}));
@@ -157,8 +155,8 @@ function UsersPage() {
 
             <DeleteModal
                 isOpen={isDeleteOpen}
-                title="Видалити жанр?"
-                description={`Ви впевнені, що хочете видалити "${selectedGenre?.lastName + " " + selectedGenre?.firstName}"? Всі фільми втратять цей зв'язок.`}
+                title="Видалити користувача?"
+                description={`Ви впевнені, що хочете видалити "${selectedGenre?.lastName + " " + selectedGenre?.firstName}"?`}
                 isLoading={isDeleting}
                 onConfirm={handleDelete}
                 onClose={() => {
