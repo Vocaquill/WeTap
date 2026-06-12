@@ -1,7 +1,6 @@
 import {useState, type ChangeEvent, type FormEvent} from 'react';
 import {motion, AnimatePresence} from 'framer-motion';
 import {X} from 'lucide-react';
-import {slugify} from '../../utils/slugify';
 
 import {useFormServerErrors} from "../../hooks/useFormServerErrors";
 import {InputField} from '../form/InputField';
@@ -24,6 +23,8 @@ function EditUserModal({isOpen, onClose, user}: Props) {
 
     const [form, setForm] = useState<IUserEditRequest | null>(null);
 
+    const availableRoles = ["Admin", "User", "Author"];
+
     if (!isOpen) {
         if (form) setForm(null); // Скидаємо стейт, коли модалка закрита
         return null;
@@ -45,17 +46,44 @@ function EditUserModal({isOpen, onClose, user}: Props) {
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
-        setForm(prev => prev ? ({
-            ...prev,
-            [name]: value,
-            ...(name === 'name' ? {slug: slugify(value)} : {})
-        }) : null);
+
+        setForm(prev => prev ? {
+                ...prev, [name]: value,
+            } : null
+        );
+
         clearError(name);
     };
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         setForm(prev => prev ? ({...prev, image: e.target.files?.[0]}) : null);
         clearError('image');
+    };
+
+    const handleRoleChange = (role: string) => {
+        setForm(prev => {
+            if (!prev) return prev;
+
+            const roles = prev.roles ?? [];
+
+            if (roles.includes(role)) {
+                if (roles.length === 1) {
+                    return prev;
+                }
+
+                return {
+                    ...prev,
+                    roles: roles.filter(r => r !== role)
+                };
+            }
+
+            return {
+                ...prev,
+                roles: [...roles, role]
+            };
+        });
+
+        clearError("roles");
     };
 
     const handleSubmit = async (e: FormEvent) => {
@@ -92,6 +120,36 @@ function EditUserModal({isOpen, onClose, user}: Props) {
                                     error={errors.firstName}/>
                         <InputField label="Прізвище" name="lastName" value={form.lastName} onChange={handleChange}
                                     error={errors.lastName}/>
+
+                        <div>
+                            <label className="font-semibold text-zinc-400 mb-1">
+                                Ролі
+                            </label>
+
+                            <div className="flex flex-wrap gap-3">
+                                {availableRoles.map(role => (
+                                    <label
+                                        key={role}
+                                        className="flex items-center gap-2 text-zinc-200 cursor-pointer"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={form.roles?.includes(role) ?? false}
+                                            onChange={() => handleRoleChange(role)}
+                                            className="w-4 h-4"
+                                        />
+                                        {role}
+                                    </label>
+                                ))}
+                            </div>
+
+                            {errors.roles && (
+                                <p className="mt-1 text-sm text-red-500">
+                                    {errors.roles}
+                                </p>
+                            )}
+                        </div>
+
                         <FileUploadField label="Змінити фото" name="image" onChange={handleFileChange} accept="image/*"
                                          error={errors.image}/>
 
