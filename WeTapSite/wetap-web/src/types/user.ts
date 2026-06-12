@@ -34,10 +34,6 @@ export interface IUserHasPasswordResponse {
     hasPassword: boolean;
 }
 
-export interface IUserDelete {
-    id: number;
-}
-
 export interface ServerError {
     status: number;
     data: {
