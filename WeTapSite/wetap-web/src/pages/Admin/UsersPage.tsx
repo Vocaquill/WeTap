@@ -4,7 +4,6 @@ import {Button} from '../../components/form/Button';
 import type {UserSortField} from '../../env';
 
 import AddGenreModal from '../../components/modal/AddGenreModal';
-import EditGenreModal from '../../components/modal/EditGenreModal';
 import DeleteModal from "../../components/ui/common/DeleteModal.tsx";
 
 import {Pagination} from '../../components/ui/common/Pagination';
@@ -144,15 +143,6 @@ function UsersPage() {
             )}
 
             <AddGenreModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)}/>
-
-            {/*<EditGenreModal*/}
-            {/*    isOpen={isEditOpen}*/}
-            {/*    genre={selectedUser}*/}
-            {/*    onClose={() => {*/}
-            {/*        setIsEditOpen(false);*/}
-            {/*        setSelectedUser(null);*/}
-            {/*    }}*/}
-            {/*/>*/}
 
             <EditUserModal
                 isOpen={isEditOpen}
