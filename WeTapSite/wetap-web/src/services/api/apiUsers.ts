@@ -25,7 +25,7 @@ export const apiUsers = createApi({
         editUser: builder.mutation<{ token: string }, IUserEditRequest>({
             query: (body) => ({
                 url: "EditUser",
-                method: "POST",
+                method: "PUT",
                 body: serialize(body),
             }),
             invalidatesTags: ["Users"]
@@ -44,5 +44,6 @@ export const apiUsers = createApi({
 
 export const {
     useSearchUsersQuery,
-    useDeleteUserMutation
+    useDeleteUserMutation,
+    useEditUserMutation,
 } = apiUsers;

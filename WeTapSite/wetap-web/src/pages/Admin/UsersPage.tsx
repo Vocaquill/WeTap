@@ -15,6 +15,7 @@ import {SelectField} from '../../components/form/SelectField';
 import type {IUserSearchRequest} from "../../types/User/IUserSearchRequest.ts";
 import type {IUserItemResponse} from "../../types/User/IUserItemResponse.ts";
 import {useDeleteUserMutation, useSearchUsersQuery} from "../../services/api/apiUsers.ts";
+import EditUserModal from "../../components/modal/EditUserModal.tsx";
 
 const perPageOptions = [
     {id: 5, name: '5'},
@@ -36,10 +37,10 @@ function UsersPage() {
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-    const [selectedGenre, setSelectedGenre] = useState<IUserItemResponse | null>(null);
+    const [selectedUser, setSelectedUser] = useState<IUserItemResponse | null>(null);
 
     const {data, isFetching, isError} = useSearchUsersQuery(searchParams);
-    const [deleteGenre, {isLoading: isDeleting}] = useDeleteUserMutation();
+    const [deleteUser, {isLoading: isDeleting}] = useDeleteUserMutation();
 
     const handleSearchChange = <K extends keyof IUserSearchRequest>(key: K, value: IUserSearchRequest[K]) => {
         setSearchParams((prev: IUserSearchRequest) => ({...prev, [key]: value, page: 1}));
@@ -65,11 +66,11 @@ function UsersPage() {
     };
 
     const handleDelete = async () => {
-        if (!selectedGenre) return;
+        if (!selectedUser) return;
         try {
-            await deleteGenre({id: selectedGenre.id}).unwrap();
+            await deleteUser({id: selectedUser.id}).unwrap();
             setIsDeleteOpen(false);
-            setSelectedGenre(null);
+            setSelectedUser(null);
         } catch (e) {
             console.error('Помилка видалення:', e);
         }
@@ -108,12 +109,12 @@ function UsersPage() {
                 emptyMessage="Користувачів не знайдено"
                 sortBy={searchParams.sortBy}
                 onSortChange={handleSortChange}
-                onEdit={(genre) => {
-                    setSelectedGenre(genre);
+                onEdit={(user) => {
+                    setSelectedUser(user);
                     setIsEditOpen(true);
                 }}
-                onDelete={(genre) => {
-                    setSelectedGenre(genre);
+                onDelete={(user) => {
+                    setSelectedUser(user);
                     setIsDeleteOpen(true);
                 }}
             />
@@ -144,24 +145,33 @@ function UsersPage() {
 
             <AddGenreModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)}/>
 
-            <EditGenreModal
+            {/*<EditGenreModal*/}
+            {/*    isOpen={isEditOpen}*/}
+            {/*    genre={selectedUser}*/}
+            {/*    onClose={() => {*/}
+            {/*        setIsEditOpen(false);*/}
+            {/*        setSelectedUser(null);*/}
+            {/*    }}*/}
+            {/*/>*/}
+
+            <EditUserModal
                 isOpen={isEditOpen}
-                genre={selectedGenre}
+                user={selectedUser}
                 onClose={() => {
                     setIsEditOpen(false);
-                    setSelectedGenre(null);
+                    setSelectedUser(null);
                 }}
             />
 
             <DeleteModal
                 isOpen={isDeleteOpen}
                 title="Видалити користувача?"
-                description={`Ви впевнені, що хочете видалити "${selectedGenre?.lastName + " " + selectedGenre?.firstName}"?`}
+                description={`Ви впевнені, що хочете видалити "${selectedUser?.lastName + " " + selectedUser?.firstName}"?`}
                 isLoading={isDeleting}
                 onConfirm={handleDelete}
                 onClose={() => {
                     setIsDeleteOpen(false);
-                    setSelectedGenre(null);
+                    setSelectedUser(null);
                 }}
             />
         </div>
