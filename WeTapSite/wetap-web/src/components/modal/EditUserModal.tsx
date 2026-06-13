@@ -104,7 +104,7 @@ function EditUserModal({isOpen, onClose, user}: Props) {
                             className="absolute inset-0 bg-black/90 backdrop-blur-sm" onClick={onClose}/>
 
                 <motion.div initial={{scale: 0.95}} animate={{scale: 1}}
-                            className="relative z-10 w-full max-w-lg bg-zinc-950 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl">
+                            className="relative z-10 w-full max-w-lg bg-zinc-950 border border-zinc-800 rounded-3xl max-h-[90vh] overflow-y-auto shadow-2xl">
                     <div className="p-6 border-b border-zinc-800 flex justify-between items-center">
                         <div>
                             <h3 className="text-2xl font-black text-white">Редагувати</h3>
