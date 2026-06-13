@@ -5,16 +5,16 @@ import {useAppDispatch, useAppSelector} from "../../store/index";
 import React, {useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {APP_ENV} from "../../env/index";
-import type {IUserEdit} from "../../types/user";
 import {useEditAccountMutation} from "../../services/api/apiAccount";
 import {loginSuccess} from "../../store/slices/authSlice";
-import { InputField } from "../../components/form/InputField";
-import { Button } from "../../components/form/Button";
-import { BackButton } from "../../components/ui/common/BackButton";
+import {InputField} from "../../components/form/InputField";
+import {Button} from "../../components/form/Button";
+import {BackButton} from "../../components/ui/common/BackButton";
+import type {IUserEditRequest} from "../../types/User/IUserEditRequest.ts";
 
 function EditProfilePage() {
     const {user} = useAppSelector(state => state.auth);
-    const [edit, {isLoading }] = useEditAccountMutation()
+    const [edit, {isLoading}] = useEditAccountMutation()
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const navigate = useNavigate();
@@ -40,20 +40,20 @@ function EditProfilePage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const value: IUserEdit = {
+        const value: IUserEditRequest = {
+            id: 0,
             firstName: formData.firstName,
             lastName: formData.lastName,
             email: formData.email
         }
-        if(imageFile){
+        if (imageFile) {
             value.image = imageFile;
         }
-        try{
+        try {
             const res = await edit(value).unwrap();
             dispatch(loginSuccess(res.token));
             navigate('/account');
-        }
-        catch (error) {
+        } catch (error) {
             console.error(error);
         }
     };
@@ -118,7 +118,7 @@ function EditProfilePage() {
                         onChange={(e) =>
                             setFormData({...formData, firstName: e.target.value})
                         }
-                        icon={<User className="text-zinc-600" size={20} />}
+                        icon={<User className="text-zinc-600" size={20}/>}
                         inputClassName="w-full bg-black/40 rounded-2xl py-3.5"
                         labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
                     />
@@ -131,7 +131,7 @@ function EditProfilePage() {
                         onChange={(e) =>
                             setFormData({...formData, lastName: e.target.value})
                         }
-                        icon={<User className="text-zinc-600" size={20} />}
+                        icon={<User className="text-zinc-600" size={20}/>}
                         inputClassName="w-full bg-black/40 rounded-2xl py-3.5"
                         labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
                     />
@@ -145,7 +145,7 @@ function EditProfilePage() {
                         onChange={(e) =>
                             setFormData({...formData, email: e.target.value})
                         }
-                        icon={<Mail className="text-zinc-600" size={20} />}
+                        icon={<Mail className="text-zinc-600" size={20}/>}
                         inputClassName="w-full bg-black/40 rounded-2xl py-3.5"
                         labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
                     />
@@ -155,7 +155,7 @@ function EditProfilePage() {
                         variant="primary"
                         size="xl"
                         fullWidth
-                        iconRight={<ArrowRight />}
+                        iconRight={<ArrowRight/>}
                     >
                         Підтвердити
                     </Button>
