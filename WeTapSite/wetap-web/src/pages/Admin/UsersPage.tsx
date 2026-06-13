@@ -3,15 +3,12 @@ import {Plus} from 'lucide-react';
 import {Button} from '../../components/form/Button';
 import type {UserSortField} from '../../env';
 
-import AddGenreModal from '../../components/modal/AddGenreModal';
-import DeleteModal from "../../components/ui/common/DeleteModal.tsx";
+// import AddGenreModal from '../../components/modal/AddGenreModal';
+import DeleteModal from "../../components/modal/common/DeleteModal.tsx";
 
 import {Pagination} from '../../components/ui/common/Pagination';
 import { FilterBar } from '../../components/ui/common/FilterBar';
 import { GenericTable } from '../../components/ui/common/GenericTable';
-import {useSearchUsersQuery} from "../../services/api/apiUsers.ts";
-import type {IBaseSearch} from "../../types/Additional/IBaseSearch.ts";
-import { USER_SORT_FIELDS, type UserSortField} from "../../env";
 
 import {SelectField} from '../../components/form/SelectField';
 import type {IUserSearchRequest} from "../../types/User/IUserSearchRequest.ts";
