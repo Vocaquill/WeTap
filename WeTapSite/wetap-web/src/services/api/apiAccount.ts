@@ -1,20 +1,21 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
 import {createBaseQuery} from "../../utils/createBaseQuery.ts";
-import type {ILogin, IRegister, IUserEdit, IUserHasPasswordResponse} from "../../types/user.ts";
+import type {ILogin, IRegister, IUserHasPasswordResponse} from "../../types/user.ts";
 import {serialize} from "object-to-formdata";
 import {loginSuccess} from "../../store/slices/authSlice.ts";
 import type {Dispatch} from "@reduxjs/toolkit";
+import type {IUserEditRequest} from "../../types/User/IUserEditRequest.ts";
 
-export  interface  IForgotPasswordRequest {
+export interface IForgotPasswordRequest {
     email: string;
 }
 
-export  interface IValidateTokenRequest {
+export interface IValidateTokenRequest {
     token: string;
     email: string;
 }
 
-export  interface IResetPasswordRequest {
+export interface IResetPasswordRequest {
     newPassword: string;
     token: string;
     email: string;
@@ -30,11 +31,11 @@ export interface IValidateResetToken {
 }
 
 const handleAuthSuccess = async (
-    queryFulfilled: Promise<{ data: {token: string} }>,
+    queryFulfilled: Promise<{ data: { token: string } }>,
     dispatch: Dispatch
 ) => {
     try {
-        const { data } = await queryFulfilled;
+        const {data} = await queryFulfilled;
         if (data?.token) {
             dispatch(loginSuccess(data.token));
         }
@@ -48,22 +49,22 @@ export const apiAccount = createApi({
     baseQuery: createBaseQuery('Account'),
     tagTypes: ['Account', 'AccountPassword'],
     endpoints: (builder) => ({
-        login: builder.mutation<{token: string}, ILogin>({
+        login: builder.mutation<{ token: string }, ILogin>({
             query: (credentials) => ({
                 url: 'login',
                 method: 'POST',
                 body: credentials
             }),
-            onQueryStarted: async (_arg, { dispatch, queryFulfilled }) =>
+            onQueryStarted: async (_arg, {dispatch, queryFulfilled}) =>
                 handleAuthSuccess(queryFulfilled, dispatch)
         }),
-        loginByGoogle: builder.mutation<{token: string}, string>({
+        loginByGoogle: builder.mutation<{ token: string }, string>({
             query: (token) => ({
                 url: 'GoogleLogin',
                 method: 'POST',
                 body: {token}
             }),
-            onQueryStarted: async (_arg, { dispatch, queryFulfilled }) =>
+            onQueryStarted: async (_arg, {dispatch, queryFulfilled}) =>
                 handleAuthSuccess(queryFulfilled, dispatch)
         }),
         forgotPassword: builder.mutation<void, IForgotPasswordRequest>({
@@ -95,11 +96,11 @@ export const apiAccount = createApi({
             }),
             invalidatesTags: ['AccountPassword']
         }),
-        register: builder.mutation<{token: string}, IRegister>({
+        register: builder.mutation<{ token: string }, IRegister>({
             query: (credentials) => {
                 const formData = serialize(credentials);
 
-                return{
+                return {
                     url: 'register',
                     method: 'POST',
                     body: formData};
@@ -109,17 +110,18 @@ export const apiAccount = createApi({
         }),
         deleteAccount: builder.mutation<void, void>({
             query: () => {
-                return{
+                return {
                     url: 'delete',
-                    method: 'DELETE',};
+                    method: 'DELETE',
+                };
             },
             invalidatesTags: ['AccountPassword']
         }),
-        editAccount: builder.mutation<{token : string}, IUserEdit>({
+        editAccount: builder.mutation<{ token: string }, IUserEditRequest>({
             query: (credentials) => {
                 const formData = serialize(credentials);
 
-                return{
+                return {
                     url: 'EditAccount',
                     method: 'PUT',
                     body: formData,
@@ -129,19 +131,19 @@ export const apiAccount = createApi({
         }),
         hasPassword: builder.query<IUserHasPasswordResponse, void>({
             query: () => {
-                return{
+                return {
                     url: 'has-password',
                     method: 'GET'
                 };
             },
             providesTags: ['AccountPassword']
         }),
-        refreshToken: builder.mutation<{token: string}, void>({
+        refreshToken: builder.mutation<{ token: string }, void>({
             query: () => ({
                 url: 'RefreshToken',
                 method: 'POST'
             }),
-            onQueryStarted: async (_arg, { dispatch, queryFulfilled }) =>
+            onQueryStarted: async (_arg, {dispatch, queryFulfilled}) =>
                 handleAuthSuccess(queryFulfilled, dispatch)
         }),
         logout: builder.mutation<void, void>({

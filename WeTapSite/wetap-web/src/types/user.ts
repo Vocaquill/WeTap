@@ -22,20 +22,8 @@ export interface User {
     roles: string[];
 }
 
-export interface IUserEdit {
-    firstName: string;
-    lastName: string;
-    email: string;
-    image?: File;
-    roles?: string[];
-}
-
 export interface IUserHasPasswordResponse {
     hasPassword: boolean;
-}
-
-export interface IUserDelete {
-    id: number;
 }
 
 export interface ServerError {
