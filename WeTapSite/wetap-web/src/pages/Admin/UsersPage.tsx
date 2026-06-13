@@ -3,13 +3,13 @@ import {Plus} from 'lucide-react';
 import {Button} from '../../components/form/Button';
 import type {UserSortField} from '../../env';
 
-import AddGenreModal from '../../components/modal/AddGenreModal';
-import DeleteModal from "../../components/ui/common/DeleteModal.tsx";
+// import AddGenreModal from '../../components/modal/AddGenreModal';
+import DeleteModal from "../../components/modal/common/DeleteModal.tsx";
 
 import {Pagination} from '../../components/ui/common/Pagination';
+import { FilterBar } from '../../components/ui/common/FilterBar';
+import { GenericTable } from '../../components/ui/common/GenericTable';
 
-import {FilterBar} from '../../components/ui/common/FilterBar';
-import {GenericTable} from '../../components/ui/common/GenericTable';
 import {SelectField} from '../../components/form/SelectField';
 import type {IUserSearchRequest} from "../../types/User/IUserSearchRequest.ts";
 import type {IUserItemResponse} from "../../types/User/IUserItemResponse.ts";
@@ -107,6 +107,7 @@ function UsersPage() {
                 isError={isError}
                 emptyMessage="Користувачів не знайдено"
                 sortBy={searchParams.sortBy}
+                sortableFields={[...USER_SORT_FIELDS]}
                 onSortChange={handleSortChange}
                 onEdit={(user) => {
                     setSelectedUser(user);

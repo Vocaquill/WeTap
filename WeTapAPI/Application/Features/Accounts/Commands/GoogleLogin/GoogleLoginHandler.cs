@@ -1,6 +1,6 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.Account;
-using AutoMapper;
 using Domain.Entities.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -12,9 +12,10 @@ namespace Application.Features.Accounts.Commands.GoogleLogin;
 
 public class GoogleLoginHandler(UserManager<UserEntity> userManager,
     IJwtTokenService tokenService,
-    IMapper mapper,
+    UserMapping mapper,
     IImageService imageService, 
-    IConfiguration configuration) : IRequestHandler<GoogleLoginCommand, string>
+    IConfiguration configuration,
+    ICookieAuthService cookieAuthService) : IRequestHandler<GoogleLoginCommand, string>
 {
     public async Task<string> Handle(GoogleLoginCommand request, CancellationToken cancellationToken)
     {
@@ -43,11 +44,12 @@ public class GoogleLoginHandler(UserManager<UserEntity> userManager,
                 await userManager.AddLoginAsync(existingUser, new UserLoginInfo("Google", googleUser.GoogleId, "Google"));
             }
             var jwtToken = await tokenService.CreateTokenAsync(existingUser);
+            cookieAuthService.SetAuthCookie(jwtToken);
             return jwtToken;
         }
         else
         {
-            var user = mapper.Map<UserEntity>(googleUser);
+            var user = mapper.MapToEntity(googleUser);
 
             if (!String.IsNullOrEmpty(googleUser.Picture))
             {
@@ -66,6 +68,7 @@ public class GoogleLoginHandler(UserManager<UserEntity> userManager,
 
                 await userManager.AddToRoleAsync(user, "User");
                 var jwtToken = await tokenService.CreateTokenAsync(user);
+                cookieAuthService.SetAuthCookie(jwtToken);
                 return jwtToken;
             }
         }

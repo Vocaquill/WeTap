@@ -1,9 +1,8 @@
 using Application.Constants;
 using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.Search;
 using Application.Models.Video;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain.Entities.Video;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,7 @@ namespace Application.Features.Videos.Queries.SearchVideos;
 
 public class SearchVideosQueryHandler(
         IGenericRepository<VideoEntity, long> repo,
-        IMapper mapper,
+        VideoMappingProfile mapper,
         ICurrentUserService currentUser
     )
     : IRequestHandler<SearchVideosQuery, SearchResult<VideoItemModel>>
@@ -91,11 +90,11 @@ public class SearchVideosQueryHandler(
             query = query.OrderByDescending(x => x.Id);
         }
 
-        var items = await query
+        var items = await mapper.ProjectToItemModel(
+            query
             .Skip((currentPage - 1) * itemsPerPage)
             .Take(itemsPerPage)
-            .ProjectTo<VideoItemModel>(mapper.ConfigurationProvider)
-            .ToListAsync();
+        ).ToListAsync();
 
         return new SearchResult<VideoItemModel>
         {

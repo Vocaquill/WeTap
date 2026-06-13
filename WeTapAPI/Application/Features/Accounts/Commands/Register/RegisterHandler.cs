@@ -1,6 +1,6 @@
-﻿using Application.Constants;
+using Application.Constants;
 using Application.Interfaces;
-using AutoMapper;
+using Application.Mappings;
 using Domain.Entities.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -9,12 +9,13 @@ namespace Application.Features.Accounts.Commands.Register;
 
 public class RegisterHandler(UserManager<UserEntity> userManager,
     IJwtTokenService jwtTokenService,
-    IMapper mapper,
-    IImageService imageService) : IRequestHandler<RegisterCommand, string>
+    UserMapping mapper,
+    IImageService imageService,
+    ICookieAuthService cookieAuthService) : IRequestHandler<RegisterCommand, string>
 {
     public async Task<string> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var user = mapper.Map<UserEntity>(request.Model);
+        var user = mapper.MapToEntity(request.Model);
 
         user.Image = await imageService.SaveImageAsync(request.Model.ImageFile);
 
@@ -22,7 +23,9 @@ public class RegisterHandler(UserManager<UserEntity> userManager,
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(user, Roles.User);
-            return await jwtTokenService.CreateTokenAsync(user);
+            var token = await jwtTokenService.CreateTokenAsync(user);
+            cookieAuthService.SetAuthCookie(token);
+            return token;
         }
         throw new Exception("Registration failed");
     }

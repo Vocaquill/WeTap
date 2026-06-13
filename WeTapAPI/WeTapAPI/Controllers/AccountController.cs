@@ -2,6 +2,7 @@ using Application.Features.Accounts.Commands.ChangePassword;
 using Application.Features.Accounts.Commands.ForgotPassword;
 using Application.Features.Accounts.Commands.GoogleLogin;
 using Application.Features.Accounts.Commands.Login;
+using Application.Features.Accounts.Commands.Logout;
 using Application.Features.Accounts.Commands.Register;
 using Application.Features.Accounts.Commands.ResetPassword;
 using Application.Features.Accounts.Queries.ValidateResetToken;
@@ -27,9 +28,9 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
         try
         {
             var command = new LoginCommand(model);
-            var result = await mediator.Send(command);
+            var token = await mediator.Send(command);
 
-            return Ok(new { Token = result });
+            return Ok(new { token });
         }
         catch (Exception ex)
         {
@@ -45,9 +46,9 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
         try
         {
             var command = new RegisterCommand(model);
-            var result = await mediator.Send(command);
+            var token = await mediator.Send(command);
 
-            return Ok(new { Token = result });
+            return Ok(new { token });
         }
         catch (Exception ex)
         {
@@ -60,9 +61,9 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
     public async Task<IActionResult> GoogleLogin([FromBody] AccountGoogleLoginRequestModel model)
     {
         var command = new GoogleLoginCommand(model);
-        var result = await mediator.Send(command);
+        var token = await mediator.Send(command);
 
-        return Ok(new { Token = result });
+        return Ok(new { token });
     }
 
     [HttpPost]
@@ -122,9 +123,9 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
         model.Id = userId;
 
         var command = new EditUserCommand(model);
-        var result = await mediator.Send(command);
+        var token = await mediator.Send(command);
 
-        return Ok(new { Token = result });
+        return Ok(new { token });
     }
 
     [Authorize]
@@ -135,13 +136,21 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
         {
             var userId = currentUserService.GetCurrentUserId();
             var command = new RefreshTokenCommand(userId);
-            var result = await mediator.Send(command);
+            var token = await mediator.Send(command);
 
-            return Ok(new { Token = result });
+            return Ok(new { token });
         }
         catch (Exception ex)
         {
             return BadRequest(new { message = ex.Message });
         }
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> Logout()
+    {
+        await mediator.Send(new LogoutCommand());
+        return Ok();
     }
 }

@@ -43,6 +43,14 @@ public static class IdentityConfigurator
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
             };
+            options.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    context.Token = context.Request.Cookies[Application.Constants.AuthConstants.AuthCookieName];
+                    return Task.CompletedTask;
+                }
+            };
         });
 
         return services;

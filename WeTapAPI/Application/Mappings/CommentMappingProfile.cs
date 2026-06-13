@@ -1,15 +1,15 @@
 using Application.Models.Comments;
-using AutoMapper;
 using Domain.Entities.Comments;
+using Riok.Mapperly.Abstractions;
 
 namespace Application.Mappings;
 
-public class CommentMappingProfile : Profile
+[Mapper]
+public partial class CommentMappingProfile
 {
-    public CommentMappingProfile()
-    {
-        CreateMap<CommentsEntity, CommentsItemModal>()
-            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
-            .ForMember(dest => dest.UserImage, opt => opt.MapFrom(src => src.User.Image));
-    }
+    [MapProperty(nameof(CommentsEntity.User) + "." + nameof(CommentsEntity.User.UserName), nameof(CommentsItemModal.UserName))]
+    [MapProperty(nameof(CommentsEntity.User) + "." + nameof(CommentsEntity.User.Image), nameof(CommentsItemModal.UserImage))]
+    public partial CommentsItemModal MapToItemModel(CommentsEntity entity);
+
+    public partial IQueryable<CommentsItemModal> ProjectToItemModel(IQueryable<CommentsEntity> query);
 }

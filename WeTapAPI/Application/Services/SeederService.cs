@@ -1,12 +1,12 @@
 using System.Text.Json;
 using Application.Constants;
 using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.Genre;
 using Application.Models.Language;
 using Application.Models.Tag;
 using Application.Models.User;
 using Application.Models.Video;
-using AutoMapper;
 using Domain;
 using Domain.Entities.Channel;
 using Domain.Entities.Genre;
@@ -23,7 +23,11 @@ public class SeederService(
     AppDbContext appDbContext,
     RoleManager<RoleEntity> roleManager,
     UserManager<UserEntity> userManager,
-    IMapper mapper,
+    GenreMappingProfile genreMapper,
+    VideoMappingProfile videoMapper,
+    TagMappingProfile tagMapper,
+    LanguageMappingProfile languageMapper,
+    UserMapping userMapper,
     IImageService imageService,
     IVideoFileService videoFileService
 ) : ISeederService
@@ -46,7 +50,7 @@ public class SeederService(
         {
             var genreTasks = genresData.Select(async g =>
             {
-                GenreEntity entity = mapper.Map<GenreEntity>(g);
+                GenreEntity entity = genreMapper.MapToEntity(g);
                 if (!string.IsNullOrEmpty(g.ImagePath))
                     entity.Image = await imageService.SaveImageFromUrlAsync(g.ImagePath);
 
@@ -92,7 +96,7 @@ public class SeederService(
                 if (await appDbContext.Videos.AnyAsync(vid => vid.Slug == v.Slug))
                     continue;
 
-                var entity = mapper.Map<VideoEntity>(v);
+                var entity = videoMapper.MapToEntity(v);
                 entity.ChannelId = channel.Id;
 
                 var privacy =
@@ -175,7 +179,7 @@ public class SeederService(
 
         if (tagsData != null)
         {
-            var tags = tagsData.Select(t => mapper.Map<TagEntity>(t)).ToList();
+            var tags = tagsData.Select(t => tagMapper.MapToEntity(t)).ToList();
             await appDbContext.Tags.AddRangeAsync(tags);
             await appDbContext.SaveChangesAsync();
         }
@@ -213,7 +217,7 @@ public class SeederService(
 
         if (languagesData != null)
         {
-            var languages = languagesData.Select(l => mapper.Map<VideoLanguageEntity>(l)).ToList();
+            var languages = languagesData.Select(l => languageMapper.MapToEntity(l)).ToList();
             await appDbContext.VideoLanguages.AddRangeAsync(languages);
             await appDbContext.SaveChangesAsync();
         }
@@ -250,7 +254,7 @@ public class SeederService(
 
             foreach (var user in users)
             {
-                var entity = mapper.Map<UserEntity>(user);
+                var entity = userMapper.MapToEntity(user);
                 entity.Image = await imageService.SaveImageFromUrlAsync(user.ImagePath);
                 var result = await userManager.CreateAsync(entity, user.Password);
                 if (!result.Succeeded)

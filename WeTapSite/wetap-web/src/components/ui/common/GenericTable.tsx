@@ -1,7 +1,7 @@
-import {Edit2, Trash2, Loader2, ArrowUpDown} from 'lucide-react';
-import {Button} from '../../form/Button';
-import {APP_ENV} from "../../../env";
-import type {IColumnConfig} from '../../../types/Additional/IColumnConfig';
+import { Edit2, Trash2, Loader2, ArrowUpDown } from 'lucide-react';
+import { Button } from '../../form/Button';
+import { APP_ENV } from "../../../env";
+import type { IColumnConfig } from '../../../types/Additional/IColumnConfig';
 
 interface GenericTableProps<T> {
     data: T[] | undefined;
@@ -10,6 +10,7 @@ interface GenericTableProps<T> {
     isError?: boolean;
     emptyMessage?: string;
     sortBy?: string;
+    sortableFields?: string[];
     onSortChange?: (key: string | undefined) => void;
     onEdit?: (item: T) => void;
     onDelete?: (item: T) => void;
@@ -22,10 +23,16 @@ export function GenericTable<T extends { id: string | number }>({
                                                                     isError = false,
                                                                     emptyMessage = 'Даних не знайдено',
                                                                     sortBy,
+                                                                    sortableFields = [], // за замовчуванням порожній
                                                                     onSortChange,
                                                                     onEdit,
                                                                     onDelete,
                                                                 }: GenericTableProps<T>) {
+
+    const checkIfSortable = (key: string) => {
+        return sortableFields.some(field => field.toLowerCase() === key.toLowerCase());
+    };
+
     const getAutoColumns = (): IColumnConfig<T>[] => {
         if (!data || data.length === 0) return [];
 
@@ -34,6 +41,7 @@ export function GenericTable<T extends { id: string | number }>({
 
         return keys.map((key) => {
             const lowerKey = key.toLowerCase();
+            const isFieldSortable = checkIfSortable(key);
 
             switch (lowerKey) {
                 case 'id':
@@ -74,8 +82,8 @@ export function GenericTable<T extends { id: string | number }>({
                     return {
                         key,
                         label: lowerKey === 'name' ? 'Назва жанру' : 'Назва',
-                        sortable: true,
-                        sortKey: lowerKey,
+                        sortable: isFieldSortable,
+                        sortKey: key,
                         render: (item: any) => (
                             <span className="font-bold text-zinc-200 group-hover:text-white transition-colors">
                                 {item[key]}
@@ -87,8 +95,8 @@ export function GenericTable<T extends { id: string | number }>({
                     return {
                         key,
                         label: 'Slug',
-                        sortable: true,
-                        sortKey: 'slug',
+                        sortable: isFieldSortable,
+                        sortKey: key,
                         render: (item: any) => (
                             <span className="px-3 py-1 bg-zinc-900 text-zinc-500 rounded-lg text-xs font-mono border border-zinc-800">
                                 /{item[key]}
@@ -100,6 +108,8 @@ export function GenericTable<T extends { id: string | number }>({
                     return {
                         key,
                         label: key.charAt(0).toUpperCase() + key.slice(1),
+                        sortable: isFieldSortable,
+                        sortKey: key,
                         render: (item: any) => (
                             <span className="font-medium text-zinc-300">
                                 {String(item[key] ?? '')}
@@ -155,16 +165,16 @@ export function GenericTable<T extends { id: string | number }>({
                                 >
                                     <span className="inline-flex items-center gap-1.5">
                                         {col.label}
-                                            {isSortable && (
-                                                <ArrowUpDown
-                                                    size={12}
-                                                    className={`transition-all duration-300 ${
-                                                        isActiveSort
-                                                            ? 'text-red-500 opacity-100 scale-110'
-                                                            : 'opacity-30 group-hover/header:opacity-75'
-                                                    }`}
-                                                />
-                                            )}
+                                        {isSortable && (
+                                            <ArrowUpDown
+                                                size={12}
+                                                className={`transition-all duration-300 ${
+                                                    isActiveSort
+                                                        ? 'text-red-500 opacity-100 scale-110'
+                                                        : 'opacity-30 group-hover/header:opacity-75'
+                                                }`}
+                                            />
+                                        )}
                                     </span>
                                 </th>
                             );
@@ -174,32 +184,21 @@ export function GenericTable<T extends { id: string | number }>({
                     </thead>
 
                     <tbody className="divide-y divide-zinc-900">
+                    {/* ... (код мапінгу body залишається незмінним) ... */}
                     {isError ? (
                         <tr>
-                            <td colSpan={colSpan} className="p-20 text-center text-red-500 font-bold">
-                                Помилка завантаження даних
-                            </td>
+                            <td colSpan={colSpan} className="p-20 text-center text-red-500 font-bold">Помилка завантаження даних</td>
                         </tr>
                     ) : !data || data.length === 0 ? (
                         <tr>
-                            <td colSpan={colSpan} className="p-20 text-center text-zinc-600 italic">
-                                {emptyMessage}
-                            </td>
+                            <td colSpan={colSpan} className="p-20 text-center text-zinc-600 italic">{emptyMessage}</td>
                         </tr>
                     ) : (
                         data.map((item) => (
-                            <tr
-                                key={item.id}
-                                className="hover:bg-zinc-900/40 transition-all group"
-                            >
+                            <tr key={item.id} className="hover:bg-zinc-900/40 transition-all group">
                                 {activeColumns.map((col) => (
-                                    <td
-                                        key={String(col.key)}
-                                        className={`p-5 ${col.className || ''}`}
-                                    >
-                                        {col.render ? (
-                                            col.render(item)
-                                        ) : (
+                                    <td key={String(col.key)} className={`p-5 ${col.className || ''}`}>
+                                        {col.render ? col.render(item) : (
                                             <span className="font-medium text-zinc-300">
                                                 {String((item as any)[col.key] ?? '')}
                                             </span>
@@ -209,24 +208,8 @@ export function GenericTable<T extends { id: string | number }>({
                                 {hasActions && (
                                     <td className="p-5 text-right">
                                         <div className="flex justify-end gap-2">
-                                            {onEdit && (
-                                                <Button
-                                                    type="button"
-                                                    variant="action"
-                                                    onClick={() => onEdit(item)}
-                                                >
-                                                    <Edit2 size={16}/>
-                                                </Button>
-                                            )}
-                                            {onDelete && (
-                                                <Button
-                                                    type="button"
-                                                    variant="actionDanger"
-                                                    onClick={() => onDelete(item)}
-                                                >
-                                                    <Trash2 size={16}/>
-                                                </Button>
-                                            )}
+                                            {onEdit && <Button type="button" variant="action" onClick={() => onEdit(item)}><Edit2 size={16}/></Button>}
+                                            {onDelete && <Button type="button" variant="actionDanger" onClick={() => onDelete(item)}><Trash2 size={16}/></Button>}
                                         </div>
                                     </td>
                                 )}

@@ -1,52 +1,62 @@
 using Application.Models.Video;
-using AutoMapper;
+using Application.Models.Genre;
+using Application.Models.Tag;
 using Domain.Entities.Video;
-using System.Globalization;
+using Domain.Entities.Genre;
+using Domain.Entities.Tag;
+using Riok.Mapperly.Abstractions;
 
 namespace Application.Mappings;
 
-public class VideoMappingProfile : Profile
+[Mapper]
+[UseStaticMapper(typeof(GenreMappingProfile))]
+[UseStaticMapper(typeof(TagMappingProfile))]
+public partial class VideoMappingProfile
 {
-    public VideoMappingProfile()
-    {
-        var ukraineCulture = new CultureInfo("uk-UA");
+    [MapProperty(nameof(VideoEntity.Channel), nameof(VideoItemModel.Channel))]
+    [MapProperty(nameof(VideoEntity.VideoGenres), nameof(VideoItemModel.Genres))]
+    [MapProperty(nameof(VideoEntity.VideoTags), nameof(VideoItemModel.Tags))]
+    public partial VideoItemModel MapToItemModel(VideoEntity entity);
 
-        CreateMap<VideoEntity, VideoItemModel>()
-            .ForMember(x => x.Genres,
-                opt => opt.MapFrom(x =>
-                    x.VideoGenres.Select(mg => mg.Genre)))
-            .ForMember(x => x.Tags,
-                opt => opt.MapFrom(x =>
-                    x.VideoTags.Select(mt => mt.Tag)))
-            .ForMember(x => x.Channel, opt => opt.MapFrom(src => src.Channel))
-            .ForMember(dest => dest.DateCreated,
-                opt => opt.MapFrom(src =>
-                    src.DateCreated.ToString("d MMM yyyy'р.'", ukraineCulture)))
-            .ForMember(x => x.LikesCount,
-                opt => opt.MapFrom(x => x.VideoReactions.Count(r => r.IsLike)))
-            .ForMember(x => x.DislikesCount,
-                opt => opt.MapFrom(x => x.VideoReactions.Count(r => !r.IsLike)));
+    [MapProperty(nameof(VideoEntity.VideoGenres), nameof(VideoItemModel.Genres))]
+    [MapProperty(nameof(VideoEntity.VideoTags), nameof(VideoItemModel.Tags))]
+    public partial IQueryable<VideoItemModel> ProjectToItemModel(IQueryable<VideoEntity> query);
 
-        CreateMap<VideoPrivacyEntity, VideoPrivacyItemModel>();
+    public partial VideoPrivacyItemModel MapToItemModel(VideoPrivacyEntity entity);
+    public partial IQueryable<VideoPrivacyItemModel> ProjectToItemModel(IQueryable<VideoPrivacyEntity> query);
 
-        CreateMap<VideoSeedModel, VideoEntity>()
-            .ForMember(dest => dest.Image, opt => opt.Ignore())
-            .ForMember(dest => dest.Video, opt => opt.Ignore())
-            .ForMember(dest => dest.VideoGenres, opt => opt.Ignore());
+    private GenreItemModel MapVideoGenreToGenreModel(VideoGenreEntity videoGenre)
+        => new GenreMappingProfile().MapToItemModel(videoGenre.Genre);
 
-        CreateMap<VideoCreateModel, VideoEntity>()
-            .ForMember(dest => dest.Image, opt => opt.Ignore())
-            .ForMember(dest => dest.Video, opt => opt.Ignore())
-            .ForMember(dest => dest.VideoGenres, opt => opt.Ignore())
-            .ForMember(dest => dest.VideoTags, opt => opt.Ignore());
+    private TagItemModel MapVideoTagToTagModel(VideoTagEntity videoTag)
+        => new TagMappingProfile().MapToItemModel(videoTag.Tag);
 
-        CreateMap<VideoUpdateModel, VideoEntity>()
-            .ForMember(dest => dest.Image, opt => opt.Ignore())
-            .ForMember(dest => dest.Video, opt => opt.Ignore())
-            .ForMember(dest => dest.VideoGenres, opt => opt.Ignore())
-            .ForMember(dest => dest.VideoTags, opt => opt.Ignore())
-            .ForMember(dest => dest.ChannelId, opt => opt.Ignore());
+    [MapperIgnoreTarget(nameof(VideoEntity.Image))]
+    [MapperIgnoreTarget(nameof(VideoEntity.Video))]
+    [MapperIgnoreTarget(nameof(VideoEntity.VideoGenres))]
+    public partial VideoEntity MapToEntity(VideoSeedModel model);
 
-        CreateMap<VideoReactionModel, VideoReactionEntity>();
-    }
+    [MapperIgnoreTarget(nameof(VideoEntity.Image))]
+    [MapperIgnoreTarget(nameof(VideoEntity.Video))]
+    [MapperIgnoreTarget(nameof(VideoEntity.VideoGenres))]
+    [MapperIgnoreTarget(nameof(VideoEntity.VideoTags))]
+    public partial VideoEntity MapToEntity(VideoCreateModel model);
+
+    [MapperIgnoreTarget(nameof(VideoEntity.Image))]
+    [MapperIgnoreTarget(nameof(VideoEntity.Video))]
+    [MapperIgnoreTarget(nameof(VideoEntity.VideoGenres))]
+    [MapperIgnoreTarget(nameof(VideoEntity.VideoTags))]
+    [MapperIgnoreTarget(nameof(VideoEntity.ChannelId))]
+    public partial void MapToEntity(VideoUpdateModel model, VideoEntity entity);
+
+    public partial VideoReactionEntity MapToEntity(VideoReactionModel model);
+
+    protected static string MapDateCreated(DateTime dateCreated)
+        => dateCreated.ToString("dd.MM.yyyy'р.'");
+
+    protected static int MapLikesCount(ICollection<VideoReactionEntity> reactions)
+        => reactions.Count(r => r.IsLike);
+
+    protected static int MapDislikesCount(ICollection<VideoReactionEntity> reactions)
+        => reactions.Count(r => !r.IsLike);
 }

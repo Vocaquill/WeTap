@@ -103,9 +103,10 @@ export const apiAccount = createApi({
                 return {
                     url: 'register',
                     method: 'POST',
-                    body: formData
-                };
-            }
+                    body: formData};
+            },
+            onQueryStarted: async (_arg, { dispatch, queryFulfilled }) =>
+                handleAuthSuccess(queryFulfilled, dispatch)
         }),
         deleteAccount: builder.mutation<void, void>({
             query: () => {
@@ -144,6 +145,12 @@ export const apiAccount = createApi({
             }),
             onQueryStarted: async (_arg, {dispatch, queryFulfilled}) =>
                 handleAuthSuccess(queryFulfilled, dispatch)
+        }),
+        logout: builder.mutation<void, void>({
+            query: () => ({
+                url: 'logout',
+                method: 'POST'
+            })
         })
     })
 });
@@ -160,4 +167,5 @@ export const {
     useEditAccountMutation,
     useHasPasswordQuery,
     useRefreshTokenMutation,
+    useLogoutMutation,
 } = apiAccount;

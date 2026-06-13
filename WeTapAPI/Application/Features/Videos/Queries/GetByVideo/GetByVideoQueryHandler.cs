@@ -1,9 +1,8 @@
 using Application.Constants;
 using Application.Features.Videos.Queries.GetVideos;
 using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.Video;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain.Entities.Video;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,7 @@ namespace Application.Features.Videos.Queries.GetByVideo;
 
 public class GetByVideoQueryHandler(
     IGenericRepository<VideoEntity, long> repo,
-    IMapper mapper,
+    VideoMappingProfile mapper,
     ICurrentUserService currentUser)
     : IRequestHandler<GetByVideoQuery, VideoItemModel>
 {
@@ -35,8 +34,7 @@ public class GetByVideoQueryHandler(
 
         query = query.ForCurrentUser(currentUser);
 
-        var model = await query
-            .ProjectTo<VideoItemModel>(mapper.ConfigurationProvider)
+        var model = await mapper.ProjectToItemModel(query)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (model == null)

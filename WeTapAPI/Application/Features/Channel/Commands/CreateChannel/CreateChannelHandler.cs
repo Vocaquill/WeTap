@@ -1,7 +1,7 @@
 using Application.Constants;
 using Application.Interfaces;
 using Application.Models.Channel;
-using AutoMapper;
+using Application.Mappings;
 using Domain.Entities.Channel;
 using Domain.Entities.Identity;
 using MediatR;
@@ -11,7 +11,7 @@ namespace Application.Features.Channel.Commands.CreateChannel;
 
 public class CreateChannelHandler(
     IGenericRepository<ChannelEntity, long> repo,
-    IMapper mapper,
+    ChannelMappingProfile channelMapper,
     IImageService imageService,
     ICurrentUserService currentUserService,
     UserManager<UserEntity> userManager
@@ -19,7 +19,7 @@ public class CreateChannelHandler(
 {
     public async Task<ChannelItemModel> Handle(CreateChannelCommand request, CancellationToken cancellationToken)
     {
-        var entity = mapper.Map<ChannelEntity>(request.Model);
+        var entity = channelMapper.MapToEntity(request.Model);
         long userId = currentUserService.GetCurrentUserId();
         entity.Id = userId;
 
@@ -47,6 +47,6 @@ public class CreateChannelHandler(
             await userManager.AddToRoleAsync(user, Roles.Author);
         }
 
-        return mapper.Map<ChannelItemModel>(entity);
+        return channelMapper.MapToItemModel(entity);
     }
 }
