@@ -1,9 +1,8 @@
 import {useState} from 'react';
 import {Plus} from 'lucide-react';
 import {Button} from '../../components/form/Button';
-import type {UserSortField} from '../../env';
+import {USER_SORT_FIELDS, type UserSortField} from '../../env';
 
-// import AddGenreModal from '../../components/modal/AddGenreModal';
 import DeleteModal from "../../components/modal/common/DeleteModal.tsx";
 
 import {Pagination} from '../../components/ui/common/Pagination';
@@ -33,7 +32,7 @@ function UsersPage() {
         sortBy: undefined,
     });
 
-    const [isAddOpen, setIsAddOpen] = useState(false);
+    // const [isAddOpen, setIsAddOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<IUserItemResponse | null>(null);
@@ -89,7 +88,7 @@ function UsersPage() {
                     size="md"
                     className="rounded-2xl"
                     icon={<Plus size={20} strokeWidth={3}/>}
-                    onClick={() => setIsAddOpen(true)}
+                    onClick={() => {}}
                 >
                     ДОДАТИ КОРИСТУВАЧА
                 </Button>
@@ -143,7 +142,7 @@ function UsersPage() {
                 </div>
             )}
 
-            <AddGenreModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)}/>
+            {/* <AddGenreModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)}/> */}
 
             <EditUserModal
                 isOpen={isEditOpen}

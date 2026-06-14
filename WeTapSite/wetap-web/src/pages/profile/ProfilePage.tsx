@@ -54,7 +54,7 @@ function ProfilePage() {
                             <Mail size={16}/> {user!.email}
                         </p>
                         <div className="flex gap-2 pt-2 justify-center md:justify-start">
-                            {user!.role == "Admin" ? (
+                            {user!.roles.includes("Admin") ? (
                                 <span
                                     className="px-3 py-1 bg-red-600/10 border border-red-600/20 rounded-full text-[10px] font-black uppercase text-red-500 tracking-widest">
                                     Premium Member
