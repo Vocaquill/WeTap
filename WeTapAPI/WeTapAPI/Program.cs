@@ -34,10 +34,7 @@ try
     app.UseImagesDirectory(builder.Configuration);
     app.UseVideosDirectory(builder.Configuration);
 
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwaggerDocumentation();
-    }
+    app.UseSwaggerDocumentation();
 
     app.UseSerilogRequestLogging();  
 
