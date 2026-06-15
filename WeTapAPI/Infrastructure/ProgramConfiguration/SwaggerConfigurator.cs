@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
@@ -36,7 +37,14 @@ public static class SwaggerConfigurator
                         "(Do NOT prefix with 'Bearer ' — Swagger adds it automatically)"
                 };
 
-                document.SetReferenceHostDocument();
+                // Override server URL from config (needed in prod behind HTTPS reverse proxy)
+                var config    = context.ApplicationServices.GetRequiredService<IConfiguration>();
+                var serverUrl = config["ApiServerUrl"];
+                if (!string.IsNullOrEmpty(serverUrl))
+                    document.Servers = [new OpenApiServer { Url = serverUrl }];
+                else
+                    document.SetReferenceHostDocument();
+
                 return Task.CompletedTask;
             });
 
@@ -75,17 +83,23 @@ public static class SwaggerConfigurator
 
     public static IApplicationBuilder UseSwaggerDocumentation(this IApplicationBuilder app)
     {
+        var isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+
+        var routePrefix    = isDevelopment ? "swagger"                       : "swagger";
+        var openApiRoute   = isDevelopment ? "/openapi/{documentName}.json"  : "/swagger/{documentName}.json";
+        var schemaEndpoint = isDevelopment ? "../openapi/v1.json"            : "v1.json";
+
         app.UseSwaggerUI(options =>
         {
-            options.RoutePrefix = "swagger";
-            options.SwaggerEndpoint("/openapi/v1.json", "WeTap API v1");
+            options.RoutePrefix = routePrefix;
+            options.SwaggerEndpoint(schemaEndpoint, "WeTap API v1");
             options.OAuthUsePkce();
             options.EnablePersistAuthorization();
         });
 
         if (app is IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapOpenApi();
+            endpoints.MapOpenApi(openApiRoute);
 
             endpoints.MapScalarApiReference(options =>
             {
