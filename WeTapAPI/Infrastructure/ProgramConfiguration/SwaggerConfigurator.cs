@@ -26,18 +26,17 @@ public static class SwaggerConfigurator
 
                 document.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
                 {
-                    Type       = SecuritySchemeType.Http,
-                    Scheme     = "bearer",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
                     BearerFormat = "JWT",
-                    In         = ParameterLocation.Header,
-                    Name       = "Authorization",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
                     Description =
                         "Enter your JWT token below.\n\n" +
                         "Example: **eyJhbGci...**\n\n" +
                         "(Do NOT prefix with 'Bearer ' — Swagger adds it automatically)"
                 };
 
-                // Override server URL from config (needed in prod behind HTTPS reverse proxy)
                 var config    = context.ApplicationServices.GetRequiredService<IConfiguration>();
                 var serverUrl = config["ApiServerUrl"];
                 if (!string.IsNullOrEmpty(serverUrl))
@@ -53,7 +52,7 @@ public static class SwaggerConfigurator
                 var metadata = context.Description.ActionDescriptor.EndpointMetadata;
 
                 bool hasAllowAnonymous = metadata.OfType<IAllowAnonymous>().Any();
-                bool hasAuthorize      = metadata.OfType<IAuthorizeData>().Any();
+                bool hasAuthorize = metadata.OfType<IAuthorizeData>().Any();
 
                 operation.Security =
                 [
@@ -85,9 +84,9 @@ public static class SwaggerConfigurator
     {
         var isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
 
-        var routePrefix    = isDevelopment ? "swagger"                       : "swagger";
-        var openApiRoute   = isDevelopment ? "/openapi/{documentName}.json"  : "/swagger/{documentName}.json";
-        var schemaEndpoint = isDevelopment ? "../openapi/v1.json"            : "v1.json";
+        var routePrefix    = isDevelopment ? "swagger" : "swagger";
+        var openApiRoute   = isDevelopment ? "/openapi/{documentName}.json" : "/swagger/{documentName}.json";
+        var schemaEndpoint = isDevelopment ? "../openapi/v1.json" : "v1.json";
 
         app.UseSwaggerUI(options =>
         {
