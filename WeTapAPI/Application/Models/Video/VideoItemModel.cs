@@ -27,6 +27,8 @@ public class VideoItemModel
     public int LikesCount { get; set; }
     public int DislikesCount { get; set; }
 
+    public bool? IsLiked { get; set; }
+
     public int UserRatingPercent =>
         LikesCount + DislikesCount == 0
             ? 0

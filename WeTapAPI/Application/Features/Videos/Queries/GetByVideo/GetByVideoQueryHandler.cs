@@ -3,6 +3,7 @@ using Application.Features.Videos.Queries.GetVideos;
 using Application.Interfaces;
 using Application.Mappings;
 using Application.Models.Video;
+using Domain;
 using Domain.Entities.Video;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,8 @@ namespace Application.Features.Videos.Queries.GetByVideo;
 public class GetByVideoQueryHandler(
     IGenericRepository<VideoEntity, long> repo,
     VideoMappingProfile mapper,
-    ICurrentUserService currentUser)
+    ICurrentUserService currentUser,
+    AppDbContext context)
     : IRequestHandler<GetByVideoQuery, VideoItemModel>
 {
     public async Task<VideoItemModel> Handle(GetByVideoQuery request, CancellationToken cancellationToken)
@@ -40,6 +42,19 @@ public class GetByVideoQueryHandler(
         if (model == null)
             throw new Exception("Відео не знайдено");
 
+        model.LikesCount = await context.VideoReactions
+            .CountAsync(x => x.VideoId == model.Id && x.IsLike, cancellationToken);
+        model.DislikesCount = await context.VideoReactions
+            .CountAsync(x => x.VideoId == model.Id && !x.IsLike, cancellationToken);
+
+        var userId = currentUser.TryGetCurrentUserId();
+        if (userId.HasValue)
+        {
+            var userReaction = await context.VideoReactions
+                .FirstOrDefaultAsync(x => x.VideoId == model.Id && x.UserId == userId.Value, cancellationToken);
+            model.IsLiked = userReaction?.IsLike;
+        }
+
         return model;
     }
-}
+}

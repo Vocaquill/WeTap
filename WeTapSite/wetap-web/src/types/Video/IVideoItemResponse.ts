@@ -20,4 +20,5 @@ export interface IVideoItemResponse {
     language?: ILanguageItemResponse;
     likesCount: number;
     dislikesCount: number;
+    isLiked?: boolean | null;
 }

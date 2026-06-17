@@ -128,8 +128,12 @@ function VideoPage() {
                                             variant="reaction"
                                             onClick={() => handleReaction(true)}
                                             disabled={isReacting}
-                                            className="border-r border-zinc-700"
-                                            icon={<ThumbsUp size={18} />}
+                                            className={`border-r border-zinc-700 transition-colors ${
+                                                video.isLiked === true
+                                                    ? 'text-[#FF2D7A] bg-zinc-700/30'
+                                                    : 'text-zinc-300 hover:text-white'
+                                            }`}
+                                            icon={<ThumbsUp size={18} fill={video.isLiked === true ? "currentColor" : "none"} />}
                                         >
                                             <span>{video.likesCount}</span>
                                         </Button>
@@ -137,7 +141,12 @@ function VideoPage() {
                                             variant="reaction"
                                             onClick={() => handleReaction(false)}
                                             disabled={isReacting}
-                                            icon={<ThumbsDown size={18} />}
+                                            className={`transition-colors ${
+                                                video.isLiked === false
+                                                    ? 'text-[#FF2D7A] bg-zinc-700/30'
+                                                    : 'text-zinc-300 hover:text-white'
+                                            }`}
+                                            icon={<ThumbsDown size={18} fill={video.isLiked === false ? "currentColor" : "none"} />}
                                         >
                                             <span>{video.dislikesCount}</span>
                                         </Button>

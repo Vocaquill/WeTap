@@ -108,7 +108,7 @@ public class VideosController(
     }
 
     [HttpPost("react")]
-    [Authorize(Roles = Roles.User)]
+    [Authorize]
     public async Task<ActionResult> React([FromBody] VideoReactionModel model)
     {
         var command = new ReactVideoCommand(model);
