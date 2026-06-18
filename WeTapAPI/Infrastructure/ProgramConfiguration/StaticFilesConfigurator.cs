@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
@@ -10,7 +10,11 @@ public static class StaticFilesConfigurator
     public static IApplicationBuilder UseImagesDirectory(this IApplicationBuilder app, IConfiguration configuration)
     {
         var dir = configuration["ImagesDir"]!;
-        var path = Path.Combine(Directory.GetCurrentDirectory(), dir);
+        var mediaRoot = configuration["MediaRoot"];
+        var basePath = string.IsNullOrEmpty(mediaRoot)
+            ? Directory.GetCurrentDirectory()
+            : mediaRoot;
+        var path = Path.Combine(basePath, dir);
 
         if (!Directory.Exists(path))
         {
@@ -29,7 +33,11 @@ public static class StaticFilesConfigurator
     public static IApplicationBuilder UseVideosDirectory(this IApplicationBuilder app, IConfiguration configuration)
     {
         var dir = configuration["VideosDir"]!;
-        var path = Path.Combine(Directory.GetCurrentDirectory(), dir);
+        var mediaRoot = configuration["MediaRoot"];
+        var basePath = string.IsNullOrEmpty(mediaRoot)
+            ? Directory.GetCurrentDirectory()
+            : mediaRoot;
+        var path = Path.Combine(basePath, dir);
 
         if (!Directory.Exists(path))
         {
@@ -44,4 +52,4 @@ public static class StaticFilesConfigurator
 
         return app;
     }
-}
+}
