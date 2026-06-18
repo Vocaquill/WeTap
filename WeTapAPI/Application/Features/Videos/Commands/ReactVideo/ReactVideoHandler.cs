@@ -41,6 +41,10 @@ public class ReactVideoHandler(
 
             context.VideoReactions.Add(reaction);
         }
+        else if (reaction.IsLike == request.Model.IsLike)
+        {
+            context.VideoReactions.Remove(reaction);
+        }
         else
         {
             reaction.IsLike = request.Model.IsLike;

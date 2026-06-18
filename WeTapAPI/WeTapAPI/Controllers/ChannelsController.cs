@@ -56,7 +56,7 @@ public class ChannelsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost("subscribe")]
-    [Authorize(Roles = Roles.User)]
+    [Authorize]
     public async Task<IActionResult> Subscribe([FromBody] ChannelSubscriptionModel model)
     {
         var command = new ToggleChannelSubscriptionCommand(model);
