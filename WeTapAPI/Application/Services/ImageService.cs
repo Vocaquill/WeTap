@@ -9,10 +9,19 @@ namespace Application.Services;
 
 public class ImageService(IConfiguration configuration) : IImageService
 {
+    private string GetImagesBasePath()
+    {
+        var mediaRoot = configuration["MediaRoot"];
+        var basePath = string.IsNullOrEmpty(mediaRoot)
+            ? Directory.GetCurrentDirectory()
+            : mediaRoot;
+        return Path.Combine(basePath, configuration["ImagesDir"]!);
+    }
+
     public async Task DeleteImageAsync(string name)
     {
         var sizes = configuration.GetRequiredSection("ImageSizes").Get<List<int>>();
-        var dir = Path.Combine(Directory.GetCurrentDirectory(), configuration["ImagesDir"]!);
+        var dir = GetImagesBasePath();
 
         Task[] tasks = sizes
             .AsParallel()
@@ -78,8 +87,7 @@ public class ImageService(IConfiguration configuration) : IImageService
 
     private async Task SaveImageAsync(byte[] bytes, string name, int size)
     {
-        var path = Path.Combine(Directory.GetCurrentDirectory(), configuration["ImagesDir"]!,
-            $"{size}_{name}");
+        var path = Path.Combine(GetImagesBasePath(), $"{size}_{name}");
         using var image = Image.Load(bytes);
         image.Mutate(async imgConext =>
         {
