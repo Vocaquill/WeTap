@@ -44,8 +44,6 @@ jobs:
           
           docker compose down
           
-          sudo rm -rf ./data/wetap
-          
           docker compose pull
           
           docker compose up -d
