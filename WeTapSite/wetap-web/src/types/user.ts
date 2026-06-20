@@ -20,6 +20,7 @@ export interface User {
     image: string;
     token: string;
     roles: string[];
+    channelId?: number;
 }
 
 export interface IUserHasPasswordResponse {
