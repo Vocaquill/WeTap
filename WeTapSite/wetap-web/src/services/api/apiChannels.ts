@@ -3,6 +3,7 @@ import { createBaseQuery } from "../../utils/createBaseQuery.ts";
 import { serialize } from "object-to-formdata";
 import type { IChannelItemResponse } from "../../types/Channel/IChannelItemResponse.ts";
 import type { IChannelCreateRequest } from "../../types/Channel/IChannelCreateRequest.ts";
+import type { IGetByRequest } from "../../types/Additional/IGetByRequest.ts";
 
 export const apiChannels = createApi({
     reducerPath: "api/channels",
@@ -17,9 +18,19 @@ export const apiChannels = createApi({
             }),
             invalidatesTags: ["Channels"],
         }),
+        getBy: builder.query<IChannelItemResponse, IGetByRequest>({
+            query: (par) => ({
+                url: "get-by",
+                method: "GET",
+                params: par,
+            }),
+            providesTags: (result) =>
+                result ? [{ type: "Channel", id: result.id }] : ["Channel"],
+        }),
     }),
 });
 
 export const {
     useCreateChannelMutation,
+    useGetByQuery,
 } = apiChannels;
