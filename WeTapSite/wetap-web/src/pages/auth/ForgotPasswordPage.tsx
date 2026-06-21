@@ -13,15 +13,18 @@ function ForgotPasswordPage() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             await forgot({email: email}).unwrap();
             setIsSubmitted(true);
-        } catch (err) {
+            setErrorMessage("");
+        } catch (err: any) {
             console.log("error", err);
-            alert("Login failed");
+            const msg = err?.data?.message || err?.data?.error || "Сталася помилка при відновленні паролю";
+            setErrorMessage(msg);
         }
     };
 
@@ -77,6 +80,10 @@ function ForgotPasswordPage() {
                                     labelClassName="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1"
                                     wrapperClassName="space-y-2 group"
                                 />
+
+                                {errorMessage && (
+                                    <p className="text-red-500 text-sm font-semibold">{errorMessage}</p>
+                                )}
 
                                 <Button
                                     type="submit"

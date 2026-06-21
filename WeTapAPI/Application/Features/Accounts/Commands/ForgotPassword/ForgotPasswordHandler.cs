@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
 using Application.SMTP;
 using Domain.Entities.Identity;
 using MediatR;
@@ -14,11 +14,16 @@ public class ForgotPasswordHandler(UserManager<UserEntity> userManager,
 {
     public async Task<bool> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await userManager.Users.FirstOrDefaultAsync(x => x.Email == request.Model.Email && !x.IsDeleted);
+        var user = await userManager.Users.FirstOrDefaultAsync(x => x.Email == request.Model.Email);
 
         if (user == null)
         {
-            return false;
+            throw new Exception("Користувача з такою поштою не знайдено");
+        }
+
+        if (user.IsDeleted)
+        {
+            throw new Exception("Цей користувач видалений. Будь ласка, зверніться в підтримку");
         }
 
         string token = await userManager.GeneratePasswordResetTokenAsync(user);
