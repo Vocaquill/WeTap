@@ -2,13 +2,14 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Mail, Send, CheckCircle2} from 'lucide-react';
 import {motion, AnimatePresence} from 'framer-motion';
-import {useForgotPasswordMutation} from "../../services/api/apiAccount"; // Імпортуємо фон
+import {useForgotPasswordMutation} from "../../services/api/apiAccount";
 import { InputField } from "../../components/form/InputField";
 import { Button } from "../../components/form/Button";
 import { BackButton } from "../../components/ui/common/BackButton";
+import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 
 function ForgotPasswordPage() {
-    const [forgot] = useForgotPasswordMutation();
+    const [forgot, { isLoading }] = useForgotPasswordMutation();
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -27,6 +28,7 @@ function ForgotPasswordPage() {
     return (
         <div
             className="min-h-screen bg-black text-white flex items-center justify-center relative overflow-hidden px-6">
+            {isLoading && <LoadingOverlay />}
             {/* Background Glow */}
             <div
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-red-600/10 blur-[120px] rounded-full pointer-events-none"/>

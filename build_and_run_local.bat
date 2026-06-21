@@ -33,7 +33,7 @@ echo ===================================================
 cd ..
 
 echo Starting Database...
-docker run -d --name wetap-db --network wetap_net --network-alias db --restart unless-stopped -e POSTGRES_DB=wetap -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -v wetap-db-data:/var/lib/postgresql/data postgres:17
+docker run -d --name wetap-db --network wetap_net --network-alias db --restart unless-stopped -e POSTGRES_DB=wetap -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -v wetap-db-data:/var/lib/postgresql/data postgres:18
 
 echo Starting API...
 docker run -d --name wetap-api --network wetap_net --network-alias api --restart unless-stopped -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Production -e ConnectionStrings__DefaultConnection="Host=db;Database=wetap;Username=postgres;Password=postgres" -v wetap-media:/app/media wetap-api:latest
