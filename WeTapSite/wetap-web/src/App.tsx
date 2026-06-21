@@ -15,6 +15,7 @@ import CreateVideoPage from './pages/video/CreateVideoPage';
 import EditVideoPage from './pages/video/EditVideoPage';
 import CreateChannelPage from './pages/channel/CreateChannelPage';
 import StudioPage from './pages/channel/StudioPage.tsx';
+import ChannelPage from './pages/channel/ChannelPage.tsx';
 
 import Dashboard from './pages/Admin/Dashboard.tsx';
 import GenresPage from './pages/Admin/GenresPage.tsx';
@@ -64,6 +65,7 @@ function App() {
             <Route element={<AppLayout />}>
                 <Route path="/" element={<UserHomePage />} />
                 <Route path="/video/:slug" element={<VideoPage />} />
+                <Route path="/channel/:slug" element={<ChannelPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
