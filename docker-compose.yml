@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:17
+    image: postgres:18
     container_name: wetap-db
     restart: unless-stopped
     environment:
@@ -9,6 +9,26 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - /data/wetap/postgres:/var/lib/postgresql/data
+    networks:
+      - wetap_net
+
+  db-backup:
+    image: prodrigestivill/postgres-backup-local:18
+    container_name: wetap-db-backup
+    restart: unless-stopped
+    volumes:
+      - /data/wetap/backups:/backups
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=wetap
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - SCHEDULE=0 */6 * * *
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
     networks:
       - wetap_net
 
