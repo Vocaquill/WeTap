@@ -1,4 +1,4 @@
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 import {Play, CheckCircle2} from 'lucide-react';
 import {APP_ENV} from '../../env';
@@ -28,20 +28,21 @@ function UserHomePage() {
         <div className="min-h-screen bg-[#121213] text-white pb-12">
 
             {heroVideo && (
-                <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8 pt-2">
-                    <div
-                        className="lg:col-span-7 aspect-video bg-zinc-900 rounded-[2rem] overflow-hidden relative group border border-white/5 shadow-2xl">
+                <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8 pt-2 relative group">
+                    <Link
+                        to={`/video/${heroVideo.slug}`}
+                        className="absolute inset-0 z-10"
+                        aria-label={`Дивитися відео: ${heroVideo.title}`}
+                    />
+
+                    <div className="lg:col-span-7 aspect-video bg-zinc-900 rounded-[2rem] overflow-hidden relative border border-white/5 shadow-2xl">
                         <img
                             src={heroVideo.image ? `${APP_ENV.IMAGES_400_URL}${heroVideo.image}` : '/placeholder.jpg'}
                             className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-700"
                             alt={heroVideo.title}
                         />
-                        <div
-                            className="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <Button
-                                variant="play"
-                                onClick={() => navigate(`/video/${heroVideo.slug}`)}
-                            >
+                        <div className="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <Button variant="play" tabIndex={-1}>
                                 <Play size={26} fill="white" className="ml-1 text-white"/>
                             </Button>
                         </div>
@@ -52,10 +53,13 @@ function UserHomePage() {
                             {heroVideo.title}
                         </h1>
 
-                        <div className="flex items-center gap-2 group cursor-pointer">
-                              <span className="font-bold text-zinc-300 hover:text-white transition-colors">
+                        <div className="flex items-center gap-2 relative z-20 w-fit">
+                            <Link
+                                to={`/channel/${heroVideo.channel?.id}`} // або куди веде клік на канал
+                                className="font-bold text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                            >
                                 {heroVideo.channel?.name || 'Unknown Channel'}
-                              </span>
+                            </Link>
                             <CheckCircle2 size={16} className="text-zinc-400" fill="currentColor"/>
                         </div>
 
