@@ -74,7 +74,7 @@ function RegisterPage() {
     };
 
     return (
-        <div className="min-h-screen bg-black text-white flex items-center justify-center relative overflow-hidden py-12">
+        <div className="min-h-screen bg-theme-bg text-white flex items-center justify-center relative overflow-hidden py-12">
             {isLoading && <LoadingOverlay />}
 
             {/* Background */}

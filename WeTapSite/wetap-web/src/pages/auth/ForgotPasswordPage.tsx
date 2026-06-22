@@ -30,7 +30,7 @@ function ForgotPasswordPage() {
 
     return (
         <div
-            className="min-h-screen bg-black text-white flex items-center justify-center relative overflow-hidden px-6">
+            className="min-h-screen bg-theme-bg text-white flex items-center justify-center relative overflow-hidden px-6">
             {isLoading && <LoadingOverlay />}
             {/* Background Glow */}
             <div

@@ -46,7 +46,7 @@ function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
   return (
     <aside
-      className={`bg-[#121213] p-3 transition-all duration-300 ${isOpen ? 'w-[18.2vw] max-w-[350px] min-w-[220px]' : 'w-18'} sticky top-0 h-screen flex flex-col justify-between select-none z-[50]`}
+      className={`bg-zinc-950 p-3 transition-all duration-300 ${isOpen ? 'w-[18.2vw] max-w-[350px] min-w-[220px]' : 'w-18'} sticky top-0 h-screen flex flex-col justify-between select-none z-[50]`}
     >
       <div className="flex flex-col flex-1 overflow-y-auto no-scrollbar">
         {/* ФІКС БАГУ: Адаптивне вирівнювання шапки сайдбару */}

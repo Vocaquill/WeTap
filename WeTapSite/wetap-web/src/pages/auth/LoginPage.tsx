@@ -68,7 +68,7 @@ function LoginPage() {
     );
 
     return (
-        <div className="min-h-screen bg-black text-white flex items-center justify-center relative overflow-hidden">
+        <div className="min-h-screen bg-theme-bg text-white flex items-center justify-center relative overflow-hidden">
             {(isLoginLoading || isGoogleLoading) && <LoadingOverlay />}
 
             {/* Background blur */}
