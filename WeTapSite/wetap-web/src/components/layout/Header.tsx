@@ -4,9 +4,11 @@ import { Bell, Search, Mic, Settings, Plus, Users, ChevronDown } from 'lucide-re
 import { useAppSelector } from "../../store/index";
 import { APP_ENV } from "../../env/index";
 import { Button } from '../form/Button';
+import { themes, applyTheme, getActiveTheme } from '../../themes';
 
 function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [activeTheme, setActiveTheme] = useState(getActiveTheme());
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -35,9 +37,15 @@ function Header() {
     }
   };
 
+  const handleThemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const nextTheme = e.target.value;
+    applyTheme(nextTheme);
+    setActiveTheme(nextTheme);
+  };
+
   return (
       <header
-          className={`h-14 sticky top-0 z-[40] px-4 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-[#121213]/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'}`}
+          className={`h-14 sticky top-0 z-[40] px-4 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-theme-bg/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'}`}
       >
         {/* ЛІВА ТА ЦЕНТРАЛЬНА ЧАСТИНИ ЗАЛИШИЛИСЬ БЕЗ ЗМІН */}
         <div className="flex items-center min-w-[50px]">
@@ -80,6 +88,26 @@ function Header() {
             <Button variant="icon" onClick={() => navigate('/video/add')} className="hover:bg-zinc-800/50 rounded-full p-2 text-zinc-300 hover:text-white transition-all">
               <Plus size={20} />
             </Button>
+          </div>
+
+          <div className="relative">
+            <select
+              value={activeTheme}
+              onChange={handleThemeChange}
+              className="bg-[#1c1c1e] text-zinc-300 hover:text-white text-xs font-bold py-2.5 pl-4 pr-9 rounded-full border border-zinc-800/40 outline-none cursor-pointer appearance-none transition-all hover:bg-zinc-800"
+              style={{
+                backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>")`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'right 12px center',
+                backgroundSize: '14px'
+              }}
+            >
+              {themes.map(t => (
+                <option key={t.id} value={t.id} className="bg-[#1c1c1e] text-zinc-300">
+                  {t.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* ОНОВЛЕНО: Додано onClick для кнопки Users */}

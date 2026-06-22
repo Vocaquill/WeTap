@@ -1,4 +1,4 @@
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import {Play, CheckCircle2} from 'lucide-react';
 import {APP_ENV} from '../../env';
@@ -9,7 +9,6 @@ import { Button } from '../../components/form/Button';
 import { VideoCard } from '../../components/video/VideoCard';
 
 function UserHomePage() {
-    const navigate = useNavigate();
 
     const {data: data, isLoading} = useSearchVideosQuery({itemPerPage: 30, page: 1});
     const videos = data?.items;
@@ -25,7 +24,7 @@ function UserHomePage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#121213] text-white pb-12">
+        <div className="min-h-screen bg-theme-bg text-white pb-12">
 
             {heroVideo && (
                 <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8 pt-2 relative group">

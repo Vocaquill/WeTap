@@ -11,11 +11,11 @@ function AppLayout() {
   const location = useLocation();
 
   return (
-    <div className="flex min-h-screen bg-[#121213] text-zinc-100 antialiased font-sans">
+    <div className="flex min-h-screen bg-theme-bg text-zinc-100 antialiased font-sans">
       {/* Передаємо функцію toggleSidebar у Сайдбар */}
       <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
 
-      <main className="flex-1 flex flex-col min-w-0 bg-[#121213]">
+      <main className="flex-1 flex flex-col min-w-0 bg-theme-bg">
         <Header />
 
         <div className="px-2 py-1 flex-grow">

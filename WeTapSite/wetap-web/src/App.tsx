@@ -31,10 +31,15 @@ import RequireAuthor from './components/auth/RequireAuthor';
 import RequireAdmin from './components/auth/RequireAdmin';
 import { useEffect, useState } from 'react';
 import { useRefreshTokenMutation } from './services/api/apiAccount';
+import { applyTheme, getActiveTheme } from './themes';
 
 function App() {
     const [refreshToken] = useRefreshTokenMutation();
     const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+    useEffect(() => {
+        applyTheme(getActiveTheme());
+    }, []);
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -51,7 +56,7 @@ function App() {
 
     if (isCheckingAuth) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-[#121213] text-zinc-100 font-sans">
+            <div className="flex min-h-screen items-center justify-center bg-theme-bg text-zinc-100 font-sans">
                 <div className="relative">
                     <div className="w-12 h-12 border-4 border-zinc-800 rounded-full" />
                     <div className="absolute top-0 left-0 w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin" />
