@@ -1,4 +1,5 @@
-﻿using Application.Models.Search;
+﻿using Application.Interfaces;
+using Application.Models.Search;
 using Application.Models.User;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -10,11 +11,14 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.Users.Queries.SearchUsers;
 
 public class SearchUsersQueryHandler(UserManager<UserEntity> userManager,
-    IMapper mapper) : IRequestHandler<SearchUsersQuery, SearchResult<UserItemModel>>
+    IMapper mapper,
+    ICurrentUserService currentUserService) : IRequestHandler<SearchUsersQuery, SearchResult<UserItemModel>>
 {
     public async Task<SearchResult<UserItemModel>> Handle(SearchUsersQuery request, CancellationToken cancellationToken)
     {
-        var query = userManager.Users.Where(x => !x.IsDeleted).AsQueryable();
+        var loginUserId = currentUserService.GetCurrentUserId();
+
+        var query = userManager.Users.Where(x => !x.IsDeleted).Where(x => x.Id != loginUserId).AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(request.SearchModel.Query))
         {

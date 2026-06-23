@@ -1,6 +1,4 @@
-﻿using Application.Features.Genres.Queries.GetGenres;
-using Application.Interfaces;
-using Application.Models.Genre;
+﻿using Application.Interfaces;
 using Application.Models.User;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
