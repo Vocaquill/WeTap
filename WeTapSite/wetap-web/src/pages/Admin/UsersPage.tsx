@@ -15,6 +15,7 @@ import type {IUserSearchRequest} from "../../types/User/IUserSearchRequest.ts";
 import type {IUserItemResponse} from "../../types/User/IUserItemResponse.ts";
 import {useDeleteUserMutation, useSearchUsersQuery} from "../../services/api/apiUsers.ts";
 import EditUserModal from "../../components/modal/EditUserModal.tsx";
+import AddUserModal from "../../components/modal/AddUserModal.tsx";
 
 const perPageOptions = [
     {id: 5, name: '5'},
@@ -142,7 +143,7 @@ function UsersPage() {
                 </div>
             )}
 
-            <AddGenreModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)}/>
+            <AddUserModal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)}/>
 
             <EditUserModal
                 isOpen={isEditOpen}
