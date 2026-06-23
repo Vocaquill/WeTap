@@ -5,11 +5,12 @@ import { motion } from 'framer-motion';
 import { message } from 'antd';
 
 import {useLoginByGoogleMutation, useLoginMutation} from "../../services/api/apiAccount";
-import type {ILogin, ServerError} from "../../types/user";
 import { useGoogleLogin } from '@react-oauth/google';
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 import { InputField } from "../../components/form/InputField";
 import { Button } from "../../components/form/Button";
+import type {ServerError} from "../../types/Account/ServerError.ts";
+import type {ILogin} from "../../types/Account/ILogin.ts";
 
 function LoginPage() {
     const navigate = useNavigate();

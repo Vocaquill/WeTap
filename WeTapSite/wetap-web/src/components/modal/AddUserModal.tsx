@@ -4,11 +4,11 @@ import {X} from 'lucide-react';
 
 import {useRegisterMutation} from "../../services/api/apiAccount.ts";
 import {useFormServerErrors} from "../../hooks/useFormServerErrors.ts";
-import type {IRegister} from "../../types/user.ts";
 
 import {InputField} from "../form/InputField";
 import {FileUploadField} from '../form/FileUploadField';
 import {Button} from "../form/Button";
+import type {IRegister} from "../../types/Account/IRegister.ts";
 
 interface Props {
     isOpen: boolean;
