@@ -29,9 +29,12 @@ public class CommentsController(IMediator mediator) : ControllerBase
 
     [HttpGet("{parentId:long}/replies")]
     [AllowAnonymous]
-    public async Task<ActionResult<List<CommentsItemModal>>> GetReplies(long parentId)
+    public async Task<ActionResult<SearchResult<CommentsItemModal>>> GetReplies(
+        long parentId,
+        [FromQuery] BaseSearchParamsModel model
+    )
     {
-        var result = await mediator.Send(new GetCommentRepliesQuery(parentId));
+        var result = await mediator.Send(new GetCommentRepliesQuery(parentId, model));
         return Ok(result);
     }
 
