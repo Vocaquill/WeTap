@@ -2,8 +2,8 @@ import {motion, AnimatePresence} from "framer-motion";
 import {X, Lock} from "lucide-react";
 import React, {useState} from "react";
 import {useChangePasswordMutation} from "../../services/api/apiAccount.ts";
-import { InputField } from "../form/InputField";
-import { Button } from "../form/Button";
+import {InputField} from "../form/InputField";
+import {Button} from "../form/Button";
 
 interface Props {
     isOpen: boolean;
@@ -23,6 +23,11 @@ export default function ChangePasswordModal({isOpen, onClose}: Props) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (formData.newPassword.length < 8) {
+            setErrorMessage("Закороткий пароль. Мінімальна довжина 8 символів.")
+            return;
+        }
 
         if (formData.newPassword !== formData.confirmPassword) {
             setErrorMessage("Паролі не збігаються!");

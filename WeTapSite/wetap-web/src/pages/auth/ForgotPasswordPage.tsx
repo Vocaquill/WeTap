@@ -13,14 +13,18 @@ function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
 
+    const [errorMessage, setErrorMessage] = useState("");
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setErrorMessage("")
+
         try {
             await forgot({email: email}).unwrap();
             setIsSubmitted(true);
         } catch (err) {
             console.log("error", err);
-            alert("Login failed");
+            setErrorMessage("Не вдалося відправити лист. Перевірте чи коректна електрона пошта");
         }
     };
 
@@ -74,6 +78,7 @@ function ForgotPasswordPage() {
                                     inputClassName="bg-zinc-900/40 border border-white/5 focus:border-red-600 focus:ring-4 focus:ring-red-600/10 rounded-2xl py-4 pr-4 outline-none transition-all placeholder:text-zinc-700"
                                     labelClassName="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1"
                                     wrapperClassName="space-y-2 group"
+                                    error={errorMessage}
                                 />
 
                                 <Button
