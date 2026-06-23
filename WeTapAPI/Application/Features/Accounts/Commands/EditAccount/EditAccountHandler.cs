@@ -1,4 +1,4 @@
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using AutoMapper;
 using Domain;
 using Domain.Entities.Identity;
@@ -6,16 +6,20 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Features.Users.Commands.EditUser;
+namespace Application.Features.Accounts.Commands.EditAccount;
 
-public class EditUserHandler(UserManager<UserEntity> userManager,
+public class EditAccountHandler(UserManager<UserEntity> userManager,
     AppDbContext context,
     IMapper mapper,
     IImageService imageService,
-    IJwtTokenService tokenService) : IRequestHandler<EditUserCommand, string>
+    IJwtTokenService tokenService,
+    ICurrentUserService currentUserService) : IRequestHandler<EditAccountCommand, string>
 {
-    public async Task<string> Handle(EditUserCommand request, CancellationToken cancellationToken)
+    public async Task<string> Handle(EditAccountCommand request, CancellationToken cancellationToken)
     {
+        var userId = currentUserService.GetCurrentUserId();
+        request.Model.Id = userId;
+
         var existing = await userManager.FindByIdAsync(request.Model.Id.ToString());
         var userLogins = await context.UserLogins
             .FirstOrDefaultAsync(ul => ul.UserId == existing!.Id);
