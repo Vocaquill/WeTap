@@ -5,6 +5,7 @@ using Application.Features.Comments.Commands.UpdateComment;
 using Application.Features.Comments.Queries.GetCommentsReplies;
 using Application.Features.Comments.Queries.GetVideoComments;
 using Application.Models.Comments;
+using Application.Models.Search;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +18,12 @@ public class CommentsController(IMediator mediator) : ControllerBase
 {
     [HttpGet("video/{videoId:long}")]
     [AllowAnonymous]
-    public async Task<ActionResult<List<CommentsItemModal>>> GetByVideo(long videoId)
+    public async Task<ActionResult<SearchResult<CommentsItemModal>>> GetByVideo(
+        long videoId,
+        [FromQuery] BaseSearchParamsModel model
+    )
     {
-        var result = await mediator.Send(new GetVideoCommentsQuery(videoId));
+        var result = await mediator.Send(new GetVideoCommentsQuery(videoId, model));
         return Ok(result);
     }
 
