@@ -7,6 +7,7 @@ import { apiAccount } from "../services/api/apiAccount.ts";
 import { apiTags } from "../services/api/apiTags.ts";
 import { apiLanguages } from "../services/api/apiLanguages.ts";
 import { apiChannels } from "../services/api/apiChannels.ts";
+import { apiComments } from "../services/api/apiComments.ts";
 
 
 import authReducer from "./slices/authSlice.ts";
@@ -22,6 +23,7 @@ export const store = configureStore({
         [apiTags.reducerPath]: apiTags.reducer,
         [apiLanguages.reducerPath]: apiLanguages.reducer,
         [apiChannels.reducerPath]: apiChannels.reducer,
+        [apiComments.reducerPath]: apiComments.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -32,7 +34,8 @@ export const store = configureStore({
             apiUsers.middleware,
             apiTags.middleware,
             apiLanguages.middleware,
-            apiChannels.middleware
+            apiChannels.middleware,
+            apiComments.middleware
         )
 });
 
