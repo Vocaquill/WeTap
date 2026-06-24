@@ -17,6 +17,7 @@ import { useGetByQuery, useIncrementViewMutation, useReactVideoMutation, useSear
 import { useAppSelector } from '../../store/index';
 import {TabButtons} from "../../components/ui/common/TabButton.tsx";
 import {Button} from "../../components/form/Button.tsx";
+import {CommentsSection} from "../../components/video/CommentsSection";
 
 function VideoPage() {
     const navigate = useNavigate();
@@ -213,6 +214,10 @@ function VideoPage() {
                                     </Button>
                                 )}
                             </div>
+                        </div>
+
+                        <div id="comments-section">
+                            <CommentsSection videoId={video.id} currentUser={user} />
                         </div>
                     </div>
 

@@ -17,7 +17,13 @@ export const apiComments = createApi({
                 method: "GET",
                 params,
             }),
-            providesTags: ["Comments"],
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.items.map(({ id }) => ({ type: "Comment" as const, id })),
+                        { type: "Comment" as const, id: "VIDEO_LIST" },
+                      ]
+                    : [{ type: "Comment" as const, id: "VIDEO_LIST" }],
         }),
 
         getCommentReplies: builder.query<IPagedResult<ICommentItemResponse>, { parentId: number; params?: IBaseSearch }>({
@@ -26,7 +32,13 @@ export const apiComments = createApi({
                 method: "GET",
                 params,
             }),
-            providesTags: ["Comments"],
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.items.map(({ id }) => ({ type: "Comment" as const, id })),
+                        { type: "Comment" as const, id: "REPLIES_LIST" },
+                      ]
+                    : [{ type: "Comment" as const, id: "REPLIES_LIST" }],
         }),
 
         createComment: builder.mutation<ICommentItemResponse, ICreateCommentRequest>({
@@ -35,7 +47,7 @@ export const apiComments = createApi({
                 method: "POST",
                 body,
             }),
-            invalidatesTags: ["Comments"],
+            invalidatesTags: [{ type: "Comment", id: "VIDEO_LIST" }],
         }),
 
         updateComment: builder.mutation<ICommentItemResponse, IUpdateCommentRequest>({
@@ -44,7 +56,11 @@ export const apiComments = createApi({
                 method: "PUT",
                 body,
             }),
-            invalidatesTags: (_result, _error, { id }) => [{ type: "Comment", id }, "Comments"],
+            invalidatesTags: (_result, _error, { id }) => [
+                { type: "Comment", id },
+                { type: "Comment", id: "VIDEO_LIST" },
+                { type: "Comment", id: "REPLIES_LIST" },
+            ],
         }),
 
         deleteComment: builder.mutation<void, number>({
@@ -52,7 +68,11 @@ export const apiComments = createApi({
                 url: `${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["Comments"],
+            invalidatesTags: (_result, _error, id) => [
+                { type: "Comment", id },
+                { type: "Comment", id: "VIDEO_LIST" },
+                { type: "Comment", id: "REPLIES_LIST" },
+            ],
         }),
     }),
 });
