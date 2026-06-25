@@ -76,15 +76,27 @@ function CreateChannelPage() {
         if (!validateClient()) return;
 
         try {
+            // 1. Відправляємо запит на створення
             await createChannel(form).unwrap();
+
+            // 2. Оновлюємо токен (щоб отримати роль Author, якщо бекенд її видає)
             await refreshToken().unwrap();
+
+            // 3. Переходимо в профіль (або на сторінку каналу)
             navigate("/account");
         } catch (err: any) {
+            // ДОДАНО: Виводимо повну помилку в консоль браузера
+            console.error("Помилка при створенні каналу:", err);
+
             if (err?.data?.errors) {
                 setServerErrors(err.data.errors);
             } else if (err?.data?.message) {
-                // If it's a general message, e.g. "Канал з таким Id вже існує" or "У користувача вже є канал"
                 setServerErrors({ name: [err.data.message] });
+            } else {
+                // ДОДАНО: Якщо структура помилки невідома, показуємо це користувачу
+                setServerErrors({
+                    name: ["Не вдалося створити канал. Відкрийте консоль розробника (F12) для деталей."]
+                });
             }
         }
     };

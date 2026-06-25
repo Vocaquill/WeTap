@@ -1,13 +1,11 @@
 using Application.Interfaces;
-using Application.Models.Tag;
-using AutoMapper;
 using Domain.Entities.Tag;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Tags.Commands.DeleteTag;
 
-public class DeleteTagHandler(IGenericRepository<TagEntity, long> repo, IMapper mapper)
+public class DeleteTagHandler(IGenericRepository<TagEntity, long> repo)
     : IRequestHandler<DeleteTagCommand>
 {
     public async Task Handle(

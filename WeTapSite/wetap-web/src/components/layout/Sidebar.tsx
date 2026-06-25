@@ -1,5 +1,5 @@
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { ShieldCheck, Home, Monitor, History, Clock, ThumbsUp, ListVideo, LogOut, Film, Flame, Menu } from 'lucide-react';
+import { ShieldCheck, Home, Monitor, History, Clock, ThumbsUp, ListVideo, Film, Flame, Menu } from 'lucide-react';
 import logoImg from '../../layouts/logo.png';
 import { useAppSelector } from "../../store";
 import { Button } from '../form/Button';
@@ -46,7 +46,7 @@ function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
   return (
     <aside
-      className={`bg-[#121213] p-3 transition-all duration-300 ${isOpen ? 'w-[18.2vw] max-w-[350px] min-w-[220px]' : 'w-18'} sticky top-0 h-screen flex flex-col justify-between select-none z-[50]`}
+      className={`bg-zinc-950 p-3 transition-all duration-300 ${isOpen ? 'w-[18.2vw] max-w-[350px] min-w-[220px]' : 'w-18'} sticky top-0 h-screen flex flex-col justify-between select-none z-[50]`}
     >
       <div className="flex flex-col flex-1 overflow-y-auto no-scrollbar">
         {/* ФІКС БАГУ: Адаптивне вирівнювання шапки сайдбару */}
@@ -164,20 +164,6 @@ function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               </Link>
             </div>
           )}
-
-          <hr className="border-zinc-500/60 my-3 mx-1" />
-
-          <button
-            onClick={() => { }}
-            className={`w-full flex items-center p-2.5 rounded-xl transition-all text-zinc-400 hover:bg-zinc-900/40 hover:text-rose-400 active:scale-[0.98] ${isOpen ? 'px-3 mx-1' : 'justify-center mx-1'}`}
-          >
-            <span className="min-w-[24px] flex items-center justify-center">
-              <LogOut size={18} />
-            </span>
-            <span className={`ml-4 text-sm font-medium transition-all duration-300 ${isOpen ? 'opacity-100 block' : 'opacity-0 hidden w-0'}`}>
-              Log Out
-            </span>
-          </button>
         </nav>
       </div>
     </aside>

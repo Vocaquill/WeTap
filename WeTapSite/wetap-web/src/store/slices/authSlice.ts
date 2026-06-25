@@ -10,7 +10,7 @@ interface AuthState {
 const getUserFromToken = (token: string): User | null => {
     try {
         const decoded: any = jwtDecode(token);
-        
+
         let roles: string[] = [];
         if (decoded["roles"]) {
             if (Array.isArray(decoded["roles"])) {
@@ -26,6 +26,9 @@ const getUserFromToken = (token: string): User | null => {
 
         const idVal = decoded["nameid"] ?? decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
 
+        // ДОДАНО: спроба дістати ID каналу з токена
+        const channelIdVal = decoded["channelId"] ?? decoded["ChannelId"];
+
         return {
             id: idVal ? Number(idVal) : undefined,
             name: decoded["name"] ?? decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] ?? "",
@@ -33,6 +36,8 @@ const getUserFromToken = (token: string): User | null => {
             image: decoded["image"] ?? "",
             token,
             roles,
+            // ДОДАНО: передаємо ID каналу, якщо він є
+            channelId: channelIdVal ? Number(channelIdVal) : undefined,
         };
     } catch (e) {
         console.error("Invalid token", e);
@@ -40,11 +45,8 @@ const getUserFromToken = (token: string): User | null => {
     }
 };
 
-const token = localStorage.getItem('token');
-const initialUser = token ? getUserFromToken(token) : null;
-
 const initialState: AuthState = {
-    user: initialUser,
+    user: null,
 };
 
 const authSlice = createSlice({
@@ -55,12 +57,10 @@ const authSlice = createSlice({
             const user = getUserFromToken(action.payload);
             if (user) {
                 state.user = user;
-                localStorage.setItem('token', action.payload);
             }
         },
         logout: (state) => {
             state.user = null;
-            localStorage.removeItem('token');
         },
     },
 });

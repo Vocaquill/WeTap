@@ -1,8 +1,7 @@
 using Application.Interfaces;
 using Application.Jobs;
+using Application.Mappings;
 using Application.Models.VideoProcessing;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain.Entities.Video;
 using Hangfire;
 using MediatR;
@@ -11,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace Application.Features.Videos.Commands.CreateVideo;
 
 public class CreateVideoHandler(IGenericRepository<VideoEntity, long> repo,
-    IMapper mapper,
+    VideoMappingProfile mapper,
     IImageService imageService,
     IVideoFileService videoFileService,
     IBackgroundJobClient backgroundJobClient,
@@ -23,7 +22,7 @@ public class CreateVideoHandler(IGenericRepository<VideoEntity, long> repo,
 {
     public async Task<VideoProcessingResult> Handle(CreateVideoCommand request, CancellationToken cancellationToken)
     {
-        var entity = mapper.Map<VideoEntity>(request.Model);
+        var entity = mapper.MapToEntity(request.Model);
 
         if (!request.Model.ChannelId.HasValue || request.Model.ChannelId == 0)
         {

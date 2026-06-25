@@ -2,16 +2,18 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Mail, Send, CheckCircle2} from 'lucide-react';
 import {motion, AnimatePresence} from 'framer-motion';
-import {useForgotPasswordMutation} from "../../services/api/apiAccount"; // Імпортуємо фон
+import {useForgotPasswordMutation} from "../../services/api/apiAccount";
 import { InputField } from "../../components/form/InputField";
 import { Button } from "../../components/form/Button";
 import { BackButton } from "../../components/ui/common/BackButton";
+import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 
 function ForgotPasswordPage() {
-    const [forgot] = useForgotPasswordMutation();
+    const [forgot, { isLoading }] = useForgotPasswordMutation();
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -22,15 +24,18 @@ function ForgotPasswordPage() {
         try {
             await forgot({email: email}).unwrap();
             setIsSubmitted(true);
-        } catch (err) {
+            setErrorMessage("");
+        } catch (err: any) {
             console.log("error", err);
-            setErrorMessage("Не вдалося відправити лист. Перевірте чи коректна електрона пошта");
+            const msg = err?.data?.message || err?.data?.error || "Сталася помилка при відновленні паролю";
+            setErrorMessage(msg);
         }
     };
 
     return (
         <div
-            className="min-h-screen bg-black text-white flex items-center justify-center relative overflow-hidden px-6">
+            className="min-h-screen bg-theme-bg text-white flex items-center justify-center relative overflow-hidden px-6">
+            {isLoading && <LoadingOverlay />}
             {/* Background Glow */}
             <div
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-red-600/10 blur-[120px] rounded-full pointer-events-none"/>
@@ -80,6 +85,10 @@ function ForgotPasswordPage() {
                                     wrapperClassName="space-y-2 group"
                                     error={errorMessage}
                                 />
+
+                                {errorMessage && (
+                                    <p className="text-red-500 text-sm font-semibold">{errorMessage}</p>
+                                )}
 
                                 <Button
                                     type="submit"

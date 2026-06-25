@@ -3,10 +3,11 @@ import {motion} from 'framer-motion';
 import {useAppSelector} from "../../store/index";
 import {APP_ENV} from "../../env/index";
 import {logout} from "../../store/slices/authSlice";
+import {useLogoutMutation} from "../../services/api/apiAccount";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
-import ChangePasswordModal from "../../components/modal/ChangePasswordModal";
+import ChangePasswordModal from "../../components/modal/account/ChangePasswordModal";
 import { Button } from "../../components/form/Button";
 
 function ProfilePage() {
@@ -18,7 +19,13 @@ function ProfilePage() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [logoutApi] = useLogoutMutation();
     const logoutHandler = async () => {
+        try {
+            await logoutApi().unwrap();
+        } catch (e) {
+            console.error("Logout failed on server", e);
+        }
         dispatch(logout());
         navigate('/')
     }
@@ -47,7 +54,7 @@ function ProfilePage() {
                             <Mail size={16}/> {user!.email}
                         </p>
                         <div className="flex gap-2 pt-2 justify-center md:justify-start">
-                            {user!.role == "Admin" ? (
+                            {user!.roles.includes("Admin") ? (
                                 <span
                                     className="px-3 py-1 bg-red-600/10 border border-red-600/20 rounded-full text-[10px] font-black uppercase text-red-500 tracking-widest">
                                     Premium Member

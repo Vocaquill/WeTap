@@ -1,33 +1,63 @@
-﻿using Application.Models.Account;
+using Application.Models.Account;
 using Application.Models.User;
-using AutoMapper;
 using Domain.Entities.Identity;
+using Riok.Mapperly.Abstractions;
 
 namespace Application.Mappings;
 
-public class UserMapping: Profile
+[Mapper]
+public partial class UserMapping
 {
-    public UserMapping()
+    [MapProperty(nameof(UserEntity.UserRoles), nameof(UserItemModel.Roles))]
+    [MapProperty(nameof(UserEntity.UserLogins), nameof(UserItemModel.LoginTypes))]
+    public partial UserItemModel MapToItemModel(UserEntity entity);
+
+    [MapProperty(nameof(AccountRegisterModel.Email), nameof(UserEntity.UserName))]
+    [MapperIgnoreTarget(nameof(UserEntity.Image))]
+    public partial UserEntity MapToEntity(AccountRegisterModel model);
+
+    [MapProperty(nameof(AccountGoogleAccountModel.Email), nameof(UserEntity.UserName))]
+    [MapperIgnoreTarget(nameof(UserEntity.Image))]
+    public partial UserEntity MapToEntity(AccountGoogleAccountModel model);
+
+    [MapProperty(nameof(UserSeedModel.Email), nameof(UserEntity.UserName))]
+    [MapProperty(nameof(UserSeedModel.ImagePath), nameof(UserEntity.Image))]
+    public partial UserEntity MapToEntity(UserSeedModel model);
+
+    [MapperIgnoreTarget(nameof(UserEntity.Image))]
+    public partial void MapToEntity(UserEditModel model, UserEntity entity);
+
+    [MapPropertyFromSource(nameof(UserItemModel.Roles), Use = nameof(MapRolesQuery))]
+    [MapPropertyFromSource(nameof(UserItemModel.LoginTypes), Use = nameof(MapLoginsQuery))]
+    [MapPropertyFromSource(nameof(UserItemModel.IsLoginGoogle), Use = nameof(MapIsGoogleQuery))]
+    [MapPropertyFromSource(nameof(UserItemModel.IsLoginPassword), Use = nameof(MapIsPasswordQuery))]
+    public partial IQueryable<UserItemModel> ProjectToItemModel(IQueryable<UserEntity> query);
+
+    private static readonly System.Linq.Expressions.Expression<Func<UserEntity, List<string>>> MapRolesQuery =
+        user => user.UserRoles.Select(ur => ur.Role.Name).ToList();
+
+    private static readonly System.Linq.Expressions.Expression<Func<UserEntity, List<string>>> MapLoginsQuery =
+        user => user.UserLogins.Select(l => l.LoginProvider).ToList();
+
+    private static readonly System.Linq.Expressions.Expression<Func<UserEntity, bool>> MapIsGoogleQuery =
+        user => user.UserLogins.Any(l => l.LoginProvider == "Google");
+
+    private static readonly System.Linq.Expressions.Expression<Func<UserEntity, bool>> MapIsPasswordQuery =
+        user => user.PasswordHash != null && user.PasswordHash != "";
+
+    private List<string> MapRoles(ICollection<UserRoleEntity> userRoles)
     {
-        CreateMap<UserEntity, UserItemModel>()
-            .ForMember(dest => dest.IsLoginGoogle, opt => opt.MapFrom(src => src.UserLogins!.Any(l => l.LoginProvider == "Google")))
-            .ForMember(dest => dest.IsLoginPassword, opt => opt.MapFrom(src => !string.IsNullOrEmpty(src.PasswordHash)))
-            .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.UserRoles!.Select(ur => ur.Role.Name).ToList()))
-            .ForMember(dest => dest.LoginTypes, opt => opt.Ignore());
+        return userRoles.Select(ur => ur.Role.Name).ToList();
+    }
 
-        CreateMap<AccountRegisterModel, UserEntity>()
-            .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.Email))
-            .ForMember(x => x.Image, opt => opt.Ignore());
+    private List<string> MapLoginTypes(ICollection<UserLoginEntity> logins)
+    {
+        return logins.Select(l => l.LoginProvider).ToList();
+    }
 
-        CreateMap<AccountGoogleAccountModel, UserEntity>()
-            .ForMember(x => x.Image, opt => opt.Ignore())
-            .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.Email));
-
-        CreateMap<UserSeedModel, UserEntity>()
-            .ForMember(opt => opt.UserName, opt => opt.MapFrom(x => x.Email))
-            .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.ImagePath));
-
-        CreateMap<UserEditModel, UserEntity>()
-            .ForMember(dest => dest.Image, opt => opt.Ignore());
+    private void AfterMapToItemModel(UserEntity entity, UserItemModel model)
+    {
+        model.IsLoginGoogle = model.LoginTypes.Any(x => x.Contains("Google", StringComparison.OrdinalIgnoreCase));
+        model.IsLoginPassword = !string.IsNullOrEmpty(entity.PasswordHash);
     }
 }

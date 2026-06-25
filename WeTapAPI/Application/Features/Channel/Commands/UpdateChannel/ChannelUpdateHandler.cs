@@ -1,13 +1,13 @@
 using Application.Interfaces;
 using Application.Models.Channel;
-using AutoMapper;
+using Application.Mappings;
 using Domain.Entities.Channel;
 using MediatR;
 
 namespace Application.Features.Channel.Commands.UpdateChannel;
 
 public class ChannelUpdateHandler(IGenericRepository<ChannelEntity, long> repo,
-    IMapper mapper,
+    ChannelMappingProfile channelMapper,
     IImageService imageService,
     ICurrentUserService currentUserService
     ) : IRequestHandler<UpdateChannelCommand, ChannelItemModel>
@@ -17,7 +17,7 @@ public class ChannelUpdateHandler(IGenericRepository<ChannelEntity, long> repo,
         long id = currentUserService.GetCurrentUserId();
         var entity = await repo.GetByIdAsync(id);
 
-        mapper.Map(request.Model, entity);
+        channelMapper.MapToEntity(request.Model, entity);
 
         if (request.Model.AvatarImage != null)
         {
@@ -39,6 +39,6 @@ public class ChannelUpdateHandler(IGenericRepository<ChannelEntity, long> repo,
 
         await repo.UpdateAsync(entity);
 
-        return mapper.Map<ChannelItemModel>(entity);
+        return channelMapper.MapToItemModel(entity);
     }
 }

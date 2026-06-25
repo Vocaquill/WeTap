@@ -1,14 +1,12 @@
 using Application.Interfaces;
 using Application.Models.Language;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain.Entities.Language;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Languages.Commands.DeleteLanguage;
 
-public class DeleteLanguageHandler(IGenericRepository<VideoLanguageEntity, long> repo, IMapper mapper)
+public class DeleteLanguageHandler(IGenericRepository<VideoLanguageEntity, long> repo)
     : IRequestHandler<DeleteLanguageCommand>
 {
     public async Task Handle(DeleteLanguageCommand request, CancellationToken cancellationToken)

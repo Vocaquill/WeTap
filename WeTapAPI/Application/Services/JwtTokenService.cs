@@ -1,17 +1,21 @@
 ﻿using Application.Constants;
 using Application.Interfaces;
 using Domain.Entities.Identity;
+using Domain.Entities.Channel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Json;
 
 namespace Application.Services;
 
-public class JwtTokenService(IConfiguration configuration,
-    UserManager<UserEntity> userManager) : IJwtTokenService
+public class JwtTokenService(
+    IConfiguration configuration,
+    UserManager<UserEntity> userManager,
+    IGenericRepository<ChannelEntity, long> channelRepo) : IJwtTokenService
 {
     public async Task<string> CreateTokenAsync(UserEntity user)
     {
@@ -20,10 +24,19 @@ public class JwtTokenService(IConfiguration configuration,
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim("email", user.Email),
+            new Claim("email", user.Email ?? string.Empty),
             new Claim("name", $"{user.LastName} {user.FirstName}"),
             new Claim("image", $"{user.Image}")
         };
+
+        var channel = await channelRepo.AsQurable()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Author != null && c.Author.Id == user.Id);
+
+        if (channel != null)
+        {
+            claims.Add(new Claim("channelId", channel.Id.ToString()));
+        }
 
         var roles = await userManager.GetRolesAsync(user);
         var rolesJson = JsonSerializer.Serialize(roles);

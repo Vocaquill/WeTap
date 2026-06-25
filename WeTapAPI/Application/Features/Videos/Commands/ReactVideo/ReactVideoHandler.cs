@@ -1,7 +1,7 @@
 using Application.Constants;
 using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.Video;
-using AutoMapper;
 using Domain;
 using Domain.Entities.Video;
 using MediatR;
@@ -11,7 +11,7 @@ namespace Application.Features.Videos.Commands.ReactVideo;
 
 public class ReactVideoHandler(
     AppDbContext context,
-    IMapper mapper,
+    VideoMappingProfile mapper,
     ICurrentUserService currentUser)
     : IRequestHandler<ReactVideoCommand>
 {
@@ -36,10 +36,14 @@ public class ReactVideoHandler(
 
         if (reaction == null)
         {
-            reaction = mapper.Map<VideoReactionEntity>(request.Model);
+            reaction = mapper.MapToEntity(request.Model);
             reaction.UserId = userId;
 
             context.VideoReactions.Add(reaction);
+        }
+        else if (reaction.IsLike == request.Model.IsLike)
+        {
+            context.VideoReactions.Remove(reaction);
         }
         else
         {

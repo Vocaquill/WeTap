@@ -1,8 +1,7 @@
-﻿using Application.Interfaces;
+using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.Search;
 using Application.Models.User;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain.Entities.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Features.Users.Queries.SearchUsers;
 
 public class SearchUsersQueryHandler(UserManager<UserEntity> userManager,
-    IMapper mapper,
+    UserMapping mapper,
     ICurrentUserService currentUserService) : IRequestHandler<SearchUsersQuery, SearchResult<UserItemModel>>
 {
     public async Task<SearchResult<UserItemModel>> Handle(SearchUsersQuery request, CancellationToken cancellationToken)
@@ -90,10 +89,10 @@ public class SearchUsersQueryHandler(UserManager<UserEntity> userManager,
         var totalPages = (int)Math.Ceiling(totalCount / (double)safeItemsPerPage);
         var safePage = Math.Min(Math.Max(1, request.SearchModel.Page), Math.Max(1, totalPages));
 
-        var users = await query
-            .Skip((safePage - 1) * safeItemsPerPage)
-            .Take(safeItemsPerPage)
-            .ProjectTo<UserItemModel>(mapper.ConfigurationProvider)
+        var users = await mapper.ProjectToItemModel(
+            query
+                .Skip((safePage - 1) * safeItemsPerPage)
+                .Take(safeItemsPerPage))
             .ToListAsync();
 
         return new SearchResult<UserItemModel>

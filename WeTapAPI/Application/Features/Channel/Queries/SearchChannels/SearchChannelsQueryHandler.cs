@@ -1,8 +1,7 @@
 using Application.Interfaces;
 using Application.Models.Channel;
 using Application.Models.Search;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using Application.Mappings;
 using Domain.Entities.Channel;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,7 @@ namespace Application.Features.Channel.Queries.SearchChannels;
 
 public class SearchChannelsQueryHandler(
         IGenericRepository<ChannelEntity, long> repo,
-        IMapper mapper
+        ChannelMappingProfile channelMapper
     )
     : IRequestHandler<SearchChannelsQuery, SearchResult<ChannelItemModel>>
 {
@@ -37,11 +36,12 @@ public class SearchChannelsQueryHandler(
         int totalCount = await query.CountAsync(cancellationToken);
         int totalPages = (int)Math.Ceiling(totalCount / (double)itemsPerPage);
 
-        var items = await query
+        var pagedQuery = query
             .OrderByDescending(x => x.Id)
             .Skip((currentPage - 1) * itemsPerPage)
-            .Take(itemsPerPage)
-            .ProjectTo<ChannelItemModel>(mapper.ConfigurationProvider)
+            .Take(itemsPerPage);
+
+        var items = await channelMapper.ProjectToItemModel(pagedQuery)
             .ToListAsync(cancellationToken);
 
         return new SearchResult<ChannelItemModel>

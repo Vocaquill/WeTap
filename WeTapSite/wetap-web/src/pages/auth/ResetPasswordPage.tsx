@@ -6,6 +6,7 @@ import {useResetPasswordMutation} from "../../services/api/apiAccount";
 import { InputField } from "../../components/form/InputField";
 import { Button } from "../../components/form/Button";
 import { BackButton } from "../../components/ui/common/BackButton";
+import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 
 function ResetPasswordPage() {
     const [searchParams] = useSearchParams();
@@ -14,7 +15,7 @@ function ResetPasswordPage() {
 
     const [errorMessage, setErrorMessage] = useState("");
 
-    const [resetPassword] = useResetPasswordMutation();
+    const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
     const [formData, setFormData] = useState({
         newPassword: "",
@@ -46,7 +47,8 @@ function ResetPasswordPage() {
 
     return (
         <div
-            className="min-h-screen bg-black text-white flex items-center justify-center relative overflow-hidden py-12">
+            className="min-h-screen bg-theme-bg text-white flex items-center justify-center relative overflow-hidden py-12">
+            {isLoading && <LoadingOverlay />}
 
             {/* Background */}
             <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-600/20 blur-[120px] rounded-full"/>

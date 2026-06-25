@@ -1,6 +1,6 @@
 using Application.Interfaces;
 using Application.Models.Language;
-using AutoMapper;
+using Application.Mappings;
 using Domain.Entities.Language;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ namespace Application.Features.Languages.Queries.GetByLanguage;
 
 public class GetByLanguageHandler(
     IGenericRepository<VideoLanguageEntity, long> repo,
-    IMapper mapper
+    LanguageMappingProfile languageMapper
 ) : IRequestHandler<GetByLanguageQuery, LanguageItemModel?>
 {
     public async Task<LanguageItemModel?> Handle(GetByLanguageQuery request, CancellationToken cancellationToken)
@@ -31,6 +31,6 @@ public class GetByLanguageHandler(
         if (entity == null)
             throw new KeyNotFoundException("Мову не знайдено");
 
-        return entity == null ? null : mapper.Map<LanguageItemModel>(entity);
+        return entity == null ? null : languageMapper.MapToItemModel(entity);
     }
 }

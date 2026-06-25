@@ -136,5 +136,20 @@ public class AppDbContext
                 .HasForeignKey(c => c.ParentId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
+
+        modelBuilder.Entity<VideoReactionEntity>(vr =>
+        {
+            vr.HasOne(x => x.Video)
+                .WithMany(v => v.VideoReactions)
+                .HasForeignKey(x => x.VideoId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
+
+            vr.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
+        });
     }
 }

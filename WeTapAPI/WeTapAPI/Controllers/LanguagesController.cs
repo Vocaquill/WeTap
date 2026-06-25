@@ -8,6 +8,7 @@ using Application.Models.Language;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Application.Constants;
 
 namespace WeTapAPI.Controllers;
 
@@ -16,7 +17,7 @@ namespace WeTapAPI.Controllers;
 public class LanguagesController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
-    //[Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult<LanguageItemModel>> Create([FromBody] LanguageCreateModel model)
     {
         var command = new CreateLanguageCommand(model);
@@ -44,7 +45,7 @@ public class LanguagesController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut]
-    //[Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult<LanguageItemModel>> Update([FromBody] LanguageUpdateModel model)
     {
         var command = new UpdateLanguageCommand(model);
@@ -53,7 +54,7 @@ public class LanguagesController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete]
-    //[Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult<IEnumerable<LanguageItemModel>>> Delete(
         [FromBody] LanguageDeleteModel model)
     {

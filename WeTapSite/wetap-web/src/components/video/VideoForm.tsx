@@ -23,6 +23,7 @@ export interface VideoFormProps {
     onSubmit: (form: IVideoCreateRequest) => Promise<void>;
     isLoading: boolean;
     initialData?: Partial<IVideoCreateRequest>;
+    initialTags?: ITagItemResponse[];
     requireVideoFile?: boolean;
 }
 
@@ -32,6 +33,7 @@ export function VideoForm({
     onSubmit,
     isLoading,
     initialData,
+    initialTags,
     requireVideoFile = true,
 }: VideoFormProps) {
     const [createTag, { isLoading: isLoadingTag }] = useCreateTagMutation();
@@ -64,7 +66,7 @@ export function VideoForm({
         privacyId: initialData?.privacyId ?? 1,
     }));
 
-    const [extraTags, setExtraTags] = useState<ITagItemResponse[]>([]);
+    const [extraTags, setExtraTags] = useState<ITagItemResponse[]>(() => initialTags ?? []);
 
     const knownTags = useMemo(() => {
         const map = new Map(extraTags.map(tag => [tag.id, tag]));

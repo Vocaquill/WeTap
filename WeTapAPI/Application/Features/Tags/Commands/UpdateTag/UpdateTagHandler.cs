@@ -1,13 +1,13 @@
 using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.Tag;
-using AutoMapper;
 using Domain;
 using Domain.Entities.Tag;
 using MediatR;
 
 namespace Application.Features.Tags.Commands.UpdateTag;
 
-public class UpdateTagHandler(IGenericRepository<TagEntity, long> repo, IMapper mapper, AppDbContext context)
+public class UpdateTagHandler(IGenericRepository<TagEntity, long> repo, TagMappingProfile mapper, AppDbContext context)
     : IRequestHandler<UpdateTagCommand, TagItemModel>
 {
     public async Task<TagItemModel> Handle(
@@ -16,10 +16,10 @@ public class UpdateTagHandler(IGenericRepository<TagEntity, long> repo, IMapper 
     {
         var tag = context.Tags.First(x => x.Id == request.Model.Id && !x.IsDeleted);
 
-        mapper.Map(request.Model, tag);
+        mapper.MapToEntity(request.Model, tag);
 
         await repo.UpdateAsync(tag);
 
-        return mapper.Map<TagItemModel>(tag);
+        return mapper.MapToItemModel(tag);
     }
 }

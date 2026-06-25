@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useCreateVideoMutation } from '../../services/api/apiVideos';
 import type { IVideoCreateRequest } from '../../types/Video/IVideoCreateRequest';
-import { VideoProcessingModal } from '../../components/modal/VideoProcessingModal';
+import { VideoProcessingModal } from '../../components/modal/video/VideoProcessingModal';
 import { VideoForm } from '../../components/video/VideoForm';
 
 export default function CreateVideoPage() {

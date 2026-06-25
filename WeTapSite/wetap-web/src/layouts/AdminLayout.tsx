@@ -1,5 +1,5 @@
 import {Outlet, NavLink, useLocation, useNavigate} from 'react-router-dom';
-import {LayoutDashboard, Film, Tag, HomeIcon} from 'lucide-react';
+import {LayoutDashboard, Film, Tag, Hash, HomeIcon, Globe} from 'lucide-react';
 import PageTransition from '../components/layout/PageTransition';
 import { Button } from '../components/form/Button';
 
@@ -7,7 +7,7 @@ function AdminLayout() {
     const location = useLocation();
     const navigate = useNavigate();
     return (
-        <div className="flex min-h-screen bg-[#121213] text-zinc-100">
+        <div className="flex min-h-screen bg-theme-bg text-zinc-100">
             {/* Admin Sidebar */}
             <aside className="w-64 border-r border-zinc-800 bg-zinc-950 p-4 flex flex-col">
                 <div className="p-6 mb-4">
@@ -46,6 +46,8 @@ function AdminLayout() {
                         <div className="space-y-1">
                             <AdminNavLink to="/admin/movies" icon={<Film size={20}/>} label="Усі фільми"/>
                             <AdminNavLink to="/admin/genres" icon={<Tag size={20}/>} label="Жанри"/>
+                            <AdminNavLink to="/admin/tags" icon={<Hash size={20}/>} label="Теги"/>
+                            <AdminNavLink to="/admin/languages" icon={<Globe size={20}/>} label="Мови"/>
                         </div>
                     </div>
 

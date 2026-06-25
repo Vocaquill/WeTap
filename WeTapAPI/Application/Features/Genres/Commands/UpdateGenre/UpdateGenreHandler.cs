@@ -1,7 +1,7 @@
 using Application.Features.Genres.Commands.CreateGenre;
 using Application.Interfaces;
 using Application.Models.Genre;
-using AutoMapper;
+using Application.Mappings;
 using Domain;
 using Domain.Entities;
 using Domain.Entities.Genre;
@@ -10,7 +10,7 @@ using MediatR;
 namespace Application.Features.Genres.Commands.UpdateGenre;
 
 public class UpdateGenreHandler(IGenericRepository<GenreEntity, long> repo,
-    IMapper mapper,
+    GenreMappingProfile genreMapper,
     IImageService imageService)
     : IRequestHandler<UpdateGenreCommand, GenreItemModel>
 {
@@ -23,7 +23,7 @@ public class UpdateGenreHandler(IGenericRepository<GenreEntity, long> repo,
 
         var oldImage = genre.Image;
 
-        mapper.Map(request.Model, genre);
+        genreMapper.MapToEntity(request.Model, genre);
 
         if (request.Model.Image != null)
         {
@@ -39,7 +39,7 @@ public class UpdateGenreHandler(IGenericRepository<GenreEntity, long> repo,
 
         await repo.UpdateAsync(genre);
 
-        var returnedGenre = mapper.Map<GenreItemModel>(genre);
+        var returnedGenre = genreMapper.MapToItemModel(genre);
 
         return returnedGenre;
     }

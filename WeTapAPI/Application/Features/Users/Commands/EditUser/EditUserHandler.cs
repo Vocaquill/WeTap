@@ -1,5 +1,6 @@
 using Application.Interfaces;
-using AutoMapper;
+using Application.Mappings;
+using Application.Services;
 using Domain;
 using Domain.Entities.Identity;
 using MediatR;
@@ -10,9 +11,11 @@ namespace Application.Features.Users.Commands.EditUser;
 
 public class EditUserHandler(UserManager<UserEntity> userManager,
     AppDbContext context,
-    IMapper mapper,
+    UserMapping mapper,
     IImageService imageService,
-    IJwtTokenService tokenService) : IRequestHandler<EditUserCommand, string>
+    IJwtTokenService tokenService,
+    ICookieAuthService cookieAuthService,
+    ICurrentUserService currentUserService) : IRequestHandler<EditUserCommand, string>
 {
     public async Task<string> Handle(EditUserCommand request, CancellationToken cancellationToken)
     {
@@ -23,7 +26,7 @@ public class EditUserHandler(UserManager<UserEntity> userManager,
         if (userLogins != null && userLogins.LoginProvider == "Google" && existing!.Email != request.Model.Email)
             throw new InvalidOperationException("Cannot edit email for Google login user");
 
-        existing = mapper.Map(request.Model, existing);
+        mapper.MapToEntity(request.Model, existing);
 
         if (request.Model.Image != null)
         {
@@ -41,6 +44,13 @@ public class EditUserHandler(UserManager<UserEntity> userManager,
         await userManager.UpdateAsync(existing);
 
         var jwtToken = await tokenService.CreateTokenAsync(existing);
+
+        var currentUserId = currentUserService.TryGetCurrentUserId();
+        if (currentUserId.HasValue && currentUserId.Value == existing.Id)
+        {
+            cookieAuthService.SetAuthCookie(jwtToken);
+        }
+
         return jwtToken;
     }
 }

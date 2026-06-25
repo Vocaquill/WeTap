@@ -21,7 +21,11 @@ public class VideoFileService : IVideoFileService
 
     public VideoFileService(IConfiguration configuration)
     {
-        _videosDir = Path.Combine(Directory.GetCurrentDirectory(), configuration["VideosDir"]!);
+        var mediaRoot = configuration["MediaRoot"];
+        var basePath = string.IsNullOrEmpty(mediaRoot)
+            ? Directory.GetCurrentDirectory()
+            : mediaRoot;
+        _videosDir = Path.Combine(basePath, configuration["VideosDir"]!);
         _videoSizes = configuration.GetSection("VideoSizes").Get<List<int>>()!;
         _ffmpegPath = Path.Combine(Directory.GetCurrentDirectory(), "FFmpeg");
         _ffmpegThreads = configuration.GetValue("VideoProcessing:FfmpegThreads", 2);
@@ -33,6 +37,7 @@ public class VideoFileService : IVideoFileService
 
         FFmpeg.SetExecutablesPath(_ffmpegPath);
     }
+
 
     public async Task<string> SaveVideoAsync(IFormFile file)
     {

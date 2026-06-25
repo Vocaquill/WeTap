@@ -2,6 +2,7 @@ using Application.Features.Accounts.Commands.ChangePassword;
 using Application.Features.Accounts.Commands.ForgotPassword;
 using Application.Features.Accounts.Commands.GoogleLogin;
 using Application.Features.Accounts.Commands.Login;
+using Application.Features.Accounts.Commands.Logout;
 using Application.Features.Accounts.Commands.Register;
 using Application.Features.Accounts.Commands.ResetPassword;
 using Application.Features.Accounts.Queries.ValidateResetToken;
@@ -26,9 +27,9 @@ public class AccountController(IMediator mediator) : ControllerBase
         try
         {
             var command = new LoginCommand(model);
-            var result = await mediator.Send(command);
+            var token = await mediator.Send(command);
 
-            return Ok(new { Token = result });
+            return Ok(new { token });
         }
         catch (Exception ex)
         {
@@ -44,9 +45,9 @@ public class AccountController(IMediator mediator) : ControllerBase
         try
         {
             var command = new RegisterCommand(model);
-            var result = await mediator.Send(command);
+            var token = await mediator.Send(command);
 
-            return Ok(new { Token = result });
+            return Ok(new { token });
         }
         catch (Exception ex)
         {
@@ -59,27 +60,29 @@ public class AccountController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> GoogleLogin([FromBody] AccountGoogleLoginRequestModel model)
     {
         var command = new GoogleLoginCommand(model);
-        var result = await mediator.Send(command);
+        var token = await mediator.Send(command);
 
-        return Ok(new { Token = result });
+        return Ok(new { token });
     }
 
     [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> ForgotPassword([FromBody] AccountForgotPasswordModel model)
     {
-        var command = new ForgotPasswordCommand(model);
-        var result = await mediator.Send(command);
+        try
+        {
+            var command = new ForgotPasswordCommand(model);
+            var result = await mediator.Send(command);
 
-        if (result)
-            return Ok();
-        else
-            return BadRequest(new
-            {
-                Status = 400,
-                IsValid = false,
-                Errors = new { Email = "Користувача з такою поштою не існує" }
-            });
+            if (result)
+                return Ok();
+
+            return BadRequest(new { message = "Не вдалося надіслати лист для відновлення паролю" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpPost]
@@ -120,16 +123,32 @@ public class AccountController(IMediator mediator) : ControllerBase
     var command = new EditAccountCommand(model);
         var result = await mediator.Send(command);
 
-        return Ok(new { Token = result });
+        return Ok(new { token });
     }
 
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> RefreshToken()
     {
-        var command = new RefreshTokenCommand();
-        var result = await mediator.Send(command);
+        try
+        {
+            var userId = currentUserService.GetCurrentUserId();
+            var command = new RefreshTokenCommand(userId);
+            var token = await mediator.Send(command);
 
-        return Ok(new { Token = result });
+            return Ok(new { token });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> Logout()
+    {
+        await mediator.Send(new LogoutCommand());
+        return Ok();
     }
 }
