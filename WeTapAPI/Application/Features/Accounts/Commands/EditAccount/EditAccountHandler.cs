@@ -1,5 +1,5 @@
 ﻿using Application.Interfaces;
-using AutoMapper;
+using Application.Mappings;
 using Domain;
 using Domain.Entities.Identity;
 using MediatR;
@@ -10,7 +10,8 @@ namespace Application.Features.Accounts.Commands.EditAccount;
 
 public class EditAccountHandler(UserManager<UserEntity> userManager,
     AppDbContext context,
-    IMapper mapper,
+    UserMapping mapper,
+    ICookieAuthService cookieAuthService,
     IImageService imageService,
     IJwtTokenService tokenService,
     ICurrentUserService currentUserService) : IRequestHandler<EditAccountCommand, string>
@@ -27,7 +28,7 @@ public class EditAccountHandler(UserManager<UserEntity> userManager,
         if (userLogins != null && userLogins.LoginProvider == "Google" && existing!.Email != request.Model.Email)
             throw new InvalidOperationException("Cannot edit email for Google login user");
 
-        existing = mapper.Map(request.Model, existing);
+        mapper.MapToEntity(request.Model, existing);
 
         if (request.Model.Image != null)
         {
@@ -45,6 +46,13 @@ public class EditAccountHandler(UserManager<UserEntity> userManager,
         await userManager.UpdateAsync(existing);
 
         var jwtToken = await tokenService.CreateTokenAsync(existing);
+
+        var currentUserId = currentUserService.TryGetCurrentUserId();
+        if (currentUserId.HasValue && currentUserId.Value == existing.Id)
+        {
+            cookieAuthService.SetAuthCookie(jwtToken);
+        }
+
         return jwtToken;
     }
 }

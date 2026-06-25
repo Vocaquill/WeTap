@@ -6,8 +6,8 @@ import {USER_SORT_FIELDS, type UserSortField} from '../../env';
 import DeleteModal from "../../components/modal/common/DeleteModal.tsx";
 
 import {Pagination} from '../../components/ui/common/Pagination';
-import { FilterBar } from '../../components/ui/common/FilterBar';
-import { GenericTable } from '../../components/ui/common/GenericTable';
+import {FilterBar} from '../../components/ui/common/FilterBar';
+import {GenericTable} from '../../components/ui/common/GenericTable';
 
 import {SelectField} from '../../components/form/SelectField';
 import type {IUserSearchRequest} from "../../types/User/IUserSearchRequest.ts";
@@ -33,7 +33,7 @@ function UsersPage() {
         sortBy: undefined,
     });
 
-    // const [isAddOpen, setIsAddOpen] = useState(false);
+    const [isAddOpen, setIsAddOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<IUserItemResponse | null>(null);
@@ -89,7 +89,7 @@ function UsersPage() {
                     size="md"
                     className="rounded-2xl"
                     icon={<Plus size={20} strokeWidth={3}/>}
-                    onClick={() => {}}
+                    onClick={() => setIsAddOpen(true)}
                 >
                     ДОДАТИ КОРИСТУВАЧА
                 </Button>

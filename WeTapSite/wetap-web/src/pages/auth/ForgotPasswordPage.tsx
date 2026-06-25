@@ -15,8 +15,6 @@ function ForgotPasswordPage() {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    const [errorMessage, setErrorMessage] = useState("");
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMessage("")

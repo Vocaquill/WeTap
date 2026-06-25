@@ -120,10 +120,10 @@ public class AccountController(IMediator mediator) : ControllerBase
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> EditAccount([FromForm] UserEditModel model)
     {
-    var command = new EditAccountCommand(model);
+        var command = new EditAccountCommand(model);
         var result = await mediator.Send(command);
 
-        return Ok(new { token });
+        return Ok(new { token = result });
     }
 
     [Authorize]
@@ -132,8 +132,7 @@ public class AccountController(IMediator mediator) : ControllerBase
     {
         try
         {
-            var userId = currentUserService.GetCurrentUserId();
-            var command = new RefreshTokenCommand(userId);
+            var command = new RefreshTokenCommand();
             var token = await mediator.Send(command);
 
             return Ok(new { token });
