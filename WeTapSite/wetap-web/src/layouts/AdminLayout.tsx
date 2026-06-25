@@ -7,7 +7,7 @@ function AdminLayout() {
     const location = useLocation();
     const navigate = useNavigate();
     return (
-        <div className="flex min-h-screen bg-[#121213] text-zinc-100">
+        <div className="flex min-h-screen bg-theme-bg text-zinc-100">
             {/* Admin Sidebar */}
             <aside className="w-64 border-r border-zinc-800 bg-zinc-950 p-4 flex flex-col">
                 <div className="p-6 mb-4">

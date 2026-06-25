@@ -70,18 +70,20 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
     [AllowAnonymous]
     public async Task<IActionResult> ForgotPassword([FromBody] AccountForgotPasswordModel model)
     {
-        var command = new ForgotPasswordCommand(model);
-        var result = await mediator.Send(command);
+        try
+        {
+            var command = new ForgotPasswordCommand(model);
+            var result = await mediator.Send(command);
 
-        if (result)
-            return Ok();
-        else
-            return BadRequest(new
-            {
-                Status = 400,
-                IsValid = false,
-                Errors = new { Email = "Користувача з такою поштою не існує" }
-            });
+            if (result)
+                return Ok();
+
+            return BadRequest(new { message = "Не вдалося надіслати лист для відновлення паролю" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpPost]
