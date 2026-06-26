@@ -4,13 +4,11 @@ using Application.Features.Users.Commands.EditUser;
 using Application.Features.Users.Queries.GetUserById;
 using Application.Features.Users.Queries.GetUsers;
 using Application.Features.Users.Queries.SearchUsers;
-using Application.Models.Genre;
 using Application.Models.Search;
 using Application.Models.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi;
 
 namespace WeTapAPI.Controllers;
 
@@ -41,17 +39,10 @@ public class UsersController(IMediator mediator) : ControllerBase
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> EditUser([FromForm] UserEditModel model)
     {
-        try
-        {
-            var command = new EditUserCommand(model);
-            var result = await mediator.Send(command);
+        var command = new EditUserCommand(model);
+        var result = await mediator.Send(command);
 
-            return Ok(new { Token = result });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
+        return Ok(new { Token = result });
     }
 
     [HttpGet]

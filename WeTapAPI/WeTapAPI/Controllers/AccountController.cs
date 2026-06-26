@@ -7,19 +7,18 @@ using Application.Features.Accounts.Commands.Register;
 using Application.Features.Accounts.Commands.ResetPassword;
 using Application.Features.Accounts.Queries.ValidateResetToken;
 using Application.Features.Accounts.Commands.RefreshToken;
-using Application.Features.Users.Commands.EditUser;
-using Application.Interfaces;
 using Application.Models.Account;
 using Application.Models.User;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Application.Features.Accounts.Commands.EditAccount;
 
 namespace WeTapAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]/[action]")]
-public class AccountController(IMediator mediator, ICurrentUserService currentUserService) : ControllerBase
+public class AccountController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
     [AllowAnonymous]
@@ -121,13 +120,10 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> EditAccount([FromForm] UserEditModel model)
     {
-        var userId = currentUserService.GetCurrentUserId();
-        model.Id = userId;
+        var command = new EditAccountCommand(model);
+        var result = await mediator.Send(command);
 
-        var command = new EditUserCommand(model);
-        var token = await mediator.Send(command);
-
-        return Ok(new { token });
+        return Ok(new { token = result });
     }
 
     [Authorize]
@@ -136,8 +132,7 @@ public class AccountController(IMediator mediator, ICurrentUserService currentUs
     {
         try
         {
-            var userId = currentUserService.GetCurrentUserId();
-            var command = new RefreshTokenCommand(userId);
+            var command = new RefreshTokenCommand();
             var token = await mediator.Send(command);
 
             return Ok(new { token });

@@ -1,34 +1,18 @@
 import {createApi} from "@reduxjs/toolkit/query/react";
 import {createBaseQuery} from "../../utils/createBaseQuery.ts";
-import type {ILogin, IRegister, IUserHasPasswordResponse} from "../../types/user.ts";
 import {serialize} from "object-to-formdata";
 import {loginSuccess} from "../../store/slices/authSlice.ts";
 import type {Dispatch} from "@reduxjs/toolkit";
 import type {IUserEditRequest} from "../../types/User/IUserEditRequest.ts";
+import type {IForgotPasswordRequest} from "../../types/Account/IForgotPasswordRequest.ts";
+import type {IValidateTokenRequest} from "../../types/Account/IValidateTokenRequest.ts";
+import type {IResetPasswordRequest} from "../../types/Account/IResetPasswordRequest.ts";
+import type {IChangePasswordRequest} from "../../types/Account/IChangePasswordRequest.ts";
+import type {IValidateResetToken} from "../../types/Account/IValidateResetToken.ts";
+import type {IUserHasPasswordResponse} from "../../types/User/IUserHasPasswordResponse.ts";
+import type {ILogin} from "../../types/Account/ILogin.ts";
+import type {IRegister} from "../../types/Account/IRegister.ts";
 
-export interface IForgotPasswordRequest {
-    email: string;
-}
-
-export interface IValidateTokenRequest {
-    token: string;
-    email: string;
-}
-
-export interface IResetPasswordRequest {
-    newPassword: string;
-    token: string;
-    email: string;
-}
-
-export interface IChangePasswordRequest {
-    oldPassword: string;
-    newPassword: string;
-}
-
-export interface IValidateResetToken {
-    isValid: boolean;
-}
 
 const handleAuthSuccess = async (
     queryFulfilled: Promise<{ data: { token: string } }>,

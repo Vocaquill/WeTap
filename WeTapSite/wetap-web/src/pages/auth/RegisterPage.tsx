@@ -6,11 +6,12 @@ import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from "../../store/slices/authSlice";
 import { useRegisterMutation } from "../../services/api/apiAccount";
-import type { ServerError, IRegister } from "../../types/user";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 import { InputField } from "../../components/form/InputField";
 import { Button } from "../../components/form/Button";
 import { BackButton } from "../../components/ui/common/BackButton";
+import type {ServerError} from "../../types/Account/ServerError.ts";
+import type {IRegister} from "../../types/Account/IRegister.ts";
 
 function RegisterPage() {
     const navigate = useNavigate();

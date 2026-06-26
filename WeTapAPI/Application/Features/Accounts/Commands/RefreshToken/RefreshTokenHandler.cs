@@ -8,12 +8,15 @@ namespace Application.Features.Accounts.Commands.RefreshToken;
 public class RefreshTokenHandler(
     UserManager<UserEntity> userManager,
     IJwtTokenService jwtTokenService,
-    ICookieAuthService cookieAuthService
+    ICookieAuthService cookieAuthService,
+    ICurrentUserService currentUserService
 ) : IRequestHandler<RefreshTokenCommand, string>
 {
     public async Task<string> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
-        var user = await userManager.FindByIdAsync(request.UserId.ToString());
+        var userId = currentUserService.GetCurrentUserId();
+
+        var user = await userManager.FindByIdAsync(userId.ToString());
         if (user == null || user.IsDeleted)
             throw new UnauthorizedAccessException("Користувача не знайдено");
 

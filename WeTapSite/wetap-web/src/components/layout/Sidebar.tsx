@@ -152,7 +152,7 @@ function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                 </p>
               )}
               <Link
-                to="/admin/genres"
+                to="/admin"
                 className={`flex items-center p-2.5 rounded-xl transition-all relative ${isOpen ? 'px-3 mx-1' : 'justify-center mx-1'} ${location.pathname.startsWith('/admin')
                   ? 'bg-gradient-to-r from-zinc-900 via-rose-950/20 to-rose-600/10 text-white font-bold'
                   : 'text-zinc-400 hover:bg-zinc-900/40 hover:text-zinc-200'
