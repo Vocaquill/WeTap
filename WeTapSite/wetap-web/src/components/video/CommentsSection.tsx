@@ -183,6 +183,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
     const [replies, setReplies] = useState<ICommentItemResponse[]>([]);
     const [repliesPage, setRepliesPage] = useState(1);
     const [hasMoreReplies, setHasMoreReplies] = useState(false);
+    const [isLoadingReplies, setIsLoadingReplies] = useState(false);
 
     // Queries & Mutations
     const [triggerGetReplies, { isFetching: isFetchingReplies }] = useLazyGetCommentRepliesQuery();
@@ -191,6 +192,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
     const [createComment, { isLoading: isCreatingReply }] = useCreateCommentMutation();
 
     const fetchReplies = async (page: number) => {
+        setIsLoadingReplies(true);
         try {
             const res = await triggerGetReplies({
                 parentId: comment.id,
@@ -207,15 +209,17 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
             setHasMoreReplies(res.pagination.currentPage < res.pagination.totalPages);
         } catch (error) {
             console.error("Failed to load replies", error);
+        } finally {
+            setIsLoadingReplies(false);
         }
     };
 
     const handleToggleReplies = () => {
         if (!showReplies) {
             setShowReplies(true);
-            if (replies.length === 0) {
-                fetchReplies(1);
-            }
+            // Завжди перезавантажуємо replies при відкритті,
+            // щоб показати актуальні дані (нові відповіді від інших)
+            fetchReplies(1);
         } else {
             setShowReplies(false);
         }
@@ -437,7 +441,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
                             />
                         ))}
 
-                        {isFetchingReplies && replies.length === 0 && (
+                        {isLoadingReplies && (
                             <div className="text-xs text-zinc-500 animate-pulse">Завантаження відповідей...</div>
                         )}
 
