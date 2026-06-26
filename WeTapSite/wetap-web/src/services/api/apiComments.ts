@@ -17,13 +17,9 @@ export const apiComments = createApi({
                 method: "GET",
                 params,
             }),
-            providesTags: (result) =>
-                result
-                    ? [
-                        ...result.items.map(({ id }) => ({ type: "Comment" as const, id })),
-                        { type: "Comment" as const, id: "VIDEO_LIST" },
-                      ]
-                    : [{ type: "Comment" as const, id: "VIDEO_LIST" }],
+            providesTags: (_result, _error, { videoId }) => [
+                { type: "Comments" as const, id: `VIDEO_${videoId}` },
+            ],
         }),
 
         getCommentReplies: builder.query<IPagedResult<ICommentItemResponse>, { parentId: number; params?: IBaseSearch }>({
@@ -32,13 +28,9 @@ export const apiComments = createApi({
                 method: "GET",
                 params,
             }),
-            providesTags: (result) =>
-                result
-                    ? [
-                        ...result.items.map(({ id }) => ({ type: "Comment" as const, id })),
-                        { type: "Comment" as const, id: "REPLIES_LIST" },
-                      ]
-                    : [{ type: "Comment" as const, id: "REPLIES_LIST" }],
+            providesTags: (_result, _error, { parentId }) => [
+                { type: "Comments" as const, id: `REPLIES_${parentId}` },
+            ],
         }),
 
         createComment: builder.mutation<ICommentItemResponse, ICreateCommentRequest>({
@@ -47,7 +39,10 @@ export const apiComments = createApi({
                 method: "POST",
                 body,
             }),
-            invalidatesTags: [{ type: "Comment", id: "VIDEO_LIST" }],
+            invalidatesTags: (_result, _error, { videoId, parentId }) => [
+                { type: "Comments", id: `VIDEO_${videoId}` },
+                ...(parentId != null ? [{ type: "Comments" as const, id: `REPLIES_${parentId}` }] : []),
+            ],
         }),
 
         updateComment: builder.mutation<ICommentItemResponse, IUpdateCommentRequest>({
@@ -58,8 +53,6 @@ export const apiComments = createApi({
             }),
             invalidatesTags: (_result, _error, { id }) => [
                 { type: "Comment", id },
-                { type: "Comment", id: "VIDEO_LIST" },
-                { type: "Comment", id: "REPLIES_LIST" },
             ],
         }),
 
@@ -70,8 +63,6 @@ export const apiComments = createApi({
             }),
             invalidatesTags: (_result, _error, id) => [
                 { type: "Comment", id },
-                { type: "Comment", id: "VIDEO_LIST" },
-                { type: "Comment", id: "REPLIES_LIST" },
             ],
         }),
     }),

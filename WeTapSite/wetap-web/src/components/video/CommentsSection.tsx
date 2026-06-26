@@ -35,7 +35,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ videoId, curre
     const [currentPage, setCurrentPage] = useState(1);
     const [commentText, setCommentText] = useState("");
 
-    // Load main video comments (paginated)
     const { data: commentsData, isLoading } = useGetVideoCommentsQuery({
         videoId,
         params: { page: currentPage, itemPerPage: 10 },
@@ -54,7 +53,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ videoId, curre
                 parentId: null,
             }).unwrap();
             setCommentText("");
-            // Reset to first page to see the new comment
             setCurrentPage(1);
         } catch (error) {
             console.error("Failed to post comment", error);
@@ -70,7 +68,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ videoId, curre
                 </h3>
             </div>
 
-            {/* Comment Form */}
             {currentUser ? (
                 <form onSubmit={handleCreateComment} className="flex gap-3 items-start mb-8">
                     <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-white/10">
@@ -113,7 +110,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ videoId, curre
                 </div>
             )}
 
-            {/* Comments List */}
             {isLoading ? (
                 <div className="space-y-4 animate-pulse">
                     {[...Array(3)].map((_, i) => (
@@ -141,7 +137,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ videoId, curre
                 </div>
             )}
 
-            {/* Pagination for main comments */}
             {commentsData && commentsData.pagination.totalPages > 1 && (
                 <div className="flex justify-center mt-6">
                     <Pagination
@@ -149,7 +144,6 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ videoId, curre
                         totalPages={commentsData.pagination.totalPages}
                         onChange={(page) => {
                             setCurrentPage(page);
-                            // Scroll to comments header smoothly
                             document.getElementById("comments-section")?.scrollIntoView({ behavior: "smooth" });
                         }}
                     />
@@ -178,14 +172,12 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
     const [replyText, setReplyText] = useState("");
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-    // Replies state
     const [showReplies, setShowReplies] = useState(false);
     const [replies, setReplies] = useState<ICommentItemResponse[]>([]);
     const [repliesPage, setRepliesPage] = useState(1);
     const [hasMoreReplies, setHasMoreReplies] = useState(false);
     const [isLoadingReplies, setIsLoadingReplies] = useState(false);
 
-    // Queries & Mutations
     const [triggerGetReplies, { isFetching: isFetchingReplies }] = useLazyGetCommentRepliesQuery();
     const [updateComment, { isLoading: isUpdating }] = useUpdateCommentMutation();
     const [deleteComment, { isLoading: isDeleting }] = useDeleteCommentMutation();
@@ -217,8 +209,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
     const handleToggleReplies = () => {
         if (!showReplies) {
             setShowReplies(true);
-            // Завжди перезавантажуємо replies при відкритті,
-            // щоб показати актуальні дані (нові відповіді від інших)
             fetchReplies(1);
         } else {
             setShowReplies(false);
@@ -236,7 +226,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
         try {
             await updateComment({ id: comment.id, content: editText.trim() }).unwrap();
             setIsEditing(false);
-            // Notify parent to refresh its local replies list
             onModified?.();
         } catch (error) {
             console.error("Failed to edit comment", error);
@@ -247,7 +236,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
         try {
             await deleteComment(comment.id).unwrap();
             setIsDeleteModalOpen(false);
-            // Notify parent to refresh its local replies list
             onModified?.();
         } catch (error) {
             console.error("Failed to delete comment", error);
@@ -259,7 +247,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
         if (!replyText.trim()) return;
 
         try {
-            const newReply = await createComment({
+            await createComment({
                 videoId,
                 content: replyText.trim(),
                 parentId: comment.id,
@@ -269,15 +257,12 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
             setIsReplying(false);
             setShowReplies(true);
 
-            // Fetch first page again or append reply locally
-            // We append the new reply directly to the end of the replies list if we already loaded some
-            setReplies((prev) => [...prev, newReply]);
+            await fetchReplies(1);
         } catch (error) {
             console.error("Failed to reply", error);
         }
     };
 
-    // Format date string beautifully (simple reader-friendly format)
     const formatDate = (dateStr: string) => {
         try {
             const date = new Date(dateStr);
@@ -295,7 +280,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
 
     return (
         <div className="flex gap-3 group/item">
-            {/* User Avatar */}
             <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-white/10">
                 <img
                     src={comment.userImage ? `${APP_ENV.IMAGES_200_URL}${comment.userImage}` : "/images/user/default.jpg"}
@@ -304,7 +288,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
                 />
             </div>
 
-            {/* Comment Body */}
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                     <span className="text-sm font-bold text-zinc-100">{comment.userName}</span>
@@ -344,7 +327,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
                     </p>
                 )}
 
-                {/* Comment Actions */}
                 {!isEditing && (
                     <div className="flex items-center gap-4 mt-2">
                         {currentUser && (
@@ -379,7 +361,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
                     </div>
                 )}
 
-                {/* Reply Form */}
                 {isReplying && (
                     <form onSubmit={handleReply} className="flex gap-3 items-start mt-4 mb-2">
                         <div className="w-8 h-8 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-white/10">
@@ -415,20 +396,20 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
                     </form>
                 )}
 
-                {/* Show/Hide Replies Toggle */}
-                {comment.repliesCount > 0 && (
+                {(comment.repliesCount > 0 || replies.length > 0) && (
                     <button
                         onClick={handleToggleReplies}
                         className="flex items-center gap-1.5 text-xs font-bold text-[#FF2D7A] hover:underline mt-3"
                     >
                         {showReplies ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                         <span>
-                            {showReplies ? "Сховати відповіді" : `Показати відповіді (${comment.repliesCount})`}
+                            {showReplies
+                                ? "Сховати відповіді"
+                                : `Показати відповіді (${Math.max(comment.repliesCount, replies.length)})`}
                         </span>
                     </button>
                 )}
 
-                {/* Replies Container */}
                 {showReplies && (
                     <div className="mt-4 pl-4 border-l-2 border-zinc-800 space-y-4">
                         {replies.map((reply) => (
@@ -459,7 +440,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
                 )}
             </div>
 
-            {/* Delete Confirmation Modal */}
             <DeleteModal
                 isOpen={isDeleteModalOpen}
                 onClose={() => setIsDeleteModalOpen(false)}
