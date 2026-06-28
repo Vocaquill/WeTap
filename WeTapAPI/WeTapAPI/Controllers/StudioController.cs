@@ -9,8 +9,7 @@ namespace WeTapAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = Roles.Author)]
-[Authorize(Roles = Roles.Admin)]
+[Authorize(Roles = $"{Roles.Author},{Roles.Admin}")]
 public class StudioController(IMediator mediator) : ControllerBase
 {
     [HttpGet("charts")]
