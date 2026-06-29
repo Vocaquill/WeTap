@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import UserHomePage from './pages/home/UserHomePage';
 import VideoPage from './pages/video/VideoPage';
@@ -14,7 +14,8 @@ import EditProfilePage from './pages/profile/EditProfilePage';
 import CreateVideoPage from './pages/video/CreateVideoPage';
 import EditVideoPage from './pages/video/EditVideoPage';
 import CreateChannelPage from './pages/channel/CreateChannelPage';
-import StudioPage from './pages/channel/StudioPage.tsx';
+import StudioContentPage from './pages/channel/StudioContentPage.tsx';
+import StudioLayout from './layouts/StudioLayout.tsx';
 import ChannelPage from './pages/channel/ChannelPage.tsx';
 
 import Dashboard from './pages/Admin/Dashboard.tsx';
@@ -85,9 +86,15 @@ function App() {
                 <Route element={<RequireAuthor />}>
                     <Route path="/video/add" element={<CreateVideoPage />} />
                     <Route path="/video/edit/:id" element={<EditVideoPage />} />
-                    <Route path="/studio" element={<StudioPage />} />
                 </Route>
 
+            </Route>
+
+            <Route element={<RequireAuthor />}>
+                <Route path="/studio" element={<StudioLayout />}>
+                    <Route index element={<Navigate to="content" replace />} />
+                    <Route path="content" element={<StudioContentPage />} />
+                </Route>
             </Route>
 
             <Route element={<RequireAdmin />}>

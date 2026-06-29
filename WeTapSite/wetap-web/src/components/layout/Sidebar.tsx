@@ -136,7 +136,7 @@ function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
                     {renderActiveIndicator(isActive)}
                     <span className={`min-w-[24px] flex items-center justify-center ${isActive ? 'text-rose-500' : 'text-zinc-400'}`}><Film size={18} /></span>
                     <span className={`ml-4 transition-all duration-300 ${isOpen ? 'opacity-100 block' : 'opacity-0 hidden w-0'}`}>
-                      Мої відео
+                      Студія
                     </span>
                   </>
                 )}
