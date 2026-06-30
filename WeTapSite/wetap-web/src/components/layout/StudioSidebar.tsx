@@ -11,14 +11,14 @@ function StudioSidebar({isOpen, toggleSidebar}: StudioSidebarProps) {
         {
             items: [
                 {
-                    name: 'Контент',
-                    path: '/studio/content',
-                    icon: <Film size={18}/>,
-                },
-                {
                     name: 'Огляд',
                     path: '/studio/review',
                     icon: <Star size={18}/>,
+                },
+                {
+                    name: 'Контент',
+                    path: '/studio/content',
+                    icon: <Film size={18}/>,
                 },
                 {
                     name: 'Аналітика',
@@ -42,7 +42,6 @@ function StudioSidebar({isOpen, toggleSidebar}: StudioSidebarProps) {
             isOpen={isOpen}
             toggleSidebar={toggleSidebar}
             isCollapsible={true}
-            variant="default"
             logoType="default"
             sections={sections}
             bottomItems={bottomItems}

@@ -15,6 +15,7 @@ import CreateVideoPage from './pages/video/CreateVideoPage';
 import EditVideoPage from './pages/video/EditVideoPage';
 import CreateChannelPage from './pages/channel/CreateChannelPage';
 import StudioContentPage from './pages/channel/StudioContentPage.tsx';
+import StudioReviewPage from './pages/channel/StudioReviewPage.tsx';
 import StudioLayout from './layouts/StudioLayout.tsx';
 import ChannelPage from './pages/channel/ChannelPage.tsx';
 
@@ -92,7 +93,8 @@ function App() {
 
             <Route element={<RequireAuthor />}>
                 <Route path="/studio" element={<StudioLayout />}>
-                    <Route index element={<Navigate to="content" replace />} />
+                    <Route index element={<Navigate to="review" replace />} />
+                    <Route path="review" element={<StudioReviewPage />} />
                     <Route path="content" element={<StudioContentPage />} />
                 </Route>
             </Route>
