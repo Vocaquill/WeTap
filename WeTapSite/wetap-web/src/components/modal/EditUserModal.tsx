@@ -114,33 +114,39 @@ function EditUserModal({isOpen, onClose, user}: Props) {
                     </div>
 
                     <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                        <InputField label="Електрона пошта" name="email" value={form.email} onChange={handleChange}
-                                    error={errors.email}/>
-                        <InputField label="Ім'я" name="firstName" value={form.firstName} onChange={handleChange}
-                                    error={errors.firstName}/>
-                        <InputField label="Прізвище" name="lastName" value={form.lastName} onChange={handleChange}
-                                    error={errors.lastName}/>
 
-                        <div>
-                            <label className="font-semibold text-zinc-400 mb-1">
-                                Ролі
-                            </label>
+                        <div className="flex gap-4">
+                            <InputField label="Ім'я" name="firstName" value={form.firstName} onChange={handleChange}
+                                        error={errors.firstName}/>
+                            <InputField label="Прізвище" name="lastName" value={form.lastName} onChange={handleChange}
+                                        error={errors.lastName}/>
+                        </div>
 
-                            <div className="flex flex-wrap gap-3">
-                                {availableRoles.map(role => (
-                                    <label
-                                        key={role}
-                                        className="flex items-center gap-2 text-zinc-200 cursor-pointer"
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={form.roles?.includes(role) ?? false}
-                                            onChange={() => handleRoleChange(role)}
-                                            className="w-4 h-4"
-                                        />
-                                        {role}
-                                    </label>
-                                ))}
+                        <div className="flex gap-4">
+                            <InputField label="Електрона пошта" name="email" value={form.email} onChange={handleChange}
+                                        error={errors.email}/>
+
+                            <div>
+                                <label className="font-semibold text-zinc-400 mb-1">
+                                    Ролі
+                                </label>
+
+                                <div className="flex flex-wrap gap-3">
+                                    {availableRoles.map(role => (
+                                        <label
+                                            key={role}
+                                            className="flex items-center gap-2 text-zinc-200 cursor-pointer"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={form.roles?.includes(role) ?? false}
+                                                onChange={() => handleRoleChange(role)}
+                                                className="w-4 h-4"
+                                            />
+                                            {role}
+                                        </label>
+                                    ))}
+                                </div>
                             </div>
 
                             {errors.roles && (

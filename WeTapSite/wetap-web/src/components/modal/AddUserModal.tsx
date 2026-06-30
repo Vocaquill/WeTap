@@ -72,14 +72,21 @@ function AddUserModal({isOpen, onClose}: Props) {
                     </div>
 
                     <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                        <InputField label="Ім'я" name="firstName" value={form.firstName} onChange={handleChange}
-                                    error={errors.firstName} required/>
-                        <InputField label="Прізвище" name="lastName" value={form.lastName} onChange={handleChange}
-                                    error={errors.lastName} required/>
-                        <InputField label="Електрона пошта" name="email" value={form.email} onChange={handleChange}
-                                    error={errors.email} required/>
-                        <InputField label="Пароль" type="password" name="password" value={form.password}
-                                    onChange={handleChange} error={errors.password} required/>
+
+                        <div className="flex gap-4">
+                            <InputField label="Ім'я" name="firstName" value={form.firstName} onChange={handleChange}
+                                        error={errors.firstName} required/>
+                            <InputField label="Прізвище" name="lastName" value={form.lastName} onChange={handleChange}
+                                        error={errors.lastName} required/>
+                        </div>
+
+                        <div className="flex gap-4">
+                            <InputField label="Електрона пошта" name="email" value={form.email} onChange={handleChange}
+                                        error={errors.email} required/>
+                            <InputField label="Пароль" type="password" name="password" value={form.password}
+                                        onChange={handleChange} error={errors.password} required/>
+                        </div>
+
                         <FileUploadField label="Фото" name="imageFile" onChange={handleFileChange} accept="image/*"
                                          error={errors.imageFile}/>
 
