@@ -23,6 +23,7 @@ function StudioReviewPage() {
 
     const overview = overviewData?.overview;
     const popularVideo = overviewData?.mostPopularVideo;
+    const subscribers = overviewData?.recentSubscribers || [];
 
     return (
         <div className="p-8 space-y-10 animate-in fade-in duration-500 max-w-6xl mx-auto bg-[#121214] min-h-screen">
@@ -64,46 +65,19 @@ function StudioReviewPage() {
                                         <span className="text-white font-medium">{overview.monthlyViewCount.toLocaleString('uk-UA')}</span>
                                     </div>
                                 )}
-                                <div className="flex items-center justify-between">
-                                    <span className="text-zinc-300">Час перегляду (в годинах)</span>
-                                    <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
-                                    <span className="text-white font-medium">0,6</span>
-                                </div>
+                                {overview.averageViewsPerVideo !== undefined && (
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-zinc-300">Сер. кількість переглядів відео</span>
+                                        <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
+                                        <span className="text-white font-medium">{overview.averageViewsPerVideo.toLocaleString('uk-UA')}</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
                 )}
 
-                {/* 2. Most popular content */}
-                <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[320px]">
-                    <div className="bg-gradient-to-b from-[#ec4899] to-[#500724] px-6 py-4 flex items-center shrink-0">
-                        <h3 className="font-bold text-white text-base">Найпопулярніший контент</h3>
-                    </div>
-                    <div className="p-6 flex-grow flex flex-col justify-between text-sm">
-                        <div className="space-y-4">
-                            <div className="text-xs text-zinc-400 font-medium">Останні 48 годин · Перегляди</div>
-                            {popularVideo ? (
-                                <div className="flex items-center justify-between">
-                                    <span className="text-zinc-200 truncate font-semibold max-w-[70%]">{popularVideo.title}</span>
-                                    <span className="text-zinc-400 font-medium text-xs shrink-0">{popularVideo.viewCount.toLocaleString('uk-UA')} переглядів</span>
-                                </div>
-                            ) : (
-                                <div className="text-zinc-500 py-2">
-                                    Немає доступної статистики
-                                </div>
-                            )}
-                        </div>
-                        <button
-                            type="button"
-                            onClick={(e) => e.preventDefault()}
-                            className="bg-[#ec4899] hover:bg-[#db2777] text-white font-bold py-2.5 px-6 rounded-full text-xs uppercase tracking-wider transition-all duration-200 self-start active:scale-[0.98]"
-                        >
-                            Перейти до аналітики каналу
-                        </button>
-                    </div>
-                </div>
-
-                {/* 3. Video analytics */}
+                {/* 2. Video analytics */}
                 <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[320px]">
                     <div className="bg-gradient-to-b from-[#ec4899] to-[#500724] px-6 py-4 flex items-center shrink-0">
                         <h3 className="font-bold text-white text-base">Аналітика відео</h3>
@@ -164,6 +138,49 @@ function StudioReviewPage() {
                             >
                                 Завантажити відео
                             </button>
+                        )}
+                    </div>
+                </div>
+
+                {/* 3. Latest subscriptions */}
+                <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[320px]">
+                    <div className="bg-gradient-to-b from-[#ec4899] to-[#500724] px-6 py-4 flex items-center shrink-0">
+                        <h3 className="font-bold text-white text-base">Останні підписки</h3>
+                    </div>
+                    <div className="p-6 flex-grow flex flex-col justify-between text-sm overflow-hidden">
+                        {subscribers.length > 0 ? (
+                            <div className="space-y-3 overflow-y-auto pr-1 flex-grow">
+                                {subscribers.map((sub, index) => (
+                                    <div key={index} className="flex items-center justify-between py-1">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <div className="w-8 h-8 rounded-full bg-zinc-800 overflow-hidden flex-shrink-0 flex items-center justify-center border border-zinc-700">
+                                                {sub.avatarImage ? (
+                                                    <img
+                                                        src={APP_ENV.IMAGES_100_URL + sub.avatarImage}
+                                                        alt={sub.name}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <span className="text-xs font-bold text-zinc-400">
+                                                        {sub.name ? sub.name[0] : (sub.nickName ? sub.nickName[0] : '?')}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className="min-w-0">
+                                                <div className="text-zinc-200 font-medium truncate leading-none mb-1">{sub.name || sub.nickName}</div>
+                                                <div className="text-zinc-500 text-xs truncate">@{sub.nickName}</div>
+                                            </div>
+                                        </div>
+                                        <span className="text-zinc-500 text-xs whitespace-nowrap shrink-0">
+                                            {new Date(sub.dateSubscribed).toLocaleDateString('uk-UA')}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex-grow flex items-center justify-center">
+                                <span className="text-zinc-500 italic">поки підписок немає</span>
+                            </div>
                         )}
                     </div>
                 </div>
