@@ -14,10 +14,11 @@ import EditProfilePage from './pages/profile/EditProfilePage';
 import CreateVideoPage from './pages/video/CreateVideoPage';
 import EditVideoPage from './pages/video/EditVideoPage';
 import CreateChannelPage from './pages/channel/CreateChannelPage';
-import StudioContentPage from './pages/channel/StudioContentPage.tsx';
-import StudioReviewPage from './pages/channel/StudioReviewPage.tsx';
-import StudioLayout from './layouts/StudioLayout.tsx';
-import ChannelPage from './pages/channel/ChannelPage.tsx';
+import StudioContentPage from "./pages/channel/StudioContentPage.tsx";
+import StudioReviewPage from "./pages/channel/StudioReviewPage.tsx";
+import StudioAnalyticsPage from "./pages/channel/StudioAnalyticsPage.tsx";
+import StudioLayout from "./layouts/StudioLayout.tsx";
+import ChannelPage from "./pages/channel/ChannelPage.tsx";
 
 import Dashboard from './pages/Admin/Dashboard.tsx';
 import GenresPage from './pages/Admin/GenresPage.tsx';
@@ -48,7 +49,6 @@ function App() {
             try {
                 await refreshToken().unwrap();
             } catch (e) {
-                // Ignore auth failures on startup
             } finally {
                 setIsCheckingAuth(false);
             }
@@ -96,6 +96,7 @@ function App() {
                     <Route index element={<Navigate to="review" replace />} />
                     <Route path="review" element={<StudioReviewPage />} />
                     <Route path="content" element={<StudioContentPage />} />
+                    <Route path="analytics" element={<StudioAnalyticsPage />} />
                 </Route>
             </Route>
 

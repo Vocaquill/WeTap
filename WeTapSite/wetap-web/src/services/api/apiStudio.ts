@@ -32,6 +32,22 @@ export interface IStudioOverviewResponse {
     };
 }
 
+export interface IChannelChartDataPoint {
+    date: string;
+    value: number;
+}
+
+export interface IChannelChartModel {
+    metric: "Views" | "Subscribers" | "Likes";
+    dataPoints: IChannelChartDataPoint[];
+}
+
+export interface IGetChannelChartsRequest {
+    channelId?: number;
+    from: string;
+    to: string;
+}
+
 export const apiStudio = createApi({
     reducerPath: "api/studio",
     baseQuery: createBaseQuery("Studio"),
@@ -45,9 +61,18 @@ export const apiStudio = createApi({
             }),
             providesTags: ["Studio"],
         }),
+        getCharts: builder.query<IChannelChartModel[], IGetChannelChartsRequest>({
+            query: (params) => ({
+                url: "charts",
+                method: "GET",
+                params,
+            }),
+            providesTags: ["Studio"],
+        }),
     }),
 });
 
 export const {
     useGetOverviewQuery,
+    useGetChartsQuery,
 } = apiStudio;

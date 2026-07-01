@@ -1,8 +1,8 @@
-import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../store';
-import { useGetOverviewQuery } from '../../services/api/apiStudio';
-import { APP_ENV } from '../../env';
-import { Loader2 } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../store";
+import { useGetOverviewQuery } from "../../services/api/apiStudio";
+import { APP_ENV } from "../../env";
+import { Loader2 } from "lucide-react";
 
 function StudioReviewPage() {
     const navigate = useNavigate();
@@ -27,16 +27,12 @@ function StudioReviewPage() {
 
     return (
         <div className="p-8 space-y-10 animate-in fade-in duration-500 max-w-6xl mx-auto bg-[#121214] min-h-screen">
-            {/* Header */}
             <div>
                 <h1 className="text-3xl font-black text-white tracking-tight">Панель керування каналом</h1>
                 <p className="text-zinc-500 mt-1">Огляд вашої активності та аналітики каналу</p>
             </div>
 
-            {/* Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                {/* 1. Channel analytics */}
                 {overview && (
                     <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[320px]">
                         <div className="bg-gradient-to-b from-[#ec4899] to-[#500724] px-6 py-4 flex items-center shrink-0">
@@ -48,36 +44,42 @@ function StudioReviewPage() {
                                     <div className="flex items-center justify-between">
                                         <span className="text-zinc-300">Підписники</span>
                                         <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
-                                        <span className="text-white font-medium">{overview.subscriberCount.toLocaleString('uk-UA')}</span>
+                                        <span className="text-white font-medium">{overview.subscriberCount.toLocaleString("uk-UA")}</span>
                                     </div>
                                 )}
                                 {overview.totalViewCount !== undefined && (
                                     <div className="flex items-center justify-between">
                                         <span className="text-zinc-300">Перегляди</span>
                                         <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
-                                        <span className="text-white font-medium">{overview.totalViewCount.toLocaleString('uk-UA')}</span>
+                                        <span className="text-white font-medium">{overview.totalViewCount.toLocaleString("uk-UA")}</span>
                                     </div>
                                 )}
                                 {overview.monthlyViewCount !== undefined && (
                                     <div className="flex items-center justify-between">
                                         <span className="text-zinc-300">Перегляди за місяць</span>
                                         <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
-                                        <span className="text-white font-medium">{overview.monthlyViewCount.toLocaleString('uk-UA')}</span>
+                                        <span className="text-white font-medium">{overview.monthlyViewCount.toLocaleString("uk-UA")}</span>
                                     </div>
                                 )}
                                 {overview.averageViewsPerVideo !== undefined && (
                                     <div className="flex items-center justify-between">
                                         <span className="text-zinc-300">Сер. кількість переглядів відео</span>
                                         <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
-                                        <span className="text-white font-medium">{overview.averageViewsPerVideo.toLocaleString('uk-UA')}</span>
+                                        <span className="text-white font-medium">{overview.averageViewsPerVideo.toLocaleString("uk-UA")}</span>
                                     </div>
                                 )}
                             </div>
+                            <button
+                                type="button"
+                                onClick={() => navigate("/studio/analytics")}
+                                className="bg-[#ec4899] hover:bg-[#db2777] text-white font-bold py-2 px-4 rounded-full text-xs uppercase tracking-wider transition-all duration-200 self-start active:scale-[0.98]"
+                            >
+                                Перейти до аналітики каналу
+                            </button>
                         </div>
                     </div>
                 )}
 
-                {/* 2. Video analytics */}
                 <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[320px]">
                     <div className="bg-gradient-to-b from-[#ec4899] to-[#500724] px-6 py-4 flex items-center shrink-0">
                         <h3 className="font-bold text-white text-base">Аналітика відео</h3>
@@ -101,13 +103,13 @@ function StudioReviewPage() {
                                     </div>
                                     <div className="flex flex-col justify-center min-w-0">
                                         <h4 className="font-bold text-zinc-200 truncate">{popularVideo.title}</h4>
-                                        <p className="text-zinc-500 text-xs mt-1 truncate">{popularVideo.description || 'Немає опису'}</p>
+                                        <p className="text-zinc-500 text-xs mt-1 truncate">{popularVideo.description || "Немає опису"}</p>
                                     </div>
                                 </div>
                                 <div className="space-y-2 text-xs pt-2">
                                     <div className="flex justify-between text-zinc-400">
                                         <span>Перегляди:</span>
-                                        <span className="text-zinc-200 font-bold">{popularVideo.viewCount.toLocaleString('uk-UA')}</span>
+                                        <span className="text-zinc-200 font-bold">{popularVideo.viewCount.toLocaleString("uk-UA")}</span>
                                     </div>
                                     <div className="flex justify-between text-zinc-400">
                                         <span>Оцінки:</span>
@@ -133,7 +135,7 @@ function StudioReviewPage() {
                         ) : (
                             <button
                                 type="button"
-                                onClick={() => navigate('/video/add')}
+                                onClick={() => navigate("/video/add")}
                                 className="bg-[#ec4899] hover:bg-[#db2777] text-white font-bold py-2.5 px-6 rounded-full text-xs uppercase tracking-wider transition-all duration-200 self-start active:scale-[0.98]"
                             >
                                 Завантажити відео
@@ -142,7 +144,6 @@ function StudioReviewPage() {
                     </div>
                 </div>
 
-                {/* 3. Latest subscriptions */}
                 <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[320px]">
                     <div className="bg-gradient-to-b from-[#ec4899] to-[#500724] px-6 py-4 flex items-center shrink-0">
                         <h3 className="font-bold text-white text-base">Останні підписки</h3>
@@ -162,7 +163,7 @@ function StudioReviewPage() {
                                                     />
                                                 ) : (
                                                     <span className="text-xs font-bold text-zinc-400">
-                                                        {sub.name ? sub.name[0] : (sub.nickName ? sub.nickName[0] : '?')}
+                                                        {sub.name ? sub.name[0] : (sub.nickName ? sub.nickName[0] : "?")}
                                                     </span>
                                                 )}
                                             </div>
@@ -172,7 +173,7 @@ function StudioReviewPage() {
                                             </div>
                                         </div>
                                         <span className="text-zinc-500 text-xs whitespace-nowrap shrink-0">
-                                            {new Date(sub.dateSubscribed).toLocaleDateString('uk-UA')}
+                                            {new Date(sub.dateSubscribed).toLocaleDateString("uk-UA")}
                                         </span>
                                     </div>
                                 ))}
@@ -184,7 +185,6 @@ function StudioReviewPage() {
                         )}
                     </div>
                 </div>
-
             </div>
         </div>
     );
