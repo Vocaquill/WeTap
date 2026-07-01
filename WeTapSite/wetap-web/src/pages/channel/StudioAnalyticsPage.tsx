@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAppSelector } from "../../store";
 import { useGetChartsQuery } from "../../services/api/apiStudio";
 import { StudioDateRangePicker } from "../../components/ui/common/StudioDateRangePicker";
+import { Button } from "../../components/form/Button";
 import { Loader2 } from "lucide-react";
 import {
     LineChart,
@@ -147,7 +148,7 @@ export default function StudioAnalyticsPage() {
 
             <div className="flex gap-4 border-b border-zinc-800 pb-2">
                 {(["Views", "Likes", "Subscribers"] as MetricType[]).map((metric) => (
-                    <button
+                    <Button
                         key={metric}
                         onClick={() => setActiveMetric(metric)}
                         className={`pb-2 px-1 text-sm font-bold border-b-2 transition-all ${
@@ -157,7 +158,7 @@ export default function StudioAnalyticsPage() {
                         }`}
                     >
                         {formatMetricName(metric)}
-                    </button>
+                    </Button>
                 ))}
             </div>
 

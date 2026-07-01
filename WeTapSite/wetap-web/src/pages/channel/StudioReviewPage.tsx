@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../store";
 import { useGetOverviewQuery } from "../../services/api/apiStudio";
+import { Button } from "../../components/form/Button";
 import { APP_ENV } from "../../env";
 import { Loader2 } from "lucide-react";
 
@@ -69,13 +70,13 @@ function StudioReviewPage() {
                                     </div>
                                 )}
                             </div>
-                            <button
+                            <Button
                                 type="button"
                                 onClick={() => navigate("/studio/analytics")}
                                 className="bg-[#ec4899] hover:bg-[#db2777] text-white font-bold py-2 px-4 rounded-full text-xs uppercase tracking-wider transition-all duration-200 self-start active:scale-[0.98]"
                             >
                                 Перейти до аналітики каналу
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 )}
@@ -126,20 +127,20 @@ function StudioReviewPage() {
                         )}
 
                         {popularVideo ? (
-                            <button
+                            <Button
                                 disabled
                                 className="w-full bg-zinc-900/50 text-zinc-500 font-bold py-2.5 px-4 rounded-xl cursor-not-allowed text-xs uppercase tracking-wider flex items-center justify-center gap-2 shrink-0 border border-zinc-800"
                             >
                                 Перейти до аналітики відео
-                            </button>
+                            </Button>
                         ) : (
-                            <button
+                            <Button
                                 type="button"
                                 onClick={() => navigate("/video/add")}
                                 className="bg-[#ec4899] hover:bg-[#db2777] text-white font-bold py-2.5 px-6 rounded-full text-xs uppercase tracking-wider transition-all duration-200 self-start active:scale-[0.98]"
                             >
                                 Завантажити відео
-                            </button>
+                            </Button>
                         )}
                     </div>
                 </div>
