@@ -128,10 +128,11 @@ function StudioReviewPage() {
 
                         {popularVideo ? (
                             <Button
-                                disabled
-                                className="w-full bg-zinc-900/50 text-zinc-500 font-bold py-2.5 px-4 rounded-xl cursor-not-allowed text-xs uppercase tracking-wider flex items-center justify-center gap-2 shrink-0 border border-zinc-800"
+                                type="button"
+                                onClick={() => navigate("/studio/analytics")}
+                                className="bg-[#ec4899] hover:bg-[#db2777] text-white font-bold py-2 px-4 rounded-full text-xs uppercase tracking-wider transition-all duration-200 self-start active:scale-[0.98]"
                             >
-                                Перейти до аналітики відео
+                                Перейти до аналітики каналу
                             </Button>
                         ) : (
                             <Button
