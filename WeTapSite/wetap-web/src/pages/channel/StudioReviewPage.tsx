@@ -35,12 +35,12 @@ function StudioReviewPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {overview && (
-                    <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[320px]">
+                    <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[360px]">
                         <div className="bg-gradient-to-b from-[#ec4899] to-[#500724] px-6 py-4 flex items-center shrink-0">
                             <h3 className="font-bold text-white text-base">Аналітика каналу</h3>
                         </div>
-                        <div className="p-6 flex-grow flex flex-col justify-between text-sm">
-                            <div className="space-y-4">
+                        <div className="p-6 flex-grow flex flex-col justify-between text-xs md:text-sm overflow-hidden">
+                            <div className="space-y-2.5 overflow-y-auto pr-1">
                                 {overview.subscriberCount !== undefined && (
                                     <div className="flex items-center justify-between">
                                         <span className="text-zinc-300">Підписники</span>
@@ -62,9 +62,23 @@ function StudioReviewPage() {
                                         <span className="text-white font-medium">{overview.monthlyViewCount.toLocaleString("uk-UA")}</span>
                                     </div>
                                 )}
+                                {overview.totalVideoCount !== undefined && (
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-zinc-300">Всього відео</span>
+                                        <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
+                                        <span className="text-white font-medium">{overview.totalVideoCount.toLocaleString("uk-UA")}</span>
+                                    </div>
+                                )}
+                                {overview.totalLikesCount !== undefined && (
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-zinc-300">Всього лайків</span>
+                                        <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
+                                        <span className="text-white font-medium">👍 {overview.totalLikesCount.toLocaleString("uk-UA")}</span>
+                                    </div>
+                                )}
                                 {overview.averageViewsPerVideo !== undefined && (
                                     <div className="flex items-center justify-between">
-                                        <span className="text-zinc-300">Сер. кількість переглядів відео</span>
+                                        <span className="text-zinc-300">Сер. перегляди відео</span>
                                         <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
                                         <span className="text-white font-medium">{overview.averageViewsPerVideo.toLocaleString("uk-UA")}</span>
                                     </div>
@@ -73,7 +87,7 @@ function StudioReviewPage() {
                             <Button
                                 type="button"
                                 onClick={() => navigate("/studio/analytics")}
-                                className="bg-[#ec4899] hover:bg-[#db2777] text-white font-bold py-2 px-4 rounded-full text-xs uppercase tracking-wider transition-all duration-200 self-start active:scale-[0.98]"
+                                className="bg-[#ec4899] hover:bg-[#db2777] text-white font-bold py-2 px-4 rounded-full text-xs uppercase tracking-wider transition-all duration-200 self-start active:scale-[0.98] mt-4 flex-shrink-0"
                             >
                                 Перейти до аналітики каналу
                             </Button>
@@ -81,7 +95,7 @@ function StudioReviewPage() {
                     </div>
                 )}
 
-                <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[320px]">
+                <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[360px]">
                     <div className="bg-gradient-to-b from-[#ec4899] to-[#500724] px-6 py-4 flex items-center shrink-0">
                         <h3 className="font-bold text-white text-base">Аналітика відео</h3>
                     </div>
@@ -146,7 +160,7 @@ function StudioReviewPage() {
                     </div>
                 </div>
 
-                <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[320px]">
+                <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[360px]">
                     <div className="bg-gradient-to-b from-[#ec4899] to-[#500724] px-6 py-4 flex items-center shrink-0">
                         <h3 className="font-bold text-white text-base">Останні підписки</h3>
                     </div>
