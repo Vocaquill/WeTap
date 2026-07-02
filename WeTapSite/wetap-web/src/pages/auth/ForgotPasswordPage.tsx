@@ -84,10 +84,6 @@ function ForgotPasswordPage() {
                                     error={errorMessage}
                                 />
 
-                                {errorMessage && (
-                                    <p className="text-red-500 text-sm font-semibold">{errorMessage}</p>
-                                )}
-
                                 <Button
                                     type="submit"
                                     variant="primary"
