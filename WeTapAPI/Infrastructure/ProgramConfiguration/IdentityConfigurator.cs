@@ -47,7 +47,12 @@ public static class IdentityConfigurator
             {
                 OnMessageReceived = context =>
                 {
-                    context.Token = context.Request.Cookies[Application.Constants.AuthConstants.AuthCookieName];
+                    // Якщо хедер Authorization вже є (напр. Swagger) — не перезаписувати його кукою
+                    var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+                    if (string.IsNullOrEmpty(authHeader))
+                    {
+                        context.Token = context.Request.Cookies[Application.Constants.AuthConstants.AuthCookieName];
+                    }
                     return Task.CompletedTask;
                 }
             };

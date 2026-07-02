@@ -1,5 +1,6 @@
 using Application.Constants;
 using Application.Features.Studio.Queries.GetChannelCharts;
+using Application.Features.Studio.Queries.GetChannelOverview;
 using Application.Models.Statistics;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -9,20 +10,23 @@ namespace WeTapAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = Roles.Author)]
+[Authorize(Roles = $"{Roles.Author},{Roles.Admin}")]
 public class StudioController(IMediator mediator) : ControllerBase
 {
-    /// <summary>
-    /// Returns timeseries chart data (views, subscribers, likes) for the given channel
-    /// within the specified date range.
-    /// </summary>
     [HttpGet("charts")]
     public async Task<ActionResult<IEnumerable<ChannelChartModel>>> GetCharts(
-        [FromQuery] long channelId,
-        [FromQuery] DateTime from,
-        [FromQuery] DateTime to)
+        [FromQuery] GetChannelChartsModel model)
     {
-        var query = new GetChannelChartsQuery(channelId, from, to);
+        var query = new GetChannelChartsQuery(model);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("overview")]
+    public async Task<ActionResult<ChannelStatisticsModel>> GetOverview(
+        [FromQuery] long? channelId)
+    {
+        var query = new GetChannelOverviewQuery(channelId);
         var result = await mediator.Send(query);
         return Ok(result);
     }

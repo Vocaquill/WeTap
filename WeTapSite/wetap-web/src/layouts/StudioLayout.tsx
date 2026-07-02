@@ -1,13 +1,13 @@
 import BaseLayout from './BaseLayout';
-import Sidebar from '../components/layout/Sidebar';
+import StudioSidebar from '../components/layout/StudioSidebar';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 
-function AppLayout() {
+function StudioLayout() {
     return (
         <BaseLayout
             sidebar={({isOpen, toggleSidebar}) => (
-                <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar}/>
+                <StudioSidebar isOpen={isOpen} toggleSidebar={toggleSidebar}/>
             )}
             header={<Header/>}
             footer={<Footer/>}
@@ -15,4 +15,4 @@ function AppLayout() {
     );
 }
 
-export default AppLayout;
+export default StudioLayout;

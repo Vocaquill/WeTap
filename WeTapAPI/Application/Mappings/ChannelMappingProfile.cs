@@ -1,4 +1,5 @@
 using Application.Models.Channel;
+using Application.Models.Statistics;
 using Domain.Entities.Channel;
 using Riok.Mapperly.Abstractions;
 
@@ -24,4 +25,14 @@ public partial class ChannelMappingProfile
     
     [MapProperty(nameof(ChannelEntity.Subscribers), nameof(ChannelItemModel.SubscriberCount))]
     public partial IQueryable<ChannelItemModel> ProjectToItemModel(IQueryable<ChannelEntity> query);
+
+    [MapProperty(nameof(ChannelSubscriberEntity.User.UserName), nameof(ChannelSubscriberItemModel.NickName))]
+    [MapProperty(nameof(ChannelSubscriberEntity.User.Image), nameof(ChannelSubscriberItemModel.AvatarImage))]
+    public partial ChannelSubscriberItemModel MapToSubscriberItemModel(ChannelSubscriberEntity entity);
+
+    private void AfterMapToSubscriberItemModel(ChannelSubscriberEntity entity, ChannelSubscriberItemModel model)
+    {
+        model.Name = $"{entity.User?.FirstName} {entity.User?.LastName}".Trim();
+        model.DateSubscribed = entity.DateSubscribed.ToString("yyyy-MM-dd");
+    }
 }
