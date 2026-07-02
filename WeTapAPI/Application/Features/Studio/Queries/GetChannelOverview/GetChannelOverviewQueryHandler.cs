@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Mappings;
 using Application.Models.Statistics;
 using Application.Models.Video;
 using Domain.Entities.Channel;
@@ -14,7 +15,9 @@ public class GetChannelOverviewQueryHandler(
     IGenericRepository<ChannelEntity, long> channelRepo,
     IGenericRepository<VideoEntity, long> videoRepo,
     UserManager<UserEntity> userManager,
-    ICurrentUserService currentUserService)
+    ICurrentUserService currentUserService,
+    ChannelMappingProfile channelMapper,
+    VideoMappingProfile videoMapper)
     : IRequestHandler<GetChannelOverviewQuery, ChannelStatisticsModel>
 {
     public async Task<ChannelStatisticsModel> Handle(
@@ -63,66 +66,29 @@ public class GetChannelOverviewQueryHandler(
             AverageViewsPerVideo = averageViewsPerVideo
         };
 
-        // Recent subscribers (last 10)
         var recentSubscribersRaw = await channelRepo.AsQurable()
             .Where(c => c.Id == targetChannelId)
             .SelectMany(c => c.Subscribers!)
+            .Include(s => s.User)
             .OrderByDescending(s => s.DateSubscribed)
             .Take(10)
-            .Select(s => new
-            {
-                s.User!.FirstName,
-                s.User.LastName,
-                s.User.UserName,
-                s.User.Image,
-                s.DateSubscribed
-            })
             .ToListAsync(cancellationToken);
 
-        var recentSubscribers = recentSubscribersRaw.Select(s => new ChannelSubscriberItemModel
-        {
-            Name           = $"{s.FirstName} {s.LastName}".Trim(),
-            NickName       = s.UserName ?? string.Empty,
-            AvatarImage    = s.Image,
-            DateSubscribed = s.DateSubscribed.ToString("yyyy-MM-dd")
-        }).ToList();
-
-        // Most popular video
-        var topVideoRaw = await videoRepo.AsQurable()
-            .Where(v => v.ChannelId == targetChannelId && !v.IsDeleted)
-            .OrderByDescending(v => v.ViewCount)
-            .Select(v => new
+        var recentSubscribers = recentSubscribersRaw
+            .Select(s => new ChannelSubscriberItemModel
             {
-                v.Id,
-                v.Title,
-                v.Slug,
-                v.Description,
-                v.ViewCount,
-                v.Image,
-                v.Video,
-                v.DateCreated,
-                LikesCount    = v.VideoReactions.Count(r => r.IsLike),
-                DislikesCount = v.VideoReactions.Count(r => !r.IsLike)
+                NickName = s.User?.UserName,
+                AvatarImage = s.User?.Image,
+                Name = $"{s.User?.FirstName} {s.User?.LastName}".Trim(),
+                DateSubscribed = s.DateSubscribed.ToString("yyyy-MM-dd")
             })
-            .FirstOrDefaultAsync(cancellationToken);
+            .ToList();
 
-        VideoItemModel? mostPopularVideo = null;
-        if (topVideoRaw is not null)
-        {
-            mostPopularVideo = new VideoItemModel
-            {
-                Id            = topVideoRaw.Id,
-                Title         = topVideoRaw.Title,
-                Slug          = topVideoRaw.Slug,
-                Description   = topVideoRaw.Description,
-                ViewCount     = topVideoRaw.ViewCount,
-                Image         = topVideoRaw.Image,
-                Video         = topVideoRaw.Video,
-                DateCreated   = topVideoRaw.DateCreated.ToString("yyyy-MM-dd"),
-                LikesCount    = topVideoRaw.LikesCount,
-                DislikesCount = topVideoRaw.DislikesCount
-            };
-        }
+        var mostPopularVideo = await videoMapper.ProjectToItemModel(
+            videoRepo.AsQurable()
+                .Where(v => v.ChannelId == targetChannelId && !v.IsDeleted)
+                .OrderByDescending(v => v.ViewCount)
+        ).FirstOrDefaultAsync(cancellationToken);
 
         return new ChannelStatisticsModel
         {
