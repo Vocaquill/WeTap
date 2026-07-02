@@ -26,6 +26,8 @@ export type GenreSortField = typeof GENRE_SORT_FIELDS[number];
 export const USER_SORT_FIELDS = ['email', 'firstName', 'lastName'] as const;
 export type UserSortField = typeof USER_SORT_FIELDS[number];
 
+export type MetricType = "Views" | "Subscribers" | "Likes";
+
 const APP_ENV = {
     API_BASE_URL,
     SIGNALR_HUB_URL,

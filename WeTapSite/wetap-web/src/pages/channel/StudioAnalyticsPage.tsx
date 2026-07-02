@@ -3,7 +3,6 @@ import { useAppSelector } from "../../store";
 import { useGetChartsQuery } from "../../services/api/apiStudio";
 import { StudioDateRangePicker } from "../../components/ui/common/StudioDateRangePicker";
 import { Button } from "../../components/form/Button";
-import { Loader2 } from "lucide-react";
 import {
     LineChart,
     Line,
@@ -13,8 +12,9 @@ import {
     Tooltip,
     ResponsiveContainer
 } from "recharts";
-
-type MetricType = "Views" | "Subscribers" | "Likes";
+import LoadingOverlay from "../../components/ui/loading/LoadingOverlay.tsx";
+import type { MetricType } from "../../env/index.ts";
+import {formatMetricName, formatNumber} from "../../utils/statsUtils.ts";
 
 export default function StudioAnalyticsPage() {
     const { user } = useAppSelector((state) => state.auth);
@@ -49,12 +49,7 @@ export default function StudioAnalyticsPage() {
 
     if (isLoading) {
         return (
-            <div className="flex h-full items-center justify-center min-h-[60vh] bg-[#0c0c0e]">
-                <div className="flex flex-col items-center gap-3">
-                    <Loader2 className="animate-spin text-[#ec4899]" size={48} />
-                    <p className="text-zinc-400 text-sm font-medium">Завантаження аналітики...</p>
-                </div>
-            </div>
+            <LoadingOverlay />
         );
     }
 
@@ -113,22 +108,6 @@ export default function StudioAnalyticsPage() {
             comments: 0
         };
     });
-
-    const formatMetricName = (metric: MetricType) => {
-        if (metric === "Views") return "Перегляди";
-        if (metric === "Likes") return "Вподобайки";
-        return "Підписки";
-    };
-
-    const formatNumber = (num: number) => {
-        if (num >= 1000000) {
-            return (num / 1000000).toFixed(1) + "M";
-        }
-        if (num >= 1000) {
-            return (num / 1000).toFixed(1) + "K";
-        }
-        return num.toString();
-    };
 
     return (
         <div className="p-8 space-y-10 animate-in fade-in duration-500 max-w-6xl mx-auto bg-[#121214] min-h-screen text-zinc-100">
