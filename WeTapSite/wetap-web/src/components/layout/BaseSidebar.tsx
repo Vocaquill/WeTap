@@ -25,6 +25,7 @@ interface BaseSidebarProps {
     logoType?: 'default' | 'admin';
     sections: SidebarSection[];
     bottomItems?: SidebarItem[];
+    headerContent?: React.ReactNode;
 }
 
 export function BaseSidebar({
@@ -34,6 +35,7 @@ export function BaseSidebar({
                                 logoType = 'default',
                                 sections,
                                 bottomItems = [],
+                                headerContent,
                             }: BaseSidebarProps) {
     const location = useLocation();
 
@@ -140,6 +142,13 @@ export function BaseSidebar({
 
                 {logoType === 'admin' && !isCollapsible && (
                     <div className="h-[1px] w-full bg-gradient-to-r from-zinc-800 to-transparent mb-6"/>
+                )}
+
+                {headerContent && (
+                    <>
+                        {headerContent}
+                        <div className="h-[1px] w-full bg-gradient-to-r from-zinc-800/80 to-transparent mb-3 mx-1"/>
+                    </>
                 )}
 
                 {/* Navigation Sections */}
