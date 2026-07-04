@@ -33,7 +33,7 @@ function AdminSidebar() {
     {
       name: 'Додому',
       icon: <HomeIcon size={20} />,
-      onClick: () => navigate('/')
+      path: '/'
     }
   ];
 
