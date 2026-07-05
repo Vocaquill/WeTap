@@ -1,3 +1,3 @@
-export interface VideoRecommendationRequest {
+export interface IVideoRecommendationRequest {
     videoId: number;
 }

@@ -128,8 +128,7 @@ public class VideosController(
 
     [HttpGet("recommendations")]
     [AllowAnonymous]
-    public async Task<ActionResult<IEnumerable<VideoItemModel>>> GetRecommendations(
-        [FromQuery] VideoRecommendationRequest model)
+    public async Task<ActionResult<IEnumerable<VideoItemModel>>> GetRecommendations([FromQuery] VideoRecommendationRequest model)
     {
         var query = new GetVideoRecommendationsQuery(model);
         var result = await mediator.Send(query);

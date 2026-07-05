@@ -11,11 +11,12 @@ import type { IVideoProcessingResult } from "../../types/Video/IVideoProcessingR
 import type { IGetByRequest } from "../../types/Additional/IGetByRequest.ts";
 import type { IPagedResult } from "../../types/Additional/IPagedResult.ts";
 import type { IVideoReactionRequest } from "../../types/Video/IVideoReactionRequest.ts";
+import type {IVideoRecommendationRequest} from "../../types/Video/IVideoRecommendationRequest.ts";
 
 export const apiVideos = createApi({
     reducerPath: "api/videos",
     baseQuery: createBaseQuery("Videos"),
-    tagTypes: ["Videos", "Video"],
+    tagTypes: ["Videos", "Video", "Recommendations"],
     endpoints: (builder) => ({
 
         searchVideos: builder.query<IPagedResult<IVideoItemResponse>, IVideoSearchRequest>({
@@ -25,6 +26,15 @@ export const apiVideos = createApi({
                 params,
             }),
             providesTags: ["Videos"],
+        }),
+
+        getRecommendations: builder.query<IVideoItemResponse[], IVideoRecommendationRequest>({
+            query: (params) => ({
+                url: "recommendations",
+                method: "GET",
+                params,
+            }),
+            providesTags: ["Recommendations"],
         }),
 
         getBy: builder.query<IVideoItemResponse, IGetByRequest>({
@@ -43,7 +53,7 @@ export const apiVideos = createApi({
                 method: "POST",
                 body: serialize(body),
             }),
-            invalidatesTags: ["Videos"],
+            invalidatesTags: ["Videos", "Recommendations"],
         }),
 
         editVideo: builder.mutation<IVideoProcessingResult, IVideoEditRequest>({
@@ -52,7 +62,7 @@ export const apiVideos = createApi({
                 method: "PUT",
                 body: serialize(body),
             }),
-            invalidatesTags: (_result, _error, { id }) => [{ type: "Video", id }, "Videos"],
+            invalidatesTags: (_result, _error, { id }) => [{ type: "Video", id }, "Videos", "Recommendations"],
         }),
 
         deleteVideo: builder.mutation<IVideoItemResponse[], IVideoDeleteRequest>({
@@ -96,4 +106,5 @@ export const {
     useGetPrivaciesQuery,
     useReactVideoMutation,
     useIncrementViewMutation,
+    useGetRecommendationsQuery,
 } = apiVideos;
