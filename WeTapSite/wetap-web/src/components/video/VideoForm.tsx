@@ -150,6 +150,7 @@ export function VideoForm({
 
         if (!form.title.trim()) validationErrors.title = ['Назва обовʼязкова'];
         if (!form.slug.trim()) validationErrors.slug = ['Slug обовʼязковий'];
+        if (!form.description?.trim()) validationErrors.description = ['Опис не може бути порожнім'];
         if (!form.video && requireVideoFile) validationErrors.video = ['Відео файл обовʼязковий'];
         if (form.languageId === 0) validationErrors.languageId = ['Оберіть мову'];
         if (form.privacyId === 0) validationErrors.privacyId = ['Оберіть рівень приватності'];
@@ -234,6 +235,7 @@ export function VideoForm({
                             name="description"
                             value={form.description}
                             onChange={handleChange}
+                            required
                             error={errors.description}
                         />
 

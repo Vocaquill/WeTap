@@ -6,7 +6,7 @@ public class VideoCreateModel
 {
     public string Title { get; set; } = string.Empty;
     public string Slug { get; set; } = string.Empty;
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
     public long[]? GenreIds { get; set; }
     public long[]? TagIds { get; set; }
     public IFormFile? Image { get; set; }
