@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import type {IBaseSearch} from "../types/Additional/IBaseSearch.ts";
 
 const VALID_PER_PAGE = [5, 10, 20, 50] as const;
 const MIN_PAGE = 1;
@@ -7,17 +8,11 @@ const MAX_STRING_LENGTH = 200;
 
 const ALWAYS_EXCLUDED_FROM_URL = ['channelId'] as const;
 
-type BaseSearch = {
-    page: number;
-    itemPerPage: number;
-    [key: string]: unknown;
-};
-
 interface UseSearchStateOptions<T> {
     excludeFromUrl?: (keyof T)[];
 }
 
-interface UseSearchStateReturn<T extends BaseSearch> {
+interface UseSearchStateReturn<T extends IBaseSearch> {
     searchParams: T;
     setSearchParams: React.Dispatch<React.SetStateAction<T>>;
     handleSearchChange: <K extends keyof T>(key: K, value: T[K]) => void;
@@ -42,13 +37,14 @@ function isValidPerPage(value: unknown): value is number {
     return (VALID_PER_PAGE as readonly number[]).includes(n);
 }
 
-function parseAndValidate<T extends BaseSearch>(
+function parseAndValidate<T extends IBaseSearch>(
     urlSearch: string,
     defaults: T,
     excludedKeys: Set<string>,
 ): { params: T; needsReplace: boolean } {
     const sp = new URLSearchParams(urlSearch);
-    const result: Record<string, unknown> = { ...defaults };
+
+    const result: T = { ...defaults };
     let needsReplace = false;
 
     if (sp.has('page')) {
@@ -73,34 +69,34 @@ function parseAndValidate<T extends BaseSearch>(
         }
     }
 
-    for (const key of Object.keys(defaults)) {
+    for (const key of Object.keys(defaults) as (keyof T)[]) {
         if (key === 'page' || key === 'itemPerPage') continue;
-        if (excludedKeys.has(key)) continue;
-        if (!sp.has(key)) continue;
+        if (excludedKeys.has(key as string)) continue;
+        if (!sp.has(key as string)) continue;
 
-        const defaultValue = defaults[key as keyof T];
-        const raw = sp.get(key)!;
+        const defaultValue = defaults[key];
+        const raw = sp.get(key as string)!;
 
         if (typeof defaultValue === 'string' || defaultValue === '') {
-            result[key] = sanitizeString(raw);
+            result[key] = sanitizeString(raw) as T[keyof T];
         } else if (typeof defaultValue === 'number' || defaultValue === undefined) {
             const n = Number(raw);
             if (!isNaN(n) && n >= 0) {
-                result[key] = n;
+                result[key] = n as T[keyof T];
             } else if (raw === '' || raw === 'undefined') {
-                result[key] = defaults[key as keyof T];
+                result[key] = defaults[key];
             } else {
-                result[key] = sanitizeString(raw) || defaults[key as keyof T];
+                result[key] = (sanitizeString(raw) || defaults[key]) as T[keyof T];
             }
         } else if (defaultValue === undefined || defaultValue === null) {
-            result[key] = sanitizeString(raw) || undefined;
+            result[key] = (sanitizeString(raw) || undefined) as T[keyof T];
         }
     }
 
-    return { params: result as T, needsReplace };
+    return { params: result, needsReplace };
 }
 
-function buildUrlSearch<T extends BaseSearch>(
+function buildUrlSearch<T extends IBaseSearch>(
     params: T,
     excludedKeys: Set<string>,
     defaultItemPerPage: number,
@@ -120,7 +116,7 @@ function buildUrlSearch<T extends BaseSearch>(
     return str ? `?${str}` : '';
 }
 
-export function useSearchState<T extends BaseSearch>(
+export function useSearchState<T extends IBaseSearch>(
     defaultParams: T,
     options: UseSearchStateOptions<T> = {},
 ): UseSearchStateReturn<T> {
