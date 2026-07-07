@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Plus} from 'lucide-react';
 import {Button} from '../../components/form/Button';
 import {USER_SORT_FIELDS, type UserSortField} from '../../env';
@@ -15,6 +15,7 @@ import type {IUserItemResponse} from "../../types/User/IUserItemResponse.ts";
 import {useDeleteUserMutation, useSearchUsersQuery} from "../../services/api/apiUsers.ts";
 import EditUserModal from "../../components/modal/EditUserModal.tsx";
 import AddUserModal from "../../components/modal/AddUserModal.tsx";
+import {useSearchState} from '../../hooks/useSearchState';
 
 const perPageOptions = [
     {id: 5, name: '5'},
@@ -23,15 +24,18 @@ const perPageOptions = [
     {id: 50, name: '50'},
 ];
 
+const DEFAULT_USER_PARAMS: IUserSearchRequest = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    page: 1,
+    itemPerPage: 10,
+    sortBy: undefined,
+};
+
 function UsersPage() {
-    const [searchParams, setSearchParams] = useState<IUserSearchRequest>({
-        firstName: '',
-        lastName: '',
-        email: '',
-        page: 1,
-        itemPerPage: 10,
-        sortBy: undefined,
-    });
+    const {searchParams, setSearchParams, handleSearchChange, resetFilters, clampPage} =
+        useSearchState<IUserSearchRequest>(DEFAULT_USER_PARAMS);
 
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -41,20 +45,9 @@ function UsersPage() {
     const {data, isFetching, isError} = useSearchUsersQuery(searchParams);
     const [deleteUser, {isLoading: isDeleting}] = useDeleteUserMutation();
 
-    const handleSearchChange = <K extends keyof IUserSearchRequest>(key: K, value: IUserSearchRequest[K]) => {
-        setSearchParams((prev: IUserSearchRequest) => ({...prev, [key]: value, page: 1}));
-    };
-
-    const resetFilters = () => {
-        setSearchParams({
-            firstName: '',
-            lastName: '',
-            email: '',
-            page: 1,
-            itemPerPage: searchParams.itemPerPage,
-            sortBy: undefined,
-        });
-    };
+    useEffect(() => {
+        if (data) clampPage(data.pagination.totalPages);
+    }, [data?.pagination.totalPages]);
 
     const handleSortChange = (key: string | undefined) => {
         setSearchParams((prev: IUserSearchRequest) => ({
@@ -125,7 +118,7 @@ function UsersPage() {
                         <Pagination
                             currentPage={data.pagination.currentPage}
                             totalPages={data.pagination.totalPages}
-                            onChange={(page) => setSearchParams((prev: IUserSearchRequest) => ({...prev, page}))}
+                            onChange={(page) => setSearchParams((prev) => ({...prev, page}))}
                         />
                         <div
                             className="flex items-center gap-2 text-zinc-500 text-xs uppercase tracking-wider font-black">
