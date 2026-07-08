@@ -3,6 +3,7 @@ import { createBaseQuery } from "../../utils/createBaseQuery.ts";
 import type { IStudioOverviewResponse } from "../../types/Channel/IStudioOverviewResponse";
 import type { IChannelChartModel } from "../../types/Channel/IChannelChartModel";
 import type { IGetChannelChartsRequest } from "../../types/Channel/IGetChannelChartsRequest";
+import type { IAdminDashboardResponse } from "../../types/Channel/IAdminDashboardResponse";
 
 export const apiStudio = createApi({
     reducerPath: "api/studio",
@@ -25,10 +26,19 @@ export const apiStudio = createApi({
             }),
             providesTags: ["Studio"],
         }),
+        getAdminDashboard: builder.query<IAdminDashboardResponse, void>({
+            query: () => ({
+                url: "admin-dashboard",
+                method: "GET",
+            }),
+            providesTags: ["Studio"],
+        }),
     }),
 });
 
 export const {
     useGetOverviewQuery,
     useGetChartsQuery,
+    useGetAdminDashboardQuery,
 } = apiStudio;
+
