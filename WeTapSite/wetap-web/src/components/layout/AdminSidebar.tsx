@@ -1,9 +1,7 @@
-import { useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Film, Tag, Hash, HomeIcon, Globe } from 'lucide-react';
 import BaseSidebar, { type SidebarSection, type SidebarItem } from './BaseSidebar';
 
 function AdminSidebar() {
-  const navigate = useNavigate();
 
   const sections: SidebarSection[] = [
     {
