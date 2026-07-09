@@ -12,6 +12,7 @@ import type { IGetByRequest } from "../../types/Additional/IGetByRequest.ts";
 import type { IPagedResult } from "../../types/Additional/IPagedResult.ts";
 import type { IVideoReactionRequest } from "../../types/Video/IVideoReactionRequest.ts";
 import type {IVideoRecommendationRequest} from "../../types/Video/IVideoRecommendationRequest.ts";
+import { apiStudio } from "../api/apiStudio.ts";
 
 export const apiVideos = createApi({
     reducerPath: "api/videos",
@@ -54,6 +55,13 @@ export const apiVideos = createApi({
                 body: serialize(body),
             }),
             invalidatesTags: ["Videos", "Recommendations"],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(apiStudio.util.invalidateTags(["Studio"]));
+                }
+                catch {}
+            },
         }),
 
         editVideo: builder.mutation<IVideoProcessingResult, IVideoEditRequest>({
@@ -63,6 +71,12 @@ export const apiVideos = createApi({
                 body: serialize(body),
             }),
             invalidatesTags: (_result, _error, { id }) => [{ type: "Video", id }, "Videos", "Recommendations"],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(apiStudio.util.invalidateTags(["Studio"]));
+                } catch {}
+            },
         }),
 
         deleteVideo: builder.mutation<IVideoItemResponse[], IVideoDeleteRequest>({
@@ -72,6 +86,12 @@ export const apiVideos = createApi({
                 body,
             }),
             invalidatesTags: (_result, _error, { id }) => [{ type: "Video", id }, "Videos"],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(apiStudio.util.invalidateTags(["Studio"]));
+                } catch {}
+            },
         }),
 
         getPrivacies: builder.query<IVideoPrivacyItemResponse[], void>({
