@@ -13,7 +13,7 @@ public class DeleteVideoHandler(IGenericRepository<VideoEntity, long> repo, ICur
     {
         var video = await repo.GetByIdAsync(request.Model.Id);
 
-        if (video!.ChannelId != currentUserService.GetCurrentUserId())
+        if (video!.ChannelId != currentUserService.GetCurrentUserId() && !currentUserService.IsInRole(Application.Constants.Roles.Admin))
             throw new Exception("Ви не є власником цього відео");
 
         await repo.DeleteAsync(video.Id);

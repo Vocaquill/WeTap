@@ -29,7 +29,7 @@ public class UpdateVideoHandler(
             .FirstOrDefaultAsync(x => x.Id == model.Id && !x.IsDeleted, cancellationToken);
 
 
-        if (entity!.ChannelId != currentUserId)
+        if (entity!.ChannelId != currentUserId && !currentUserService.IsInRole(Application.Constants.Roles.Admin))
             throw new Exception("Ви не є власником цього відео");
 
         mapper.MapToEntity(model, entity);
