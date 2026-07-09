@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAppSelector } from "../../store";
 import { useGetChartsQuery } from "../../services/api/apiStudio";
 import { StudioDateRangePicker } from "../../components/ui/common/StudioDateRangePicker";
 import { Button } from "../../components/form/Button";
@@ -17,8 +16,6 @@ import type { MetricType } from "../../env/index.ts";
 import {formatMetricName, formatNumber} from "../../utils/statsUtils.ts";
 
 export default function StudioAnalyticsPage() {
-    const { user } = useAppSelector((state) => state.auth);
-
     const today = new Date();
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(today.getDate() - 30);
@@ -36,11 +33,9 @@ export default function StudioAnalyticsPage() {
 
     const { data: chartData, isLoading } = useGetChartsQuery(
         {
-            channelId: user?.channelId,
             from: dateRange.from,
             to: dateRange.to
-        },
-        { skip: !user?.channelId }
+        }
     );
 
     const handleDateChange = (from: string, to: string) => {

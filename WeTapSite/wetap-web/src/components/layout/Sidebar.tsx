@@ -56,7 +56,6 @@ function Sidebar({isOpen, toggleSidebar}: SidebarProps) {
             isOpen={isOpen}
             toggleSidebar={toggleSidebar}
             isCollapsible={true}
-            logoType="default"
             sections={sections}
         />
     );

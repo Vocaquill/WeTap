@@ -84,7 +84,6 @@ function StudioSidebar({isOpen, toggleSidebar}: StudioSidebarProps) {
             isOpen={isOpen}
             toggleSidebar={toggleSidebar}
             isCollapsible={true}
-            logoType="default"
             sections={sections}
             bottomItems={bottomItems}
             headerContent={channelHeader}

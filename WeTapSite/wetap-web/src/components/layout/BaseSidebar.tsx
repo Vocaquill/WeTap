@@ -22,7 +22,6 @@ interface BaseSidebarProps {
     isOpen?: boolean;
     toggleSidebar?: () => void;
     isCollapsible?: boolean;
-    logoType?: 'default' | 'admin';
     sections: SidebarSection[];
     bottomItems?: SidebarItem[];
     headerContent?: React.ReactNode;
@@ -32,7 +31,6 @@ export function BaseSidebar({
                                 isOpen = true,
                                 toggleSidebar,
                                 isCollapsible = true,
-                                logoType = 'default',
                                 sections,
                                 bottomItems = [],
                                 headerContent,
@@ -93,30 +91,17 @@ export function BaseSidebar({
                     )}
 
                     {(!isCollapsible || isOpen) && (
-                        <>
-                            {logoType === 'admin' ? (
-                                <div className="flex items-center gap-3">
-                                    <div
-                                        className="bg-red-600 text-white font-black px-2 py-1 rounded shadow-lg shadow-red-900/40 transform -rotate-3">
-                                        CW
-                                    </div>
-                                    <h2 className="text-xl font-bold tracking-tight text-white">
-                                        Admin <span
-                                        className="text-zinc-500 font-light text-sm uppercase ml-1 tracking-widest">Panel</span>
-                                    </h2>
-                                </div>
-                            ) : (
-                                <Link to="/"
-                                      className="flex items-center active:scale-[0.98] cursor-pointer animate-fadeIn">
-                                    <div className="h-11 w-auto flex items-center justify-center shrink-0">
-                                        <img
-                                            src={logoImg}
-                                            alt="WeTap Logo"
-                                            className="h-full object-contain"
-                                        />
-                                    </div>
+                        <Link to="/"
+                              className="flex items-center active:scale-[0.98] cursor-pointer animate-fadeIn">
+                            <div className="h-11 w-auto flex items-center justify-center shrink-0">
+                                <img
+                                    src={logoImg}
+                                    alt="WeTap Logo"
+                                    className="h-full object-contain"
+                                />
+                            </div>
 
-                                    <style>{`
+                            <style>{`
                     @keyframes shimmer-move {
                       0% { background-position: 0% 50%; }
                       50% { background-position: 100% 50%; }
@@ -124,25 +109,19 @@ export function BaseSidebar({
                     }
                   `}</style>
 
-                                    <h2
-                                        className="ml-3 text-xl font-black tracking-tight whitespace-nowrap bg-clip-text text-transparent"
-                                        style={{
-                                            backgroundImage: 'linear-gradient(to right, #f43f5e, #ec4899, #a855f7, #6366f1, #3b82f6)',
-                                            backgroundSize: '300% auto',
-                                            animation: 'shimmer-move 15s ease infinite',
-                                        }}
-                                    >
-                                        WeTap
-                                    </h2>
-                                </Link>
-                            )}
-                        </>
+                            <h2
+                                className="ml-3 text-xl font-black tracking-tight whitespace-nowrap bg-clip-text text-transparent"
+                                style={{
+                                    backgroundImage: 'linear-gradient(to right, #f43f5e, #ec4899, #a855f7, #6366f1, #3b82f6)',
+                                    backgroundSize: '300% auto',
+                                    animation: 'shimmer-move 15s ease infinite',
+                                }}
+                            >
+                                WeTap
+                            </h2>
+                        </Link>
                     )}
                 </div>
-
-                {logoType === 'admin' && !isCollapsible && (
-                    <div className="h-[1px] w-full bg-gradient-to-r from-zinc-800 to-transparent mb-6"/>
-                )}
 
                 {headerContent && (
                     <>

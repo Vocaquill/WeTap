@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../store";
 import { useGetOverviewQuery } from "../../services/api/apiStudio";
 import { Button } from "../../components/form/Button";
 import { APP_ENV } from "../../env";
@@ -7,12 +6,8 @@ import { Loader2 } from "lucide-react";
 
 function StudioReviewPage() {
     const navigate = useNavigate();
-    const { user } = useAppSelector((state) => state.auth);
 
-    const { data: overviewData, isLoading } = useGetOverviewQuery(
-        { channelId: user?.channelId },
-        { skip: !user?.channelId }
-    );
+    const { data: overviewData, isLoading } = useGetOverviewQuery({});
 
     if (isLoading) {
         return (

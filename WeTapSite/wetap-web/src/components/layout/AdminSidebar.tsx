@@ -40,7 +40,6 @@ function AdminSidebar() {
   return (
     <BaseSidebar
       isCollapsible={false}
-      logoType="admin"
       sections={sections}
       bottomItems={bottomItems}
     />
