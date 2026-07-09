@@ -15,6 +15,7 @@ using Application.Features.Videos.Queries.GetByVideo;
 using Application.Features.Videos.Queries.GetVideoPrivacies;
 using Application.Features.Videos.Commands.ReactVideo;
 using Application.Features.Videos.Commands.IncrementView;
+using Application.Features.Videos.Queries.GetVideoRecommendations;
 using Microsoft.Extensions.Logging;
 
 namespace WeTapAPI.Controllers;
@@ -123,6 +124,15 @@ public class VideosController(
         var command = new IncrementViewCommand(id);
         await mediator.Send(command);
         return Ok();
+    }
+
+    [HttpGet("recommendations")]
+    [AllowAnonymous]
+    public async Task<ActionResult<IEnumerable<VideoItemModel>>> GetRecommendations([FromQuery] VideoRecommendationRequest model)
+    {
+        var query = new GetVideoRecommendationsQuery(model);
+        var result = await mediator.Send(query);
+        return Ok(result);
     }
 
     [HttpGet("progress/{trackingId}")]

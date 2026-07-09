@@ -1,65 +1,54 @@
-import {useState} from 'react';
-import {Plus, Film} from 'lucide-react';
-import {useNavigate} from 'react-router-dom';
-import {Button} from '../../components/form/Button';
-import {useAppSelector} from '../../store';
-import {APP_ENV} from '../../env';
+import { useState, useEffect } from 'react';
+import { Film } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { APP_ENV } from '../../env';
 
 import DeleteModal from "../../components/modal/common/DeleteModal.tsx";
 
-import type {IVideoItemResponse} from '../../types/Video/IVideoItemResponse';
-import type {IVideoSearchRequest} from '../../types/Video/IVideoSearchRequest';
-import {useSearchVideosQuery, useDeleteVideoMutation} from '../../services/api/apiVideos';
+import type { IVideoItemResponse } from '../../types/Video/IVideoItemResponse';
+import type { IVideoSearchRequest } from '../../types/Video/IVideoSearchRequest';
+import { useSearchVideosQuery, useDeleteVideoMutation } from '../../services/api/apiVideos';
 
-import {Pagination} from '../../components/ui/common/Pagination';
-import {FilterBar} from '../../components/ui/common/FilterBar';
-import {GenericTable} from '../../components/ui/common/GenericTable';
-import {SelectField} from '../../components/form/SelectField';
-import type {IColumnConfig} from '../../types/Additional/IColumnConfig';
+import { Pagination } from '../../components/ui/common/Pagination';
+import { FilterBar } from '../../components/ui/common/FilterBar';
+import { GenericTable } from '../../components/ui/common/GenericTable';
+import { SelectField } from '../../components/form/SelectField';
+import type { IColumnConfig } from '../../types/Additional/IColumnConfig';
+import { useSearchState } from '../../hooks/useSearchState';
 
 const perPageOptions = [
-    {id: 5, name: '5'},
-    {id: 10, name: '10'},
-    {id: 20, name: '20'},
-    {id: 50, name: '50'},
+    { id: 5, name: '5' },
+    { id: 10, name: '10' },
+    { id: 20, name: '20' },
+    { id: 50, name: '50' },
 ];
 
-function StudioPage() {
+function VideosPage() {
     const navigate = useNavigate();
-    const {user} = useAppSelector((state) => state.auth);
 
-    const [searchParams, setSearchParams] = useState<IVideoSearchRequest>({
-        title: '',
-        page: 1,
-        itemPerPage: 10,
-        sortBy: undefined,
-        channelId: user?.id || 0,
-    });
+    const { searchParams, setSearchParams, handleSearchChange, resetFilters, clampPage } =
+        useSearchState<IVideoSearchRequest>(
+            {
+                title: '',
+                page: 1,
+                itemPerPage: 10,
+                sortBy: undefined,
+                channelId: undefined,
+            }
+        );
 
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState<IVideoItemResponse | null>(null);
 
-    const {data, isFetching, isError} = useSearchVideosQuery(searchParams, {
-        skip: !searchParams.channelId,
-    });
-    const [deleteVideo, {isLoading: isDeleting}] = useDeleteVideoMutation();
+    const { data, isFetching, isError } = useSearchVideosQuery(searchParams);
+    const [deleteVideo, { isLoading: isDeleting }] = useDeleteVideoMutation();
 
-    const handleSearchChange = <K extends keyof IVideoSearchRequest>(key: K, value: IVideoSearchRequest[K]) => {
-        setSearchParams((prev: IVideoSearchRequest) => ({...prev, [key]: value, page: 1}));
-    };
-
-    const resetFilters = () => {
-        setSearchParams({
-            title: '',
-            page: 1,
-            itemPerPage: searchParams.itemPerPage,
-            sortBy: undefined,
-            channelId: user?.id || 0,
-        });
-    };
+    useEffect(() => {
+        if (data) clampPage(data.pagination.totalPages);
+    }, [data?.pagination.totalPages]);
 
     const handleSortChange = (key: string | undefined) => {
-        setSearchParams((prev: IVideoSearchRequest) => ({
+        setSearchParams((prev) => ({
             ...prev,
             sortBy: key,
             page: 1,
@@ -69,7 +58,7 @@ function StudioPage() {
     const handleDelete = async () => {
         if (!selectedVideo) return;
         try {
-            await deleteVideo({id: selectedVideo.id}).unwrap();
+            await deleteVideo({ id: selectedVideo.id }).unwrap();
             setIsDeleteOpen(false);
             setSelectedVideo(null);
         } catch (e) {
@@ -83,8 +72,7 @@ function StudioPage() {
             label: "Прев'ю",
             headerClassName: 'w-28',
             render: (item) => (
-                <div
-                    className="w-16 h-10 rounded-lg bg-zinc-900 border border-zinc-800 overflow-hidden shadow-inner group-hover:border-zinc-700 transition-colors">
+                <div className="w-16 h-10 rounded-lg bg-zinc-900 border border-zinc-800 overflow-hidden shadow-inner group-hover:border-zinc-700 transition-colors">
                     {item.image ? (
                         <img
                             src={APP_ENV.IMAGES_400_URL + item.image}
@@ -92,9 +80,8 @@ function StudioPage() {
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                     ) : (
-                        <div
-                            className="w-full h-full flex items-center justify-center text-zinc-700 uppercase text-[9px] font-black">No
-                            Pic
+                        <div className="w-full h-full flex items-center justify-center text-zinc-700 uppercase text-[9px] font-black">
+                            No Pic
                         </div>
                     )}
                 </div>
@@ -128,7 +115,7 @@ function StudioPage() {
             label: 'Оцінки',
             render: (item) => (
                 <span className="text-zinc-400 whitespace-nowrap text-xs">
-                  👍 {item.likesCount} / 👎 {item.dislikesCount}
+                    👍 {item.likesCount} / 👎 {item.dislikesCount}
                 </span>
             ),
         },
@@ -136,9 +123,8 @@ function StudioPage() {
             key: 'privacy',
             label: 'Приватність',
             render: (item) => (
-                <span
-                    className="px-2 py-0.5 bg-zinc-900 text-zinc-400 whitespace-nowrap rounded-md text-xs font-semibold border border-zinc-800">
-                  {item.privacy?.name || 'Публічне'}
+                <span className="px-2 py-0.5 bg-zinc-900 text-zinc-400 whitespace-nowrap rounded-md text-xs font-semibold border border-zinc-800">
+                    {item.privacy?.name || 'Публічне'}
                 </span>
             ),
         },
@@ -148,9 +134,8 @@ function StudioPage() {
             sortable: true,
             sortKey: 'date',
             render: (item) => (
-                <span
-                    className="px-2 py-0.5 bg-zinc-900 text-zinc-400 whitespace-nowrap rounded-md text-xs font-semibold border border-zinc-800">
-                  {item.dateCreated || 'Колись'}
+                <span className="px-2 py-0.5 bg-zinc-900 text-zinc-400 whitespace-nowrap rounded-md text-xs font-semibold border border-zinc-800">
+                    {item.dateCreated || 'Колись'}
                 </span>
             ),
         },
@@ -161,24 +146,13 @@ function StudioPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                     <div className="p-3 bg-red-600/10 rounded-2xl text-red-500 border border-red-500/10">
-                        <Film size={28}/>
+                        <Film size={28} />
                     </div>
                     <div>
-                        <h1 className="text-4xl font-black text-white tracking-tight">Студія автора</h1>
-                        <p className="text-zinc-500 mt-1">Керування завантаженими відео та перегляд статистики</p>
+                        <h1 className="text-4xl font-black text-white tracking-tight">Усі відео</h1>
+                        <p className="text-zinc-500 mt-1">Керування відеоматеріалами на платформі</p>
                     </div>
                 </div>
-
-                <Button
-                    type="button"
-                    variant="primary"
-                    size="md"
-                    className="rounded-2xl"
-                    icon={<Plus size={20} strokeWidth={3}/>}
-                    onClick={() => navigate('/video/add')}
-                >
-                    ДОДАТИ ВІДЕО
-                </Button>
             </div>
 
             <FilterBar
@@ -195,7 +169,7 @@ function StudioPage() {
                 emptyMessage="Відео не знайдено"
                 sortBy={searchParams.sortBy}
                 onSortChange={handleSortChange}
-                onEdit={(video) => navigate(`/video/edit/${video.id}`)}
+                onEdit={(video) => navigate(`/video/edit/${video.id}`, { state: { fromAdmin: true } })}
                 onDelete={(video) => {
                     setSelectedVideo(video);
                     setIsDeleteOpen(true);
@@ -208,10 +182,9 @@ function StudioPage() {
                         <Pagination
                             currentPage={data.pagination.currentPage}
                             totalPages={data.pagination.totalPages}
-                            onChange={(page) => setSearchParams((prev: IVideoSearchRequest) => ({...prev, page}))}
+                            onChange={(page) => setSearchParams((prev: IVideoSearchRequest) => ({ ...prev, page }))}
                         />
-                        <div
-                            className="flex items-center gap-2 text-zinc-500 text-xs uppercase tracking-wider font-black">
+                        <div className="flex items-center gap-2 text-zinc-500 text-xs uppercase tracking-wider font-black">
                             <span>Елементів на сторінці:</span>
                             <SelectField
                                 name="itemPerPage"
@@ -241,4 +214,4 @@ function StudioPage() {
     );
 }
 
-export default StudioPage;
+export default VideosPage;

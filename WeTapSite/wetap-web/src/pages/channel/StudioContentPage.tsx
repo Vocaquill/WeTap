@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Plus, Film} from 'lucide-react';
 import {useNavigate} from 'react-router-dom';
 import {Button} from '../../components/form/Button';
@@ -16,6 +16,7 @@ import {FilterBar} from '../../components/ui/common/FilterBar';
 import {GenericTable} from '../../components/ui/common/GenericTable';
 import {SelectField} from '../../components/form/SelectField';
 import type {IColumnConfig} from '../../types/Additional/IColumnConfig';
+import {useSearchState} from '../../hooks/useSearchState';
 
 const perPageOptions = [
     {id: 5, name: '5'},
@@ -28,13 +29,17 @@ function StudioContentPage() {
     const navigate = useNavigate();
     const {user} = useAppSelector((state) => state.auth);
 
-    const [searchParams, setSearchParams] = useState<IVideoSearchRequest>({
-        title: '',
-        page: 1,
-        itemPerPage: 10,
-        sortBy: undefined,
-        channelId: user?.id || 0,
-    });
+    const {searchParams, setSearchParams, handleSearchChange, resetFilters, clampPage} =
+        useSearchState<IVideoSearchRequest>(
+            {
+                title: '',
+                page: 1,
+                itemPerPage: 10,
+                sortBy: undefined,
+                channelId: user?.id || 0,
+            },
+            { excludeFromUrl: ['channelId'] },
+        );
 
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState<IVideoItemResponse | null>(null);
@@ -44,22 +49,12 @@ function StudioContentPage() {
     });
     const [deleteVideo, {isLoading: isDeleting}] = useDeleteVideoMutation();
 
-    const handleSearchChange = <K extends keyof IVideoSearchRequest>(key: K, value: IVideoSearchRequest[K]) => {
-        setSearchParams((prev: IVideoSearchRequest) => ({...prev, [key]: value, page: 1}));
-    };
-
-    const resetFilters = () => {
-        setSearchParams({
-            title: '',
-            page: 1,
-            itemPerPage: searchParams.itemPerPage,
-            sortBy: undefined,
-            channelId: user?.id || 0,
-        });
-    };
+    useEffect(() => {
+        if (data) clampPage(data.pagination.totalPages);
+    }, [data?.pagination.totalPages]);
 
     const handleSortChange = (key: string | undefined) => {
-        setSearchParams((prev: IVideoSearchRequest) => ({
+        setSearchParams((prev) => ({
             ...prev,
             sortBy: key,
             page: 1,

@@ -13,9 +13,9 @@ import PageTransition from '../../components/layout/PageTransition';
 import { MoviePlayer } from "../../components/movie/MoviePlayer";
 import { APP_ENV } from "../../env/index";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
-import { useGetByQuery, useIncrementViewMutation, useReactVideoMutation, useSearchVideosQuery } from "../../services/api/apiVideos";
+import { useGetByQuery,
+    useGetRecommendationsQuery, useIncrementViewMutation, useReactVideoMutation } from "../../services/api/apiVideos";
 import { useAppSelector } from '../../store/index';
-import {TabButtons} from "../../components/ui/common/TabButton.tsx";
 import {Button} from "../../components/form/Button.tsx";
 import {CommentsSection} from "../../components/video/CommentsSection";
 
@@ -31,10 +31,10 @@ function VideoPage() {
         { skip: !slug }
     );
 
-    const { data: recommendations, isLoading: isRecsLoading } = useSearchVideosQuery({
-        page: 1,
-        itemPerPage: 10
-    });
+    const { data: recommendations, isLoading: isRecsLoading } = useGetRecommendationsQuery(
+        { videoId: video?.id as number },
+        { skip: !video?.id }
+    );
 
     const [reactVideo, { isLoading: isReacting }] = useReactVideoMutation();
     const [incrementView] = useIncrementViewMutation();
@@ -56,11 +56,6 @@ function VideoPage() {
             console.error('Помилка при відправці реакції', error);
         }
     };
-
-    const handleTabChange = (tab: string) => {
-        console.log('Tab changed to:', tab);
-        // TODO: implement tab switching logic
-    }
 
     const handleSubscribe = () => {
         if (!user) {
@@ -222,8 +217,6 @@ function VideoPage() {
                     </div>
 
                     <div className="w-full lg:w-[400px] flex-shrink-0 space-y-3">
-                        <TabButtons tabList={["Suggestions", "From this channel"]} onTabChange={handleTabChange} />
-
                         {isRecsLoading ? (
                             <div className="animate-pulse space-y-4">
                                 {[...Array(5)].map((_, i) => (
@@ -237,7 +230,7 @@ function VideoPage() {
                                 ))}
                             </div>
                         ) : (
-                            recommendations?.items.map((item) => (
+                            recommendations?.map((item) => (
                                 <Link
                                     key={item.id}
                                     to={`/video/${item.slug}`}

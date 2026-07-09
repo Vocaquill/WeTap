@@ -38,6 +38,7 @@ public class VideoCreateModelValidator : AbstractValidator<VideoCreateModel>
             .IsVideo();
 
         RuleFor(x => x.Description)
+            .NotNull().WithMessage("Опис не може бути порожнім")
             .MaximumLength(1000).WithMessage("Опис повинен містити не більше 1000 символів");
 
         RuleFor(x => x.LanguageId)

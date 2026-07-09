@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useGetByQuery, useEditVideoMutation } from '../../services/api/apiVideos';
 import type { IVideoEditRequest } from '../../types/Video/IVideoEditRequest';
 import { VideoProcessingModal } from '../../components/modal/video/VideoProcessingModal';
@@ -9,6 +9,7 @@ import LoadingOverlay from '../../components/ui/loading/LoadingOverlay';
 export default function EditVideoPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const location = useLocation();
     const videoId = Number(id);
 
     const { data: video, isLoading: isLoadingVideo, isError } = useGetByQuery({ id: videoId }, {
@@ -55,7 +56,8 @@ export default function EditVideoPage() {
         if (hasNewVideo) {
             setTrackingId(result.trackingId);
         } else {
-            navigate('/studio');
+            const fromAdmin = location.state?.fromAdmin;
+            navigate(fromAdmin ? '/admin/videos' : '/studio');
         }
     };
 

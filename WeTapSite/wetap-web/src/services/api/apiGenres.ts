@@ -8,6 +8,7 @@ import type {IGenreCreateRequest} from "../../types/Genre/IGenreCreateRequest.ts
 import type {IGenreEditRequest} from "../../types/Genre/IGenreEditRequest.ts";
 import type {IGenreDeleteRequest} from "../../types/Genre/IGenreDeleteRequest.ts";
 import type {IPagedResult} from "../../types/Additional/IPagedResult.ts";
+import { apiStudio } from "../api/apiStudio";
 
 export const apiGenres = createApi({
     reducerPath: "api/genres",
@@ -41,6 +42,12 @@ export const apiGenres = createApi({
                 body: serialize(body),
             }),
             invalidatesTags: ["Genres"],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(apiStudio.util.invalidateTags(["Studio"]));
+                } catch {}
+            },
         }),
 
         editGenre: builder.mutation<IGenreItemResponse, IGenreEditRequest>({
@@ -50,6 +57,12 @@ export const apiGenres = createApi({
                 body: serialize(body),
             }),
             invalidatesTags: ["Genres"],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(apiStudio.util.invalidateTags(["Studio"]));
+                } catch {}
+            },
         }),
 
         deleteGenre: builder.mutation<void, IGenreDeleteRequest>({
@@ -59,6 +72,12 @@ export const apiGenres = createApi({
                 body,
             }),
             invalidatesTags: ["Genres"],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(apiStudio.util.invalidateTags(["Studio"]));
+                } catch {}
+            },
         }),
     }),
 });

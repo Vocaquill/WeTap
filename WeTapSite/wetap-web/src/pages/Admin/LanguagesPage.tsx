@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '../../components/form/Button';
 import { Pagination } from '../../components/ui/common/Pagination';
@@ -9,6 +9,7 @@ import { useDeleteLanguageMutation, useSearchLanguagesQuery } from "../../servic
 import type { ILanguageSearchRequest } from "../../types/Language/ILanguageSearchRequest.ts";
 import type { ILanguageItemResponse } from "../../types/Language/ILanguageItemResponse.ts";
 import type { IColumnConfig } from '../../types/Additional/IColumnConfig';
+import { useSearchState } from '../../hooks/useSearchState';
 
 import AddLanguageModal from '../../components/modal/language/AddLanguageModal';
 import EditLanguageModal from '../../components/modal/language/EditLanguageModal';
@@ -21,12 +22,15 @@ const perPageOptions = [
     { id: 50, name: '50' },
 ];
 
+const DEFAULT_LANGUAGE_PARAMS: ILanguageSearchRequest = {
+    name: '',
+    page: 1,
+    itemPerPage: 10,
+};
+
 function LanguagesPage() {
-    const [searchParams, setSearchParams] = useState<ILanguageSearchRequest>({
-        name: '',
-        page: 1,
-        itemPerPage: 10,
-    });
+    const { searchParams, setSearchParams, handleSearchChange, resetFilters, clampPage } =
+        useSearchState<ILanguageSearchRequest>(DEFAULT_LANGUAGE_PARAMS);
 
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -36,17 +40,9 @@ function LanguagesPage() {
     const { data, isFetching, isError } = useSearchLanguagesQuery(searchParams);
     const [deleteLanguage, { isLoading: isDeleting }] = useDeleteLanguageMutation();
 
-    const handleSearchChange = <K extends keyof ILanguageSearchRequest>(key: K, value: ILanguageSearchRequest[K]) => {
-        setSearchParams((prev) => ({ ...prev, [key]: value, page: 1 }));
-    };
-
-    const resetFilters = () => {
-        setSearchParams({
-            name: '',
-            page: 1,
-            itemPerPage: searchParams.itemPerPage,
-        });
-    };
+    useEffect(() => {
+        if (data) clampPage(data.pagination.totalPages);
+    }, [data?.pagination.totalPages]);
 
     const handleDelete = async () => {
         if (!selectedLanguage) return;

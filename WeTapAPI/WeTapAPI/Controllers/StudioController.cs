@@ -1,6 +1,7 @@
 using Application.Constants;
 using Application.Features.Studio.Queries.GetChannelCharts;
 using Application.Features.Studio.Queries.GetChannelOverview;
+using Application.Features.Studio.Queries.GetAdminDashboard;
 using Application.Models.Statistics;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -30,4 +31,14 @@ public class StudioController(IMediator mediator) : ControllerBase
         var result = await mediator.Send(query);
         return Ok(result);
     }
+
+    [HttpGet("admin-dashboard")]
+    [Authorize(Roles = Roles.Admin)]
+    public async Task<ActionResult<AdminDashboardModel>> GetAdminDashboard()
+    {
+        var query = new GetAdminDashboardQuery();
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
 }
+
