@@ -1,4 +1,4 @@
-import { useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useMemo, useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
 import { useGetPrivaciesQuery } from '../../services/api/apiVideos';
 import { useSearchGenresQuery } from '../../services/api/apiGenres';
 import { useCreateTagMutation, useSearchTagsQuery } from '../../services/api/apiTags';
@@ -14,6 +14,8 @@ import { Button } from '../form/Button';
 import { SelectField } from '../form/SelectField';
 import { useFormServerErrors } from "../../hooks/useFormServerErrors";
 import LoadingOverlay from "../ui/loading/LoadingOverlay";
+import { MoviePlayer } from '../movie/MoviePlayer';
+import { APP_ENV } from '../../env';
 
 import { slugify } from '../../utils/slugify';
 
@@ -25,6 +27,8 @@ export interface VideoFormProps {
     initialData?: Partial<IVideoCreateRequest>;
     initialTags?: ITagItemResponse[];
     requireVideoFile?: boolean;
+    initialImageUrl?: string;
+    initialVideoUrl?: string;
 }
 
 export function VideoForm({
@@ -35,6 +39,8 @@ export function VideoForm({
     initialData,
     initialTags,
     requireVideoFile = true,
+    initialImageUrl,
+    initialVideoUrl,
 }: VideoFormProps) {
     const [createTag, { isLoading: isLoadingTag }] = useCreateTagMutation();
     const { data: genresData } = useSearchGenresQuery({ page: 1, itemPerPage: 100 });
@@ -67,6 +73,32 @@ export function VideoForm({
     }));
 
     const [extraTags, setExtraTags] = useState<ITagItemResponse[]>(() => initialTags ?? []);
+    const [tagError, setTagError] = useState<string | null>(null);
+    const [imagePreview, setImagePreview] = useState<string>('');
+    const [videoPreview, setVideoPreview] = useState<string>('');
+
+    // Generate previews when files change
+    useEffect(() => {
+        if (form.image instanceof File) {
+            const objectUrl = URL.createObjectURL(form.image);
+            setImagePreview(objectUrl);
+            return () => URL.revokeObjectURL(objectUrl);
+        } else if (initialImageUrl) {
+            setImagePreview(`${APP_ENV.IMAGES_400_URL}${initialImageUrl}`);
+        } else {
+            setImagePreview('');
+        }
+    }, [form.image, initialImageUrl]);
+
+    useEffect(() => {
+        if (form.video instanceof File) {
+            const objectUrl = URL.createObjectURL(form.video);
+            setVideoPreview(objectUrl);
+            return () => URL.revokeObjectURL(objectUrl);
+        } else {
+            setVideoPreview('');
+        }
+    }, [form.video]);
 
     const knownTags = useMemo(() => {
         const map = new Map(extraTags.map(tag => [tag.id, tag]));
@@ -100,6 +132,7 @@ export function VideoForm({
 
     const handleTagChange = (e: ChangeEvent<HTMLInputElement>) => {
         setTagInput(e.target.value);
+        if (tagError) setTagError(null);
     };
 
     const handleGenreToggle = (id: number) => {
@@ -184,6 +217,8 @@ export function VideoForm({
         const name = tagInput.trim();
         if (!name) return;
 
+        setTagError(null);
+
         try {
             const createdTag = await createTag({
                 name,
@@ -197,7 +232,11 @@ export function VideoForm({
             setTagInput('');
         } catch (err: any) {
             if (err?.data?.errors) {
-                setServerErrors(err.data.errors);
+                const errorsObj = err.data.errors;
+                const errorMsg = errorsObj.Name?.[0] || errorsObj.name?.[0] || errorsObj.Slug?.[0] || errorsObj.slug?.[0] || 'Помилка створення тегу';
+                setTagError(errorMsg);
+            } else {
+                setTagError('Не вдалося створити тег');
             }
         }
     };
@@ -288,12 +327,12 @@ export function VideoForm({
                         </div>
 
                         <div>
-                            <label className="text-zinc-400 mb-1 font-semibold block">
+                            <label className="text-zinc-400 mb-2 font-semibold block">
                                 Теги
                             </label>
 
                             {!!form.tagIds?.length && (
-                                <div className="flex flex-wrap gap-2 mb-2">
+                                <div className="flex flex-wrap gap-2 mb-3 pb-3 border-b border-zinc-800">
                                     {knownTags
                                         .filter(tag => form.tagIds?.includes(tag.id))
                                         .map((tag: ITagItemResponse) => (
@@ -310,7 +349,7 @@ export function VideoForm({
                                 </div>
                             )}
 
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-2 mb-4 max-h-32 overflow-y-auto pr-1">
                                 {tagsData?.items.map((tag: ITagItemResponse) => (
                                     <Button
                                         key={tag.id}
@@ -324,44 +363,63 @@ export function VideoForm({
                                 ))}
                             </div>
 
-                            <label className="text-zinc-400 mb-1 font-semibold block">
-                                Пошук або створення тегу
-                            </label>
-
-                            <InputField
-                                label="Тег"
-                                name="tag"
-                                value={tagInput}
-                                onChange={handleTagChange}
-                            />
-
-                            <Button onClick={handleTagSubmit} variant="primary" size="md">
-                                Створити тег
-                            </Button>
-
                             {errors.tagIds && (
-                                <span className="text-red-500 text-sm mt-1 block">
+                                <span className="text-red-500 text-sm mt-1 mb-4 block">
                                     {errors.tagIds[0]}
                                 </span>
                             )}
+
+                            <div className="bg-zinc-900/40 p-4 rounded-xl border border-zinc-800/80 space-y-3 mt-4">
+                                <InputField
+                                    label="Пошук або створення тегу"
+                                    name="tag"
+                                    value={tagInput}
+                                    onChange={handleTagChange}
+                                    error={tagError}
+                                    placeholder="Введіть назву тегу..."
+                                />
+
+                                <Button onClick={handleTagSubmit} variant="primary" size="md" className="w-full justify-center">
+                                    Створити тег
+                                </Button>
+                            </div>
                         </div>
 
-                        <FileUploadField
-                            label="Зображення (Прев'ю)"
-                            name="image"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                            error={errors.image}
-                        />
+                        <div className="space-y-2">
+                            <FileUploadField
+                                label="Зображення (Прев'ю)"
+                                name="image"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                                error={errors.image}
+                            />
+                            {imagePreview && (
+                                <div className="mt-2 aspect-video w-full max-w-[240px] rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 flex items-center justify-center">
+                                    <img src={imagePreview} alt="Image Preview" className="w-full h-full object-cover" />
+                                </div>
+                            )}
+                        </div>
 
-                        <FileUploadField
-                            label="Відео файл"
-                            name="video"
-                            accept="video/*"
-                            onChange={handleFileChange}
-                            error={errors.video}
-                            required={requireVideoFile}
-                        />
+                        <div className="space-y-2">
+                            <FileUploadField
+                                label="Відео файл"
+                                name="video"
+                                accept="video/*"
+                                onChange={handleFileChange}
+                                error={errors.video}
+                                required={requireVideoFile}
+                            />
+                            {videoPreview && (
+                                <div className="mt-2 w-full max-w-[400px] rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950">
+                                    <MoviePlayer src={videoPreview} />
+                                </div>
+                            )}
+                            {initialVideoUrl && !videoPreview && (
+                                <div className="mt-2 w-full max-w-[400px] rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950">
+                                    <MoviePlayer videoName={initialVideoUrl} />
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <div className="col-span-2 flex justify-end mt-4">
