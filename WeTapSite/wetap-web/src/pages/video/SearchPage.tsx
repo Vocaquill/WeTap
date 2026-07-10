@@ -109,7 +109,7 @@ export default function SearchPage() {
                         value={genreId || 'all'}
                         onChange={(e) => updateUrlParam('genreId', e.target.value === 'all' ? undefined : Number(e.target.value))}
                         options={[
-                            { id: 'all', name: 'Жанр: All' },
+                            { id: 'all', name: 'Жанр: Всі' },
                             ...(genresData?.items.map((g) => ({ id: g.id, name: g.name })) || [])
                         ]}
                         selectClassName={filterSelectRowStyles}
@@ -120,7 +120,7 @@ export default function SearchPage() {
                         value={tagId || 'all'}
                         onChange={(e) => updateUrlParam('tagId', e.target.value === 'all' ? undefined : Number(e.target.value))}
                         options={[
-                            { id: 'all', name: 'Features: Any' },
+                            { id: 'all', name: 'Особливості: Будь-які' },
                             ...(tagsData?.items.map((t) => ({ id: t.id, name: t.name })) || [])
                         ]}
                         selectClassName={filterSelectRowStyles}
@@ -131,16 +131,16 @@ export default function SearchPage() {
                         value={sortBy}
                         onChange={(e) => updateUrlParam('sortBy', e.target.value)}
                         options={[
-                            { id: 'relevance', name: 'Sort by: Relevance' },
-                            { id: 'date', name: 'Sort by: Upload Date' },
-                            { id: 'views', name: 'Sort by: Views' },
-                            { id: 'likes', name: 'Sort by: Likes' }
+                            { id: 'relevance', name: 'Сортувати за: Релевантністю' },
+                            { id: 'date', name: 'Сортувати за: Датою завантаження' },
+                            { id: 'views', name: 'Сортувати за: Переглядами' },
+                            { id: 'likes', name: 'Сортувати за: Лайками' }
                         ]}
                         selectClassName={filterSelectRowStyles}
                     />
 
                     <div className="flex items-center gap-3 bg-zinc-800/60 rounded-full py-1.5 px-4 text-sm font-medium text-zinc-200">
-                        <span className="text-xs text-zinc-400 shrink-0 select-none">Years:</span>
+                        <span className="text-xs text-zinc-400 shrink-0 select-none">Роки:</span>
                         <div className="flex items-center gap-2">
                             <input
                                 type="range"
@@ -155,7 +155,7 @@ export default function SearchPage() {
                                 className="w-16 md:w-24 h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-rose-500 focus:outline-none"
                             />
                             <span className="text-xs font-bold text-rose-500 min-w-[65px] text-center select-none">
-                                {yearFrom === minPossibleYear && yearTo === maxPossibleYear ? 'Any' : `${yearFrom}-${yearTo}`}
+                                {yearFrom === minPossibleYear && yearTo === maxPossibleYear ? 'Будь-які' : `${yearFrom}-${yearTo}`}
                             </span>
                             <input
                                 type="range"
