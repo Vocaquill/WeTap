@@ -248,9 +248,9 @@ export function VideoForm({
             <div className="p-6 bg-[#121213] min-h-screen">
                 <h1 className="text-3xl font-black text-white mb-8">{title}</h1>
 
-                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-                    <div className="space-y-4">
+                    <div className="lg:col-span-7 space-y-6">
                         <InputField
                             label="Назва"
                             name="title"
@@ -297,9 +297,7 @@ export function VideoForm({
                             required
                             error={errors.privacyId}
                         />
-                    </div>
 
-                    <div className="space-y-4">
                         <div>
                             <label className="text-zinc-400 mb-1 font-semibold block">
                                 Жанри
@@ -384,7 +382,9 @@ export function VideoForm({
                                 </Button>
                             </div>
                         </div>
+                    </div>
 
+                    <div className="lg:col-span-5 space-y-6">
                         <div className="space-y-2">
                             <FileUploadField
                                 label="Зображення (Прев'ю)"
@@ -394,7 +394,7 @@ export function VideoForm({
                                 error={errors.image}
                             />
                             {imagePreview && (
-                                <div className="mt-2 aspect-video w-full max-w-[240px] rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 flex items-center justify-center">
+                                <div className="mt-2 aspect-video w-full rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 flex items-center justify-center shadow-lg">
                                     <img src={imagePreview} alt="Image Preview" className="w-full h-full object-cover" />
                                 </div>
                             )}
@@ -410,19 +410,19 @@ export function VideoForm({
                                 required={requireVideoFile}
                             />
                             {videoPreview && (
-                                <div className="mt-2 w-full max-w-[400px] rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950">
+                                <div className="mt-2 w-full rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 shadow-lg">
                                     <MoviePlayer src={videoPreview} />
                                 </div>
                             )}
                             {initialVideoUrl && !videoPreview && (
-                                <div className="mt-2 w-full max-w-[400px] rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950">
+                                <div className="mt-2 w-full rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 shadow-lg">
                                     <MoviePlayer videoName={initialVideoUrl} />
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    <div className="col-span-2 flex justify-end mt-4">
+                    <div className="lg:col-span-12 flex justify-end mt-4">
                         <Button type="submit" variant="primary" size="md" isLoading={isLoading}>
                             {submitButtonText}
                         </Button>
