@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.Mappings;
 using Application.Models.Search;
 using Application.Models.Video;
+using Domain;
 using Domain.Entities.Video;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,8 @@ namespace Application.Features.Videos.Queries.SearchVideos;
 public class SearchVideosQueryHandler(
         IGenericRepository<VideoEntity, long> repo,
         VideoMappingProfile mapper,
-        ICurrentUserService currentUser
+        ICurrentUserService currentUser,
+        AppDbContext context
     )
     : IRequestHandler<SearchVideosQuery, SearchResult<VideoItemModel>>
 {
@@ -85,6 +87,14 @@ public class SearchVideosQueryHandler(
         {
             query = query.OrderByDescending(x => x.DateCreated);
         }
+        else if (request.Model.SortBy == "views")
+        {
+            query = query.OrderByDescending(x => x.ViewCount);
+        }
+        else if (request.Model.SortBy == "reactions")
+        {
+            query = query.OrderByDescending(x => x.VideoReactions.Count);
+        }
         else
         {
             query = query.OrderByDescending(x => x.Id);
@@ -95,6 +105,45 @@ public class SearchVideosQueryHandler(
             .Skip((currentPage - 1) * itemsPerPage)
             .Take(itemsPerPage)
         ).ToListAsync();
+
+        var videoIds = items.Select(x => x.Id).ToList();
+        var reactions = await context.VideoReactions
+            .Where(r => videoIds.Contains(r.VideoId))
+            .GroupBy(r => r.VideoId)
+            .Select(g => new
+            {
+                VideoId = g.Key,
+                LikesCount = g.Count(r => r.IsLike),
+                DislikesCount = g.Count(r => !r.IsLike)
+            })
+            .ToListAsync(cancellationToken);
+
+        var userId = currentUser.TryGetCurrentUserId();
+        var userReactions = userId.HasValue
+            ? await context.VideoReactions
+                .Where(r => videoIds.Contains(r.VideoId) && r.UserId == userId.Value)
+                .ToDictionaryAsync(r => r.VideoId, r => r.IsLike, cancellationToken)
+            : new Dictionary<long, bool>();
+
+        foreach (var item in items)
+        {
+            var reaction = reactions.FirstOrDefault(r => r.VideoId == item.Id);
+            if (reaction != null)
+            {
+                item.LikesCount = reaction.LikesCount;
+                item.DislikesCount = reaction.DislikesCount;
+            }
+            else
+            {
+                item.LikesCount = 0;
+                item.DislikesCount = 0;
+            }
+
+            if (userId.HasValue && userReactions.TryGetValue(item.Id, out var isLike))
+            {
+                item.IsLiked = isLike;
+            }
+        }
 
         return new SearchResult<VideoItemModel>
         {
