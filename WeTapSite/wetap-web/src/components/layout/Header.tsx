@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {useNavigate, useLocation} from 'react-router-dom';
+import {useNavigate, useLocation, useSearchParams} from 'react-router-dom';
 import {Bell, Search, Mic, Settings, Plus, Users} from 'lucide-react';
 import {useAppSelector} from "../../store/index";
 import {APP_ENV} from "../../env/index";
@@ -11,6 +11,21 @@ function Header() {
     const [activeTheme, setActiveTheme] = useState(getActiveTheme());
     const navigate = useNavigate();
     const location = useLocation();
+    const [searchParams] = useSearchParams();
+    const [searchVal, setSearchVal] = useState(searchParams.get('q') || '');
+
+    useEffect(() => {
+        setSearchVal(searchParams.get('q') || '');
+    }, [searchParams]);
+
+    const handleSearchSubmit = (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
+        if (searchVal.trim()) {
+            navigate(`/search?q=${encodeURIComponent(searchVal.trim())}`);
+        } else {
+            navigate('/search');
+        }
+    };
 
     const isHomePage = location.pathname === '/';
     const {user} = useAppSelector(state => state.auth);
@@ -54,22 +69,24 @@ function Header() {
                 )}
             </div>
 
-            <div className="flex-1 max-w-xl mx-4 flex items-center gap-2">
+            <form onSubmit={handleSearchSubmit} className="flex-1 max-w-xl mx-4 flex items-center gap-2">
                 <div className="relative w-full">
                     <input
                         type="text"
                         placeholder="Search"
+                        value={searchVal}
+                        onChange={(e) => setSearchVal(e.target.value)}
                         className="w-full bg-zinc-900/90 border border-zinc-800/60 rounded-xl py-2 pl-5 pr-12 text-sm font-medium focus:outline-none focus:border-rose-500/50 focus:bg-zinc-900 transition-all text-zinc-100 placeholder-zinc-500"
                     />
-                    <Button variant="iconInline" className="absolute right-4 top-2.5">
+                    <Button type="submit" variant="iconInline" className="absolute right-4 top-2.5">
                         <Search size={20} strokeWidth={2.5}/>
                     </Button>
                 </div>
 
-                <Button variant="iconFilled">
+                <Button type="button" variant="iconFilled">
                     <Mic size={20}/>
                 </Button>
-            </div>
+            </form>
 
             <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1 bg-zinc-900 p-0.5 rounded-full border border-zinc-800/40">

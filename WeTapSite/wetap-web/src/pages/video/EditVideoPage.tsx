@@ -84,6 +84,8 @@ export default function EditVideoPage() {
                     privacyId: video.privacy?.id ?? 1,
                 }}
                 initialTags={video.tags ?? []}
+                initialImageUrl={video.image}
+                initialVideoUrl={video.video}
             />
         </>
     );

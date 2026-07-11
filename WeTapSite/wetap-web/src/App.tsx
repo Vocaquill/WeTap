@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 import UserHomePage from './pages/home/UserHomePage';
 import VideoPage from './pages/video/VideoPage';
+import SearchPage from './pages/video/SearchPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
@@ -73,6 +74,7 @@ function App() {
             <Route element={<AppLayout />}>
                 <Route path="/" element={<UserHomePage />} />
                 <Route path="/video/:slug" element={<VideoPage />} />
+                <Route path="/search" element={<SearchPage />} />
                 <Route path="/channel/:slug" element={<ChannelPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
