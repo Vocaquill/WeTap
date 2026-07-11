@@ -99,7 +99,7 @@ function UserHomePage() {
             )}
 
             {genreId && (
-                <div className="mb-6 text-xs text-zinc-400 font-medium tracking-wide">
+                <div className="mt-6 text-xs text-zinc-400 font-medium tracking-wide">
                     Колекція: <span className="text-white font-bold">{genreName}</span>
                 </div>
             )}

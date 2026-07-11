@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import {Link, NavLink, useLocation} from 'react-router-dom';
-import {Menu, ChevronDown, ChevronUp} from 'lucide-react';
+import React, { useState } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Menu, ChevronDown, ChevronUp } from 'lucide-react';
 import logoImg from '../../layouts/logo.png';
-import {Button} from '../form/Button';
+import { Button } from '../form/Button';
 
 export interface SidebarItem {
     name: string;
@@ -41,14 +41,12 @@ function SidebarItemRow({
     isCollapsible: boolean;
     getNavLinkClasses: (isActive: boolean) => string;
     renderActiveIndicator: (isActive: boolean) => React.ReactNode;
-    checkActive: (item: SidebarItem) => boolean;
+    checkActive: (item: SidebarItem) => boolean | undefined;
 }) {
-    const [isExpanded, setIsExpanded] = useState(false);
     const location = useLocation();
+    const hasSubItems = !!(item.subItems && item.subItems.length > 0);
 
-    const hasSubItems = item.subItems && item.subItems.length > 0;
-
-    const isItemActive = checkActive(item) || (hasSubItems && item.subItems?.some(sub => {
+    const hasActiveSubItem = hasSubItems && item.subItems?.some(sub => {
         const searchParams = new URLSearchParams(location.search);
         const subParams = new URLSearchParams(sub.path.includes('?') ? sub.path.split('?')[1] : '');
         const pathMatches = location.pathname === (sub.path.includes('?') ? sub.path.split('?')[0] : sub.path);
@@ -61,41 +59,47 @@ function SidebarItemRow({
             }
         });
         return queryMatches;
-    }));
+    });
 
-    useEffect(() => {
-        if (hasSubItems && isItemActive) {
-            setIsExpanded(true);
-        }
-    }, [location.pathname, location.search, hasSubItems]);
+    const isItemActive = (checkActive(item) || false) || !!hasActiveSubItem;
+
+    const [isExpanded, setIsExpanded] = useState(() => hasSubItems && isItemActive);
 
     if (hasSubItems) {
         return (
             <div className="space-y-1">
-                <Button
-                    variant="ghost"
-                    className={`${getNavLinkClasses(isItemActive)} w-full justify-between pr-4`}
+                <div
+                    className={`${getNavLinkClasses(isItemActive)} w-full justify-between pr-4 cursor-pointer select-none`}
                     onClick={() => setIsExpanded(!isExpanded)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            setIsExpanded(!isExpanded);
+                        }
+                    }}
                 >
-                    <div className="flex items-center">
+                    {renderActiveIndicator(isItemActive)}
+
+                    <div className="flex items-center w-full">
                         <span className={`min-w-[24px] flex items-center justify-center ${isItemActive ? 'text-rose-500' : 'text-zinc-400'}`}>
                             {item.icon}
                         </span>
                         {(!isCollapsible || isOpen) && (
-                            <span className="ml-4 font-medium text-left">
+                            <span className="ml-4 font-medium text-left flex-1">
                                 {item.name}
                             </span>
                         )}
                     </div>
                     {(!isCollapsible || isOpen) && (
-                        <span className="text-zinc-500 hover:text-zinc-300 transition-colors ml-2">
+                        <span className="text-zinc-500 hover:text-zinc-300 transition-colors ml-2 shrink-0">
                             {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                         </span>
                     )}
-                </Button>
+                </div>
 
                 {isExpanded && (!isCollapsible || isOpen) && (
-                    <div className="pl-4 space-y-1 ml-4 border-l border-zinc-800/80 transition-all duration-350">
+                    <div className="pl-6 space-y-1 border-l border-zinc-800/80 transition-all duration-350 overflow-hidden box-border max-w-full">
                         {item.subItems!.map((sub, idx) => {
                             const searchParams = new URLSearchParams(location.search);
                             const subParams = new URLSearchParams(sub.path.includes('?') ? sub.path.split('?')[1] : '');
@@ -107,13 +111,13 @@ function SidebarItemRow({
                                     key={idx}
                                     to={sub.path}
                                     className={`
-                                        flex items-center py-2 px-3 rounded-lg text-xs transition-all duration-200
-                                        ${isSubActive
+                                                flex items-center py-2 px-3 rounded-lg text-xs transition-all duration-200 min-w-0
+                                                ${isSubActive
                                         ? 'text-rose-500 font-bold bg-zinc-900/60'
                                         : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/30'}
-                                    `}
+                                            `}
                                 >
-                                    {sub.name}
+                                    <span className="truncate flex-1 text-left">{sub.name}</span>
                                 </NavLink>
                             );
                         })}
@@ -125,20 +129,27 @@ function SidebarItemRow({
 
     if (item.onClick) {
         return (
-            <Button
-                variant="ghost"
-                className={`${getNavLinkClasses(isItemActive)} w-full justify-start`}
+            <div
+                className={`${getNavLinkClasses(isItemActive)} w-full justify-start cursor-pointer select-none`}
                 onClick={item.onClick}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        item.onClick?.();
+                    }
+                }}
             >
+                {renderActiveIndicator(isItemActive)}
                 <span className={`min-w-[24px] flex items-center justify-center ${isItemActive ? 'text-rose-500' : 'text-zinc-400'}`}>
                     {item.icon}
                 </span>
                 {(!isCollapsible || isOpen) && (
-                    <span className="ml-4">
+                    <span className="ml-4 text-left">
                         {item.name}
                     </span>
                 )}
-            </Button>
+            </div>
         );
     }
 
@@ -190,7 +201,7 @@ export function BaseSidebar({
         );
     };
 
-    const checkActive = (item: SidebarItem) => {
+    const checkActive = (item: SidebarItem): boolean | undefined => {
         if (item.isActive !== undefined) {
             return typeof item.isActive === 'function' ? item.isActive(location.pathname) : item.isActive;
         }
@@ -206,7 +217,7 @@ export function BaseSidebar({
                 : 'w-64 border-r border-zinc-800'
             }`}
         >
-            <div className="flex flex-col flex-1 overflow-y-auto no-scrollbar">
+            <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden no-scrollbar">
                 <div className={`h-14 flex items-center mb-4 gap-3 shrink-0 transition-all duration-300 
           ${isCollapsible
                     ? (isOpen ? 'px-2 justify-start' : 'justify-center')
