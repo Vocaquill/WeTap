@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, type ChangeEvent, type FormEvent } from 'react';
+import { useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useGetPrivaciesQuery } from '../../services/api/apiVideos';
 import { useSearchGenresQuery } from '../../services/api/apiGenres';
 import { useCreateTagMutation, useSearchTagsQuery } from '../../services/api/apiTags';
@@ -74,31 +74,45 @@ export function VideoForm({
 
     const [extraTags, setExtraTags] = useState<ITagItemResponse[]>(() => initialTags ?? []);
     const [tagError, setTagError] = useState<string | null>(null);
-    const [imagePreview, setImagePreview] = useState<string>('');
-    const [videoPreview, setVideoPreview] = useState<string>('');
+    // const [imagePreview, setImagePreview] = useState<string>('');
+    const imagePreview =
+        form.image instanceof File
+            ? URL.createObjectURL(form.image)
+            : initialImageUrl
+                ? `${APP_ENV.IMAGES_400_URL}${initialImageUrl}`
+                : "";
+    // const [videoPreview, setVideoPreview] = useState<string>('');
+
+    const videoPreview =
+        form.video instanceof File
+            ? URL.createObjectURL(form.video)
+            : "";
+
 
     // Generate previews when files change
-    useEffect(() => {
-        if (form.image instanceof File) {
-            const objectUrl = URL.createObjectURL(form.image);
-            setImagePreview(objectUrl);
-            return () => URL.revokeObjectURL(objectUrl);
-        } else if (initialImageUrl) {
-            setImagePreview(`${APP_ENV.IMAGES_400_URL}${initialImageUrl}`);
-        } else {
-            setImagePreview('');
-        }
-    }, [form.image, initialImageUrl]);
+    // useEffect(() => {
+    //     if (form.image instanceof File) {
+    //         const objectUrl = URL.createObjectURL(form.image);
+    //         setImagePreview(objectUrl);
+    //         return () => URL.revokeObjectURL(objectUrl);
+    //     } else if (initialImageUrl) {
+    //         setImagePreview(`${APP_ENV.IMAGES_400_URL}${initialImageUrl}`);
+    //     } else {
+    //         setImagePreview('');
+    //     }
+    // }, [form.image, initialImageUrl]);
 
-    useEffect(() => {
-        if (form.video instanceof File) {
-            const objectUrl = URL.createObjectURL(form.video);
-            setVideoPreview(objectUrl);
-            return () => URL.revokeObjectURL(objectUrl);
-        } else {
-            setVideoPreview('');
-        }
-    }, [form.video]);
+
+
+    // useEffect(() => {
+    //     if (form.video instanceof File) {
+    //         const objectUrl = URL.createObjectURL(form.video);
+    //         setVideoPreview(objectUrl);
+    //         return () => URL.revokeObjectURL(objectUrl);
+    //     } else {
+    //         setVideoPreview('');
+    //     }
+    // }, [form.video]);
 
     const knownTags = useMemo(() => {
         const map = new Map(extraTags.map(tag => [tag.id, tag]));
@@ -373,7 +387,7 @@ export function VideoForm({
                                     name="tag"
                                     value={tagInput}
                                     onChange={handleTagChange}
-                                    error={tagError}
+                                    error={tagError??undefined}
                                     placeholder="Введіть назву тегу..."
                                 />
 
