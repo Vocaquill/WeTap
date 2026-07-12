@@ -107,12 +107,24 @@ export const apiVideos = createApi({
                 body,
             }),
             invalidatesTags: (_result, _error, { videoId }) => [{ type: "Video", id: videoId }, "Videos"],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(apiStudio.util.invalidateTags(["Studio"]));
+                } catch {}
+            },
         }),
         incrementView: builder.mutation<void, number>({
             query: (id) => ({
                 url: `${id}/view`,
                 method: "POST",
             }),
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(apiStudio.util.invalidateTags(["Studio"]));
+                } catch {}
+            },
         }),
     }),
 });
