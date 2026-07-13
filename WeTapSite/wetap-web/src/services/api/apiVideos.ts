@@ -12,6 +12,7 @@ import type { IGetByRequest } from "../../types/Additional/IGetByRequest.ts";
 import type { IPagedResult } from "../../types/Additional/IPagedResult.ts";
 import type { IVideoReactionRequest } from "../../types/Video/IVideoReactionRequest.ts";
 import type {IVideoRecommendationRequest} from "../../types/Video/IVideoRecommendationRequest.ts";
+import type {IVideoAutocompleteResponse} from "../../types/Video/IVideoAutocompleteResponse.ts";
 import { apiStudio } from "../api/apiStudio.ts";
 
 export const apiVideos = createApi({
@@ -126,6 +127,14 @@ export const apiVideos = createApi({
                 } catch {}
             },
         }),
+
+        autocompleteVideos: builder.query<IVideoAutocompleteResponse[], string>({
+            query: (q) => ({
+                url: "autocomplete",
+                method: "GET",
+                params: { q },
+            }),
+        }),
     }),
 });
 
@@ -139,4 +148,5 @@ export const {
     useReactVideoMutation,
     useIncrementViewMutation,
     useGetRecommendationsQuery,
+    useAutocompleteVideosQuery,
 } = apiVideos;
