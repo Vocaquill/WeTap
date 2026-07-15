@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Application.Jobs;
 using Application.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Videos.Commands.UpdateVideo;
 
@@ -15,7 +16,9 @@ public class UpdateVideoHandler(
     IImageService imageService,
     IVideoFileService videoFileService,
     IBackgroundJobClient backgroundJobClient,
-    ICurrentUserService currentUserService
+    ICurrentUserService currentUserService,
+    IVideoProgressStore progressStore,
+    ILogger<UpdateVideoHandler> logger
 ) : IRequestHandler<UpdateVideoCommand, VideoProcessingResult>
 {
     public async Task<VideoProcessingResult> Handle(UpdateVideoCommand request, CancellationToken cancellationToken)
@@ -61,12 +64,31 @@ public class UpdateVideoHandler(
 
         if (model.Video != null)
         {
+            if (entity.Video == "processing..." || entity.Video == "обробляється...")
+            {
+                logger.LogWarning(
+                    "[VideoProgress] UpdateVideo rejected — video {VideoId} is already being processed",
+                    entity.Id);
+                throw new InvalidOperationException("Відео вже обробляється. Зачекайте завершення попереднього завантаження.");
+            }
+
             if (entity.Video != null)
                 await videoFileService.DeleteVideoAsync(entity.Video);
 
-            entity.Video = "обробляється...";
+            entity.Video = "processing...";
 
-            // Save video to temp path
+            progressStore.Set(trackingId, new VideoProgressUpdate
+            {
+                Percentage = 0,
+                Status = "В черзі",
+                EstimatedTimeRemaining = "Розрахунок..."
+            });
+
+            logger.LogInformation(
+                "[VideoProgress] UpdateVideo queued trackingId={TrackingId} videoId={VideoId}",
+                trackingId,
+                entity.Id);
+
             var tempPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}{Path.GetExtension(model.Video.FileName)}");
             using (var stream = new FileStream(tempPath, FileMode.Create))
             {
