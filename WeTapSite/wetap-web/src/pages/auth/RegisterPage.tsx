@@ -62,7 +62,7 @@ function RegisterPage() {
             dispatch(loginSuccess(result.token));
             navigate('/');
             setErrorMessage("");
-        } catch (error) {
+        } catch (error: any) {
             setErrorMessage(error?.data?.message);
             const serverError = error as ServerError;
 

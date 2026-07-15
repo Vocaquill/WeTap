@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Mail, Lock, ArrowRight} from 'lucide-react';
 import {motion} from 'framer-motion';
@@ -118,8 +118,12 @@ function LoginPage() {
                         icon={<Lock className="text-zinc-500" size={20}/>}
                         inputClassName="bg-zinc-900 rounded-2xl py-4"
                         labelClassName="text-xs text-zinc-400 uppercase ml-1"
-                        error={errorMessage}
                     />
+
+
+                    {errorMessage && (
+                        <p className="text-red-500 text-sm font-semibold">{errorMessage}</p>
+                    )}
 
                     <div className="text-right">
                         <Button
