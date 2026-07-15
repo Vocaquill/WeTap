@@ -63,7 +63,7 @@ function RegisterPage() {
             navigate('/');
             setErrorMessage("");
         } catch (error) {
-            setErrorMessage("Помилка реєстрації");
+            setErrorMessage(error?.data?.message);
             const serverError = error as ServerError;
 
             if (serverError?.status === 400) {
