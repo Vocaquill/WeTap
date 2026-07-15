@@ -32,41 +32,103 @@ public class ForgotPasswordHandler(UserManager<UserEntity> userManager,
         var emailModel = new EmailMessage
         {
             To = request.Model.Email,
-            Subject = "Password Reset",
-            Body = $@"<!DOCTYPE html>
-                    <html lang=""uk"">
-                        <head>
-                            <meta charset=""UTF-8"">
-                            <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-                            <title>Відновлення пароля</title>
-                        </head>
-                        <body style=""margin:0; padding:0; background-color:#000000; font-family:Arial,sans-serif; color:white;"">
-                            <div style=""max-width:600px; margin:0 auto; padding:40px 20px; text-align:center;"">
+            Subject = "Відновлення пароля",
+            Body = $@"
+<!DOCTYPE html>
+<html lang=""uk"">
+<head>
+    <meta charset=""UTF-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>Відновлення пароля</title>
+</head>
 
-                                <h1 style=""font-size:28px; font-weight:bold; text-transform:uppercase; margin-bottom:16px;"">
-                                    Відновлення <span style=""color:#ef4444;"">пароля</span>
-                                </h1>
+<body style=""margin:0;padding:0;background:#09090B;font-family:Arial,Helvetica,sans-serif;"">
 
-                                <p style=""font-size:16px; color:#d1d5db; margin-bottom:32px;"">
-                                    Ми отримали запит на відновлення пароля для вашого акаунта. Натисніть кнопку нижче, щоб створити новий пароль.
-                                </p>
+<table role=""presentation"" cellpadding=""0"" cellspacing=""0"" width=""100%"" style=""background:#09090B;padding:40px 20px;"">
+<tr>
+<td align=""center"">
 
-                                <a href=""{resetLink}"" 
-                                   style=""background-color:#ef4444; color:white; font-weight:bold; text-transform:uppercase; padding:16px 32px; border-radius:12px; text-decoration:none; display:inline-block; font-size:16px;"">
-                                    Reset Password
-                                </a>
+<table role=""presentation"" cellpadding=""0"" cellspacing=""0"" width=""600"" style=""max-width:600px;background:#18181B;border:1px solid #27272A;border-radius:20px;padding:48px 40px;"">
 
-                                <p style=""font-size:12px; color:#9ca3af; margin-top:24px;"">
-                                    Якщо ви не запитували відновлення пароля, просто ігноруйте цей лист.
-                                </p>
+    <tr>
+        <td align=""center"" style=""padding-bottom:12px;"">
+            <span style=""
+                display:inline-block;
+                font-size:32px;
+                font-weight:800;
+                color:#FFFFFF;
+                letter-spacing:1px;
+            "">
+                We<span style=""color:#EF4444;"">Tap</span>
+            </span>
+        </td>
+    </tr>
 
-                                <p style=""font-size:12px; color:#6b7280; margin-top:32px;"">
-                                    © 2026 O.W.A.C.N. Всі права захищені.
-                                </p>
+    <tr>
+        <td align=""center"" style=""
+            color:#FFFFFF;
+            font-size:30px;
+            font-weight:bold;
+            padding-bottom:18px;
+        "">
+            Відновлення пароля
+        </td>
+    </tr>
 
-                            </div>
-                        </body>
-                    </html>"
+    <tr>
+        <td align=""center"" style=""
+            color:#A1A1AA;
+            font-size:16px;
+            line-height:28px;
+            padding-bottom:35px;
+        "">
+            Ми отримали запит на відновлення пароля для вашого акаунта.<br>
+            Натисніть кнопку нижче, щоб створити новий пароль.
+        </td>
+    </tr>
+
+    <tr>
+        <td align=""center"" style=""padding-bottom:35px;"">
+            <a href=""{resetLink}""
+               style=""
+                    display:inline-block;
+                    background:#EF4444;
+                    color:#FFFFFF;
+                    text-decoration:none;
+                    font-size:16px;
+                    font-weight:bold;
+                    padding:16px 36px;
+                    border-radius:14px;
+               "">
+                Створити новий пароль
+            </a>
+        </td>
+    </tr>
+
+    <tr>
+        <td style=""
+            border-top:1px solid #27272A;
+            padding-top:28px;
+            color:#71717A;
+            font-size:13px;
+            line-height:24px;
+            text-align:center;
+        "">
+            Якщо ви не надсилали запит на відновлення пароля,
+            просто проігноруйте цей лист.
+            <br><br>
+            © 2026 WeTap. Усі права захищені.
+        </td>
+    </tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>"
         };
 
         var result = await smtpService.SendEmailAsync(emailModel);
