@@ -162,7 +162,7 @@ function StudioContentPage() {
                         <Film size={28}/>
                     </div>
                     <div>
-                        <h1 className="text-4xl font-black text-white tracking-tight">Контент</h1>
+                        <h1 className="text-4xl font-black text-zinc-50 tracking-tight">Контент</h1>
                         <p className="text-zinc-500 mt-1">Керування завантаженими відео та перегляд статистики</p>
                     </div>
                 </div>

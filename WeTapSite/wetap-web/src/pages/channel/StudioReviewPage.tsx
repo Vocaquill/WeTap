@@ -22,15 +22,15 @@ function StudioReviewPage() {
     const subscribers = overviewData?.recentSubscribers || [];
 
     return (
-        <div className="p-8 space-y-10 animate-in fade-in duration-500 max-w-6xl mx-auto bg-[#121214] min-h-screen">
+        <div className="p-8 space-y-10 animate-in fade-in duration-500 max-w-6xl mx-auto bg-theme-bg min-h-screen text-zinc-100">
             <div>
-                <h1 className="text-3xl font-black text-white tracking-tight">Панель керування каналом</h1>
+                <h1 className="text-3xl font-black text-zinc-50 tracking-tight">Панель керування каналом</h1>
                 <p className="text-zinc-500 mt-1">Огляд вашої активності та аналітики каналу</p>
             </div>
-
+ 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {overview && (
-                    <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[360px]">
+                    <div className="bg-zinc-900 border border-zinc-800/80 rounded-[1.5rem] overflow-hidden flex flex-col h-[360px]">
                         <div className="bg-gradient-to-b from-[#ec4899] to-[#500724] px-6 py-4 flex items-center shrink-0">
                             <h3 className="font-bold text-white text-base">Аналітика каналу</h3>
                         </div>
@@ -40,42 +40,42 @@ function StudioReviewPage() {
                                     <div className="flex items-center justify-between">
                                         <span className="text-zinc-300">Підписники</span>
                                         <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
-                                        <span className="text-white font-medium">{overview.subscriberCount.toLocaleString("uk-UA")}</span>
+                                        <span className="text-zinc-50 font-medium">{overview.subscriberCount.toLocaleString("uk-UA")}</span>
                                     </div>
                                 )}
                                 {overview.totalViewCount !== undefined && (
                                     <div className="flex items-center justify-between">
                                         <span className="text-zinc-300">Перегляди</span>
                                         <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
-                                        <span className="text-white font-medium">{overview.totalViewCount.toLocaleString("uk-UA")}</span>
+                                        <span className="text-zinc-50 font-medium">{overview.totalViewCount.toLocaleString("uk-UA")}</span>
                                     </div>
                                 )}
                                 {overview.monthlyViewCount !== undefined && (
                                     <div className="flex items-center justify-between">
                                         <span className="text-zinc-300">Перегляди за місяць</span>
                                         <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
-                                        <span className="text-white font-medium">{overview.monthlyViewCount.toLocaleString("uk-UA")}</span>
+                                        <span className="text-zinc-50 font-medium">{overview.monthlyViewCount.toLocaleString("uk-UA")}</span>
                                     </div>
                                 )}
                                 {overview.totalVideoCount !== undefined && (
                                     <div className="flex items-center justify-between">
                                         <span className="text-zinc-300">Всього відео</span>
                                         <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
-                                        <span className="text-white font-medium">{overview.totalVideoCount.toLocaleString("uk-UA")}</span>
+                                        <span className="text-zinc-50 font-medium">{overview.totalVideoCount.toLocaleString("uk-UA")}</span>
                                     </div>
                                 )}
                                 {overview.totalLikesCount !== undefined && (
                                     <div className="flex items-center justify-between">
                                         <span className="text-zinc-300">Всього лайків</span>
                                         <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
-                                        <span className="text-white font-medium">👍 {overview.totalLikesCount.toLocaleString("uk-UA")}</span>
+                                        <span className="text-zinc-50 font-medium">👍 {overview.totalLikesCount.toLocaleString("uk-UA")}</span>
                                     </div>
                                 )}
                                 {overview.averageViewsPerVideo !== undefined && (
                                     <div className="flex items-center justify-between">
                                         <span className="text-zinc-300">Сер. перегляди відео</span>
                                         <div className="flex-1 border-b border-zinc-700 mx-2 mb-1"></div>
-                                        <span className="text-white font-medium">{overview.averageViewsPerVideo.toLocaleString("uk-UA")}</span>
+                                        <span className="text-zinc-50 font-medium">{overview.averageViewsPerVideo.toLocaleString("uk-UA")}</span>
                                     </div>
                                 )}
                             </div>
@@ -89,8 +89,8 @@ function StudioReviewPage() {
                         </div>
                     </div>
                 )}
-
-                <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[360px]">
+ 
+                <div className="bg-zinc-900 border border-zinc-800/80 rounded-[1.5rem] overflow-hidden flex flex-col h-[360px]">
                     <div className="bg-gradient-to-b from-[#ec4899] to-[#500724] px-6 py-4 flex items-center shrink-0">
                         <h3 className="font-bold text-white text-base">Аналітика відео</h3>
                     </div>
@@ -98,7 +98,7 @@ function StudioReviewPage() {
                         {popularVideo ? (
                             <div className="space-y-4">
                                 <div className="flex gap-4">
-                                    <div className="w-28 h-16 rounded-xl bg-zinc-900 border border-zinc-800/60 overflow-hidden shrink-0">
+                                    <div className="w-28 h-16 rounded-xl bg-zinc-900 border border-zinc-850 overflow-hidden shrink-0">
                                         {popularVideo.image ? (
                                             <img
                                                 src={APP_ENV.IMAGES_400_URL + popularVideo.image}
@@ -134,7 +134,7 @@ function StudioReviewPage() {
                                 </p>
                             </div>
                         )}
-
+ 
                         {popularVideo ? (
                             <Button
                                 type="button"
@@ -154,8 +154,8 @@ function StudioReviewPage() {
                         )}
                     </div>
                 </div>
-
-                <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden flex flex-col h-[360px]">
+ 
+                <div className="bg-zinc-900 border border-zinc-800/80 rounded-[1.5rem] overflow-hidden flex flex-col h-[360px]">
                     <div className="bg-gradient-to-b from-[#ec4899] to-[#500724] px-6 py-4 flex items-center shrink-0">
                         <h3 className="font-bold text-white text-base">Останні підписки</h3>
                     </div>
@@ -183,7 +183,7 @@ function StudioReviewPage() {
                                                 <div className="text-zinc-500 text-xs truncate">@{sub.nickName}</div>
                                             </div>
                                         </div>
-                                        <span className="text-zinc-500 text-xs whitespace-nowrap shrink-0">
+                                        <span className="text-zinc-50 text-xs whitespace-nowrap shrink-0">
                                             {new Date(sub.dateSubscribed).toLocaleDateString("uk-UA")}
                                         </span>
                                     </div>

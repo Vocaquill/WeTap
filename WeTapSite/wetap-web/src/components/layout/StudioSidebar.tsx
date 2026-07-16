@@ -68,7 +68,7 @@ function StudioSidebar({isOpen, toggleSidebar}: StudioSidebarProps) {
 
             {isOpen && (
                 <div className="flex flex-col items-center gap-0.5 mt-1 w-full px-1 transition-all duration-200">
-                    <span className="text-sm font-semibold text-white leading-tight text-center truncate w-full">
+                    <span className="text-sm font-semibold text-zinc-50 leading-tight text-center truncate w-full">
                         {channel?.name ?? user?.name ?? '—'}
                     </span>
                     <span className="text-[11px] text-zinc-500 leading-tight text-center truncate w-full">
