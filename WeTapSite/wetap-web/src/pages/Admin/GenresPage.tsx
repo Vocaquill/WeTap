@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Plus} from 'lucide-react';
 import {Button} from '../../components/form/Button';
 import {GENRE_SORT_FIELDS, type GenreSortField} from '../../env';
@@ -16,6 +16,7 @@ import {Pagination} from '../../components/ui/common/Pagination';
 import {FilterBar} from '../../components/ui/common/FilterBar';
 import {GenericTable} from '../../components/ui/common/GenericTable';
 import {SelectField} from '../../components/form/SelectField';
+import {useSearchState} from '../../hooks/useSearchState';
 
 const perPageOptions = [
     {id: 5, name: '5'},
@@ -24,14 +25,17 @@ const perPageOptions = [
     {id: 50, name: '50'},
 ];
 
+const DEFAULT_GENRE_PARAMS: IGenreSearch = {
+    name: '',
+    slug: '',
+    page: 1,
+    itemPerPage: 10,
+    sortBy: undefined,
+};
+
 function GenresPage() {
-    const [searchParams, setSearchParams] = useState<IGenreSearch>({
-        name: '',
-        slug: '',
-        page: 1,
-        itemPerPage: 10,
-        sortBy: undefined,
-    });
+    const {searchParams, setSearchParams, handleSearchChange, resetFilters, clampPage} =
+        useSearchState<IGenreSearch>(DEFAULT_GENRE_PARAMS);
 
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -41,22 +45,12 @@ function GenresPage() {
     const {data, isFetching, isError} = useSearchGenresQuery(searchParams);
     const [deleteGenre, {isLoading: isDeleting}] = useDeleteGenreMutation();
 
-    const handleSearchChange = <K extends keyof IGenreSearch>(key: K, value: IGenreSearch[K]) => {
-        setSearchParams((prev: IGenreSearch) => ({...prev, [key]: value, page: 1}));
-    };
-
-    const resetFilters = () => {
-        setSearchParams({
-            name: '',
-            slug: '',
-            page: 1,
-            itemPerPage: searchParams.itemPerPage,
-            sortBy: undefined,
-        });
-    };
+    useEffect(() => {
+        if (data) clampPage(data.pagination.totalPages);
+    }, [data?.pagination.totalPages]);
 
     const handleSortChange = (key: string | undefined) => {
-        setSearchParams((prev: IGenreSearch) => ({
+        setSearchParams((prev) => ({
             ...prev,
             sortBy: key as GenreSortField | undefined,
             page: 1,
@@ -124,7 +118,7 @@ function GenresPage() {
                         <Pagination
                             currentPage={data.pagination.currentPage}
                             totalPages={data.pagination.totalPages}
-                            onChange={(page) => setSearchParams((prev: IGenreSearch) => ({...prev, page}))}
+                            onChange={(page) => setSearchParams((prev) => ({...prev, page}))}
                         />
                         <div
                             className="flex items-center gap-2 text-zinc-500 text-xs uppercase tracking-wider font-black">

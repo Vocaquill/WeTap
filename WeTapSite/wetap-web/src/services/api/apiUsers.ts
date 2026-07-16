@@ -6,6 +6,7 @@ import type {IUserSearchRequest} from "../../types/User/IUserSearchRequest.ts";
 import type {IUserDeleteRequest} from "../../types/User/IUserDeleteRequest.ts";
 import type {IUserEditRequest} from "../../types/User/IUserEditRequest.ts";
 import {serialize} from "object-to-formdata";
+import { apiStudio } from "../api/apiStudio";
 
 export const apiUsers = createApi({
     reducerPath: "api/users",
@@ -28,7 +29,13 @@ export const apiUsers = createApi({
                 method: "PUT",
                 body: serialize(body),
             }),
-            invalidatesTags: ["Users"]
+            invalidatesTags: ["Users"],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(apiStudio.util.invalidateTags(["Studio"]));
+                } catch {}
+            },
         }),
 
         deleteUser: builder.mutation<void, IUserDeleteRequest>({
@@ -37,7 +44,13 @@ export const apiUsers = createApi({
                 method: "DELETE",
                 body,
             }),
-            invalidatesTags: ["Users"]
+            invalidatesTags: ["Users"],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch(apiStudio.util.invalidateTags(["Studio"]));
+                } catch {}
+            },
         }),
     }),
 });

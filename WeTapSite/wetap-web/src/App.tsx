@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 import UserHomePage from './pages/home/UserHomePage';
 import VideoPage from './pages/video/VideoPage';
+import SearchPage from './pages/video/SearchPage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
@@ -21,6 +22,7 @@ import StudioLayout from "./layouts/StudioLayout.tsx";
 import ChannelPage from "./pages/channel/ChannelPage.tsx";
 
 import Dashboard from './pages/Admin/Dashboard.tsx';
+import VideosPage from './pages/Admin/VideosPage.tsx';
 import GenresPage from './pages/Admin/GenresPage.tsx';
 import TagsPage from './pages/Admin/TagsPage.tsx';
 import LanguagesPage from './pages/Admin/LanguagesPage.tsx';
@@ -72,6 +74,7 @@ function App() {
             <Route element={<AppLayout />}>
                 <Route path="/" element={<UserHomePage />} />
                 <Route path="/video/:slug" element={<VideoPage />} />
+                <Route path="/search" element={<SearchPage />} />
                 <Route path="/channel/:slug" element={<ChannelPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
@@ -103,6 +106,7 @@ function App() {
             <Route element={<RequireAdmin />}>
                 <Route path="/admin" element={<AdminLayout />}>
                     <Route index element={<Dashboard />} />
+                    <Route path="videos" element={<VideosPage />} />
                     <Route path="genres" element={<GenresPage />} />
                     <Route path="users" element={<UsersPage />} />
                     <Route path="tags" element={<TagsPage />} />

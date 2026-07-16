@@ -12,11 +12,13 @@ import { apiStudio } from "../services/api/apiStudio.ts";
 
 
 import authReducer from "./slices/authSlice.ts";
+import playerReducer from "./slices/playerSlice.ts";
 import {apiUsers} from "../services/api/apiUsers.ts";
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
+        player: playerReducer,
         [apiVideos.reducerPath]: apiVideos.reducer,
         [apiGenres.reducerPath]: apiGenres.reducer,
         [apiAccount.reducerPath]: apiAccount.reducer,

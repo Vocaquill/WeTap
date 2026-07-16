@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAppSelector } from "../../store";
 import { useGetChartsQuery } from "../../services/api/apiStudio";
 import { StudioDateRangePicker } from "../../components/ui/common/StudioDateRangePicker";
 import { Button } from "../../components/form/Button";
@@ -17,8 +16,6 @@ import type { MetricType } from "../../env/index.ts";
 import {formatMetricName, formatNumber} from "../../utils/statsUtils.ts";
 
 export default function StudioAnalyticsPage() {
-    const { user } = useAppSelector((state) => state.auth);
-
     const today = new Date();
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(today.getDate() - 30);
@@ -36,11 +33,9 @@ export default function StudioAnalyticsPage() {
 
     const { data: chartData, isLoading } = useGetChartsQuery(
         {
-            channelId: user?.channelId,
             from: dateRange.from,
             to: dateRange.to
-        },
-        { skip: !user?.channelId }
+        }
     );
 
     const handleDateChange = (from: string, to: string) => {
@@ -110,10 +105,10 @@ export default function StudioAnalyticsPage() {
     });
 
     return (
-        <div className="p-8 space-y-10 animate-in fade-in duration-500 max-w-6xl mx-auto bg-[#121214] min-h-screen text-zinc-100">
+        <div className="p-8 space-y-10 animate-in fade-in duration-500 max-w-6xl mx-auto bg-theme-bg min-h-screen text-zinc-100">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="flex flex-col gap-2">
-                    <h1 className="text-3xl font-black tracking-tight text-white">
+                    <h1 className="text-3xl font-black tracking-tight text-zinc-50">
                         Аналітика каналу – {formatMetricName(activeMetric)}
                     </h1>
                 </div>
@@ -124,7 +119,7 @@ export default function StudioAnalyticsPage() {
                     onChange={handleDateChange}
                 />
             </div>
-
+ 
             <div className="flex gap-4 border-b border-zinc-800 pb-2">
                 {(["Views", "Likes", "Subscribers"] as MetricType[]).map((metric) => (
                     <Button
@@ -132,7 +127,7 @@ export default function StudioAnalyticsPage() {
                         onClick={() => setActiveMetric(metric)}
                         className={`pb-2 px-1 text-sm font-bold border-b-2 transition-all ${
                             activeMetric === metric
-                                ? "border-[#ec4899] text-white"
+                                ? "border-[#ec4899] text-zinc-50"
                                 : "border-transparent text-zinc-500 hover:text-zinc-300"
                         }`}
                     >
@@ -140,8 +135,8 @@ export default function StudioAnalyticsPage() {
                     </Button>
                 ))}
             </div>
-
-            <div className="h-[400px] w-full bg-[#1c1c20] p-6 rounded-[1.5rem] border border-zinc-800">
+ 
+            <div className="h-[400px] w-full bg-zinc-900 p-6 rounded-[1.5rem] border border-zinc-800/80">
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={chartDisplayData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
@@ -183,8 +178,8 @@ export default function StudioAnalyticsPage() {
                     </LineChart>
                 </ResponsiveContainer>
             </div>
-
-            <div className="bg-[#1c1c20] border border-zinc-800 rounded-[1.5rem] overflow-hidden">
+ 
+            <div className="bg-zinc-900 border border-zinc-800/80 rounded-[1.5rem] overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm border-collapse">
                         <thead>

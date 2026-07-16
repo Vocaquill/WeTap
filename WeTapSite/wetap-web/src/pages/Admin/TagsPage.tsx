@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '../../components/form/Button';
 import { Pagination } from '../../components/ui/common/Pagination';
@@ -9,6 +9,7 @@ import { useDeleteTagMutation, useSearchTagsQuery } from "../../services/api/api
 import type { ITagSearchRequest } from "../../types/Tag/ITagSearchRequest.ts";
 import type { ITagItemResponse } from "../../types/Tag/ITagItemResponse.ts";
 import type { IColumnConfig } from '../../types/Additional/IColumnConfig';
+import { useSearchState } from '../../hooks/useSearchState';
 
 import AddTagModal from '../../components/modal/tag/AddTagModal';
 import EditTagModal from '../../components/modal/tag/EditTagModal';
@@ -21,12 +22,15 @@ const perPageOptions = [
     { id: 50, name: '50' },
 ];
 
+const DEFAULT_TAG_PARAMS: ITagSearchRequest = {
+    name: '',
+    page: 1,
+    itemPerPage: 10,
+};
+
 function TagsPage() {
-    const [searchParams, setSearchParams] = useState<ITagSearchRequest>({
-        name: '',
-        page: 1,
-        itemPerPage: 10,
-    });
+    const { searchParams, setSearchParams, handleSearchChange, resetFilters, clampPage } =
+        useSearchState<ITagSearchRequest>(DEFAULT_TAG_PARAMS);
 
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -36,17 +40,9 @@ function TagsPage() {
     const { data, isFetching, isError } = useSearchTagsQuery(searchParams);
     const [deleteTag, { isLoading: isDeleting }] = useDeleteTagMutation();
 
-    const handleSearchChange = <K extends keyof ITagSearchRequest>(key: K, value: ITagSearchRequest[K]) => {
-        setSearchParams((prev) => ({ ...prev, [key]: value, page: 1 }));
-    };
-
-    const resetFilters = () => {
-        setSearchParams({
-            name: '',
-            page: 1,
-            itemPerPage: searchParams.itemPerPage,
-        });
-    };
+    useEffect(() => {
+        if (data) clampPage(data.pagination.totalPages);
+    }, [data?.pagination.totalPages]);
 
     const handleDelete = async () => {
         if (!selectedTag) return;

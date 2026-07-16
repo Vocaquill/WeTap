@@ -3,29 +3,32 @@ import {useState} from "react";
 interface Props {
     tabList: string[];
     onTabChange: (tab: string) => void;
+    activeTab?: string;
 }
 
 export function TabButtons({
                                tabList,
-                               onTabChange
+                               onTabChange,
+                               activeTab: propActiveTab
                            } : Props) {
 
-    const [activeTab, setActiveTab] = useState<string>(tabList[0]);
+    const [internalActiveTab, setInternalActiveTab] = useState<string>(tabList[0]);
+    const activeTab = propActiveTab !== undefined ? propActiveTab : internalActiveTab;
 
     const handleTabChange = (tab: string) => {
-        setActiveTab(tab);
-        onTabChange(tab); // Виправили: тепер передаємо нове значення одразу
+        setInternalActiveTab(tab);
+        onTabChange(tab);
     }
 
     return (
         <div className="flex gap-2 mb-4">
             {tabList.map((tab) => (
                 <button
-                    key={tab} // Не забудь додати key при map, щоб не було warning у консолі
+                    key={tab}
                     onClick={() => handleTabChange(tab)}
                     className={`custom-tab-btn px-4 py-2 rounded-xl transition-all duration-300 font-bold ${activeTab === tab
                         ? 'bg-[#FF2D7A] text-white shadow-lg shadow-[#FF2D7A]/20'
-                        : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white'
+                        : 'bg-zinc-900/80 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-50'
                     }`}
                 >
                     {tab}

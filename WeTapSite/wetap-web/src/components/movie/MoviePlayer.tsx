@@ -11,6 +11,8 @@ import {
     RotateCw,
 } from 'lucide-react';
 import { APP_ENV, VIDEO_QUALITIES, type VideoQuality } from "../../env";
+import { useAppDispatch, useAppSelector } from '../../store';
+import { setVolume, setIsMuted } from '../../store/slices/playerSlice';
 
 interface MoviePlayerProps {
     videoName?: string;
@@ -22,12 +24,14 @@ type Quality = VideoQuality;
 export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const dispatch = useAppDispatch();
+
+    const volume = useAppSelector((state) => state.player.volume);
+    const isMuted = useAppSelector((state) => state.player.isMuted);
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [volume, setVolume] = useState(1);
-    const [isMuted, setIsMuted] = useState(false);
     const [showControls, setShowControls] = useState(true);
     const [quality, setQuality] = useState<Quality>('1080');
     const [showSettings, setShowSettings] = useState(false);
@@ -81,22 +85,19 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = parseFloat(e.target.value);
-        setVolume(val);
-        if (videoRef.current) {
-            videoRef.current.volume = val;
-            setIsMuted(val === 0);
+        dispatch(setVolume(val));
+        if (val === 0) {
+            dispatch(setIsMuted(true));
+        } else if (isMuted) {
+            dispatch(setIsMuted(false));
         }
     };
 
     const toggleMute = () => {
-        if (videoRef.current) {
-            const newMuted = !isMuted;
-            setIsMuted(newMuted);
-            videoRef.current.muted = newMuted;
-            if (!newMuted && volume === 0) {
-                setVolume(0.5);
-                videoRef.current.volume = 0.5;
-            }
+        const newMuted = !isMuted;
+        dispatch(setIsMuted(newMuted));
+        if (!newMuted && volume === 0) {
+            dispatch(setVolume(0.5));
         }
     };
 
@@ -166,7 +167,13 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
             onMouseLeave={() => isPlaying && setShowControls(false)}
         >
             <video
-                ref={videoRef}
+                ref={(el) => {
+                    if (el) {
+                        el.volume = volume;
+                        el.muted = isMuted;
+                    }
+                    (videoRef as React.MutableRefObject<HTMLVideoElement | null>).current = el;
+                }}
                 src={getUrlForQuality(quality)}
                 className="w-full h-full cursor-pointer"
                 onClick={togglePlay}

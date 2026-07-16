@@ -1,30 +1,58 @@
-import {Link} from 'react-router-dom';
+import {Link, useSearchParams} from 'react-router-dom';
 
 import {Play, CheckCircle2} from 'lucide-react';
 import {APP_ENV} from '../../env';
 import {useSearchVideosQuery} from '../../services/api/apiVideos';
+import {useSearchGenresQuery} from '../../services/api/apiGenres';
 import {TabButtons} from "../../components/ui/common/TabButton.tsx";
 import { Button } from '../../components/form/Button';
 
 import { VideoCard } from '../../components/video/VideoCard';
+import { Pagination } from '../../components/ui/common/Pagination';
 
 function UserHomePage() {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const genreId = searchParams.get('genreId') ? Number(searchParams.get('genreId')) : undefined;
+    const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
 
-    const {data: data, isLoading} = useSearchVideosQuery({itemPerPage: 30, page: 1});
+    const {data: data, isLoading} = useSearchVideosQuery({
+        itemPerPage: 30,
+        page,
+        genreId
+    });
     const videos = data?.items;
 
-    const heroVideo = videos?.[0];
-    const gridVideos = videos?.slice(1) || [];
+    const {data: genresData} = useSearchGenresQuery({ page: 1, itemPerPage: 100 });
+    const currentGenre = genresData?.items.find(g => g.id === genreId);
+    const genreName = currentGenre ? currentGenre.name : '';
 
-    const tags = ['All', 'Subscriptions', 'Posts', 'Music', 'Tech', 'Design', 'Comedy', 'Movies'];
+    const heroVideo = genreId ? null : videos?.[0];
+    const gridVideos = genreId ? videos || [] : videos?.slice(1) || [];
 
+    const tags = ['Всі', ...(genresData?.items.map(g => g.name) || [])];
+ 
     const handleTabChange = (tab: string) => {
-        console.log('Tab changed to:', tab);
-        // TODO: implement tab switching logic
-    }
+        const nextParams = new URLSearchParams(searchParams);
+        if (tab === 'Всі') {
+            nextParams.delete('genreId');
+        } else {
+            const selectedGenre = genresData?.items.find(g => g.name === tab);
+            if (selectedGenre) {
+                nextParams.set('genreId', selectedGenre.id.toString());
+            }
+        }
+        nextParams.set('page', '1');
+        setSearchParams(nextParams);
+    };
+ 
+    const handlePageChange = (newPage: number) => {
+        const nextParams = new URLSearchParams(searchParams);
+        nextParams.set('page', newPage.toString());
+        setSearchParams(nextParams);
+    };
 
     return (
-        <div className="min-h-screen bg-theme-bg text-white pb-12">
+        <div className="min-h-screen bg-theme-bg text-zinc-100 pb-12">
 
             {heroVideo && (
                 <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8 pt-2 relative group">
@@ -74,31 +102,61 @@ function UserHomePage() {
             )}
 
             <section className="mb-8 flex items-center gap-3 overflow-x-auto pb-3 no-scrollbar">
-                <TabButtons tabList={tags} onTabChange={handleTabChange} />
+                <TabButtons tabList={tags} activeTab={genreName || 'Всі'} onTabChange={handleTabChange} />
             </section>
 
-            <section>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
-                    {isLoading ? (
-                        [...Array(6)].map((_, i) => (
-                            <div key={i} className="space-y-4 animate-pulse">
-                                <div className="aspect-video bg-zinc-900 rounded-[2rem] border border-white/5"/>
-                                <div className="flex gap-3">
-                                    <div className="w-10 h-10 bg-zinc-900 rounded-full"/>
-                                    <div className="flex-1 space-y-2">
-                                        <div className="h-4 bg-zinc-900 rounded w-3/4"/>
-                                        <div className="h-3 bg-zinc-900 rounded w-1/2"/>
+            {genreId && (
+                <div className="mt-6 text-xs text-zinc-400 font-medium tracking-wide">
+                    Колекція: <span className="text-zinc-50 font-bold">{genreName}</span>
+                </div>
+            )}
+
+            {genreId && !isLoading && gridVideos.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 px-4 bg-zinc-900/20 border border-zinc-800/30 rounded-[2rem] text-center my-6">
+                    <p className="text-zinc-300 text-sm md:text-base mb-4 font-semibold">
+                        Стань першим, хто зробить відео в жанрі <span className="text-zinc-50 font-bold">{genreName}</span>
+                    </p>
+                    <Link
+                        to="/video/add"
+                        className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-sm transition-all duration-200 active:scale-[0.98] shadow-lg shadow-rose-500/20"
+                    >
+                        Створити відео
+                    </Link>
+                </div>
+            ) : (
+                <section>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+                        {isLoading ? (
+                            [...Array(6)].map((_, i) => (
+                                <div key={i} className="space-y-4 animate-pulse">
+                                    <div className="aspect-video bg-zinc-900 rounded-[2rem] border border-white/5"/>
+                                    <div className="flex gap-3">
+                                        <div className="w-10 h-10 bg-zinc-900 rounded-full"/>
+                                        <div className="flex-1 space-y-2">
+                                            <div className="h-4 bg-zinc-900 rounded w-3/4"/>
+                                            <div className="h-3 bg-zinc-900 rounded w-1/2"/>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))
-                    ) : (
-                        gridVideos.map((video) => (
-                            <VideoCard key={video.id} video={video} />
-                        ))
-                    )}
+                            ))
+                        ) : (
+                            gridVideos.map((video) => (
+                                <VideoCard key={video.id} video={video} />
+                            ))
+                        )}
+                    </div>
+                </section>
+            )}
+
+            {data && data.pagination.totalPages > 1 && (
+                <div className="mt-12 flex justify-center">
+                    <Pagination
+                        currentPage={page}
+                        totalPages={data.pagination.totalPages}
+                        onChange={handlePageChange}
+                    />
                 </div>
-            </section>
+            )}
 
         </div>
     );
