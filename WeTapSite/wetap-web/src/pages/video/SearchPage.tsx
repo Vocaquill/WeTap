@@ -100,7 +100,7 @@ export default function SearchPage() {
 
     return (
         <PageTransition>
-            <div className="min-h-screen bg-theme-bg text-white pb-16 px-4 md:px-8">
+            <div className="min-h-screen bg-theme-bg text-zinc-100 pb-16 px-4 md:px-8">
 
                 <div className="flex flex-wrap items-center gap-4 pt-6 mb-8">
 
@@ -235,7 +235,7 @@ export default function SearchPage() {
                                                         className="w-full h-full object-cover"
                                                     />
                                                 </Link>
-                                                <Link to={`/channel/${video.channel?.id}`} className="font-bold text-zinc-300 hover:text-white text-sm transition-colors cursor-pointer truncate">
+                                                <Link to={`/channel/${video.channel?.id}`} className="font-bold text-zinc-300 hover:text-zinc-50 text-sm transition-colors cursor-pointer truncate">
                                                     {video.channel?.name}
                                                 </Link>
                                                 <CheckCircle2 size={13} className="text-zinc-500 shrink-0" fill="currentColor" />

@@ -43,7 +43,7 @@ function UserHomePage() {
     };
 
     return (
-        <div className="min-h-screen bg-theme-bg text-white pb-12">
+        <div className="min-h-screen bg-theme-bg text-zinc-100 pb-12">
 
             {heroVideo && (
                 <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8 pt-2 relative group">
@@ -100,14 +100,14 @@ function UserHomePage() {
 
             {genreId && (
                 <div className="mt-6 text-xs text-zinc-400 font-medium tracking-wide">
-                    Колекція: <span className="text-white font-bold">{genreName}</span>
+                    Колекція: <span className="text-zinc-50 font-bold">{genreName}</span>
                 </div>
             )}
 
             {genreId && !isLoading && gridVideos.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 px-4 bg-zinc-900/20 border border-zinc-800/30 rounded-[2rem] text-center my-6">
                     <p className="text-zinc-300 text-sm md:text-base mb-4 font-semibold">
-                        Стань першим, хто зробить відео в жанрі <span className="text-white font-bold">{genreName}</span>
+                        Стань першим, хто зробить відео в жанрі <span className="text-zinc-50 font-bold">{genreName}</span>
                     </p>
                     <Link
                         to="/video/add"

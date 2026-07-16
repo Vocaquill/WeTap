@@ -70,7 +70,7 @@ function VideoPage() {
 
     return (
         <PageTransition>
-            <div className="min-h-screen bg-theme-bg text-white">
+            <div className="min-h-screen bg-theme-bg text-zinc-100">
                 <div className="max-w-[1700px] mx-auto flex flex-col xl:flex-row gap-6 p-4 md:p-6">
 
                     <div className="flex-1 xl:max-w-[calc(100%-400px)]">
@@ -88,7 +88,7 @@ function VideoPage() {
                             className="flex flex-col 2xl:flex-row xl:items-center justify-between gap-8 md:gap-12 mt-4 pb-4 border-b border-zinc-800">
                             <div className="flex items-center gap-3">
                                 <div
-                                    className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-white/10">
+                                    className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-zinc-500/20">
                                     <img
                                         src={video.channel?.avatarImage ? `${APP_ENV.IMAGES_200_URL}${video.channel.avatarImage}` : '/images/user/default.jpg'}
                                         alt={video.channel?.name}
@@ -127,7 +127,7 @@ function VideoPage() {
                                             className={`border-r border-zinc-700 transition-colors ${
                                                 video.isLiked === true
                                                     ? 'text-[#FF2D7A] bg-zinc-700/30'
-                                                    : 'text-zinc-300 hover:text-white'
+                                                    : 'text-zinc-300 hover:text-zinc-50'
                                             }`}
                                             icon={<ThumbsUp size={18} fill={video.isLiked === true ? "currentColor" : "none"} />}
                                         >
@@ -140,7 +140,7 @@ function VideoPage() {
                                             className={`transition-colors ${
                                                 video.isLiked === false
                                                     ? 'text-[#FF2D7A] bg-zinc-700/30'
-                                                    : 'text-zinc-300 hover:text-white'
+                                                    : 'text-zinc-300 hover:text-zinc-50'
                                             }`}
                                             icon={<ThumbsDown size={18} fill={video.isLiked === false ? "currentColor" : "none"} />}
                                         >
