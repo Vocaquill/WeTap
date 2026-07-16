@@ -12,15 +12,20 @@ public class LoginHandler(UserManager<UserEntity> userManager,
 {
     public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var user = await userManager.Users.FirstOrDefaultAsync(x => x.Email == request.Model.Email && !x.IsDeleted);
+        var user = await userManager.Users.FirstOrDefaultAsync(x => x.Email == request.Model.Email);
 
         if (user != null && await userManager.CheckPasswordAsync(user, request.Model.Password))
         {
+            if (user.IsDeleted)
+            {
+                throw new Exception("Цей користувач видалений. Будь ласка, зверніться в підтримку");
+            }
+
             var token = await jwtTokenService.CreateTokenAsync(user);
             cookieAuthService.SetAuthCookie(token);
             return token;
         }
 
-        throw new Exception("Invalid email or password");
+        throw new Exception("Неправильний логін або пароль");
     }
 }

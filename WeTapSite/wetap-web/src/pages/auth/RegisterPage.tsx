@@ -62,8 +62,8 @@ function RegisterPage() {
             dispatch(loginSuccess(result.token));
             navigate('/');
             setErrorMessage("");
-        } catch (error) {
-            setErrorMessage("Помилка реєстрації");
+        } catch (error: any) {
+            setErrorMessage(error?.data?.message);
             const serverError = error as ServerError;
 
             if (serverError?.status === 400) {

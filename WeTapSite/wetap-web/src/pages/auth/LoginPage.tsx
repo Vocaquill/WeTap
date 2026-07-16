@@ -1,65 +1,59 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { message } from 'antd';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {Mail, Lock, ArrowRight} from 'lucide-react';
+import {motion} from 'framer-motion';
 import logoImg from '../../layouts/logo.png';
-
-
-import { useLoginByGoogleMutation, useLoginMutation } from "../../services/api/apiAccount";
-import { useGoogleLogin } from '@react-oauth/google';
+import {useLoginByGoogleMutation, useLoginMutation} from "../../services/api/apiAccount";
+import {useGoogleLogin} from '@react-oauth/google';
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
-import { InputField } from "../../components/form/InputField";
-import { Button } from "../../components/form/Button";
-import type { ServerError } from "../../types/Account/ServerError.ts";
-import type { ILogin } from "../../types/Account/ILogin.ts";
+import {InputField} from "../../components/form/InputField";
+import {Button} from "../../components/form/Button";
+import type {ServerError} from "../../types/Account/ServerError.ts";
+import type {ILogin} from "../../types/Account/ILogin.ts";
 
 function LoginPage() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = useState("");
+    const [formData, setFormData] = useState<ILogin>({
+        email: '',
+        password: '',
+    });
 
-  const [formData, setFormData] = useState<ILogin>({
-    email: '',
-    password: '',
-  });
+    const [login, {isLoading: isLoginLoading}] = useLoginMutation();
+    const [loginByGoogle, {isLoading: isGoogleLoading}] = useLoginByGoogleMutation();
 
-  const [login, { isLoading: isLoginLoading, isError }] = useLoginMutation();
-  const [loginByGoogle, { isLoading: isGoogleLoading }] = useLoginByGoogleMutation();
+    /* ================= EMAIL / PASSWORD LOGIN ================= */
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setErrorMessage("")
 
-  /* ================= EMAIL / PASSWORD LOGIN ================= */
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      await login(formData).unwrap();
-      navigate('/');
-    } catch (error) {
-      const serverError = error as ServerError;
-
-      if (serverError?.status === 400) {
-        message.error('Неправильний логін або пароль');
-      } else {
-        message.error('Сталася помилка при вході');
-      }
-    }
-  };
-
-  /* ================= GOOGLE LOGIN ================= */
-  const loginUseGoogle = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        await loginByGoogle(tokenResponse.access_token).unwrap();
-        navigate('/');
-      } catch (error) {
-        const serverError = error as ServerError;
-
-        if (serverError?.status === 400) {
-          message.error('Помилка входу через Google');
-        } else {
-          message.error('Сталася помилка при вході');
+        try {
+            await login(formData).unwrap();
+            navigate('/');
+        } catch (err: any) {
+            setErrorMessage(err?.data?.message)
         }
-      }
-    },
-  });
+    };
+
+    /* ================= GOOGLE LOGIN ================= */
+    const loginUseGoogle = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            setErrorMessage("")
+
+            try {
+                await loginByGoogle(tokenResponse.access_token).unwrap();
+                navigate('/');
+            } catch (error) {
+                const serverError = error as ServerError;
+
+                if (serverError?.status === 400) {
+                    setErrorMessage('Помилка входу через Google');
+                } else {
+                    setErrorMessage('Сталася помилка при вході');
+                }
+            }
+        },
+    });
 
   const GoogleIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -124,9 +118,10 @@ function LoginPage() {
             labelClassName="text-xs text-zinc-400 uppercase ml-1"
           />
 
-          {isError && (
-            <p className="text-red-500 text-sm">Неправильний логін або пароль</p>
-          )}
+
+                    {errorMessage && (
+                        <p className="text-red-500 text-sm font-semibold">{errorMessage}</p>
+                    )}
 
           <div className="text-right">
             <Button
