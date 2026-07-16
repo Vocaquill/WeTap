@@ -1,4 +1,4 @@
-import { LayoutDashboard, Film, Tag, Hash, HomeIcon, Globe } from 'lucide-react';
+import { LayoutDashboard, Film, Tag, Hash, ArrowLeft, Globe } from 'lucide-react';
 import BaseSidebar, { type SidebarSection, type SidebarItem } from './BaseSidebar';
 
 function AdminSidebar() {
@@ -29,8 +29,8 @@ function AdminSidebar() {
 
   const bottomItems: SidebarItem[] = [
     {
-      name: 'Додому',
-      icon: <HomeIcon size={20} />,
+      name: 'На головну',
+      icon: <ArrowLeft size={20} />,
       path: '/'
     }
   ];
