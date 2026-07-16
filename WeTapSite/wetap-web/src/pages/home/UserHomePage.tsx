@@ -29,13 +29,22 @@ function UserHomePage() {
     const heroVideo = genreId ? null : videos?.[0];
     const gridVideos = genreId ? videos || [] : videos?.slice(1) || [];
 
-    const tags = ['All', 'Subscriptions', 'Posts', 'Music', 'Tech', 'Design', 'Comedy', 'Movies'];
-
+    const tags = ['Всі', ...(genresData?.items.map(g => g.name) || [])];
+ 
     const handleTabChange = (tab: string) => {
-        console.log('Tab changed to:', tab);
-        // TODO: implement tab switching logic
-    }
-
+        const nextParams = new URLSearchParams(searchParams);
+        if (tab === 'Всі') {
+            nextParams.delete('genreId');
+        } else {
+            const selectedGenre = genresData?.items.find(g => g.name === tab);
+            if (selectedGenre) {
+                nextParams.set('genreId', selectedGenre.id.toString());
+            }
+        }
+        nextParams.set('page', '1');
+        setSearchParams(nextParams);
+    };
+ 
     const handlePageChange = (newPage: number) => {
         const nextParams = new URLSearchParams(searchParams);
         nextParams.set('page', newPage.toString());
@@ -92,11 +101,9 @@ function UserHomePage() {
                 </section>
             )}
 
-            {!genreId && (
-                <section className="mb-8 flex items-center gap-3 overflow-x-auto pb-3 no-scrollbar">
-                    <TabButtons tabList={tags} onTabChange={handleTabChange} />
-                </section>
-            )}
+            <section className="mb-8 flex items-center gap-3 overflow-x-auto pb-3 no-scrollbar">
+                <TabButtons tabList={tags} activeTab={genreName || 'Всі'} onTabChange={handleTabChange} />
+            </section>
 
             {genreId && (
                 <div className="mt-6 text-xs text-zinc-400 font-medium tracking-wide">

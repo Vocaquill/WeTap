@@ -3,17 +3,20 @@ import {useState} from "react";
 interface Props {
     tabList: string[];
     onTabChange: (tab: string) => void;
+    activeTab?: string;
 }
 
 export function TabButtons({
                                tabList,
-                               onTabChange
+                               onTabChange,
+                               activeTab: propActiveTab
                            } : Props) {
 
-    const [activeTab, setActiveTab] = useState<string>(tabList[0]);
+    const [internalActiveTab, setInternalActiveTab] = useState<string>(tabList[0]);
+    const activeTab = propActiveTab !== undefined ? propActiveTab : internalActiveTab;
 
     const handleTabChange = (tab: string) => {
-        setActiveTab(tab);
+        setInternalActiveTab(tab);
         onTabChange(tab); // Виправили: тепер передаємо нове значення одразу
     }
 
@@ -25,7 +28,7 @@ export function TabButtons({
                     onClick={() => handleTabChange(tab)}
                     className={`custom-tab-btn px-4 py-2 rounded-xl transition-all duration-300 font-bold ${activeTab === tab
                         ? 'bg-[#FF2D7A] text-white shadow-lg shadow-[#FF2D7A]/20'
-                        : 'bg-[#1e1e20] text-zinc-400 hover:bg-[#2a2a2d] hover:text-white'
+                        : 'bg-zinc-900/80 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-50'
                     }`}
                 >
                     {tab}
