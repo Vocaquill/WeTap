@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Film } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { APP_ENV } from '../../env';
 
 import DeleteModal from "../../components/modal/common/DeleteModal.tsx";
@@ -92,9 +92,12 @@ function VideosPage() {
             label: 'Назва відео',
             render: (item) => (
                 <div className="flex flex-col max-w-xs md:max-w-md">
-                    <span className="font-bold text-zinc-200 group-hover:text-white transition-colors truncate">
+                    <Link
+                        to={`/video/${item.slug}`}
+                        className="font-bold text-zinc-200 hover:text-white hover:underline transition-colors truncate"
+                    >
                         {item.title}
-                    </span>
+                    </Link>
                     {item.description && (
                         <span className="w-28 text-xs text-zinc-500 truncate mt-0.5">
                             {item.description}

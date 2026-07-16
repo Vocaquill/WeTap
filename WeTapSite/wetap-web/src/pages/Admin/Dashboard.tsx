@@ -1,6 +1,6 @@
 import { Film, Tag, Users, PlayCircle, Clock, UserPlus } from 'lucide-react';
 import { useGetAdminDashboardQuery } from '../../services/api/apiStudio';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
     const { data: dashboardData, isLoading, isError } = useGetAdminDashboardQuery();
@@ -75,8 +75,13 @@ function Dashboard() {
                                     {dashboardData.recentVideos.map((video) => (
                                         <tr key={video.id} className="hover:bg-zinc-800/30 transition-colors">
                                             <td className="p-4 flex items-center gap-3 font-medium text-zinc-300">
-                                                <PlayCircle size={16} className="text-zinc-600" />
-                                                {video.title}
+                                                <PlayCircle size={16} className="text-zinc-600 shrink-0" />
+                                                <Link
+                                                    to={`/video/${video.slug}`}
+                                                    className="hover:text-white hover:underline truncate transition-colors"
+                                                >
+                                                    {video.title}
+                                                </Link>
                                             </td>
                                             <td className="p-4 text-zinc-500 text-xs">{video.dateCreated}</td>
                                             <td className="p-4 text-right">

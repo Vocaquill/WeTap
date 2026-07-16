@@ -5,6 +5,7 @@ import type { IVideoEditRequest } from '../../types/Video/IVideoEditRequest';
 import { VideoProcessingModal } from '../../components/modal/video/VideoProcessingModal';
 import { VideoForm } from '../../components/video/VideoForm';
 import LoadingOverlay from '../../components/ui/loading/LoadingOverlay';
+import { message } from 'antd';
 
 export default function EditVideoPage() {
     const { id } = useParams<{ id: string }>();
@@ -35,7 +36,6 @@ export default function EditVideoPage() {
 
     const handleSubmit = async (formValues: any) => {
         const hasNewVideo = !!formValues.video;
-        setUploadedNewVideo(hasNewVideo);
         setUpdatedSlug(formValues.slug);
 
         const editRequest: IVideoEditRequest = {
@@ -51,15 +51,24 @@ export default function EditVideoPage() {
             privacyId: formValues.privacyId,
         };
 
-        const result = await editVideo(editRequest).unwrap();
+        try {
+            const result = await editVideo(editRequest).unwrap();
 
-        if (hasNewVideo) {
-            setTrackingId(result.trackingId);
-        } else {
-            const fromAdmin = location.state?.fromAdmin;
-            navigate(fromAdmin ? '/admin/videos' : '/studio');
+            if (hasNewVideo) {
+                setUploadedNewVideo(true);
+                setTrackingId(result.trackingId);
+            } else {
+                const fromAdmin = location.state?.fromAdmin;
+                navigate(fromAdmin ? '/admin/videos' : '/studio');
+            }
+        } catch (err: any) {
+            const errorMsg = err?.data?.error || err?.data?.errors
+                ? (err?.data?.error ?? Object.values(err?.data?.errors ?? {}).flat()[0])
+                : 'Помилка збереження відео';
+            message.error(String(errorMsg));
         }
     };
+
 
     return (
         <>

@@ -20,8 +20,8 @@ export interface Theme {
 
 export const themes: Theme[] = [
   {
-    id: 'standard',
-    name: 'Standard',
+    id: 'dark',
+    name: 'Dark',
     colors: {
       bg: '18 18 19',
       black: '0 0 0',
@@ -39,22 +39,22 @@ export const themes: Theme[] = [
     }
   },
   {
-    id: 'summer',
-    name: 'Summer Pastel',
+    id: 'light',
+    name: 'Light',
     colors: {
-      bg: '23 26 33',
-      black: '14 16 20',
-      'zinc-50': '247 246 240',
-      'zinc-100': '235 233 223',
-      'zinc-200': '220 217 201',
-      'zinc-300': '194 190 170',
-      'zinc-400': '166 192 179',
-      'zinc-500': '140 166 153',
-      'zinc-600': '112 138 125',
-      'zinc-700': '56 77 67',
-      'zinc-800': '42 49 59',
-      'zinc-900': '31 37 46',
-      'zinc-950': '20 24 31',
+      bg: '255 255 255',
+      black: '9 9 11',
+      'zinc-50': '9 9 11',
+      'zinc-100': '24 24 27',
+      'zinc-200': '39 39 42',
+      'zinc-300': '63 63 70',
+      'zinc-400': '82 82 91',
+      'zinc-500': '113 113 122',
+      'zinc-600': '161 161 170',
+      'zinc-700': '212 212 216',
+      'zinc-800': '228 228 231',
+      'zinc-900': '244 244 245',
+      'zinc-950': '255 255 255',
     }
   }
 ];

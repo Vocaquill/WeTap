@@ -187,7 +187,7 @@ export function BaseSidebar({
       flex items-center p-2.5 rounded-xl transition-all duration-200 relative group text-sm
       ${isOpen ? 'px-3 mx-1' : 'justify-center mx-1'}
       ${isActive
-            ? 'bg-gradient-to-r from-zinc-900 via-rose-600/20 to-pink-500/50 text-white font-bold'
+            ? 'bg-gradient-to-r from-zinc-950 via-rose-600/20 to-pink-500/50 text-zinc-50 font-bold'
             : 'text-zinc-400 hover:bg-zinc-900/40 hover:text-zinc-200'
         }
     `;

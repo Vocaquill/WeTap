@@ -7,7 +7,7 @@ function NotFoundPage() {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-[#121213] text-white flex items-center justify-center p-6 overflow-hidden relative">
+        <div className="min-h-screen bg-theme-bg text-zinc-100 flex items-center justify-center p-6 overflow-hidden relative">
 
             <div className="absolute inset-0 z-0 opacity-5 select-none pointer-events-none">
                 <div className="whitespace-nowrap text-[20rem] font-black italic uppercase tracking-tighter leading-none">
@@ -30,7 +30,7 @@ function NotFoundPage() {
                 >
                     <h1 className="text-[12rem] md:text-[20rem] font-black italic leading-none tracking-tighter text-red-600 flex items-center justify-center">
                         4
-                        <span className="inline-block mx-[-2rem] md:mx-[-4rem] text-white font-outline-4 drop-shadow-[0_0_30px_rgba(220,38,38,0.5)]">
+                        <span className="inline-block mx-[-2rem] md:mx-[-4rem] text-zinc-50 font-outline-4 drop-shadow-[0_0_30px_rgba(220,38,38,0.5)]">
                             0
                         </span>
                         4
@@ -40,7 +40,7 @@ function NotFoundPage() {
                         initial={{ rotate: -10, scale: 0 }}
                         animate={{ rotate: -15, scale: 1 }}
                         transition={{ delay: 0.5 }}
-                        className="absolute top-12 md:top-20 -right-4 md:-right-10 bg-white text-black px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest shadow-xl shadow-red-600/20"
+                        className="absolute top-12 md:top-20 -right-4 md:-right-10 bg-zinc-900 text-zinc-50 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest shadow-xl shadow-red-600/20"
                     >
                         Scene cut
                     </motion.div>
