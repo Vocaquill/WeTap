@@ -2,13 +2,7 @@ import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Mail, Lock, ArrowRight} from 'lucide-react';
 import {motion} from 'framer-motion';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { message } from 'antd';
 import logoImg from '../../layouts/logo.png';
-
 import {useLoginByGoogleMutation, useLoginMutation} from "../../services/api/apiAccount";
 import {useGoogleLogin} from '@react-oauth/google';
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
@@ -16,10 +10,6 @@ import {InputField} from "../../components/form/InputField";
 import {Button} from "../../components/form/Button";
 import type {ServerError} from "../../types/Account/ServerError.ts";
 import type {ILogin} from "../../types/Account/ILogin.ts";
-import { InputField } from "../../components/form/InputField";
-import { Button } from "../../components/form/Button";
-import type { ServerError } from "../../types/Account/ServerError.ts";
-import type { ILogin } from "../../types/Account/ILogin.ts";
 
 function LoginPage() {
     const navigate = useNavigate();
