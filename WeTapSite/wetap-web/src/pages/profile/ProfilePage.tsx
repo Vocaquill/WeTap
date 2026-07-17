@@ -31,12 +31,12 @@ function ProfilePage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#121213] text-white p-6 md:p-12">
+        <div className="min-h-screen bg-theme-bg text-theme-text p-6 md:p-12">
             <div className="max-w-4xl mx-auto">
 
                 {/* --- HEADER PROFILE --- */}
                 <section
-                    className="relative mb-12 flex flex-col md:flex-row items-center gap-8 bg-zinc-900/20 p-8 rounded-[3rem] border border-white/5 backdrop-blur-sm">
+                    className="relative mb-12 flex flex-col md:flex-row items-center gap-8 bg-zinc-100 dark:bg-zinc-900/20 p-8 rounded-[3rem] border border-zinc-200 dark:border-white/5 backdrop-blur-sm">
                     <div className="relative group">
                         <div
                             className="w-32 h-32 rounded-[2.5rem] overflow-hidden border-2 border-red-600 shadow-2xl shadow-red-600/20">
@@ -47,7 +47,7 @@ function ProfilePage() {
                     </div>
 
                     <div className="text-center md:text-left space-y-2">
-                        <h1 className="text-4xl font-black uppercase italic tracking-tighter">
+                        <h1 className="text-4xl font-black uppercase italic tracking-tighter text-theme-text">
                             {firstName!} <span className="text-red-600">{lastName!}</span>
                         </h1>
                         <p className="text-zinc-500 font-medium flex items-center justify-center md:justify-start gap-2">
@@ -84,12 +84,12 @@ function ProfilePage() {
 
                     {/* Особиста інформація */}
                     <motion.div whileHover={{y: -5}}
-                                className="bg-zinc-900/40 p-8 rounded-[2.5rem] border border-white/5 space-y-6">
+                                className="bg-zinc-100 dark:bg-zinc-900/40 p-8 rounded-[2.5rem] border border-zinc-200 dark:border-white/5 space-y-6">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="p-2 bg-red-600/20 rounded-lg text-red-500">
                                 <User size={20}/>
                             </div>
-                            <h2 className="text-lg font-black uppercase italic tracking-tight">Дані акаунту</h2>
+                            <h2 className="text-lg font-black uppercase italic tracking-tight text-theme-text">Дані акаунту</h2>
                         </div>
 
                         <div className="space-y-4">
@@ -102,20 +102,20 @@ function ProfilePage() {
                     {/* Безпека та швидкі дії */}
                     <div className="space-y-6">
                         <motion.div whileHover={{y: -5}}
-                                    className="bg-zinc-900/40 p-8 rounded-[2.5rem] border border-white/5">
+                                    className="bg-zinc-100 dark:bg-zinc-900/40 p-8 rounded-[2.5rem] border border-zinc-200 dark:border-white/5">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="p-2 bg-red-600/20 rounded-lg text-red-500">
                                     <Shield size={20}/>
                                 </div>
-                                <h2 className="text-lg font-black uppercase italic tracking-tight">Безпека</h2>
+                                <h2 className="text-lg font-black uppercase italic tracking-tight text-theme-text">Безпека</h2>
                             </div>
                             <Button
                                 variant="surface"
                                 className="justify-between group"
                                 onClick={() => setIsOpenPasswordForm(!isOpenPasswordForm)}
                             >
-                                <span className="text-sm font-bold text-zinc-300">Змінити пароль</span>
-                                <Settings size={18} className="text-zinc-600 group-hover:text-red-500"/>
+                                <span className="text-sm font-bold text-zinc-600 dark:text-zinc-300">Змінити пароль</span>
+                                <Settings size={18} className="text-zinc-400 dark:text-zinc-600 group-hover:text-red-500"/>
                             </Button>
                         </motion.div>
 
@@ -145,9 +145,9 @@ function ProfilePage() {
 // Допоміжний компонент для рядків інформації
 function InfoRow({label, value}: { label: string, value: string }) {
     return (
-        <div className="border-b border-white/5 pb-3">
-            <p className="text-[10px] font-black uppercase text-zinc-600 tracking-widest mb-1">{label}</p>
-            <p className="text-white font-bold">{value}</p>
+        <div className="border-b border-zinc-200 dark:border-white/5 pb-3">
+            <p className="text-[10px] font-black uppercase text-zinc-400 dark:text-zinc-600 tracking-widest mb-1">{label}</p>
+            <p className="text-theme-text font-bold">{value}</p>
         </div>
     );
 }
