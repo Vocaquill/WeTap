@@ -71,7 +71,7 @@ function EditGenreModal({isOpen, onClose, genre}: Props) {
             onClose={onClose}
             title={
                 <div>
-                    <span className="text-2xl font-black text-white">Редагувати</span>
+                    <span className="text-2xl font-black text-theme-text">Редагувати</span>
                     <p className="text-xs text-zinc-500 font-mono italic normal-case not-italic tracking-normal mt-0.5">ID:
                         #{genre.id}</p>
                 </div>
