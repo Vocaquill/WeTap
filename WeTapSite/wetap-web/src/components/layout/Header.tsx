@@ -64,7 +64,7 @@ function Header() {
             </div>
 
             <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1 bg-zinc-900 p-0.5 rounded-full border border-zinc-800/40">
+                <div className="flex items-center gap-1 bg-zinc-800 p-0.5 rounded-full border border-zinc-700/40">
                     <Button variant="icon"
                             className="relative hover:bg-zinc-800/50 rounded-full p-2 text-zinc-300 hover:text-white transition-all">
                         <Bell size={20}/>
@@ -86,7 +86,7 @@ function Header() {
                     <select
                         value={activeTheme}
                         onChange={handleThemeChange}
-                        className="bg-zinc-900 text-zinc-300 hover:text-white text-xs font-bold py-2.5 pl-4 pr-9 rounded-full border border-zinc-800/40 outline-none cursor-pointer appearance-none transition-all hover:bg-zinc-800"
+                        className="bg-zinc-800 text-zinc-300 hover:text-zinc-100 text-xs font-bold py-2.5 pl-4 pr-9 rounded-full border border-zinc-700/40 outline-none cursor-pointer appearance-none transition-all hover:bg-zinc-700"
                         style={{
                             backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>")`,
                             backgroundRepeat: 'no-repeat',
@@ -105,7 +105,7 @@ function Header() {
                 <Button
                     variant="icon"
                     onClick={handleMyChannelClick}
-                    className="flex items-center justify-center bg-zinc-900 p-3 rounded-full border border-zinc-800/40 text-zinc-300 hover:text-white hover:bg-zinc-800 transition-all"
+                    className="flex items-center justify-center bg-zinc-800 p-3 rounded-full border border-zinc-700/40 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700 transition-all"
                 >
                     <Users size={20}/>
                 </Button>
@@ -114,7 +114,7 @@ function Header() {
                     <Button
                         variant="profile"
                         onClick={() => navigate('/account')}
-                        className="group flex items-center gap-2 bg-zinc-900 hover:bg-zinc-800 py-1.5 px-3 rounded-full border border-zinc-800 transition-all"
+                        className="group flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 py-1.5 px-3 rounded-full border border-zinc-700 transition-all"
                     >
                         <div className="w-6 h-6 rounded-md overflow-hidden border border-rose-500/30">
                             <img

@@ -57,19 +57,19 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
                          placeholder={placeholder}
                          required={required}
                          onChange={onChange}
-                         className={`w-full bg-zinc-900 text-white rounded-xl py-3 px-4 border transition outline-none [color-scheme:dark]
-                             ${icon ? 'pl-12' : ''}
-                             ${isPassword ? 'pr-12' : ''}
-                             ${errorMessage ? 'border-red-500' : 'border-zinc-800 focus:border-red-600'}
-                             [&::-webkit-calendar-picker-indicator]:filter
-                             [&::-webkit-calendar-picker-indicator]:invert
-                             [&::-webkit-calendar-picker-indicator]:sepia
-                             [&::-webkit-calendar-picker-indicator]:saturate-[500%]
-                             [&::-webkit-calendar-picker-indicator]:hue-rotate-[-10deg]
-                             [&::-webkit-calendar-picker-indicator]:opacity-90
-                             [&::-webkit-calendar-picker-indicator]:cursor-pointer
-                             ${inputClassName}
-                         `}
+                         className={`w-full bg-zinc-800 text-zinc-100 rounded-xl py-3 px-4 border transition outline-none placeholder:text-zinc-500
+                              ${icon ? 'pl-12' : ''}
+                              ${isPassword ? 'pr-12' : ''}
+                              ${errorMessage ? 'border-red-500' : 'border-zinc-700 focus:border-red-600'}
+                              [&::-webkit-calendar-picker-indicator]:filter
+                              [&::-webkit-calendar-picker-indicator]:invert
+                              [&::-webkit-calendar-picker-indicator]:sepia
+                              [&::-webkit-calendar-picker-indicator]:saturate-[500%]
+                              [&::-webkit-calendar-picker-indicator]:hue-rotate-[-10deg]
+                              [&::-webkit-calendar-picker-indicator]:opacity-90
+                              [&::-webkit-calendar-picker-indicator]:cursor-pointer
+                              ${inputClassName}
+                          `}
                          {...props}
                      />
 

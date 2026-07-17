@@ -36,8 +36,8 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
                      value={value}
                      required={required}
                      onChange={onChange}
-                     className={`bg-zinc-900 text-white rounded-xl px-4 py-3 border transition appearance-none cursor-pointer outline-none
-                         ${errorMessage ? 'border-red-500' : 'border-zinc-800 focus:border-red-500'}
+                     className={`bg-zinc-800 text-zinc-100 rounded-xl px-4 py-3 border transition appearance-none cursor-pointer outline-none
+                         ${errorMessage ? 'border-red-500' : 'border-zinc-700 focus:border-red-500'}
                          ${selectClassName}
                      `}
                      {...props}
