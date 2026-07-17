@@ -152,7 +152,7 @@ function VideosPage() {
                         <Film size={28} />
                     </div>
                     <div>
-                        <h1 className="text-4xl font-black text-white tracking-tight">Усі відео</h1>
+                        <h1 className="text-4xl font-black text-zinc-100 tracking-tight">Усі відео</h1>
                         <p className="text-zinc-500 mt-1">Керування відеоматеріалами на платформі</p>
                     </div>
                 </div>

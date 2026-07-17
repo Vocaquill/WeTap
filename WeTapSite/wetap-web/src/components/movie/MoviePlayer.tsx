@@ -190,7 +190,7 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                     onClick={togglePlay}
                 >
                     <div className="w-20 h-20 bg-[#FF2D7A] rounded-full flex items-center justify-center shadow-2xl transform hover:scale-110 transition-transform">
-                        <Play fill="white" size={40} className="ml-1" />
+                        <Play fill="white" stroke="none" size={40} className="ml-1" />
                     </div>
                 </div>
             )}
@@ -258,8 +258,8 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
                                 </Button>
 
                                 {showSettings && (
-                                    <div className="absolute bottom-full right-0 mb-4 bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow-2xl min-w-[120px]">
-                                        <div className="p-2 border-b border-zinc-800 text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                                    <div className="absolute bottom-full right-0 mb-4 bg-zinc-900 border border-zinc-700 rounded-xl overflow-hidden shadow-2xl min-w-[120px]">
+                                        <div className="p-2 border-b border-zinc-700 text-xs font-bold text-zinc-300 uppercase tracking-wider">
                                             Якість
                                         </div>
                                         {qualities.map((q) => (
