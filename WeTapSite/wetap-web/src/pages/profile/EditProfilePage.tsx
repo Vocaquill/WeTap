@@ -119,7 +119,7 @@ function EditProfilePage() {
                             setFormData({...formData, firstName: e.target.value})
                         }
                         icon={<User className="text-zinc-400 dark:text-zinc-600" size={20}/>}
-                        inputClassName="w-full bg-white/40 dark:bg-black/40 rounded-2xl py-3.5"
+                        inputClassName="w-full bg-zinc-800 rounded-2xl py-3.5"
                         labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
                     />
 
@@ -132,7 +132,7 @@ function EditProfilePage() {
                             setFormData({...formData, lastName: e.target.value})
                         }
                         icon={<User className="text-zinc-400 dark:text-zinc-600" size={20}/>}
-                        inputClassName="w-full bg-white/40 dark:bg-black/40 rounded-2xl py-3.5"
+                        inputClassName="w-full bg-zinc-800 rounded-2xl py-3.5"
                         labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
                     />
 
@@ -146,7 +146,7 @@ function EditProfilePage() {
                             setFormData({...formData, email: e.target.value})
                         }
                         icon={<Mail className="text-zinc-400 dark:text-zinc-600" size={20}/>}
-                        inputClassName="w-full bg-white/40 dark:bg-black/40 rounded-2xl py-3.5"
+                        inputClassName="w-full bg-zinc-800 rounded-2xl py-3.5"
                         labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
                     />
 
