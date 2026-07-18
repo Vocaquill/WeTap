@@ -49,7 +49,7 @@ export function BaseModal({
                                         {headerIcon}
                                     </div>
                                 )}
-                                <h3 className="text-2xl font-black text-white uppercase italic tracking-tight">
+                                <h3 className="text-2xl font-black text-theme-text uppercase italic tracking-tight">
                                     {title}
                                 </h3>
                             </div>

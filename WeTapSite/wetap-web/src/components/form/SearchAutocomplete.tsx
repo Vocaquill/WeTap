@@ -1,16 +1,22 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Search } from "lucide-react";
 import { useAutocompleteVideosQuery } from "../../services/api/apiVideos";
 import { APP_ENV } from "../../env";
 import { Button } from "./Button";
 
 export function SearchAutocomplete() {
-    const [searchVal, setSearchVal] = useState("");
+    const [searchParams] = useSearchParams();
+    const query = searchParams.get('q') || '';
+    const [searchVal, setSearchVal] = useState(query);
     const [debouncedVal, setDebouncedVal] = useState("");
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setSearchVal(query);
+    }, [query]);
 
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -64,7 +70,7 @@ export function SearchAutocomplete() {
                             setIsOpen(true);
                         }}
                         onFocus={() => setIsOpen(true)}
-                        className="w-full bg-zinc-900/90 border border-zinc-800/60 rounded-xl py-2 pl-5 pr-12 text-sm font-medium focus:outline-none focus:border-rose-500/50 focus:bg-zinc-900 transition-all text-zinc-100 placeholder-zinc-500"
+                        className="w-full bg-zinc-800/90 border border-zinc-700/60 rounded-xl py-2 pl-5 pr-12 text-sm font-medium focus:outline-none focus:border-rose-500/50 focus:bg-zinc-800 transition-all text-zinc-100 placeholder-zinc-500"
                     />
                     <Button type="submit" variant="iconInline" className="absolute right-4 top-2.5">
                         <Search size={20} strokeWidth={2.5} />
@@ -73,7 +79,7 @@ export function SearchAutocomplete() {
             </form>
 
             {isOpen && searchVal.trim() && suggestions.length > 0 && (
-                <div className="absolute left-0 right-0 mt-2 bg-zinc-950 border border-zinc-800/80 rounded-xl shadow-2xl overflow-hidden z-[100] max-h-96 overflow-y-auto">
+                <div className="absolute left-0 right-0 mt-2 bg-zinc-800 border border-zinc-700/80 rounded-xl shadow-2xl overflow-hidden z-[100] max-h-96 overflow-y-auto">
                     {suggestions.map((video) => (
                         <div
                             key={video.slug}

@@ -71,7 +71,7 @@ function NotFoundPage() {
                         </Button>
 
                         <Button
-                            variant="secondary"
+                            variant="outline"
                             size="xl"
                             className="w-full sm:w-auto"
                             icon={<ArrowLeft size={20} />}

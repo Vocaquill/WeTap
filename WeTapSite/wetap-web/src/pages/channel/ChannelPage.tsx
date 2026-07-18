@@ -69,7 +69,7 @@ export default function ChannelPage() {
                         />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-bold text-white mb-1">{channel.name}</h1>
+                        <h1 className="text-3xl font-bold text-zinc-100 mb-1">{channel.name}</h1>
                         <div className="flex items-center gap-2 text-sm text-zinc-400">
                             <span className="font-medium text-zinc-300">@{channel.nickName}</span>
                             <span>•</span>
@@ -134,7 +134,7 @@ export default function ChannelPage() {
             {activeTab === 'Home' && (
                 <div className="space-y-8">
                     {/* Тут можна зробити кастомну вибірку найпопулярніших відео, або просто показати сітку */}
-                    <h2 className="text-xl font-bold text-white">Uploads</h2>
+                    <h2 className="text-xl font-bold text-zinc-100">Uploads</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-4 gap-y-8">
                         {videosData?.items.slice(0, 5).map((video) => (
                             <VideoCard key={video.id} video={video} />

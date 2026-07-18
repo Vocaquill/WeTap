@@ -72,7 +72,7 @@ function UsersPage() {
         <div className="p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-4xl font-black text-white tracking-tight">Користувачі</h1>
+                    <h1 className="text-4xl font-black text-zinc-100 tracking-tight">Користувачі</h1>
                     <p className="text-zinc-500 mt-1">Керування користувачами та їх відображенням</p>
                 </div>
 

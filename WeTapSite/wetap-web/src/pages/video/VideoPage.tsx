@@ -176,14 +176,22 @@ function VideoPage() {
                             {(video.genres?.length > 0 || video.tags?.length > 0) && (
                                 <div className="flex flex-wrap gap-2 mb-4 items-center">
                                     {video.genres?.map((g) => (
-                                        <span key={`genre-${g.id}`} className="text-blue-400 text-sm font-medium hover:underline cursor-pointer">
-                                            #{g.name.replace(/\s+/g, '')}
-                                        </span>
+                                        <Link
+                                            to={`/?genreId=${g.id}`}
+                                            key={`genre-${g.id}`}
+                                            className="text-zinc-300 text-xs bg-zinc-700/50 border border-zinc-600 px-2.5 py-1 rounded-full hover:bg-zinc-600 cursor-pointer transition-colors"
+                                        >
+                                            {g.name}
+                                        </Link>
                                     ))}
                                     {video.tags?.map((t) => (
-                                        <span key={`tag-${t.id}`} className="text-zinc-300 text-xs bg-zinc-700/50 border border-zinc-600 px-2.5 py-1 rounded-full hover:bg-zinc-600 cursor-pointer transition-colors">
-                                            {t.name}
-                                        </span>
+                                        <Link
+                                            to={`/search?q=${encodeURIComponent(t.name)}`}
+                                            key={`tag-${t.id}`}
+                                            className="text-blue-400 text-sm font-medium hover:underline cursor-pointer"
+                                        >
+                                            #{t.name.replace(/\s+/g, '')}
+                                        </Link>
                                     ))}
                                 </div>
                             )}
@@ -248,7 +256,9 @@ function VideoPage() {
                                         <h4 className="text-sm font-bold line-clamp-2 group-hover:text-red-500 transition-colors">
                                             {item.title}
                                         </h4>
-                                        <p className="text-xs text-zinc-400">Назва каналу</p>
+                                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                                            {item.channel?.name || "Назва каналу"}
+                                        </p>
                                         <div className="text-[11px] text-zinc-500 flex items-center gap-1">
                                             <span>{item.dateCreated}</span>
                                         </div>
