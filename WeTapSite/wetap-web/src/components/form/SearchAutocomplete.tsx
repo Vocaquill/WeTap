@@ -1,16 +1,22 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Search } from "lucide-react";
 import { useAutocompleteVideosQuery } from "../../services/api/apiVideos";
 import { APP_ENV } from "../../env";
 import { Button } from "./Button";
 
 export function SearchAutocomplete() {
-    const [searchVal, setSearchVal] = useState("");
+    const [searchParams] = useSearchParams();
+    const query = searchParams.get('q') || '';
+    const [searchVal, setSearchVal] = useState(query);
     const [debouncedVal, setDebouncedVal] = useState("");
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setSearchVal(query);
+    }, [query]);
 
     useEffect(() => {
         const handler = setTimeout(() => {
