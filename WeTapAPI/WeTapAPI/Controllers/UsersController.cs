@@ -63,6 +63,7 @@ public class UsersController(IMediator mediator) : ControllerBase
     {
         var command = new DeleteUserCommand(model.Id);
         await mediator.Send(command);
+
         return Ok();
     }
 }
