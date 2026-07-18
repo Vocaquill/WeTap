@@ -235,7 +235,7 @@ export default function SearchPage() {
                                                         className="w-full h-full object-cover"
                                                     />
                                                 </Link>
-                                                <Link to={`/channel/${video.channel?.id}`} className="font-bold text-zinc-300 hover:text-zinc-50 text-sm transition-colors cursor-pointer truncate">
+                                                <Link to={`/channel/${video.channel?.id}`} className="font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 text-sm transition-colors cursor-pointer truncate">
                                                     {video.channel?.name}
                                                 </Link>
                                                 <CheckCircle2 size={13} className="text-zinc-500 shrink-0" fill="currentColor" />

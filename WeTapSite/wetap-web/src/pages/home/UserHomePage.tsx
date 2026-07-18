@@ -83,7 +83,7 @@ function UserHomePage() {
                         <div className="flex items-center gap-2 relative z-20 w-fit">
                             <Link
                                 to={`/channel/${heroVideo.channel?.id}`} // або куди веде клік на канал
-                                className="font-bold text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                                className="font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors cursor-pointer"
                             >
                                 {heroVideo.channel?.name || 'Unknown Channel'}
                             </Link>

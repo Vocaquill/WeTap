@@ -256,7 +256,9 @@ function VideoPage() {
                                         <h4 className="text-sm font-bold line-clamp-2 group-hover:text-red-500 transition-colors">
                                             {item.title}
                                         </h4>
-                                        <p className="text-xs text-zinc-400">Назва каналу</p>
+                                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                                            {item.channel?.name || "Назва каналу"}
+                                        </p>
                                         <div className="text-[11px] text-zinc-500 flex items-center gap-1">
                                             <span>{item.dateCreated}</span>
                                         </div>
