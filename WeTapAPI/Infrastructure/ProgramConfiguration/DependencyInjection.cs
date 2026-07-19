@@ -18,6 +18,9 @@ using Microsoft.AspNetCore.Http.Features;
 using System.Globalization;
 using Hangfire;
 using Hangfire.PostgreSql;
+using HeyRed.ImageSharp.Heif.Formats.Avif;
+using SixLabors.ImageSharp;
+
 
 namespace Infrastructure.ProgramConfiguration;
 
@@ -55,6 +58,8 @@ public static class DependencyInjection
         services.AddSingleton<IVideoRecommendationService, VideoRecommendationService>();
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
         services.AddScoped<VideoProcessingJob>();
+
+        Configuration.Default.Configure(new AvifConfigurationModule());
 
         // DB
         var connectionString = configuration.GetConnectionString("DefaultConnection");
