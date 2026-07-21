@@ -96,8 +96,6 @@ export default function SearchPage() {
         setSearchParams(nextParams);
     };
 
-    const filterSelectRowStyles = "bg-zinc-800/60 hover:bg-zinc-800 text-zinc-200 border-none rounded-full py-2 px-4 text-sm font-medium transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-zinc-700 appearance-none pr-8";
-
     return (
         <PageTransition>
             <div className="min-h-screen bg-theme-bg text-zinc-100 pb-16 px-4 md:px-8">
@@ -112,7 +110,7 @@ export default function SearchPage() {
                             { id: 'all', name: 'Жанр: Всі' },
                             ...(genresData?.items.map((g) => ({ id: g.id, name: g.name })) || [])
                         ]}
-                        selectClassName={filterSelectRowStyles}
+                        variant="filter"
                     />
 
                     <SelectField
@@ -123,7 +121,7 @@ export default function SearchPage() {
                             { id: 'all', name: 'Особливості: Будь-які' },
                             ...(tagsData?.items.map((t) => ({ id: t.id, name: t.name })) || [])
                         ]}
-                        selectClassName={filterSelectRowStyles}
+                        variant="filter"
                     />
 
                     <SelectField
@@ -136,7 +134,7 @@ export default function SearchPage() {
                             { id: 'views', name: 'Сортувати за: Переглядами' },
                             { id: 'likes', name: 'Сортувати за: Лайками' }
                         ]}
-                        selectClassName={filterSelectRowStyles}
+                        variant="filter"
                     />
 
                     <div className="flex items-center gap-3 bg-zinc-800/60 rounded-full py-1.5 px-4 text-sm font-medium text-zinc-200">
