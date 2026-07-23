@@ -55,7 +55,7 @@ function UserHomePage() {
         <div className="min-h-screen bg-theme-bg text-zinc-100 pb-12">
 
             {heroVideo && (
-                <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8 pt-2 relative group">
+                <section className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-8 items-center mb-8 pt-2 relative group px-3 sm:px-4 lg:px-0">
                     <Link
                         to={`/video/${heroVideo.slug}`}
                         className="absolute inset-0 z-10"
@@ -75,8 +75,8 @@ function UserHomePage() {
                         </div>
                     </div>
 
-                    <div className="lg:col-span-5 space-y-4 pr-4">
-                        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-zinc-100">
+                    <div className="lg:col-span-5 space-y-2 sm:space-y-4 px-2 sm:px-4 lg:px-0 lg:pr-4">
+                        <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-zinc-100">
                             {heroVideo.title}
                         </h1>
 
