@@ -13,7 +13,7 @@ function Header() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const isHomePage = location.pathname === '/';
+    const isSearchPage = location.pathname.startsWith('/search');
     const { user } = useAppSelector(state => state.auth);
 
     useEffect(() => {
@@ -48,7 +48,7 @@ function Header() {
             className={`h-14 sticky top-0 z-[40] px-3 sm:px-4 md:px-6 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-theme-bg/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'}`}
         >
             <div className="flex items-center min-w-0 sm:min-w-[50px]">
-                {!isHomePage && (
+                {isSearchPage && (
                     <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400 hidden md:block">
                         Результати <span className="text-rose-500">пошуку</span>
                     </h2>
