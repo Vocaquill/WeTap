@@ -39,6 +39,11 @@ public class GoogleLoginHandler(UserManager<UserEntity> userManager,
         {
             var userLoginGoogle = await userManager.FindByLoginAsync("Google", googleUser.GoogleId);
 
+            if (userLoginGoogle!.IsDeleted)
+            {
+                throw new Exception("Цей користувач видалений. Будь ласка, зверніться в підтримку");
+            }
+
             if (userLoginGoogle == null)
             {
                 await userManager.AddLoginAsync(existingUser, new UserLoginInfo("Google", googleUser.GoogleId, "Google"));
