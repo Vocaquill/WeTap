@@ -386,16 +386,17 @@ export function VideoProcessingModal({ trackingId, videoSlug }: VideoProcessingM
             closable={false}
             centered
             styles={{
-                mask: { backdropFilter: "blur(10px)", backgroundColor: "rgba(0,0,0,0.8)" },
+                mask: { backdropFilter: "blur(8px)", backgroundColor: "rgba(0, 0, 0, 0.6)" },
             }}
-            width={600}
+            width="100%"
+            style={{ maxWidth: 600, padding: "0 12px", margin: "0 auto" }}
             modalRender={() => (
-                <div className="bg-[#121213] border border-zinc-800 rounded-[32px] p-8 shadow-2xl overflow-hidden">
-                    <div className="flex items-center justify-between mb-8 pb-4 border-b border-zinc-800">
-                        <h2 className="text-white text-xl font-black uppercase tracking-tight">
+                <div className="bg-theme-bg border border-zinc-800 rounded-2xl sm:rounded-[32px] p-5 sm:p-8 shadow-2xl overflow-hidden text-zinc-100 w-full max-w-[600px] mx-auto">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 pb-4 border-b border-zinc-800 gap-3">
+                        <h2 className="text-zinc-100 text-base sm:text-xl font-black uppercase tracking-tight leading-snug">
                             Завантаження та обробка відео
                         </h2>
-                        <div className="flex items-center gap-2 px-3 py-1 bg-zinc-900 rounded-full border border-zinc-800">
+                        <div className="flex items-center gap-2 px-3 py-1 bg-zinc-900 rounded-full border border-zinc-800 self-start sm:self-auto shrink-0">
                             <div className={`w-2 h-2 rounded-full ${isLive ? "bg-green-500 shadow-[0_0_10px_#22c55e]" : "bg-amber-500 animate-pulse"}`} />
                             <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
                                 {isLive ? "Live" : "Polling"}
@@ -404,53 +405,53 @@ export function VideoProcessingModal({ trackingId, videoSlug }: VideoProcessingM
                     </div>
 
                     {progress ? (
-                        <div className="space-y-8">
+                        <div className="space-y-6 sm:space-y-8">
                             <div className="relative">
                                 <Progress
                                     percent={Math.round(progress.percentage)}
                                     status={isCompleted ? "success" : "active"}
                                     strokeColor={isCompleted ? "#22c55e" : "#dc2626"}
-                                    trailColor="#18181b"
-                                    format={(percent) => <span className="text-white text-lg font-black tracking-tighter">{percent}%</span>}
+                                    trailColor="rgb(var(--color-zinc-800))"
+                                    format={(percent) => <span className="text-zinc-100 text-base sm:text-lg font-black tracking-tighter">{percent}%</span>}
                                     strokeWidth={14}
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="p-4 bg-zinc-900/40 rounded-2xl border border-zinc-800/50 backdrop-blur-sm">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                <div className="p-3.5 sm:p-4 bg-zinc-900/60 rounded-xl sm:rounded-2xl border border-zinc-800/80 backdrop-blur-sm">
                                     <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest mb-1">Статус процесу</p>
-                                    <p className="text-sm font-bold text-zinc-100 flex items-center gap-2">
-                                        <span className="w-1.5 h-1.5 bg-red-600 rounded-full" />
-                                        {progress.status}
+                                    <p className="text-xs sm:text-sm font-bold text-zinc-100 flex items-center gap-2">
+                                        <span className="w-1.5 h-1.5 bg-red-600 rounded-full shrink-0" />
+                                        <span className="truncate">{progress.status}</span>
                                     </p>
                                 </div>
-                                <div className="p-4 bg-zinc-900/40 rounded-2xl border border-zinc-800/50 backdrop-blur-sm">
+                                <div className="p-3.5 sm:p-4 bg-zinc-900/60 rounded-xl sm:rounded-2xl border border-zinc-800/80 backdrop-blur-sm">
                                     <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest mb-1">Залишилось часу</p>
-                                    <p className="text-sm font-bold text-zinc-100 italic">
+                                    <p className="text-xs sm:text-sm font-bold text-zinc-100 italic truncate">
                                         {progress.estimatedTimeRemaining || "Calculating..."}
                                     </p>
                                 </div>
                             </div>
 
                             {isCompleted && (
-                                <div className="p-5 bg-green-500/5 border border-green-500/20 rounded-2xl text-green-500 text-sm text-center font-bold animate-in fade-in zoom-in duration-500">
-                                    <div className="mb-1 flex justify-center">
-                                        <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-black">✓</div>
+                                <div className="p-4 sm:p-5 bg-green-500/10 border border-green-500/30 rounded-xl sm:rounded-2xl text-green-600 dark:text-green-400 text-xs sm:text-sm text-center font-bold animate-in fade-in zoom-in duration-500">
+                                    <div className="mb-1.5 flex justify-center">
+                                        <div className="w-7 h-7 sm:w-8 sm:h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-md">✓</div>
                                     </div>
                                     Відео успішно завантажено та оброблено!
                                     <br />
-                                    <span className="text-zinc-500 font-medium text-xs">Перенаправлення на сторінку перегляду...</span>
+                                    <span className="text-zinc-500 font-medium text-[11px] sm:text-xs">Перенаправлення на сторінку перегляду...</span>
                                 </div>
                             )}
                         </div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center py-12 space-y-6">
+                        <div className="flex flex-col items-center justify-center py-8 sm:py-12 space-y-4 sm:space-y-6">
                             <div className="relative">
-                                <div className="w-16 h-16 border-4 border-zinc-800 rounded-full" />
-                                <div className="absolute top-0 left-0 w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin" />
+                                <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-zinc-800 rounded-full" />
+                                <div className="absolute top-0 left-0 w-12 h-12 sm:w-16 sm:h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin" />
                             </div>
-                            <div className="text-center">
-                                <p className="text-white font-bold tracking-tight">Ініціалізація завантаження</p>
+                            <div className="text-center px-2">
+                                <p className="text-zinc-100 font-bold tracking-tight text-sm sm:text-base">Ініціалізація завантаження</p>
                                 <p className="text-zinc-500 text-xs mt-1">Очікуємо відповідь від сервера...</p>
                             </div>
                         </div>

@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import {useNavigate, useLocation} from 'react-router-dom';
-import { Bell, Mic, Settings, Plus, Users } from 'lucide-react';
+import { Plus, Users } from 'lucide-react';
 import { useAppSelector } from "../../store/index";
 import { APP_ENV } from "../../env/index";
 import { Button } from '../form/Button';
@@ -13,7 +13,7 @@ function Header() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const isHomePage = location.pathname === '/';
+    const isSearchPage = location.pathname.startsWith('/search');
     const { user } = useAppSelector(state => state.auth);
 
     useEffect(() => {
@@ -45,44 +45,30 @@ function Header() {
 
     return (
         <header
-            className={`h-14 sticky top-0 z-[40] px-4 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-theme-bg/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'}`}
+            className={`h-14 sticky top-0 z-[40] px-3 sm:px-4 md:px-6 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-theme-bg/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'}`}
         >
-            <div className="flex items-center min-w-[50px]">
-                {!isHomePage && (
+            <div className="flex items-center min-w-0 sm:min-w-[50px]">
+                {isSearchPage && (
                     <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400 hidden md:block">
                         Результати <span className="text-rose-500">пошуку</span>
                     </h2>
                 )}
             </div>
 
-            <div className="flex-1 max-w-xl mx-4 flex items-center gap-2">
+            <div className="flex-grow max-w-[200px] sm:max-w-xs md:max-w-md lg:max-w-xl mx-2 sm:mx-4">
                 <SearchAutocomplete />
-
-                <Button type="button" variant="iconFilled">
-                    <Mic size={20} />
-                </Button>
             </div>
 
-            <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1 bg-zinc-800 p-0.5 rounded-full border border-zinc-700/40">
-                    <Button variant="icon"
-                            className="relative hover:bg-zinc-800/50 rounded-full p-2 text-zinc-300 hover:text-white transition-all">
-                        <Bell size={20}/>
-                        <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-rose-500 rounded-full"></span>
-                    </Button>
+            <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                <Button 
+                    variant="icon" 
+                    onClick={() => navigate('/video/add')}
+                    className="hidden sm:flex items-center justify-center bg-zinc-800 p-2.5 rounded-full border border-zinc-700/40 text-zinc-300 hover:text-white hover:bg-zinc-700 transition-all"
+                >
+                    <Plus size={20}/>
+                </Button>
 
-                    <Button variant="icon"
-                            className="hover:bg-zinc-800/50 rounded-full p-2 text-zinc-300 hover:text-white transition-all">
-                        <Settings size={20}/>
-                    </Button>
-
-                    <Button variant="icon" onClick={() => navigate('/video/add')}
-                            className="hover:bg-zinc-800/50 rounded-full p-2 text-zinc-300 hover:text-white transition-all">
-                        <Plus size={20}/>
-                    </Button>
-                </div>
-
-                <div className="relative">
+                <div className="relative hidden md:block">
                     <select
                         value={activeTheme}
                         onChange={handleThemeChange}
@@ -105,7 +91,7 @@ function Header() {
                 <Button
                     variant="icon"
                     onClick={handleMyChannelClick}
-                    className="flex items-center justify-center bg-zinc-800 p-3 rounded-full border border-zinc-700/40 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700 transition-all"
+                    className="hidden lg:flex items-center justify-center bg-zinc-800 p-3 rounded-full border border-zinc-700/40 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700 transition-all"
                 >
                     <Users size={20}/>
                 </Button>
@@ -114,23 +100,23 @@ function Header() {
                     <Button
                         variant="profile"
                         onClick={() => navigate('/account')}
-                        className="group flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 py-1.5 px-3 rounded-full border border-zinc-700 transition-all"
+                        className="group flex items-center gap-0 sm:gap-2 bg-zinc-800 hover:bg-zinc-700 p-1 sm:py-1.5 sm:px-3 rounded-full border border-zinc-700 transition-all"
                     >
-                        <div className="w-6 h-6 rounded-md overflow-hidden border border-rose-500/30">
+                        <div className="w-7 h-7 sm:w-6 sm:h-6 rounded-full overflow-hidden border border-rose-500/30">
                             <img
                                 src={user.image ? `${APP_ENV.IMAGES_50_URL}${user.image}` : '/images/user/default.png'}
                                 alt={user.name}
                                 className="w-full h-full object-cover"
                             />
                         </div>
-                        <span className="text-xs font-bold text-zinc-200 group-hover:text-white transition-colors">
+                        <span className="text-xs font-bold text-zinc-200 group-hover:text-white transition-colors hidden sm:inline">
                             {user.name}
                         </span>
                     </Button>
                 ) : (
                     <button
                         onClick={() => navigate('/login')}
-                        className="relative text-xs font-extrabold tracking-wider uppercase px-5 py-2.5 rounded-full text-white overflow-hidden transition-all duration-300 active:scale-95 group shadow-[0_0_15px_rgba(236,72,153,0.15)] hover:shadow-[0_0_25px_rgba(236,72,153,0.35)]"
+                        className="relative text-[10px] sm:text-xs font-extrabold tracking-wider uppercase px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-white overflow-hidden transition-all duration-300 active:scale-95 group shadow-[0_0_15px_rgba(236,72,153,0.15)] hover:shadow-[0_0_25px_rgba(236,72,153,0.35)]"
                         style={{
                             background: 'rgb(var(--color-bg))',
                             padding: '3px',
@@ -138,7 +124,7 @@ function Header() {
                         }}
                     >
                         <span
-                            className="block px-5 py-2 rounded-full bg-theme-bg text-zinc-200 group-hover:text-white group-hover:bg-theme-bg/80 transition-all duration-300">
+                            className="block px-3 py-1.5 sm:px-5 sm:py-2 rounded-full bg-theme-bg text-zinc-200 group-hover:text-white group-hover:bg-theme-bg/80 transition-all duration-300">
                           Sign In
                         </span>
                     </button>

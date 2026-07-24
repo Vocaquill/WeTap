@@ -93,7 +93,7 @@ export function SearchAutocomplete() {
                                     className="w-full h-full object-cover"
                                 />
                             </div>
-                            <span className="text-sm font-medium text-zinc-200 truncate hover:text-white">
+                            <span className="text-sm font-medium text-zinc-200 truncate hover:text-zinc-50">
                                 {video.title}
                             </span>
                         </div>
