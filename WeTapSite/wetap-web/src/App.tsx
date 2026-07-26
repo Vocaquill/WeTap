@@ -38,6 +38,8 @@ import { useEffect, useState } from 'react';
 import { useRefreshTokenMutation } from './services/api/apiAccount';
 import { applyTheme, getActiveTheme } from './themes';
 
+import ScrollToTop from './components/layout/ScrollToTop.tsx';
+
 function App() {
     const [refreshToken] = useRefreshTokenMutation();
     const [isCheckingAuth, setIsCheckingAuth] = useState(true);
@@ -70,7 +72,9 @@ function App() {
     }
 
     return (
-        <Routes>
+        <>
+            <ScrollToTop />
+            <Routes>
             <Route element={<AppLayout />}>
                 <Route path="/" element={<UserHomePage />} />
                 <Route path="/video/:slug" element={<VideoPage />} />
@@ -116,6 +120,7 @@ function App() {
 
             <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </>
     );
 }
 
