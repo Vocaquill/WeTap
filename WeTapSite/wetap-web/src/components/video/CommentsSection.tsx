@@ -132,6 +132,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ videoId, curre
                             comment={comment}
                             videoId={videoId}
                             currentUser={currentUser}
+                            depth={0}
                         />
                     ))}
                 </div>
@@ -162,9 +163,10 @@ interface CommentItemProps {
         image: string;
     } | null;
     onModified?: () => void;
+    depth?: number;
 }
 
-const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser, onModified }) => {
+const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser, onModified, depth = 0 }) => {
     const isOwner = currentUser && currentUser.id === comment.userId;
     const [isEditing, setIsEditing] = useState(false);
     const [editText, setEditText] = useState(comment.content);
@@ -329,7 +331,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
 
                 {!isEditing && (
                     <div className="flex items-center gap-4 mt-2">
-                        {currentUser && (
+                        {currentUser && depth < 2 && (
                             <button
                                 onClick={() => setIsReplying(!isReplying)}
                                 className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-[#FF2D7A] transition-colors"
@@ -419,6 +421,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
                                 videoId={videoId}
                                 currentUser={currentUser}
                                 onModified={() => fetchReplies(1)}
+                                depth={depth + 1}
                             />
                         ))}
 

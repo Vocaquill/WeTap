@@ -75,51 +75,51 @@ function App() {
         <>
             <ScrollToTop />
             <Routes>
-            <Route element={<AppLayout />}>
-                <Route path="/" element={<UserHomePage />} />
-                <Route path="/video/:slug" element={<VideoPage />} />
-                <Route path="/search" element={<SearchPage />} />
-                <Route path="/channel/:slug" element={<ChannelPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                <Route path="/reset-password" element={<ResetPasswordPage />} />
+                <Route element={<AppLayout />}>
+                    <Route path="/" element={<UserHomePage />} />
+                    <Route path="/video/:slug" element={<VideoPage />} />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="/channel/:slug" element={<ChannelPage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                    <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-                <Route element={<RequireLogin />}>
-                    <Route path="/account" element={<ProfilePage />} />
-                    <Route path="/edit-account" element={<EditProfilePage />} />
-                    <Route path="/channel/create" element={<CreateChannelPage />} />
+                    <Route element={<RequireLogin />}>
+                        <Route path="/account" element={<ProfilePage />} />
+                        <Route path="/edit-account" element={<EditProfilePage />} />
+                        <Route path="/channel/create" element={<CreateChannelPage />} />
+                    </Route>
+
+                    <Route element={<RequireAuthor />}>
+                        <Route path="/video/add" element={<CreateVideoPage />} />
+                        <Route path="/video/edit/:id" element={<EditVideoPage />} />
+                    </Route>
+
                 </Route>
 
                 <Route element={<RequireAuthor />}>
-                    <Route path="/video/add" element={<CreateVideoPage />} />
-                    <Route path="/video/edit/:id" element={<EditVideoPage />} />
+                    <Route path="/studio" element={<StudioLayout />}>
+                        <Route index element={<Navigate to="review" replace />} />
+                        <Route path="review" element={<StudioReviewPage />} />
+                        <Route path="content" element={<StudioContentPage />} />
+                        <Route path="analytics" element={<StudioAnalyticsPage />} />
+                    </Route>
                 </Route>
 
-            </Route>
-
-            <Route element={<RequireAuthor />}>
-                <Route path="/studio" element={<StudioLayout />}>
-                    <Route index element={<Navigate to="review" replace />} />
-                    <Route path="review" element={<StudioReviewPage />} />
-                    <Route path="content" element={<StudioContentPage />} />
-                    <Route path="analytics" element={<StudioAnalyticsPage />} />
+                <Route element={<RequireAdmin />}>
+                    <Route path="/admin" element={<AdminLayout />}>
+                        <Route index element={<Dashboard />} />
+                        <Route path="videos" element={<VideosPage />} />
+                        <Route path="genres" element={<GenresPage />} />
+                        <Route path="users" element={<UsersPage />} />
+                        <Route path="tags" element={<TagsPage />} />
+                        <Route path="languages" element={<LanguagesPage />} />
+                    </Route>
                 </Route>
-            </Route>
 
-            <Route element={<RequireAdmin />}>
-                <Route path="/admin" element={<AdminLayout />}>
-                    <Route index element={<Dashboard />} />
-                    <Route path="videos" element={<VideosPage />} />
-                    <Route path="genres" element={<GenresPage />} />
-                    <Route path="users" element={<UsersPage />} />
-                    <Route path="tags" element={<TagsPage />} />
-                    <Route path="languages" element={<LanguagesPage />} />
-                </Route>
-            </Route>
-
-            <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+                <Route path="*" element={<NotFoundPage />} />
+            </Routes>
         </>
     );
 }
