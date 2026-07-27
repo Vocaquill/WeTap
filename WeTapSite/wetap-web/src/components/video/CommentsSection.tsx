@@ -60,7 +60,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ videoId, curre
     };
 
     return (
-        <div className="mt-8 border-t border-zinc-800 pt-6">
+        <div className="mt-8 border-t border-zinc-800 pt-6 overflow-hidden">
             <div className="flex items-center gap-2 mb-6">
                 <MessageSquare className="text-[#FF2D7A]" size={22} />
                 <h3 className="text-lg font-bold">
@@ -69,7 +69,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ videoId, curre
             </div>
 
             {currentUser ? (
-                <form onSubmit={handleCreateComment} className="flex gap-3 items-start mb-8">
+                <form onSubmit={handleCreateComment} className="flex gap-2 sm:gap-3 items-start mb-8">
                     <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-white/10">
                         <img
                             src={currentUser.image ? `${APP_ENV.IMAGES_200_URL}${currentUser.image}` : "/images/user/default.jpg"}
@@ -281,7 +281,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
     };
 
     return (
-        <div className="flex gap-3 group/item">
+        <div className="flex gap-2 sm:gap-3 group/item min-w-0 overflow-hidden">
             <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-white/10">
                 <img
                     src={comment.userImage ? `${APP_ENV.IMAGES_200_URL}${comment.userImage}` : "/images/user/default.jpg"}
@@ -330,7 +330,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
                 )}
 
                 {!isEditing && (
-                    <div className="flex items-center gap-4 mt-2">
+                    <div className="flex items-center flex-wrap gap-x-4 gap-y-1 mt-2">
                         {currentUser && depth < 2 && (
                             <button
                                 onClick={() => setIsReplying(!isReplying)}
@@ -364,38 +364,42 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
                 )}
 
                 {isReplying && (
-                    <form onSubmit={handleReply} className="flex gap-3 items-start mt-4 mb-2">
-                        <div className="w-8 h-8 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-white/10">
-                            <img
-                                src={currentUser?.image ? `${APP_ENV.IMAGES_200_URL}${currentUser.image}` : "/images/user/default.jpg"}
-                                alt={currentUser?.name}
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                        <div className="flex-1 relative">
-                            <textarea
-                                value={replyText}
-                                onChange={(e) => setReplyText(e.target.value)}
-                                placeholder="Написати відповідь..."
-                                rows={1}
-                                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-[#FF2D7A] transition-all resize-none pr-12"
-                            />
+                    <div className="mt-4 mb-2">
+                        <form onSubmit={handleReply} className="flex gap-2 items-start">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-white/10">
+                                <img
+                                    src={currentUser?.image ? `${APP_ENV.IMAGES_200_URL}${currentUser.image}` : "/images/user/default.jpg"}
+                                    alt={currentUser?.name}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                            <div className="flex-1 min-w-0 relative">
+                                <textarea
+                                    value={replyText}
+                                    onChange={(e) => setReplyText(e.target.value)}
+                                    placeholder="Написати відповідь..."
+                                    rows={1}
+                                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-[#FF2D7A] transition-all resize-none pr-10"
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={isCreatingReply || !replyText.trim()}
+                                    className="absolute right-2.5 bottom-2 text-zinc-400 hover:text-[#FF2D7A] disabled:text-zinc-700 disabled:hover:text-zinc-700 transition-colors"
+                                >
+                                    <Send size={16} />
+                                </button>
+                            </div>
+                        </form>
+                        <div className="flex justify-end mt-1.5">
                             <button
-                                type="submit"
-                                disabled={isCreatingReply || !replyText.trim()}
-                                className="absolute right-3 bottom-2 text-zinc-400 hover:text-[#FF2D7A] disabled:text-zinc-700 disabled:hover:text-zinc-700 transition-colors"
+                                type="button"
+                                onClick={() => setIsReplying(false)}
+                                className="text-xs text-zinc-500 hover:text-zinc-300"
                             >
-                                <Send size={16} />
+                                Скасувати
                             </button>
                         </div>
-                        <button
-                            type="button"
-                            onClick={() => setIsReplying(false)}
-                            className="text-xs text-zinc-500 hover:text-zinc-300 mt-2"
-                        >
-                            Скасувати
-                        </button>
-                    </form>
+                    </div>
                 )}
 
                 {(comment.repliesCount > 0 || replies.length > 0) && (
@@ -413,7 +417,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
                 )}
 
                 {showReplies && (
-                    <div className="mt-4 pl-4 border-l-2 border-zinc-800 space-y-4">
+                    <div className="mt-4 pl-3 sm:pl-4 border-l-2 border-zinc-800 space-y-4 overflow-hidden">
                         {replies.map((reply) => (
                             <CommentItem
                                 key={reply.id}
