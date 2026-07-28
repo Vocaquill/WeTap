@@ -264,6 +264,44 @@ export function VideoForm({
 
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
+                    <div className="lg:col-span-5 space-y-6">
+                        <div className="space-y-2">
+                            <FileUploadField
+                                label="Зображення (Прев'ю)"
+                                name="image"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                                error={errors.image}
+                            />
+                            {imagePreview && (
+                                <div className="mt-2 aspect-video w-full rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 flex items-center justify-center shadow-lg">
+                                    <img src={imagePreview} alt="Image Preview" className="w-full h-full object-cover" />
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="space-y-2">
+                            <FileUploadField
+                                label="Відео файл"
+                                name="video"
+                                accept="video/*"
+                                onChange={handleFileChange}
+                                error={errors.video}
+                                required={requireVideoFile}
+                            />
+                            {videoPreview && (
+                                <div className="mt-2 w-full rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 shadow-lg">
+                                    <MoviePlayer src={videoPreview} />
+                                </div>
+                            )}
+                            {initialVideoUrl && !videoPreview && (
+                                <div className="mt-2 w-full rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 shadow-lg">
+                                    <MoviePlayer videoName={initialVideoUrl} />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                     <div className="lg:col-span-7 space-y-6">
                         <InputField
                             label="Назва"
@@ -398,43 +436,6 @@ export function VideoForm({
                         </div>
                     </div>
 
-                    <div className="lg:col-span-5 space-y-6">
-                        <div className="space-y-2">
-                            <FileUploadField
-                                label="Зображення (Прев'ю)"
-                                name="image"
-                                accept="image/*"
-                                onChange={handleFileChange}
-                                error={errors.image}
-                            />
-                            {imagePreview && (
-                                <div className="mt-2 aspect-video w-full rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 flex items-center justify-center shadow-lg">
-                                    <img src={imagePreview} alt="Image Preview" className="w-full h-full object-cover" />
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="space-y-2">
-                            <FileUploadField
-                                label="Відео файл"
-                                name="video"
-                                accept="video/*"
-                                onChange={handleFileChange}
-                                error={errors.video}
-                                required={requireVideoFile}
-                            />
-                            {videoPreview && (
-                                <div className="mt-2 w-full rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 shadow-lg">
-                                    <MoviePlayer src={videoPreview} />
-                                </div>
-                            )}
-                            {initialVideoUrl && !videoPreview && (
-                                <div className="mt-2 w-full rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 shadow-lg">
-                                    <MoviePlayer videoName={initialVideoUrl} />
-                                </div>
-                            )}
-                        </div>
-                    </div>
 
                     <div className="lg:col-span-12 flex justify-end mt-4">
                         <Button type="submit" variant="primary" size="md" isLoading={isLoading}>
