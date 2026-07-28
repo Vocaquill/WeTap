@@ -34,6 +34,7 @@ import AdminLayout from './layouts/AdminLayout.tsx';
 import RequireLogin from './components/auth/RequireLogin';
 import RequireAuthor from './components/auth/RequireAuthor';
 import RequireAdmin from './components/auth/RequireAdmin';
+import RequireNoChannel from './components/auth/RequireNoChannel';
 import { useEffect, useState } from 'react';
 import { useRefreshTokenMutation } from './services/api/apiAccount';
 import { applyTheme, getActiveTheme } from './themes';
@@ -88,7 +89,9 @@ function App() {
                     <Route element={<RequireLogin />}>
                         <Route path="/account" element={<ProfilePage />} />
                         <Route path="/edit-account" element={<EditProfilePage />} />
-                        <Route path="/channel/create" element={<CreateChannelPage />} />
+                        <Route element={<RequireNoChannel />}>
+                            <Route path="/channel/create" element={<CreateChannelPage />} />
+                        </Route>
                     </Route>
 
                     <Route element={<RequireAuthor />}>
