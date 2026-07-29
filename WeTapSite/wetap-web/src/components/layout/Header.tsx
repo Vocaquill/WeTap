@@ -1,11 +1,12 @@
-import {useState, useEffect} from 'react';
-import {useNavigate, useLocation} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Plus, Users } from 'lucide-react';
 import { useAppSelector } from "../../store/index";
 import { APP_ENV } from "../../env/index";
 import { Button } from '../form/Button';
 import { themes, applyTheme, getActiveTheme } from '../../themes';
 import { SearchAutocomplete } from '../form/SearchAutocomplete';
+import logoImg from '../../layouts/logo.png';
 
 function Header() {
     const [scrolled, setScrolled] = useState(false);
@@ -45,9 +46,21 @@ function Header() {
 
     return (
         <header
-            className={`h-14 sticky top-0 z-[40] px-3 sm:px-4 md:px-6 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-theme-bg/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'}`}
+            className={`h-14 sticky top-0 z-[40] px-2 sm:px-4 md:px-6 flex items-center justify-between gap-1.5 sm:gap-3 transition-all duration-300 ${scrolled ? 'bg-theme-bg/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'}`}
         >
-            <div className="flex items-center min-w-0 sm:min-w-[50px]">
+            <div className="flex items-center shrink-0">
+                <Link to="/" className="flex items-center shrink-0 md:hidden active:scale-95 transition-transform">
+                    <img src={logoImg} alt="WeTap Logo" className="h-7 sm:h-8 w-auto object-contain" />
+                    <span
+                        className="ml-1.5 text-sm sm:text-base font-black tracking-tight bg-clip-text text-transparent hidden sm:inline"
+                        style={{
+                            backgroundImage: 'linear-gradient(to right, #f43f5e, #ec4899, #a855f7)',
+                        }}
+                    >
+                        WeTap
+                    </span>
+                </Link>
+
                 {isSearchPage && (
                     <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400 hidden md:block">
                         Результати <span className="text-rose-500">пошуку</span>
@@ -55,11 +68,11 @@ function Header() {
                 )}
             </div>
 
-            <div className="flex-grow max-w-[200px] sm:max-w-xs md:max-w-md lg:max-w-xl mx-2 sm:mx-4">
+            <div className="flex-1 min-w-0 max-w-[170px] xs:max-w-[220px] sm:max-w-xs md:max-w-md lg:max-w-xl mx-1 sm:mx-4">
                 <SearchAutocomplete />
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+            <div className="flex items-center gap-1.5 sm:gap-3 md:gap-4 shrink-0">
                 <Button 
                     variant="icon" 
                     onClick={() => navigate('/video/add')}

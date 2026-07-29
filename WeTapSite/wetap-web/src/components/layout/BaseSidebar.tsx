@@ -257,9 +257,9 @@ export function BaseSidebar({
             </div>
 
             <aside
-                className={`hidden md:flex bg-zinc-950 p-3 transition-all duration-300 flex-col justify-between select-none z-[50] sticky top-0 h-screen
+                className={`hidden md:flex bg-zinc-950 p-3 transition-all duration-300 flex-col justify-between select-none z-[50] sticky top-0 h-screen shrink-0
             ${isCollapsible
-                        ? (isOpen ? 'w-[18.2vw] max-w-[350px] min-w-[220px]' : 'w-18')
+                        ? (isOpen ? 'w-60 lg:w-64' : 'w-18')
                         : 'w-64 border-r border-zinc-800'
                     }`}
             >
@@ -274,7 +274,7 @@ export function BaseSidebar({
                             <Button
                                 variant="icon"
                                 onClick={toggleSidebar}
-                                className="text-zinc-400 hover:text-white transition-colors"
+                                className="text-zinc-400 hover:text-white transition-colors shrink-0"
                             >
                                 <Menu size={24} />
                             </Button>
@@ -282,8 +282,8 @@ export function BaseSidebar({
 
                         {(!isCollapsible || isOpen) && (
                             <Link to="/"
-                                className="flex items-center active:scale-[0.98] cursor-pointer animate-fadeIn">
-                                <div className="h-11 w-auto flex items-center justify-center shrink-0">
+                                className="flex items-center active:scale-[0.98] cursor-pointer animate-fadeIn min-w-0 overflow-hidden">
+                                <div className="h-9 w-auto flex items-center justify-center shrink-0">
                                     <img
                                         src={logoImg}
                                         alt="WeTap Logo"
@@ -300,7 +300,7 @@ export function BaseSidebar({
                   `}</style>
 
                                 <h2
-                                    className="ml-3 text-xl font-black tracking-tight whitespace-nowrap bg-clip-text text-transparent"
+                                    className="ml-2 text-lg lg:text-xl font-black tracking-tight whitespace-nowrap bg-clip-text text-transparent truncate"
                                     style={{
                                         backgroundImage: 'linear-gradient(to right, #f43f5e, #ec4899, #a855f7, #6366f1, #3b82f6)',
                                         backgroundSize: '300% auto',
