@@ -69,7 +69,7 @@ function SidebarItemRow({
         return (
             <div className="space-y-1">
                 <div
-                    className={`${getNavLinkClasses(isItemActive)} w-full justify-between pr-4 cursor-pointer select-none`}
+                    className={`${getNavLinkClasses(isItemActive)} w-full justify-between cursor-pointer select-none ${(!isCollapsible || isOpen) ? 'pr-4' : ''}`}
                     onClick={() => setIsExpanded(!isExpanded)}
                     role="button"
                     tabIndex={0}
@@ -81,7 +81,7 @@ function SidebarItemRow({
                 >
                     {renderActiveIndicator(isItemActive)}
 
-                    <div className="flex items-center w-full">
+                    <div className={`flex items-center w-full ${(!isCollapsible || isOpen) ? '' : 'justify-center'}`}>
                         <span className={`min-w-[24px] flex items-center justify-center ${isItemActive ? 'text-rose-500' : 'text-zinc-400'}`}>
                             {item.icon}
                         </span>
