@@ -1,4 +1,4 @@
-import {ShieldCheck, Home, ThumbsUp, Film, Flame, Library} from 'lucide-react';
+import {ShieldCheck, Home, ThumbsUp, Film, Flame, Library, Plus} from 'lucide-react';
 import {useAppSelector} from "../../store";
 import BaseSidebar, { type SidebarSection } from './BaseSidebar';
 import { useSearchGenresQuery } from '../../services/api/apiGenres';
@@ -36,6 +36,7 @@ function Sidebar({isOpen, toggleSidebar}: SidebarProps) {
         sections.push({
             title: 'Творча студія',
             items: [
+                {name: 'Додати відео', path: '/video/add', icon: <Plus size={18}/>},
                 {name: 'Студія', path: '/studio', icon: <Film size={18}/>}
             ]
         });
