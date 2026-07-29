@@ -6,6 +6,7 @@ import { APP_ENV } from "../../env/index";
 import { Button } from '../form/Button';
 import { themes, applyTheme, getActiveTheme } from '../../themes';
 import { SearchAutocomplete } from '../form/SearchAutocomplete';
+import { SelectField } from '../form/SelectField'; // <-- Імпортуємо ваш компонент
 import logoImg from '../../layouts/logo.png';
 
 function Header() {
@@ -73,32 +74,23 @@ function Header() {
             </div>
 
             <div className="flex items-center gap-1.5 sm:gap-3 md:gap-4 shrink-0">
-                <Button 
-                    variant="icon" 
+                <Button
+                    variant="icon"
                     onClick={() => navigate('/video/add')}
                     className="hidden sm:flex items-center justify-center bg-zinc-800 p-2.5 rounded-full border border-zinc-700/40 text-zinc-300 hover:text-white hover:bg-zinc-700 transition-all"
                 >
                     <Plus size={20}/>
                 </Button>
 
-                <div className="relative hidden md:block">
-                    <select
+                {/* Використання SelectField замість звичайного select */}
+                <div className="hidden md:block min-w-[130px]">
+                    <SelectField
+                        name="theme"
+                        variant="filter"
                         value={activeTheme}
+                        options={themes}
                         onChange={handleThemeChange}
-                        className="bg-zinc-800 text-zinc-300 hover:text-zinc-100 text-xs font-bold py-2.5 pl-4 pr-9 rounded-full border border-zinc-700/40 outline-none cursor-pointer appearance-none transition-all hover:bg-zinc-700"
-                        style={{
-                            backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>")`,
-                            backgroundRepeat: 'no-repeat',
-                            backgroundPosition: 'right 12px center',
-                            backgroundSize: '14px'
-                        }}
-                    >
-                        {themes.map(t => (
-                            <option key={t.id} value={t.id} className="bg-zinc-900 text-zinc-300">
-                                {t.name}
-                            </option>
-                        ))}
-                    </select>
+                    />
                 </div>
 
                 <Button
