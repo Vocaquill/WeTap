@@ -139,12 +139,109 @@ export function GenericTable<T extends { id: string | number }>({
         <div className="overflow-hidden bg-zinc-950 border border-zinc-800 rounded-[2rem] shadow-2xl relative">
             {isFetching && (
                 <div
-                    className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-10 flex items-center justify-center animate-in fade-in duration-300">
+                    className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-20 flex items-center justify-center animate-in fade-in duration-300">
                     <Loader2 className="animate-spin text-red-600" size={40}/>
                 </div>
             )}
 
-            <div className="overflow-x-auto">
+            {onSortChange && activeColumns.some(col => col.sortable) && (
+                <div className="md:hidden p-4 border-b border-zinc-800/80 bg-zinc-900/40 flex items-center justify-between gap-3">
+                    <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1.5">
+                        <ArrowUpDown size={14} className="text-zinc-400" /> Сортування:
+                    </span>
+                    <select
+                        value={sortBy || ''}
+                        onChange={(e) => onSortChange(e.target.value || undefined)}
+                        className="bg-zinc-900 border border-zinc-700/70 text-zinc-200 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-red-500 transition-colors"
+                    >
+                        <option value="">Без сортування</option>
+                        {activeColumns
+                            .filter((col) => col.sortable)
+                            .map((col) => {
+                                const key = col.sortKey || String(col.key);
+                                return (
+                                    <option key={key} value={key}>
+                                        {col.label}
+                                    </option>
+                                );
+                            })}
+                    </select>
+                </div>
+            )}
+
+            <div className="block md:hidden p-4 space-y-3">
+                {isError ? (
+                    <div className="p-8 text-center text-red-500 font-bold text-sm bg-red-950/20 border border-red-900/40 rounded-2xl">
+                        Помилка завантаження даних
+                    </div>
+                ) : !data || data.length === 0 ? (
+                    <div className="p-8 text-center text-zinc-500 italic text-sm bg-zinc-900/30 rounded-2xl border border-zinc-800/50">
+                        {emptyMessage}
+                    </div>
+                ) : (
+                    data.map((item) => (
+                        <div
+                            key={item.id}
+                            className="bg-zinc-900/60 border border-zinc-800/80 hover:border-zinc-700/80 rounded-2xl p-4 transition-all space-y-3.5 shadow-md"
+                        >
+                            {/* Поля картки */}
+                            <div className="space-y-2.5">
+                                {activeColumns.map((col) => {
+                                    const value = col.render ? col.render(item) : String((item as any)[col.key] ?? '');
+                                    const lowerKey = String(col.key).toLowerCase();
+                                    const isHeaderLike = lowerKey === 'name' || lowerKey === 'title' || lowerKey === 'image' || lowerKey === 'avatarimage';
+
+                                    if (isHeaderLike) {
+                                        return (
+                                            <div key={String(col.key)} className="flex items-center justify-between gap-3 pb-1 border-b border-zinc-800/50">
+                                                <span className="text-xs text-zinc-500 uppercase font-black tracking-wider">
+                                                    {col.label}
+                                                </span>
+                                                <div className="text-right">{value}</div>
+                                            </div>
+                                        );
+                                    }
+
+                                    return (
+                                        <div key={String(col.key)} className="flex items-center justify-between gap-3 text-xs">
+                                            <span className="text-zinc-500 font-medium">{col.label}:</span>
+                                            <div className="text-right font-medium text-zinc-300">{value}</div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Кнопки дій для мобільних */}
+                            {hasActions && (
+                                <div className="pt-2 border-t border-zinc-800/60 flex items-center justify-end gap-2">
+                                    {onEdit && (
+                                        <Button
+                                            type="button"
+                                            variant="action"
+                                            onClick={() => onEdit(item)}
+                                            className="flex-1 flex items-center justify-center gap-2 py-2 text-xs"
+                                        >
+                                            <Edit2 size={15}/> Редагувати
+                                        </Button>
+                                    )}
+                                    {onDelete && (
+                                        <Button
+                                            type="button"
+                                            variant="actionDanger"
+                                            onClick={() => onDelete(item)}
+                                            className="flex-1 flex items-center justify-center gap-2 py-2 text-xs"
+                                        >
+                                            <Trash2 size={15}/> Видалити
+                                        </Button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    ))
+                )}
+            </div>
+
+            <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                     <thead className="bg-zinc-900/50 text-zinc-500 text-[11px] uppercase tracking-[0.2em] font-black">
                     <tr>
@@ -184,7 +281,6 @@ export function GenericTable<T extends { id: string | number }>({
                     </thead>
 
                     <tbody className="divide-y divide-zinc-900">
-                    {/* ... (код мапінгу body залишається незмінним) ... */}
                     {isError ? (
                         <tr>
                             <td colSpan={colSpan} className="p-20 text-center text-red-500 font-bold">Помилка завантаження даних</td>
