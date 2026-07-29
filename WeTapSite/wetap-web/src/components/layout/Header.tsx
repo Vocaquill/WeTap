@@ -100,7 +100,7 @@ function Header() {
                     <Button
                         variant="profile"
                         onClick={() => navigate('/account')}
-                        className="group flex items-center gap-0 sm:gap-2 bg-zinc-800 hover:bg-zinc-700 p-1 sm:py-1.5 sm:px-3 rounded-full border border-zinc-700 transition-all"
+                        className="group flex items-center gap-0 sm:gap-2 bg-zinc-800 hover:bg-zinc-700 p-1 sm:py-1.5 sm:px-3 rounded-full border border-zinc-700 transition-all shrink-0"
                     >
                         <div className="w-7 h-7 sm:w-6 sm:h-6 rounded-full overflow-hidden border border-rose-500/30">
                             <img
@@ -116,15 +116,14 @@ function Header() {
                 ) : (
                     <button
                         onClick={() => navigate('/login')}
-                        className="relative text-[10px] sm:text-xs font-extrabold tracking-wider uppercase px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-white overflow-hidden transition-all duration-300 active:scale-95 group shadow-[0_0_15px_rgba(236,72,153,0.15)] hover:shadow-[0_0_25px_rgba(236,72,153,0.35)]"
+                        className="relative shrink-0 w-auto text-[10px] sm:text-xs font-extrabold tracking-wider uppercase p-[2px] rounded-full text-white overflow-hidden transition-all duration-300 active:scale-95 group shadow-[0_0_15px_rgba(236,72,153,0.15)] hover:shadow-[0_0_25px_rgba(236,72,153,0.35)]"
                         style={{
                             background: 'rgb(var(--color-bg))',
-                            padding: '3px',
                             backgroundImage: 'linear-gradient(to right, #f43f5e, #ec4899, #a855f7)',
                         }}
                     >
                         <span
-                            className="block px-3 py-1.5 sm:px-5 sm:py-2 rounded-full bg-theme-bg text-zinc-200 group-hover:text-white group-hover:bg-theme-bg/80 transition-all duration-300">
+                            className="block px-3 py-1.5 sm:px-5 sm:py-2 rounded-full bg-theme-bg text-zinc-200 group-hover:text-white group-hover:bg-theme-bg/80 transition-all duration-300 whitespace-nowrap">
                           Sign In
                         </span>
                     </button>
