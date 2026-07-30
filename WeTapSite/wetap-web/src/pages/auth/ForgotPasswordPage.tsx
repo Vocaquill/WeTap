@@ -32,7 +32,7 @@ function ForgotPasswordPage() {
 
     return (
         <div
-            className="min-h-screen bg-theme-bg text-white flex items-center justify-center relative overflow-hidden px-6">
+            className="min-h-screen bg-theme-bg text-theme-text flex items-center justify-center relative overflow-hidden px-6">
             {isLoading && <LoadingOverlay />}
             {/* Background Glow */}
             <div
@@ -60,7 +60,7 @@ function ForgotPasswordPage() {
                             />
 
                             <div className="space-y-2">
-                                <h1 className="text-4xl font-black uppercase italic tracking-tighter">
+                                <h1 className="text-4xl font-black uppercase italic tracking-tighter text-theme-text">
                                     Забули <span className="text-red-600">пароль?</span>
                                 </h1>
                                 <p className="text-zinc-500 text-sm leading-relaxed">
@@ -77,11 +77,12 @@ function ForgotPasswordPage() {
                                     placeholder="example@mail.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    icon={<Mail className="text-zinc-600 group-focus-within:text-red-600 transition-colors" size={20} />}
-                                    inputClassName="bg-zinc-900/40 border border-white/5 focus:border-red-600 focus:ring-4 focus:ring-red-600/10 rounded-2xl py-4 pr-4 outline-none transition-all placeholder:text-zinc-700"
+                                    icon={<Mail className="text-zinc-400 dark:text-zinc-600 group-focus-within:text-red-600 transition-colors" size={20} />}
+                                    inputClassName="bg-white/40 dark:bg-zinc-900/40 border border-zinc-200 dark:border-white/5 focus:border-red-600 focus:ring-4 focus:ring-red-600/10 rounded-2xl py-4 pr-4 outline-none transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-700"
                                     labelClassName="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1"
                                     wrapperClassName="space-y-2 group"
                                     error={errorMessage}
+                                  className="text-theme-text"
                                 />
 
                                 <Button
@@ -101,18 +102,18 @@ function ForgotPasswordPage() {
                             key="success-message"
                             initial={{opacity: 0, scale: 0.9}}
                             animate={{opacity: 1, scale: 1}}
-                            className="text-center space-y-6 bg-zinc-900/30 p-10 rounded-[3rem] border border-white/5 backdrop-blur-xl"
+                            className="text-center space-y-6 bg-zinc-100 dark:bg-zinc-900/30 p-10 rounded-[3rem] border border-zinc-200 dark:border-white/5 backdrop-blur-xl"
                         >
                             <div
                                 className="w-20 h-20 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-600/30">
                                 <CheckCircle2 className="text-red-600" size={40}/>
                             </div>
                             <div className="space-y-2">
-                                <h2 className="text-2xl font-black uppercase italic tracking-tighter text-white">Перевірте
+                                <h2 className="text-2xl font-black uppercase italic tracking-tighter text-theme-text">Перевірте
                                     пошту</h2>
                                 <p className="text-zinc-400 text-sm leading-relaxed">
                                     Ми надіслали інструкції для відновлення пароля на <span
-                                    className="text-white font-bold">{email}</span>.
+                                    className="text-theme-text font-bold">{email}</span>.
                                 </p>
                             </div>
                             <Button

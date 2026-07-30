@@ -111,44 +111,44 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
         const variantStyles: Record<ButtonVariant, string> = {
             primary: 'bg-[#FF2D7A] hover:bg-[#FF2D7A]/90 text-white focus:ring-[#FF2D7A]/30',
-            secondary: 'bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-800 hover:border-zinc-700 focus:ring-zinc-800/30',
-            outline: 'bg-transparent border border-white/10 hover:bg-white/5 text-white focus:ring-white/10',
-            google: 'bg-white hover:bg-zinc-100 text-black shadow-md focus:ring-white/30',
-            inverse: 'font-black uppercase bg-white text-black hover:bg-red-600 hover:text-white',
+            secondary: 'bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700 hover:border-zinc-600 focus:ring-zinc-700/30',
+            outline: 'bg-transparent border border-zinc-700/40 hover:bg-zinc-800/20 text-zinc-200 focus:ring-zinc-700/10',
+            google: 'bg-zinc-100 hover:bg-zinc-200 text-zinc-900 shadow-md focus:ring-zinc-300/30',
+            inverse: 'font-black uppercase bg-zinc-50 text-zinc-950 hover:bg-red-600 hover:text-white',
             danger: 'font-black uppercase border border-red-600/20 text-red-500 hover:bg-red-600 hover:text-white',
-            ghost: 'font-bold text-zinc-500 hover:text-white transition-colors',
-            ghostIcon: 'text-zinc-500 hover:text-white transition-colors',
+            ghost: 'font-bold text-zinc-500 hover:text-zinc-100 transition-colors',
+            ghostIcon: 'text-zinc-500 hover:text-zinc-100 transition-colors',
             ghostIconDanger: 'text-zinc-500 hover:text-red-500 transition-colors',
-            link: 'text-xs text-zinc-400 hover:text-white transition-colors',
+            link: 'text-xs text-zinc-400 hover:text-zinc-100 transition-colors',
             linkDanger: 'text-sm text-red-500 hover:underline',
             linkAccent: 'text-xs text-[#FF2D7A] font-bold hover:underline',
             linkSubtle: 'text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-red-600 transition-colors',
-            linkPlain: 'text-white',
-            icon: 'p-2 text-zinc-300 hover:text-white hover:bg-zinc-900 rounded-xl active:scale-95',
-            iconFilled: 'p-2 bg-zinc-900 hover:bg-zinc-800 rounded-xl text-zinc-300 hover:text-white transition-colors shrink-0',
-            iconRound: 'p-2 bg-zinc-800 rounded-full hover:bg-zinc-700 transition-colors',
-            iconInline: 'text-zinc-400 hover:text-white transition-colors',
-            surface: 'w-full text-left p-4 rounded-2xl border border-white/5 hover:bg-white/5 font-bold text-zinc-300',
-            surfaceDark: 'w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 py-3 rounded-xl text-sm font-medium text-left px-4 justify-between',
+            linkPlain: 'text-zinc-100',
+            icon: 'p-2 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 rounded-xl active:scale-95',
+            iconFilled: 'p-2 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-zinc-400 hover:text-zinc-100 transition-colors shrink-0',
+            iconRound: 'p-2 bg-zinc-700 rounded-full hover:bg-zinc-600 transition-colors',
+            iconInline: 'text-zinc-400 hover:text-zinc-100 transition-colors',
+            surface: 'w-full text-left p-4 rounded-2xl border border-zinc-700/20 hover:bg-zinc-800/20 font-bold text-zinc-300',
+            surfaceDark: 'w-full bg-zinc-700 hover:bg-zinc-600 text-zinc-100 py-3 rounded-xl text-sm font-medium text-left px-4 justify-between',
             chip: active
                 ? 'px-3 py-1 rounded-xl border transition bg-red-600 border-red-600 text-white'
-                : 'px-3 py-1 rounded-xl border transition bg-zinc-900 border-zinc-800 text-zinc-400',
+                : 'px-3 py-1 rounded-xl border transition bg-zinc-800 border-zinc-700 text-zinc-300',
             gradient: 'font-black uppercase bg-gradient-to-r from-rose-500 to-fuchsia-600 hover:opacity-90 text-white shadow-lg shadow-rose-500/20 active:scale-95 tracking-wider',
-            profile: 'bg-gradient-to-r from-zinc-900 to-rose-950/20 hover:to-rose-900/30 rounded-xl border border-zinc-800/60 transition-all gap-2.5 p-1 pr-3',
+            profile: 'bg-gradient-to-r from-zinc-800 to-rose-950/20 hover:to-rose-900/30 rounded-xl border border-zinc-700/60 transition-all gap-2.5 p-1 pr-3',
             play: 'w-16 h-16 bg-rose-600 rounded-full shadow-lg active:scale-95 transition-transform',
             menuItem: active
-                ? 'w-full text-left px-4 py-2 text-sm hover:bg-zinc-800 transition-colors text-[#FF2D7A] font-bold'
-                : 'w-full text-left px-4 py-2 hover:bg-zinc-800 transition-colors text-white',
+                ? 'w-full text-left px-4 py-2 text-sm hover:bg-zinc-700 transition-colors text-[#FF2D7A] font-bold'
+                : 'w-full text-left px-4 py-2 hover:bg-zinc-700 transition-colors text-zinc-200',
             player: 'w-8 h-8 rounded-full text-white hover:bg-white/10 hover:text-[#FF2D7A] transition-colors',
             playerMuted: 'w-8 h-8 rounded-full text-white/70 hover:bg-white/10 hover:text-[#FF2D7A] transition-colors',
-            paginationNav: 'w-10 h-10 rounded-xl border border-zinc-800 text-zinc-500 hover:bg-zinc-800 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed',
+            paginationNav: 'w-10 h-10 rounded-xl border border-zinc-700 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-100 disabled:opacity-20 disabled:cursor-not-allowed',
             paginationPage: active
-                ? 'w-10 h-10 rounded-xl text-sm font-bold bg-red-600 text-white ring-2 ring-white ring-inset'
-                : 'w-10 h-10 rounded-xl text-sm font-bold text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800',
+                ? 'w-10 h-10 rounded-xl text-sm font-bold bg-red-600 text-white'
+                : 'w-10 h-10 rounded-xl text-sm font-bold text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700',
             reaction: 'gap-2 px-4 py-2 hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium',
-            navItem: 'p-3 rounded-xl text-zinc-500 hover:bg-zinc-900/60 hover:text-rose-400 w-full justify-start gap-3',
-            action: 'bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-700',
-            actionDanger: 'bg-zinc-900 border border-zinc-800 hover:bg-red-950/40 text-zinc-500 hover:text-red-500 hover:border-red-950/40',
+            navItem: 'p-3 rounded-xl text-zinc-500 hover:bg-zinc-800/60 hover:text-rose-400 w-full justify-start gap-3',
+            action: 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-zinc-100 border border-zinc-700 hover:border-zinc-600',
+            actionDanger: 'bg-zinc-800 border border-zinc-700 hover:bg-red-950/40 text-zinc-400 hover:text-red-500 hover:border-red-950/40',
         };
 
         const resolvedSize = (() => {

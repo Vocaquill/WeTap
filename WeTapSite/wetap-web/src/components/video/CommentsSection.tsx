@@ -83,7 +83,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ videoId, curre
                             onChange={(e) => setCommentText(e.target.value)}
                             placeholder="Залишити коментар..."
                             rows={2}
-                            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[#FF2D7A] transition-all resize-none pr-12"
+                            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-[#FF2D7A] transition-all resize-none pr-12"
                         />
                         <button
                             type="submit"
@@ -302,7 +302,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
                         <textarea
                             value={editText}
                             onChange={(e) => setEditText(e.target.value)}
-                            className="w-full bg-zinc-900 border border-zinc-850 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#FF2D7A] resize-none"
+                            className="w-full bg-zinc-900 border border-zinc-850 rounded-xl px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-[#FF2D7A] resize-none"
                             rows={2}
                         />
                         <div className="flex gap-2 justify-end mt-2">
@@ -376,7 +376,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
                                 onChange={(e) => setReplyText(e.target.value)}
                                 placeholder="Написати відповідь..."
                                 rows={1}
-                                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[#FF2D7A] transition-all resize-none pr-12"
+                                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-[#FF2D7A] transition-all resize-none pr-12"
                             />
                             <button
                                 type="submit"

@@ -86,7 +86,7 @@ function LoginPage() {
               className="h-full object-contain"
             />
           </div>
-          <h1 className="text-3xl font-black uppercase italic">
+          <h1 className="text-3xl font-black uppercase italic text-zinc-100">
             Вітаємо у <span className="text-red-600">WeTap</span>
           </h1>
           <p className="text-zinc-500 text-sm mt-2">Введіть свої дані</p>
@@ -102,7 +102,7 @@ function LoginPage() {
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             icon={<Mail className="text-zinc-500" size={20} />}
-            inputClassName="bg-zinc-900 rounded-2xl py-4"
+            inputClassName="bg-zinc-800 rounded-2xl py-4"
             labelClassName="text-xs text-zinc-400 uppercase ml-1"
           />
 
@@ -114,7 +114,7 @@ function LoginPage() {
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             icon={<Lock className="text-zinc-500" size={20} />}
-            inputClassName="bg-zinc-900 rounded-2xl py-4"
+            inputClassName="bg-zinc-800 rounded-2xl py-4"
             labelClassName="text-xs text-zinc-400 uppercase ml-1"
           />
 

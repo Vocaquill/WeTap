@@ -31,17 +31,17 @@ function Dashboard() {
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
             <div>
-                <h1 className="text-2xl font-bold text-white">Панель керування</h1>
+                <h1 className="text-2xl font-bold text-zinc-100">Панель керування</h1>
                 <p className="text-zinc-500 text-sm">Вітаємо в системі моніторингу контенту</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat, index) => (
-                    <div key={index} className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-sm hover:border-zinc-700 transition-all group">
+                    <div key={index} className="bg-zinc-800 border border-zinc-700 p-6 rounded-2xl shadow-sm hover:border-zinc-600 transition-all group">
                         <div className="flex justify-between items-start">
                             <div>
                                 <p className="text-zinc-500 text-xs uppercase tracking-wider font-bold mb-1">{stat.label}</p>
-                                <h3 className="text-3xl font-bold text-white">{stat.value}</h3>
+                                <h3 className="text-3xl font-bold text-zinc-100">{stat.value}</h3>
                             </div>
                             <div className={`${stat.bg} ${stat.color} p-3 rounded-xl group-hover:scale-110 transition-transform`}>
                                 {stat.icon}
@@ -52,9 +52,9 @@ function Dashboard() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
-                    <div className="p-5 border-b border-zinc-800 flex justify-between items-center">
-                        <h3 className="font-bold flex items-center gap-2">
+                <div className="lg:col-span-2 bg-zinc-800 border border-zinc-700 rounded-2xl overflow-hidden">
+                    <div className="p-5 border-b border-zinc-700 flex justify-between items-center">
+                        <h3 className="font-bold text-zinc-100 flex items-center gap-2">
                             <Clock size={18} className="text-red-500" />
                             Останні додані відео
                         </h3>

@@ -259,8 +259,8 @@ export function VideoForm({
         <>
             {(isLoading || isLoadingTag) && <LoadingOverlay />}
 
-            <div className="p-6 bg-[#121213] min-h-screen">
-                <h1 className="text-3xl font-black text-white mb-8">{title}</h1>
+            <div className="p-6 bg-theme-bg min-h-screen">
+                <h1 className="text-3xl font-black text-zinc-100 mb-8">{title}</h1>
 
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 

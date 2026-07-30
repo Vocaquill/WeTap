@@ -101,30 +101,33 @@ function CreateChannelPage() {
         }
     };
 
+    const avatarPreview = form.avatarImage instanceof File ? URL.createObjectURL(form.avatarImage) : null;
+    const bannerPreview = form.bannerImage instanceof File ? URL.createObjectURL(form.bannerImage) : null;
+
     return (
-        <div className="min-h-screen bg-[#121213] text-white flex items-center justify-center relative overflow-hidden py-12">
+        <div className="min-h-screen bg-theme-bg text-theme-text flex items-center justify-center relative overflow-hidden py-8 sm:py-12">
             {isLoading && <LoadingOverlay />}
 
             {/* Background elements */}
-            <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-600/20 blur-[120px] rounded-full" />
-            <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-zinc-800/30 blur-[120px] rounded-full" />
+            <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-600/10 dark:bg-red-600/20 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-zinc-300/30 dark:bg-zinc-800/30 blur-[120px] rounded-full pointer-events-none" />
 
-            <div className="w-full max-w-2xl z-10 px-6">
-                <div className="mb-10 text-center">
-                    <div className="inline-flex p-4 bg-zinc-900 rounded-3xl border border-white/5 mb-4 shadow-xl">
+            <div className="w-full max-w-2xl z-10 px-4 sm:px-6">
+                <div className="mb-8 sm:mb-10 text-center">
+                    <div className="inline-flex p-4 bg-zinc-100 dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-white/5 mb-4 shadow-xl">
                         <Tv size={36} className="text-red-600 animate-pulse" />
                     </div>
-                    <h1 className="text-4xl font-black uppercase italic tracking-tight">
+                    <h1 className="text-3xl sm:text-4xl font-black uppercase italic tracking-tight text-theme-text">
                         Створити <span className="text-red-600">канал</span>
                     </h1>
-                    <p className="text-zinc-400 mt-2 text-sm">
+                    <p className="text-zinc-500 dark:text-zinc-400 mt-2 text-xs sm:text-sm">
                         Заповніть інформацію нижче, щоб розпочати свій творчий шлях на WeTap
                     </p>
                 </div>
 
                 <form
                     onSubmit={handleSubmit}
-                    className="space-y-6 bg-zinc-900/40 p-8 rounded-[2.5rem] border border-white/5 backdrop-blur-md shadow-2xl"
+                    className="space-y-6 bg-zinc-100 dark:bg-zinc-900/40 p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] border border-zinc-200 dark:border-white/5 backdrop-blur-md shadow-2xl"
                 >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-5">
@@ -136,7 +139,7 @@ function CreateChannelPage() {
                                 required
                                 error={errors.name}
                                 placeholder="Мій крутий канал"
-                                inputClassName="w-full bg-black/40 rounded-2xl py-3.5 border-zinc-800 focus:border-red-600"
+                                inputClassName="w-full bg-zinc-900 rounded-2xl py-3.5 border-zinc-800 focus:border-red-600 text-zinc-100"
                                 labelClassName="text-[10px] uppercase text-zinc-500 ml-1 font-bold tracking-wider"
                             />
 
@@ -148,7 +151,7 @@ function CreateChannelPage() {
                                 required
                                 error={errors.nickName}
                                 placeholder="my-cool-channel"
-                                inputClassName="w-full bg-black/40 rounded-2xl py-3.5 border-zinc-800 focus:border-red-600"
+                                inputClassName="w-full bg-zinc-900 rounded-2xl py-3.5 border-zinc-800 focus:border-red-600 text-zinc-100"
                                 labelClassName="text-[10px] uppercase text-zinc-500 ml-1 font-bold tracking-wider"
                             />
 
@@ -165,21 +168,35 @@ function CreateChannelPage() {
 
                         <div className="space-y-5 flex flex-col justify-between">
                             <div className="space-y-5">
-                                <FileUploadField
-                                    label="Аватар каналу"
-                                    name="avatarImage"
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                    error={errors.avatarImage}
-                                />
+                                <div>
+                                    <FileUploadField
+                                        label="Аватар каналу"
+                                        name="avatarImage"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                        error={errors.avatarImage}
+                                    />
+                                    {avatarPreview && (
+                                        <div className="mt-2.5 relative w-16 h-16 rounded-2xl overflow-hidden border border-zinc-300 dark:border-zinc-700 shadow-md">
+                                            <img src={avatarPreview} alt="Avatar Preview" className="w-full h-full object-cover" />
+                                        </div>
+                                    )}
+                                </div>
 
-                                <FileUploadField
-                                    label="Банер каналу"
-                                    name="bannerImage"
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                    error={errors.bannerImage}
-                                />
+                                <div>
+                                    <FileUploadField
+                                        label="Банер каналу"
+                                        name="bannerImage"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                        error={errors.bannerImage}
+                                    />
+                                    {bannerPreview && (
+                                        <div className="mt-2.5 relative w-full h-20 rounded-2xl overflow-hidden border border-zinc-300 dark:border-zinc-700 shadow-md">
+                                            <img src={bannerPreview} alt="Banner Preview" className="w-full h-full object-cover" />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             <div className="pt-4 md:pt-0">

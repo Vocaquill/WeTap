@@ -55,7 +55,7 @@ function UserHomePage() {
         <div className="min-h-screen bg-theme-bg text-zinc-100 pb-12">
 
             {heroVideo && (
-                <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8 pt-2 relative group">
+                <section className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-8 items-center mb-8 pt-2 relative group px-3 sm:px-4 lg:px-0">
                     <Link
                         to={`/video/${heroVideo.slug}`}
                         className="absolute inset-0 z-10"
@@ -75,15 +75,15 @@ function UserHomePage() {
                         </div>
                     </div>
 
-                    <div className="lg:col-span-5 space-y-4 pr-4">
-                        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-zinc-100">
+                    <div className="lg:col-span-5 space-y-2 sm:space-y-4 px-2 sm:px-4 lg:px-0 lg:pr-4">
+                        <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-zinc-100">
                             {heroVideo.title}
                         </h1>
 
                         <div className="flex items-center gap-2 relative z-20 w-fit">
                             <Link
                                 to={`/channel/${heroVideo.channel?.id}`} // або куди веде клік на канал
-                                className="font-bold text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                                className="font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors cursor-pointer"
                             >
                                 {heroVideo.channel?.name || 'Unknown Channel'}
                             </Link>

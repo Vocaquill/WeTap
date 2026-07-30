@@ -16,8 +16,8 @@ export function BaseLayout({
                                sidebar,
                                header,
                                footer,
-                               className = "flex min-h-screen bg-theme-bg text-zinc-100 antialiased font-sans",
-                               mainClassName = "flex-1 flex flex-col min-w-0 bg-theme-bg",
+                               className = "flex flex-col md:flex-row min-h-screen bg-theme-bg text-zinc-100 antialiased font-sans",
+                               mainClassName = "flex-1 flex flex-col min-w-0 bg-theme-bg pb-16 md:pb-0",
                                contentClassName = "px-2 py-1 flex-grow",
                                usePageTransition = true,
                            }: BaseLayoutProps) {

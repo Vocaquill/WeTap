@@ -28,7 +28,7 @@ export function TabButtons({
                     onClick={() => handleTabChange(tab)}
                     className={`custom-tab-btn px-4 py-2 rounded-xl transition-all duration-300 font-bold ${activeTab === tab
                         ? 'bg-[#FF2D7A] text-white shadow-lg shadow-[#FF2D7A]/20'
-                        : 'bg-zinc-900/80 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-50'
+                        : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-zinc-100'
                     }`}
                 >
                     {tab}

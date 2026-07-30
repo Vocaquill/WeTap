@@ -75,7 +75,7 @@ function RegisterPage() {
     };
 
     return (
-        <div className="min-h-screen bg-theme-bg text-white flex items-center justify-center relative overflow-hidden py-12">
+        <div className="min-h-screen bg-theme-bg text-theme-text flex items-center justify-center relative overflow-hidden py-12">
             {isLoading && <LoadingOverlay />}
 
             {/* Background */}
@@ -92,21 +92,23 @@ function RegisterPage() {
                 />
 
                 <div className="mb-10 text-center">
-                    <h1 className="text-4xl font-black uppercase italic">
-                        Створити <span className="text-red-600">акаунт</span>
-                    </h1>
-                    <p className="text-zinc-500 mt-2">Приєднуйся до CounterWatch</p>
+                    <div className="mb-10 text-center">
+                        <h1 className="text-4xl font-black uppercase italic text-theme-text">
+                            Створити <span className="text-red-600">акаунт</span>
+                        </h1>
+                    </div>
+                    <p className="text-zinc-500 mt-2">Приєднуйся до WeTap</p>
                 </div>
 
                 <form
                     onSubmit={handleSubmit}
-                    className="space-y-6 bg-zinc-900/30 p-8 rounded-[2.5rem] border border-white/5 backdrop-blur-md"
+                    className="space-y-6 bg-zinc-100 dark:bg-zinc-800/30 p-8 rounded-[2.5rem] border border-zinc-200 dark:border-zinc-700/20 backdrop-blur-md"
                 >
                     {/* AVATAR */}
                     <div className="flex flex-col items-center">
                         <div
                             onClick={() => fileInputRef.current?.click()}
-                            className="relative w-24 h-24 rounded-3xl bg-zinc-800 border-2 border-dashed border-zinc-700 flex items-center justify-center cursor-pointer overflow-hidden group hover:border-red-600"
+                            className="relative w-24 h-24 rounded-3xl bg-zinc-200 dark:bg-zinc-800 border-2 border-dashed border-zinc-300 dark:border-zinc-700 flex items-center justify-center cursor-pointer overflow-hidden group hover:border-red-600"
                         >
                             {imagePreview ? (
                                 <img src={imagePreview} className="w-full h-full object-cover" />
@@ -138,8 +140,8 @@ function RegisterPage() {
                                 onChange={(e) =>
                                     setFormData({ ...formData, [field]: e.target.value })
                                 }
-                                icon={<User className="text-zinc-600" size={20} />}
-                                inputClassName="bg-black/40 rounded-2xl py-3.5"
+                                icon={<User className="text-zinc-400 dark:text-zinc-600" size={20} />}
+                                inputClassName="w-full bg-zinc-800 rounded-2xl py-3.5"
                                 labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
                             />
                         ))}
@@ -154,8 +156,8 @@ function RegisterPage() {
                         onChange={(e) =>
                             setFormData({ ...formData, email: e.target.value })
                         }
-                        icon={<Mail className="text-zinc-600" size={20} />}
-                        inputClassName="bg-black/40 rounded-2xl py-3.5"
+                        icon={<Mail className="text-zinc-400 dark:text-zinc-600" size={20} />}
+                        inputClassName="w-full bg-zinc-800 rounded-2xl py-3.5"
                         labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
                     />
 
@@ -168,8 +170,8 @@ function RegisterPage() {
                         onChange={(e) =>
                             setFormData({ ...formData, password: e.target.value })
                         }
-                        icon={<Lock className="text-zinc-600" size={20} />}
-                        inputClassName="bg-black/40 rounded-2xl py-3.5"
+                        icon={<Lock className="text-zinc-400 dark:text-zinc-600" size={20} />}
+                        inputClassName="w-full bg-zinc-800 rounded-2xl py-3.5"
                         labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
                     />
 

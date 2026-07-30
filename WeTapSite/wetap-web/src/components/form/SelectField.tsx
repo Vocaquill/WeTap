@@ -7,6 +7,7 @@ export interface SelectFieldProps extends Omit<SelectHTMLAttributes<HTMLSelectEl
     error?: string | string[];
     wrapperClassName?: string;
     selectClassName?: string;
+    variant?: 'default' | 'filter';
 }
 
 export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>(
@@ -20,9 +21,16 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
          onChange,
          wrapperClassName = '',
          selectClassName = '',
+         variant = 'default',
          ...props
      }, ref) => {
          const errorMessage = Array.isArray(error) ? error[0] : error;
+
+         const baseStyles = "transition appearance-none cursor-pointer outline-none";
+         const variantStyles = {
+             default: "bg-zinc-800 text-zinc-100 rounded-xl px-4 py-3 border border-zinc-700 focus:border-red-500",
+             filter: "bg-zinc-800/60 hover:bg-zinc-800 text-zinc-200 border-none rounded-full py-2 px-4 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-zinc-700 pr-8"
+         };
 
          return (
              <div className={`flex flex-col ${wrapperClassName}`}>
@@ -36,8 +44,8 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
                      value={value}
                      required={required}
                      onChange={onChange}
-                     className={`bg-zinc-900 text-white rounded-xl px-4 py-3 border transition appearance-none cursor-pointer outline-none
-                         ${errorMessage ? 'border-red-500' : 'border-zinc-800 focus:border-red-500'}
+                     className={`${baseStyles} ${variantStyles[variant]}
+                         ${errorMessage ? 'border-red-500' : ''}
                          ${selectClassName}
                      `}
                      {...props}
@@ -61,3 +69,4 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
 );
 
 SelectField.displayName = "SelectField";
+
