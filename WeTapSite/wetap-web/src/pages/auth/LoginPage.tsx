@@ -1,59 +1,60 @@
-import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {Mail, Lock, ArrowRight} from 'lucide-react';
-import {motion} from 'framer-motion';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
+import { motion } from 'framer-motion';
 import logoImg from '../../layouts/logo.png';
-import {useLoginByGoogleMutation, useLoginMutation} from "../../services/api/apiAccount";
-import {useGoogleLogin} from '@react-oauth/google';
+import { useLoginByGoogleMutation, useLoginMutation } from "../../services/api/apiAccount";
+import { useGoogleLogin } from '@react-oauth/google';
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
-import {InputField} from "../../components/form/InputField";
-import {Button} from "../../components/form/Button";
-import type {ServerError} from "../../types/Account/ServerError.ts";
-import type {ILogin} from "../../types/Account/ILogin.ts";
+import type { ServerError } from "../../types/Account/ServerError.ts";
+import type { ILogin } from "../../types/Account/ILogin.ts";
 
 function LoginPage() {
-    const navigate = useNavigate();
-    const [errorMessage, setErrorMessage] = useState("");
-    const [formData, setFormData] = useState<ILogin>({
-        email: '',
-        password: '',
-    });
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
-    const [login, {isLoading: isLoginLoading}] = useLoginMutation();
-    const [loginByGoogle, {isLoading: isGoogleLoading}] = useLoginByGoogleMutation();
+  const [formData, setFormData] = useState<ILogin>({
+    email: '',
+    password: '',
+  });
 
-    /* ================= EMAIL / PASSWORD LOGIN ================= */
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setErrorMessage("")
+  const [login, { isLoading: isLoginLoading }] = useLoginMutation();
+  const [loginByGoogle, { isLoading: isGoogleLoading }] = useLoginByGoogleMutation();
 
-        try {
-            await login(formData).unwrap();
-            navigate('/');
-        } catch (err: any) {
-            setErrorMessage(err?.data?.message)
+  /* ================= EMAIL / PASSWORD LOGIN ================= */
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage("");
+
+    try {
+      await login(formData).unwrap();
+      navigate('/');
+    } catch (err: any) {
+      setErrorMessage(err?.data?.message || 'Помилка авторизації');
+    }
+  };
+
+  /* ================= GOOGLE LOGIN ================= */
+  const loginUseGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setErrorMessage("");
+
+      try {
+        await loginByGoogle(tokenResponse.access_token).unwrap();
+        navigate('/');
+      } catch (error) {
+        const serverError = error as ServerError;
+
+        if (serverError?.status === 400) {
+          setErrorMessage('Помилка входу через Google');
+        } else {
+          setErrorMessage('Сталася помилка при вході');
         }
-    };
-
-    /* ================= GOOGLE LOGIN ================= */
-    const loginUseGoogle = useGoogleLogin({
-        onSuccess: async (tokenResponse) => {
-            setErrorMessage("")
-
-            try {
-                await loginByGoogle(tokenResponse.access_token).unwrap();
-                navigate('/');
-            } catch (error) {
-                const serverError = error as ServerError;
-
-                if (serverError?.status === 400) {
-                    setErrorMessage('Помилка входу через Google');
-                } else {
-                    setErrorMessage('Сталася помилка при вході');
-                }
-            }
-        },
-    });
+      }
+    },
+  });
 
   const GoogleIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -65,104 +66,124 @@ function LoginPage() {
   );
 
   return (
-    <div className="min-h-screen bg-theme-bg text-white flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen bg-[#121318] text-white flex items-center justify-center p-4 relative overflow-hidden">
       {(isLoginLoading || isGoogleLoading) && <LoadingOverlay />}
 
-      {/* Background blur */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-red-600/20 blur-[120px] rounded-full" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-900/10 blur-[120px] rounded-full" />
+      {/* М'які кольорові плями на фоні */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-full -translate-y-1/2 w-96 h-96 bg-[#ff2a6d]/15 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 left-1/2 translate-y-1/2 w-96 h-96 bg-purple-600/15 rounded-full blur-[120px] pointer-events-none" />
 
+      {/* Центрований картка-прямокутник */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md z-10 px-6"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+        className="w-full max-w-md bg-[#1b1c22]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl z-10 flex flex-col items-center"
       >
-        {/* Logo */}
-        <div className="flex flex-col items-center mb-10">
-          <div className="h-20 w-auto flex items-center justify-center shrink-0">
-            <img
-              src={logoImg}
-              alt="WeTap Logo"
-              className="h-full object-contain"
-            />
-          </div>
-          <h1 className="text-3xl font-black uppercase italic text-zinc-100">
-            Вітаємо у <span className="text-red-600">WeTap</span>
-          </h1>
-          <p className="text-zinc-500 text-sm mt-2">Введіть свої дані</p>
+        {/* Logo / Header */}
+        <div className="flex items-center gap-2 mb-6">
+          <img src={logoImg} alt="WeTap Logo" className="h-8 w-auto object-contain" />
+          <span className="text-2xl font-bold tracking-tight text-[#ff2a6d]">WeTap</span>
         </div>
 
+        {/* Title & Subtitle */}
+        <h1 className="text-2xl font-bold text-center mb-1">Welcome Back</h1>
+        <p className="text-zinc-400 text-xs text-center mb-6">
+          Good to see you again! Please enter your details.
+        </p>
+
         {/* FORM */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="w-full space-y-4">
           {/* EMAIL */}
-          <InputField
-            label="Email"
-            type="email"
-            required
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            icon={<Mail className="text-zinc-500" size={20} />}
-            inputClassName="bg-zinc-800 rounded-2xl py-4"
-            labelClassName="text-xs text-zinc-400 uppercase ml-1"
-          />
-
-          {/* PASSWORD */}
-          <InputField
-            label="Пароль"
-            type="password"
-            required
-            value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            icon={<Lock className="text-zinc-500" size={20} />}
-            inputClassName="bg-zinc-800 rounded-2xl py-4"
-            labelClassName="text-xs text-zinc-400 uppercase ml-1"
-          />
-
-
-                    {errorMessage && (
-                        <p className="text-red-500 text-sm font-semibold">{errorMessage}</p>
-                    )}
-
-          <div className="text-right">
-            <Button
-              type="button"
-              variant="linkDanger"
-              onClick={() => navigate('/forgot-password')}
-            >
-              Забули пароль?
-            </Button>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-semibold text-zinc-300">Email</label>
+            <input
+              type="email"
+              required
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="w-full bg-white text-zinc-900 placeholder-zinc-400 px-4 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#ff2a6d] transition-all"
+            />
           </div>
 
-          <Button
+          {/* PASSWORD */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-semibold text-zinc-300">Password</label>
+            <div className="relative flex items-center">
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                className="w-full bg-white text-zinc-900 placeholder-zinc-400 pl-4 pr-11 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#ff2a6d] transition-all"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 text-zinc-600 hover:text-zinc-900 transition-colors"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          {/* ERROR MESSAGE */}
+          {errorMessage && (
+            <p className="text-red-500 text-xs font-medium text-center">{errorMessage}</p>
+          )}
+
+          {/* REMEMBER ME & FORGOT PASSWORD */}
+          <div className="flex items-center justify-between text-xs pt-1">
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 rounded-full accent-[#ff2a6d] cursor-pointer"
+              />
+              <span className="text-zinc-300 font-medium">Remember me</span>
+            </label>
+
+            <button
+              type="button"
+              onClick={() => navigate('/forgot-password')}
+              className="text-[#ff2a6d] hover:underline font-medium"
+            >
+              Forgot password
+            </button>
+          </div>
+
+          {/* SUBMIT BUTTON */}
+          <button
             type="submit"
-            variant="primary"
-            size="xl"
-            fullWidth
-            iconRight={<ArrowRight />}
+            className="w-full bg-[#0d0d11] hover:bg-black text-white font-semibold py-2.5 rounded-full text-sm transition-all border border-zinc-800 shadow-md mt-2"
           >
-            Увійти
-          </Button>
+            Sign In
+          </button>
         </form>
 
-        {/* GOOGLE */}
-        <Button
+        {/* GOOGLE BUTTON */}
+        <button
           type="button"
-          variant="google"
-          size="xl"
-          fullWidth
-          className="mt-6"
-          icon={<GoogleIcon />}
           onClick={() => loginUseGoogle()}
+          className="w-full bg-white hover:bg-zinc-100 text-zinc-900 font-semibold py-2.5 rounded-full text-sm transition-all flex items-center justify-center gap-2 mt-3 shadow-md"
         >
-          Google
-        </Button>
+          <GoogleIcon />
+          Sign with google
+        </button>
 
-        {/* REGISTER */}
-        <p className="text-center mt-6 text-zinc-500">
-          Немає акаунту?{' '}
-          <Button variant="linkPlain" onClick={() => navigate('/register')}>
-            Створити
-          </Button>
+        {/* REGISTER LINK */}
+        <p className="text-xs text-zinc-400 mt-6">
+          Don't have an account{' '}
+          <button
+            type="button"
+            onClick={() => navigate('/register')}
+            className="text-[#ff2a6d] hover:underline font-medium"
+          >
+            Sign up
+          </button>
         </p>
       </motion.div>
     </div>

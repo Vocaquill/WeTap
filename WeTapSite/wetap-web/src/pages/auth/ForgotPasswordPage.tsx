@@ -1,144 +1,143 @@
-import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {Mail, Send, CheckCircle2} from 'lucide-react';
-import {motion, AnimatePresence} from 'framer-motion';
-import {useForgotPasswordMutation} from "../../services/api/apiAccount";
-import { InputField } from "../../components/form/InputField";
-import { Button } from "../../components/form/Button";
-import { BackButton } from "../../components/ui/common/BackButton";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import logoImg from '../../layouts/logo.png';
+import { useForgotPasswordMutation } from "../../services/api/apiAccount";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 
 function ForgotPasswordPage() {
-    const [forgot, { isLoading }] = useForgotPasswordMutation();
-    const navigate = useNavigate();
-    const [email, setEmail] = useState('');
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+  const [forgot, { isLoading }] = useForgotPasswordMutation();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setErrorMessage("")
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage("");
 
-        try {
-            await forgot({email: email}).unwrap();
-            setIsSubmitted(true);
-            setErrorMessage("");
-        } catch (err: any) {
-            console.log("error", err);
-            const msg = err?.data?.message || err?.data?.error || "Сталася помилка при відновленні паролю";
-            setErrorMessage(msg);
-        }
-    };
+    try {
+      await forgot({ email }).unwrap();
+      setIsSubmitted(true);
+      setErrorMessage("");
+    } catch (err: any) {
+      const msg = err?.data?.message || err?.data?.error || "Сталася помилка при відновленні паролю";
+      setErrorMessage(msg);
+    }
+  };
 
-    return (
-        <div
-            className="min-h-screen bg-theme-bg text-theme-text flex items-center justify-center relative overflow-hidden px-6">
-            {isLoading && <LoadingOverlay />}
-            {/* Background Glow */}
-            <div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-red-600/10 blur-[120px] rounded-full pointer-events-none"/>
+  return (
+    <div className="min-h-screen bg-[#121318] text-white flex items-center justify-center p-4 relative overflow-hidden">
+      {isLoading && <LoadingOverlay />}
 
-            <motion.div
-                initial={{opacity: 0, y: 20}}
-                animate={{opacity: 1, y: 0}}
-                className="w-full max-w-md z-10"
-            >
-                <AnimatePresence mode="wait">
-                    {!isSubmitted ? (
-                        /* --- ФОРМА ЗАПИТУ --- */
-                        <motion.div
-                            key="request-form"
-                            initial={{opacity: 0, x: -20}}
-                            animate={{opacity: 1, x: 0}}
-                            exit={{opacity: 0, x: 20}}
-                            className="space-y-8"
-                        >
-                            <BackButton
-                                label="Назад до входу"
-                                onClick={() => navigate('/login')}
-                                className="mb-4"
-                            />
+      {/* М'які кольорові плями на фоні */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-full -translate-y-1/2 w-96 h-96 bg-[#ff2a6d]/15 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 left-1/2 translate-y-1/2 w-96 h-96 bg-purple-600/15 rounded-full blur-[120px] pointer-events-none" />
 
-                            <div className="space-y-2">
-                                <h1 className="text-4xl font-black uppercase italic tracking-tighter text-theme-text">
-                                    Забули <span className="text-red-600">пароль?</span>
-                                </h1>
-                                <p className="text-zinc-500 text-sm leading-relaxed">
-                                    Введіть свою електронну пошту, і ми надішлемо вам посилання для створення нового
-                                    пароля.
-                                </p>
-                            </div>
-
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                <InputField
-                                    label="Email"
-                                    type="email"
-                                    required
-                                    placeholder="example@mail.com"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    icon={<Mail className="text-zinc-400 dark:text-zinc-600 group-focus-within:text-red-600 transition-colors" size={20} />}
-                                    inputClassName="bg-white/40 dark:bg-zinc-900/40 border border-zinc-200 dark:border-white/5 focus:border-red-600 focus:ring-4 focus:ring-red-600/10 rounded-2xl py-4 pr-4 outline-none transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-700"
-                                    labelClassName="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1"
-                                    wrapperClassName="space-y-2 group"
-                                    error={errorMessage}
-                                  className="text-theme-text"
-                                />
-
-                                <Button
-                                    type="submit"
-                                    variant="primary"
-                                    size="xl"
-                                    fullWidth
-                                    iconRight={<Send size={18} />}
-                                >
-                                    Надіслати посилання
-                                </Button>
-                            </form>
-                        </motion.div>
-                    ) : (
-                        /* --- ПОВІДОМЛЕННЯ ПРО УСПІХ --- */
-                        <motion.div
-                            key="success-message"
-                            initial={{opacity: 0, scale: 0.9}}
-                            animate={{opacity: 1, scale: 1}}
-                            className="text-center space-y-6 bg-zinc-100 dark:bg-zinc-900/30 p-10 rounded-[3rem] border border-zinc-200 dark:border-white/5 backdrop-blur-xl"
-                        >
-                            <div
-                                className="w-20 h-20 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-600/30">
-                                <CheckCircle2 className="text-red-600" size={40}/>
-                            </div>
-                            <div className="space-y-2">
-                                <h2 className="text-2xl font-black uppercase italic tracking-tighter text-theme-text">Перевірте
-                                    пошту</h2>
-                                <p className="text-zinc-400 text-sm leading-relaxed">
-                                    Ми надіслали інструкції для відновлення пароля на <span
-                                    className="text-theme-text font-bold">{email}</span>.
-                                </p>
-                            </div>
-                            <Button
-                                variant="linkSubtle"
-                                onClick={() => setIsSubmitted(false)}
-                            >
-                                Не отримали листа? Спробувати знову
-                            </Button>
-                            <div className="pt-4">
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="xl"
-                                    fullWidth
-                                    onClick={() => navigate('/login')}
-                                >
-                                    Повернутися до входу
-                                </Button>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </motion.div>
+      {/* Центрований картка-прямокутник */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+        className="w-full max-w-md bg-[#1b1c22]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl z-10 flex flex-col items-center"
+      >
+        {/* Logo / Header */}
+        <div className="flex items-center gap-2 mb-8">
+          <img src={logoImg} alt="WeTap Logo" className="h-8 w-auto object-contain" />
+          <span className="text-2xl font-bold tracking-tight text-[#ff2a6d]">WeTap</span>
         </div>
-    );
+
+        <AnimatePresence mode="wait">
+          {!isSubmitted ? (
+            /* --- ФОРМА ЗАПИТУ --- */
+            <motion.div
+              key="request-form"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
+              className="w-full flex flex-col items-center"
+            >
+              <h1 className="text-2xl font-bold text-center mb-1">Forgot password?</h1>
+              <p className="text-zinc-400 text-xs text-center mb-6">
+                Enter your email address and we'll send you a recovery link
+              </p>
+
+              <form onSubmit={handleSubmit} className="w-full space-y-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-zinc-300">Email</label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-white text-zinc-900 placeholder-zinc-400 px-4 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#ff2a6d] transition-all"
+                  />
+                </div>
+
+                {errorMessage && (
+                  <p className="text-red-500 text-xs font-medium text-center pt-1">{errorMessage}</p>
+                )}
+
+                <button
+                  type="submit"
+                  className="w-full bg-[#ff2a6d] hover:bg-[#e0245e] text-white font-semibold py-2.5 rounded-full text-sm transition-all shadow-md shadow-[#ff2a6d]/20 mt-2"
+                >
+                  Send recovery link
+                </button>
+              </form>
+
+              <p className="text-xs text-zinc-400 mt-6">
+                Back to{' '}
+                <button
+                  type="button"
+                  onClick={() => navigate('/login')}
+                  className="text-[#ff2a6d] hover:underline font-medium"
+                >
+                  Sign in
+                </button>
+              </p>
+            </motion.div>
+          ) : (
+            /* --- ПОВІДОМЛЕННЯ ПРО УСПІХ --- */
+            <motion.div
+              key="success-message"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="w-full flex flex-col items-center text-center py-2"
+            >
+              <div className="w-14 h-14 bg-[#ff2a6d]/20 rounded-full flex items-center justify-center mb-4 border border-[#ff2a6d]/30">
+                <CheckCircle2 className="text-[#ff2a6d]" size={32} />
+              </div>
+
+              <h2 className="text-xl font-bold mb-2">Check your email</h2>
+              <p className="text-zinc-400 text-xs leading-relaxed mb-6">
+                We sent password recovery instructions to <br />
+                <span className="text-white font-medium">{email}</span>
+              </p>
+
+              <button
+                type="button"
+                onClick={() => setIsSubmitted(false)}
+                className="text-xs text-zinc-400 hover:text-white transition-colors mb-4"
+              >
+                Didn't receive the email? Try again
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate('/login')}
+                className="w-full bg-[#ff2a6d] hover:bg-[#e0245e] text-white font-semibold py-2.5 rounded-full text-sm transition-all shadow-md shadow-[#ff2a6d]/20"
+              >
+                Back to Sign in
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
+  );
 }
 
 export default ForgotPasswordPage;
