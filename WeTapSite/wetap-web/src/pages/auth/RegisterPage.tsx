@@ -1,197 +1,231 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, Camera, ArrowRight } from 'lucide-react';
+import { Camera, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
+import logoImg from '../../layouts/logo.png';
 import { loginSuccess } from "../../store/slices/authSlice";
 import { useRegisterMutation } from "../../services/api/apiAccount";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
-import { InputField } from "../../components/form/InputField";
-import { Button } from "../../components/form/Button";
-import { BackButton } from "../../components/ui/common/BackButton";
-import type {ServerError} from "../../types/Account/ServerError.ts";
-import type {IRegister} from "../../types/Account/IRegister.ts";
+import type { ServerError } from "../../types/Account/ServerError.ts";
+import type { IRegister } from "../../types/Account/IRegister.ts";
 
 function RegisterPage() {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const [register, { isLoading }] = useRegisterMutation();
+  const [register, { isLoading }] = useRegisterMutation();
 
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-    });
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+  });
 
-    const [errorMessage, setErrorMessage] = useState("");
-    const [imageFile, setImageFile] = useState<File | null>(null);
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-    /* ================= IMAGE ================= */
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+  /* ================= IMAGE ================= */
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-        setImageFile(file);
-        setImagePreview(URL.createObjectURL(file));
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  /* ================= SUBMIT ================= */
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const reg: IRegister = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      password: formData.password,
     };
 
-    /* ================= SUBMIT ================= */
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const reg: IRegister={
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            password: formData.password,
-        }
-        if(imageFile){
-            reg.imageFile = imageFile;
-        }
-        else {
-            setErrorMessage("Оберіть фото");
-            return;
-        }
+    if (imageFile) {
+      reg.imageFile = imageFile;
+    } else {
+      setErrorMessage("Оберіть фото профілю");
+      return;
+    }
 
-        try {
-            const result = await register(reg).unwrap();
-            dispatch(loginSuccess(result.token));
-            navigate('/');
-            setErrorMessage("");
-        } catch (error: any) {
-            setErrorMessage(error?.data?.message);
-            const serverError = error as ServerError;
+    try {
+      const result = await register(reg).unwrap();
+      dispatch(loginSuccess(result.token));
+      navigate('/');
+      setErrorMessage("");
+    } catch (error: any) {
+      setErrorMessage(error?.data?.message || 'Помилка реєстрації');
+      const serverError = error as ServerError;
 
-            if (serverError?.status === 400) {
-                message.error('Перевірте введені дані');
-            } else {
-                message.error('Сталася помилка при створенні акаунта');
-            }
-        }
-    };
+      if (serverError?.status === 400) {
+        message.error('Перевірте введені дані');
+      } else {
+        message.error('Сталася помилка при створенні акаунта');
+      }
+    }
+  };
 
-    return (
-        <div className="min-h-screen bg-theme-bg text-theme-text flex items-center justify-center relative overflow-hidden py-12">
-            {isLoading && <LoadingOverlay />}
+  return (
+    <div className="min-h-screen bg-[#121318] text-white flex items-center justify-center p-4 relative overflow-hidden py-10">
+      {isLoading && <LoadingOverlay />}
 
-            {/* Background */}
-            <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-600/20 blur-[120px] rounded-full" />
+      {/* М'які кольорові плями на фоні */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-full -translate-y-1/2 w-96 h-96 bg-[#ff2a6d]/15 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 left-1/2 translate-y-1/2 w-96 h-96 bg-purple-600/15 rounded-full blur-[120px] pointer-events-none" />
 
-            <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="w-full max-w-xl z-10 px-6"
-            >
-                <BackButton
-                    label="Назад до входу"
-                    onClick={() => navigate('/login')}
-                />
+      {/* Центрований картка-прямокутник */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+        className="w-full max-w-md bg-[#1b1c22]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl z-10 flex flex-col items-center relative"
+      >
+        {/* Кнопка "Назад" */}
+        <button
+          type="button"
+          onClick={() => navigate('/login')}
+          className="absolute top-6 left-6 text-zinc-400 hover:text-white flex items-center gap-1.5 text-xs transition-colors"
+        >
+          <ArrowLeft size={16} />
+          <span>Вхід</span>
+        </button>
 
-                <div className="mb-10 text-center">
-                    <div className="mb-10 text-center">
-                        <h1 className="text-4xl font-black uppercase italic text-theme-text">
-                            Створити <span className="text-red-600">акаунт</span>
-                        </h1>
-                    </div>
-                    <p className="text-zinc-500 mt-2">Приєднуйся до WeTap</p>
-                </div>
-
-                <form
-                    onSubmit={handleSubmit}
-                    className="space-y-6 bg-zinc-100 dark:bg-zinc-800/30 p-8 rounded-[2.5rem] border border-zinc-200 dark:border-zinc-700/20 backdrop-blur-md"
-                >
-                    {/* AVATAR */}
-                    <div className="flex flex-col items-center">
-                        <div
-                            onClick={() => fileInputRef.current?.click()}
-                            className="relative w-24 h-24 rounded-3xl bg-zinc-200 dark:bg-zinc-800 border-2 border-dashed border-zinc-300 dark:border-zinc-700 flex items-center justify-center cursor-pointer overflow-hidden group hover:border-red-600"
-                        >
-                            {imagePreview ? (
-                                <img src={imagePreview} className="w-full h-full object-cover" />
-                            ) : (
-                                <Camera size={32} className="text-zinc-500 group-hover:text-red-600" />
-                            )}
-                        </div>
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            onChange={handleImageChange}
-                            className="hidden"
-                            accept="image/*"
-                        />
-                        <span className="text-[10px] text-zinc-500 mt-3 font-bold uppercase">
-              Фото профілю
-            </span>
-                    </div>
-
-                    {/* NAMES */}
-                    <div className="grid md:grid-cols-2 gap-4">
-                        {['firstName', 'lastName'].map((field, i) => (
-                            <InputField
-                                key={field}
-                                label={i === 0 ? "Ім'я" : 'Прізвище'}
-                                name={field}
-                                required
-                                value={formData[field as 'firstName' | 'lastName']}
-                                onChange={(e) =>
-                                    setFormData({ ...formData, [field]: e.target.value })
-                                }
-                                icon={<User className="text-zinc-400 dark:text-zinc-600" size={20} />}
-                                inputClassName="w-full bg-zinc-800 rounded-2xl py-3.5"
-                                labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
-                            />
-                        ))}
-                    </div>
-
-                    {/* EMAIL */}
-                    <InputField
-                        label="Email"
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
-                        }
-                        icon={<Mail className="text-zinc-400 dark:text-zinc-600" size={20} />}
-                        inputClassName="w-full bg-zinc-800 rounded-2xl py-3.5"
-                        labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
-                    />
-
-                    {/* PASSWORD */}
-                    <InputField
-                        label="Пароль"
-                        type="password"
-                        required
-                        value={formData.password}
-                        onChange={(e) =>
-                            setFormData({ ...formData, password: e.target.value })
-                        }
-                        icon={<Lock className="text-zinc-400 dark:text-zinc-600" size={20} />}
-                        inputClassName="w-full bg-zinc-800 rounded-2xl py-3.5"
-                        labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
-                    />
-
-                    {errorMessage && (
-                        <p className="text-red-500 text-sm font-semibold">{errorMessage}</p>
-                    )}
-
-                    <Button
-                        type="submit"
-                        variant="primary"
-                        size="xl"
-                        fullWidth
-                        iconRight={<ArrowRight />}
-                    >
-                        Створити акаунт
-                    </Button>
-                </form>
-            </motion.div>
+        {/* Logo / Header */}
+        <div className="flex items-center gap-2 mb-4 mt-2">
+          <img src={logoImg} alt="WeTap Logo" className="h-8 w-auto object-contain" />
+          <span className="text-2xl font-bold tracking-tight text-[#ff2a6d]">WeTap</span>
         </div>
-    );
+
+        {/* Title & Subtitle */}
+        <h1 className="text-2xl font-bold text-center mb-1">Create Account</h1>
+        <p className="text-zinc-400 text-xs text-center mb-6">
+          Join WeTap and get started today!
+        </p>
+
+        {/* FORM */}
+        <form onSubmit={handleSubmit} className="w-full space-y-4">
+
+          {/* AVATAR UPLOAD */}
+          <div className="flex flex-col items-center mb-2">
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="relative w-20 h-20 rounded-full bg-white/5 border-2 border-dashed border-zinc-600 flex items-center justify-center cursor-pointer overflow-hidden group hover:border-[#ff2a6d] transition-all"
+            >
+              {imagePreview ? (
+                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+              ) : (
+                <Camera size={24} className="text-zinc-400 group-hover:text-[#ff2a6d] transition-colors" />
+              )}
+            </div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              className="hidden"
+              accept="image/*"
+            />
+            <span className="text-[11px] text-zinc-400 mt-1.5 font-medium">
+              Profile Photo
+            </span>
+          </div>
+
+          {/* FIRST & LAST NAME */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-zinc-300">First Name</label>
+              <input
+                type="text"
+                required
+                placeholder="John"
+                value={formData.firstName}
+                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                className="w-full bg-white text-zinc-900 placeholder-zinc-400 px-3.5 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#ff2a6d] transition-all"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-zinc-300">Last Name</label>
+              <input
+                type="text"
+                required
+                placeholder="Doe"
+                value={formData.lastName}
+                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                className="w-full bg-white text-zinc-900 placeholder-zinc-400 px-3.5 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#ff2a6d] transition-all"
+              />
+            </div>
+          </div>
+
+          {/* EMAIL */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-semibold text-zinc-300">Email</label>
+            <input
+              type="email"
+              required
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="w-full bg-white text-zinc-900 placeholder-zinc-400 px-4 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#ff2a6d] transition-all"
+            />
+          </div>
+
+          {/* PASSWORD */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-semibold text-zinc-300">Password</label>
+            <div className="relative flex items-center">
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                placeholder="Create password"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                className="w-full bg-white text-zinc-900 placeholder-zinc-400 pl-4 pr-11 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#ff2a6d] transition-all"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 text-zinc-600 hover:text-zinc-900 transition-colors"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+          </div>
+
+          {/* ERROR MESSAGE */}
+          {errorMessage && (
+            <p className="text-red-500 text-xs font-medium text-center pt-1">{errorMessage}</p>
+          )}
+
+          {/* SUBMIT BUTTON */}
+          <button
+            type="submit"
+            className="w-full bg-[#0d0d11] hover:bg-black text-white font-semibold py-2.5 rounded-full text-sm transition-all border border-zinc-800 shadow-md mt-4"
+          >
+            Sign Up
+          </button>
+        </form>
+
+        {/* LOGIN LINK */}
+        <p className="text-xs text-zinc-400 mt-6">
+          Already have an account?{' '}
+          <button
+            type="button"
+            onClick={() => navigate('/login')}
+            className="text-[#ff2a6d] hover:underline font-medium"
+          >
+            Sign in
+          </button>
+        </p>
+      </motion.div>
+    </div>
+  );
 }
 
 export default RegisterPage;
