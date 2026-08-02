@@ -14,13 +14,13 @@ function Footer() {
   return (
       <footer className="mt-auto border-t border-white/5 bg-zinc-950/50 backdrop-blur-sm px-6 py-12">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-12">
 
-            <div className="space-y-4 col-span-1 md:col-span-1">
+            <div className="space-y-4 col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-1">
               <h2 className="text-2xl font-black tracking-tighter uppercase italic">
                 WE<span style={{ color: '#FF2D7A' }}>TAP</span>
               </h2>
-              <p className="text-zinc-500 text-sm leading-relaxed">
+              <p className="text-zinc-500 text-sm leading-relaxed max-w-sm">
                 Найкращий досвід перегляду відео онлайн. Твій власний сервіс у кишені.
               </p>
             </div>

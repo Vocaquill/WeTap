@@ -101,15 +101,77 @@ export function MoviePlayer({ videoName, src }: MoviePlayerProps) {
         }
     };
 
-    const toggleFullscreen = () => {
+    const toggleFullscreen = async () => {
         if (containerRef.current) {
             if (!document.fullscreenElement) {
-                containerRef.current.requestFullscreen();
+                try {
+                    if (containerRef.current.requestFullscreen) {
+                        await containerRef.current.requestFullscreen();
+                    }
+                    if (screen.orientation && 'lock' in screen.orientation) {
+                        await (screen.orientation as any).lock('landscape').catch(() => {});
+                    }
+                } catch (e) {
+                    console.error("Fullscreen error:", e);
+                }
             } else {
-                document.exitFullscreen();
+                if (document.exitFullscreen) {
+                    await document.exitFullscreen().catch(() => {});
+                }
             }
         }
     };
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            if (!document.fullscreenElement && screen.orientation && 'unlock' in screen.orientation) {
+                try {
+                    (screen.orientation as any).unlock();
+                } catch (e) {}
+                if (screen.orientation && 'lock' in screen.orientation) {
+                    (screen.orientation as any).lock('portrait-primary').catch(() => {
+                        try {
+                            (screen.orientation as any).unlock();
+                        } catch (err) {}
+                    });
+                }
+            }
+        };
+
+        const handleOrientationChange = async () => {
+            if (!screen.orientation) return;
+            const type = screen.orientation.type;
+            const isMobile = window.matchMedia('(max-width: 1024px)').matches || ('ontouchstart' in window);
+
+            if (isMobile) {
+                if (type.startsWith('landscape')) {
+                    if (!document.fullscreenElement && containerRef.current) {
+                        try {
+                            await containerRef.current.requestFullscreen();
+                        } catch (e) {}
+                    }
+                } else if (type.startsWith('portrait')) {
+                    if (document.fullscreenElement) {
+                        try {
+                            await document.exitFullscreen();
+                        } catch (e) {}
+                    }
+                }
+            }
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        if (screen.orientation) {
+            screen.orientation.addEventListener('change', handleOrientationChange);
+        }
+
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            if (screen.orientation) {
+                screen.orientation.removeEventListener('change', handleOrientationChange);
+            }
+        };
+    }, []);
 
     const changeQuality = (newQuality: Quality) => {
         if (videoRef.current) {

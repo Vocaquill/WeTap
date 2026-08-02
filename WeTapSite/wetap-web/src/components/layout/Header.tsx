@@ -1,11 +1,13 @@
-import {useState, useEffect} from 'react';
-import {useNavigate, useLocation} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Plus, Users } from 'lucide-react';
 import { useAppSelector } from "../../store/index";
 import { APP_ENV } from "../../env/index";
 import { Button } from '../form/Button';
 import { themes, applyTheme, getActiveTheme } from '../../themes';
 import { SearchAutocomplete } from '../form/SearchAutocomplete';
+import { SelectField } from '../form/SelectField'; // <-- Імпортуємо ваш компонент
+import logoImg from '../../layouts/logo.png';
 
 function Header() {
     const [scrolled, setScrolled] = useState(false);
@@ -45,9 +47,21 @@ function Header() {
 
     return (
         <header
-            className={`h-14 sticky top-0 z-[40] px-3 sm:px-4 md:px-6 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-theme-bg/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'}`}
+            className={`h-14 sticky top-0 z-[40] px-2 sm:px-4 md:px-6 flex items-center justify-between gap-1.5 sm:gap-3 transition-all duration-300 ${scrolled ? 'bg-theme-bg/90 backdrop-blur-xl shadow-lg shadow-black/20' : 'bg-transparent'}`}
         >
-            <div className="flex items-center min-w-0 sm:min-w-[50px]">
+            <div className="flex items-center shrink-0">
+                <Link to="/" className="flex items-center shrink-0 md:hidden active:scale-95 transition-transform">
+                    <img src={logoImg} alt="WeTap Logo" className="h-7 sm:h-8 w-auto object-contain" />
+                    <span
+                        className="ml-1.5 text-sm sm:text-base font-black tracking-tight bg-clip-text text-transparent hidden sm:inline"
+                        style={{
+                            backgroundImage: 'linear-gradient(to right, #f43f5e, #ec4899, #a855f7)',
+                        }}
+                    >
+                        WeTap
+                    </span>
+                </Link>
+
                 {isSearchPage && (
                     <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400 hidden md:block">
                         Результати <span className="text-rose-500">пошуку</span>
@@ -55,37 +69,28 @@ function Header() {
                 )}
             </div>
 
-            <div className="flex-grow max-w-[200px] sm:max-w-xs md:max-w-md lg:max-w-xl mx-2 sm:mx-4">
+            <div className="flex-1 min-w-0 max-w-[170px] xs:max-w-[220px] sm:max-w-xs md:max-w-md lg:max-w-xl mx-1 sm:mx-4">
                 <SearchAutocomplete />
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
-                <Button 
-                    variant="icon" 
+            <div className="flex items-center gap-1.5 sm:gap-3 md:gap-4 shrink-0">
+                <Button
+                    variant="icon"
                     onClick={() => navigate('/video/add')}
                     className="hidden sm:flex items-center justify-center bg-zinc-800 p-2.5 rounded-full border border-zinc-700/40 text-zinc-300 hover:text-white hover:bg-zinc-700 transition-all"
                 >
                     <Plus size={20}/>
                 </Button>
 
-                <div className="relative hidden md:block">
-                    <select
+                {/* Використання SelectField замість звичайного select */}
+                <div className="hidden md:block min-w-[130px]">
+                    <SelectField
+                        name="theme"
+                        variant="filter"
                         value={activeTheme}
+                        options={themes}
                         onChange={handleThemeChange}
-                        className="bg-zinc-800 text-zinc-300 hover:text-zinc-100 text-xs font-bold py-2.5 pl-4 pr-9 rounded-full border border-zinc-700/40 outline-none cursor-pointer appearance-none transition-all hover:bg-zinc-700"
-                        style={{
-                            backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>")`,
-                            backgroundRepeat: 'no-repeat',
-                            backgroundPosition: 'right 12px center',
-                            backgroundSize: '14px'
-                        }}
-                    >
-                        {themes.map(t => (
-                            <option key={t.id} value={t.id} className="bg-zinc-900 text-zinc-300">
-                                {t.name}
-                            </option>
-                        ))}
-                    </select>
+                    />
                 </div>
 
                 <Button
@@ -100,7 +105,7 @@ function Header() {
                     <Button
                         variant="profile"
                         onClick={() => navigate('/account')}
-                        className="group flex items-center gap-0 sm:gap-2 bg-zinc-800 hover:bg-zinc-700 p-1 sm:py-1.5 sm:px-3 rounded-full border border-zinc-700 transition-all"
+                        className="group flex items-center gap-0 sm:gap-2 bg-zinc-800 hover:bg-zinc-700 p-1 sm:py-1.5 sm:px-3 rounded-full border border-zinc-700 transition-all shrink-0"
                     >
                         <div className="w-7 h-7 sm:w-6 sm:h-6 rounded-full overflow-hidden border border-rose-500/30">
                             <img
@@ -116,15 +121,14 @@ function Header() {
                 ) : (
                     <button
                         onClick={() => navigate('/login')}
-                        className="relative text-[10px] sm:text-xs font-extrabold tracking-wider uppercase px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-white overflow-hidden transition-all duration-300 active:scale-95 group shadow-[0_0_15px_rgba(236,72,153,0.15)] hover:shadow-[0_0_25px_rgba(236,72,153,0.35)]"
+                        className="relative shrink-0 w-auto text-[10px] sm:text-xs font-extrabold tracking-wider uppercase p-[2px] rounded-full text-white overflow-hidden transition-all duration-300 active:scale-95 group shadow-[0_0_15px_rgba(236,72,153,0.15)] hover:shadow-[0_0_25px_rgba(236,72,153,0.35)]"
                         style={{
                             background: 'rgb(var(--color-bg))',
-                            padding: '3px',
                             backgroundImage: 'linear-gradient(to right, #f43f5e, #ec4899, #a855f7)',
                         }}
                     >
                         <span
-                            className="block px-3 py-1.5 sm:px-5 sm:py-2 rounded-full bg-theme-bg text-zinc-200 group-hover:text-white group-hover:bg-theme-bg/80 transition-all duration-300">
+                            className="block px-3 py-1.5 sm:px-5 sm:py-2 rounded-full bg-theme-bg text-zinc-200 group-hover:text-white group-hover:bg-theme-bg/80 transition-all duration-300 whitespace-nowrap">
                           Sign In
                         </span>
                     </button>

@@ -38,15 +38,33 @@ public class CreateCommentCommandHandler(
 
         if (request.ParentId.HasValue)
         {
-            var parent = await context.Comments.FirstOrDefaultAsync(
-                x => x.Id == request.ParentId.Value,
-                cancellationToken
-            );
+            var parent = await context.Comments
+                .Include(x => x.Parent)
+                    .ThenInclude(p => p!.Parent)
+                .FirstOrDefaultAsync(
+                    x => x.Id == request.ParentId.Value,
+                    cancellationToken
+                );
 
-            if (parent != null)
+            if (parent == null)
             {
-                parent.RepliesCount++;
+                throw new Exception("Батьківський коментар не знайдено");
             }
+
+            int parentDepth = 0;
+            var current = parent;
+            while (current.Parent != null)
+            {
+                parentDepth++;
+                current = current.Parent;
+            }
+
+            if (parentDepth >= 2)
+            {
+                throw new Exception("Досягнуто максимальну глибину відповідей (максимум 2 рівні)");
+            }
+
+            parent.RepliesCount++;
         }
 
         context.Comments.Add(comment);
