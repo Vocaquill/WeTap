@@ -14,6 +14,7 @@ import { APP_ENV } from "../../env/index";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 import { useGetByQuery,
     useGetRecommendationsQuery, useIncrementViewMutation, useReactVideoMutation } from "../../services/api/apiVideos";
+import { useToggleSubscriptionMutation } from "../../services/api/apiChannels";
 import { useAppSelector } from '../../store/index';
 import {Button} from "../../components/form/Button.tsx";
 import {CommentsSection} from "../../components/video/CommentsSection";
@@ -38,6 +39,8 @@ function VideoPage() {
     const [reactVideo, { isLoading: isReacting }] = useReactVideoMutation();
     const [incrementView] = useIncrementViewMutation();
 
+    const [toggleSubscription, { isLoading: isSubscribing }] = useToggleSubscriptionMutation();
+
     useEffect(() => {
         if (video?.id) {
             incrementView(video.id);
@@ -56,12 +59,18 @@ function VideoPage() {
         }
     };
 
-    const handleSubscribe = () => {
+    const handleSubscribe = async () => {
         if (!user) {
             navigate('/login');
             return;
         }
-        // TODO: implement subscribe logic
+        if (video?.channel?.id) {
+            try {
+                await toggleSubscription(video.channel.id).unwrap();
+            } catch (error) {
+                console.error('Помилка при зміні підписки', error);
+            }
+        }
     };
 
     if (isVideoLoading) return <LoadingOverlay />;
@@ -86,8 +95,8 @@ function VideoPage() {
 
                             <div className="flex flex-col 2xl:flex-row xl:items-center justify-between gap-4 mt-4 pb-4 border-b border-zinc-800">
                                 <div className="flex items-center justify-between w-full 2xl:w-auto gap-3">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-zinc-500/20">
+                                    <Link to={`/channel/${video.channel?.id}`} className="flex items-center gap-3 group cursor-pointer">
+                                        <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-zinc-500/20 group-hover:border-[#FF2D7A] transition-colors">
                                             <img
                                                 src={video.channel?.avatarImage ? `${APP_ENV.IMAGES_200_URL}${video.channel.avatarImage}` : '/images/user/default.jpg'}
                                                 alt={video.channel?.name}
@@ -95,15 +104,21 @@ function VideoPage() {
                                             />
                                         </div>
                                         <div className="flex flex-col justify-center min-w-0">
-                                            <p className="channel-name text-zinc-100">
+                                            <p className="channel-name text-zinc-100 group-hover:text-[#FF2D7A] transition-colors">
                                                 {video.channel?.name}
                                             </p>
                                             <p className="text-xs text-zinc-400 mt-1">{video.channel?.subscriberCount} підписників</p>
                                         </div>
-                                    </div>
+                                    </Link>
 
-                                    <Button onClick={handleSubscribe} size={"sm"} className="ml-2 shrink-0">
-                                        Підписатися
+                                    <Button
+                                        onClick={handleSubscribe}
+                                        size="sm"
+                                        variant={video.channel?.isSubscribed ? "secondary" : "primary"}
+                                        disabled={isSubscribing}
+                                        className="ml-2 shrink-0"
+                                    >
+                                        {video.channel?.isSubscribed ? "Відписатися" : "Підписатися"}
                                     </Button>
                                 </div>
 
