@@ -27,10 +27,28 @@ export const apiChannels = createApi({
             providesTags: (result) =>
                 result ? [{ type: "Channel", id: result.id }] : ["Channel"],
         }),
+        toggleSubscription: builder.mutation<void, number>({
+            query: (channelId) => ({
+                url: `subscribe`,
+                method: "POST",
+                body: { channelId }
+            }),
+            invalidatesTags: (_result, _error, channelId) => [
+                { type: "Channel", id: channelId },
+                "Channel",
+            ],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch({ type: 'api/videos/invalidateTags', payload: ['Video'] });
+                } catch {}
+            }
+        }),
     }),
 });
 
 export const {
     useCreateChannelMutation,
     useGetByQuery,
+    useToggleSubscriptionMutation,
 } = apiChannels;
