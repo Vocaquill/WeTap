@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import UserHomePage from './pages/home/UserHomePage';
+import PopularPage from './pages/popular/PopularPage';
+import LikedVideosPage from './pages/video/LikedVideosPage';
 import VideoPage from './pages/video/VideoPage';
 import SearchPage from './pages/video/SearchPage';
 import LoginPage from './pages/auth/LoginPage';
@@ -78,6 +80,7 @@ function App() {
             <Routes>
                 <Route element={<AppLayout />}>
                     <Route path="/" element={<UserHomePage />} />
+                    <Route path="/popular" element={<PopularPage />} />
                     <Route path="/video/:slug" element={<VideoPage />} />
                     <Route path="/search" element={<SearchPage />} />
                     <Route path="/channel/:slug" element={<ChannelPage />} />
@@ -87,6 +90,7 @@ function App() {
                     <Route path="/reset-password" element={<ResetPasswordPage />} />
 
                     <Route element={<RequireLogin />}>
+                        <Route path="/liked" element={<LikedVideosPage />} />
                         <Route path="/account" element={<ProfilePage />} />
                         <Route path="/edit-account" element={<EditProfilePage />} />
                         <Route element={<RequireNoChannel />}>
