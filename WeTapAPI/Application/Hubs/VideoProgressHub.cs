@@ -21,7 +21,6 @@ public class VideoProgressHub(ILogger<VideoProgressHub> logger) : Hub
             "[VideoProgress] Hub LeaveChannel connectionId={ConnectionId} trackingId={TrackingId}",
             Context.ConnectionId,
             trackingId);
-
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, trackingId);
     }
 
