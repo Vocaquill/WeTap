@@ -24,6 +24,14 @@ body {
   background-color: rgb(var(--color-bg));
 }
 
+/* Плавний перехід кольорів ЛИШЕ під час моменту зміни теми */
+.theme-transitioning,
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease, fill 300ms ease, stroke 300ms ease !important;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

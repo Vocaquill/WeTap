@@ -69,13 +69,23 @@ export function getActiveTheme(): string {
   return 'light';
 }
 
+let themeTransitionTimer: ReturnType<typeof setTimeout> | null = null;
+
 export function applyTheme(themeId: string) {
   const theme = themes.find(t => t.id === themeId) || themes[0];
   const root = document.documentElement;
+
+  root.classList.add('theme-transitioning');
+
   Object.entries(theme.colors).forEach(([key, value]) => {
     root.style.setProperty(`--color-${key}`, value);
   });
   root.style.colorScheme = theme.id === 'dark' ? 'dark' : 'light';
+
+  if (themeTransitionTimer) clearTimeout(themeTransitionTimer);
+  themeTransitionTimer = setTimeout(() => {
+    root.classList.remove('theme-transitioning');
+  }, 300);
 }
 
 export function initThemeSystem(onThemeChange?: (newTheme: string) => void): () => void {
