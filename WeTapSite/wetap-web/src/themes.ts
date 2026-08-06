@@ -15,6 +15,7 @@ export interface Theme {
     'zinc-800': string;
     'zinc-900': string;
     'zinc-950': string;
+    'calendar-invert': string;
   };
 }
 
@@ -36,6 +37,7 @@ export const themes: Theme[] = [
       'zinc-800': '39 39 42',
       'zinc-900': '24 24 27',
       'zinc-950': '9 9 11',
+      'calendar-invert': '1',
     }
   },
   {
@@ -55,6 +57,7 @@ export const themes: Theme[] = [
       'zinc-800': '228 228 231',
       'zinc-900': '244 244 245',
       'zinc-950': '255 255 255',
+      'calendar-invert': '0',
     }
   }
 ];
@@ -65,6 +68,7 @@ export function applyTheme(themeId: string) {
   Object.entries(theme.colors).forEach(([key, value]) => {
     root.style.setProperty(`--color-${key}`, value);
   });
+  root.style.colorScheme = theme.id === 'dark' ? 'dark' : 'light';
   localStorage.setItem('theme', themeId);
 }
 

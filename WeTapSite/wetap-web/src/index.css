@@ -42,6 +42,11 @@ body {
   background: rgb(var(--color-zinc-700));
 }
 
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(var(--color-calendar-invert, 0));
+  cursor: pointer;
+}
+
 
 .custom-tab-btn {
   font-family: 'Roboto', sans-serif;

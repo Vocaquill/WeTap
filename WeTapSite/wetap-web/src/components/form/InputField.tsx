@@ -61,14 +61,10 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
                               ${icon ? 'pl-12' : ''}
                               ${isPassword ? 'pr-12' : ''}
                               ${errorMessage ? 'border-red-500' : 'border-zinc-700 focus:border-red-600'}
-                              [&::-webkit-calendar-picker-indicator]:filter
-                              [&::-webkit-calendar-picker-indicator]:invert
-                              [&::-webkit-calendar-picker-indicator]:sepia
-                              [&::-webkit-calendar-picker-indicator]:saturate-[500%]
-                              [&::-webkit-calendar-picker-indicator]:hue-rotate-[-10deg]
-                              [&::-webkit-calendar-picker-indicator]:opacity-90
-                              [&::-webkit-calendar-picker-indicator]:cursor-pointer
-                              ${inputClassName}
+                               [&::-webkit-calendar-picker-indicator]:cursor-pointer
+                               [&::-webkit-calendar-picker-indicator]:opacity-80
+                               hover:[&::-webkit-calendar-picker-indicator]:opacity-100
+                               ${inputClassName}
                           `}
                          {...props}
                      />
