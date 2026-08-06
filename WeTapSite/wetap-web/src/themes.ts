@@ -62,6 +62,13 @@ export const themes: Theme[] = [
   }
 ];
 
+export function getActiveTheme(): string {
+  if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return 'dark';
+  }
+  return 'light';
+}
+
 export function applyTheme(themeId: string) {
   const theme = themes.find(t => t.id === themeId) || themes[0];
   const root = document.documentElement;
@@ -69,9 +76,29 @@ export function applyTheme(themeId: string) {
     root.style.setProperty(`--color-${key}`, value);
   });
   root.style.colorScheme = theme.id === 'dark' ? 'dark' : 'light';
-  localStorage.setItem('theme', themeId);
 }
 
-export function getActiveTheme(): string {
-  return localStorage.getItem('theme') || 'standard';
+export function initThemeSystem(onThemeChange?: (newTheme: string) => void): () => void {
+  try {
+    localStorage.removeItem('theme');
+  } catch (e) {}
+
+  const current = getActiveTheme();
+  applyTheme(current);
+
+  if (typeof window !== 'undefined' && window.matchMedia) {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      const newTheme = e.matches ? 'dark' : 'light';
+      applyTheme(newTheme);
+      if (onThemeChange) onThemeChange(newTheme);
+    };
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    }
+  }
+
+  return () => {};
 }

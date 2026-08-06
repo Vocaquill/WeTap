@@ -39,7 +39,7 @@ import RequireAdmin from './components/auth/RequireAdmin';
 import RequireNoChannel from './components/auth/RequireNoChannel';
 import { useEffect, useState } from 'react';
 import { useRefreshTokenMutation } from './services/api/apiAccount';
-import { applyTheme, getActiveTheme } from './themes';
+import { initThemeSystem } from './themes';
 
 import ScrollToTop from './components/layout/ScrollToTop.tsx';
 
@@ -48,7 +48,8 @@ function App() {
     const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
     useEffect(() => {
-        applyTheme(getActiveTheme());
+        const cleanup = initThemeSystem();
+        return cleanup;
     }, []);
 
     useEffect(() => {
