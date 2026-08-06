@@ -28,7 +28,7 @@ export default function LikedVideosPage() {
                         <ThumbsUp size={32} className="text-white fill-white" />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-black text-white tracking-wide">Вподобані відео</h1>
+                        <h1 className="text-3xl font-black text-zinc-100 tracking-wide">Вподобані відео</h1>
                         <p className="text-zinc-400 mt-1">Відео, які вам сподобалися</p>
                     </div>
                 </div>

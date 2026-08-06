@@ -71,7 +71,7 @@ export function VideoCard({ video }: VideoCardProps) {
                         {video.title}
                     </h3>
 
-                    <div className="relative z-20 w-fit flex items-center gap-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 text-sm font-medium transition-colors">
+                    <div className="relative z-20 w-fit flex items-center gap-1 text-zinc-400 hover:text-zinc-100 text-sm font-medium transition-colors">
                         <Link to={`/channel/${video.channel?.id}`} className="truncate cursor-pointer">
                             {video.channel?.name}
                         </Link>

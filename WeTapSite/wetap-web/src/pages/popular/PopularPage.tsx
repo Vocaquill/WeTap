@@ -57,7 +57,7 @@ export default function PopularPage() {
                         <Flame size={32} className="text-white fill-white" />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-black text-white tracking-wide">В тренді</h1>
+                        <h1 className="text-3xl font-black text-zinc-100 tracking-wide">В тренді</h1>
                         <p className="text-zinc-400 mt-1">Найпопулярніші відео на WeTap</p>
                     </div>
                 </div>
