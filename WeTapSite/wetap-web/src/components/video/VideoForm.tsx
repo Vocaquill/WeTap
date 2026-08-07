@@ -543,9 +543,9 @@ export function VideoForm({
                             {privacy.name}
                           </p>
                           <p className="text-[11px] text-zinc-500">
-                            {privacy.id === 1 && "Only you and the people you choose can watch this video."}
-                            {privacy.id === 2 && "Anyone with the link can watch this video."}
-                            {privacy.id === 3 && "Anyone can watch this video."}
+                            {(privacy.systemCode === 'PRIVATE' || privacy.id === 2) && "Only you and admins can watch this video."}
+                            {(privacy.systemCode === 'URL_ONLY' || privacy.id === 3) && "Anyone with the link can watch this video."}
+                            {(privacy.systemCode === 'PUBLIC' || privacy.id === 1) && "Anyone can search and watch this video."}
                           </p>
                         </div>
                       </label>

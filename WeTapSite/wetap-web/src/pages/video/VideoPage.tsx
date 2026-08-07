@@ -6,6 +6,7 @@ import {
     Globe,
     Shield,
     Eye,
+    VideoOff,
 } from 'lucide-react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import PageTransition from '../../components/layout/PageTransition';
@@ -26,7 +27,7 @@ function VideoPage() {
 
     const { user } = useAppSelector((state) => state.auth);
 
-    const { data: video, isLoading: isVideoLoading } = useGetByQuery(
+    const { data: video, isLoading: isVideoLoading, isError } = useGetByQuery(
         { slug: slug! },
         { skip: !slug }
     );
@@ -74,7 +75,33 @@ function VideoPage() {
     };
 
     if (isVideoLoading) return <LoadingOverlay />;
-    if (!video) return null;
+
+    if (isError || !video) {
+        return (
+            <PageTransition>
+                <div className="min-h-[70vh] flex items-center justify-center p-6 text-center">
+                    <div className="max-w-md w-full bg-zinc-900/60 border border-white/10 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-300">
+                        <div className="w-16 h-16 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center mx-auto border border-rose-500/20 shadow-lg shadow-rose-500/10">
+                            <VideoOff size={32} />
+                        </div>
+                        <div className="space-y-2">
+                            <h2 className="text-xl font-bold text-zinc-100">Відео недоступне</h2>
+                            <p className="text-xs text-zinc-400 leading-relaxed">
+                                Можливо, воно приватне, було видалене або ви перейшли за некоректним посиланням.
+                            </p>
+                        </div>
+                        <Button
+                            variant="primary"
+                            onClick={() => navigate('/')}
+                            className="rounded-2xl px-6 py-2.5 font-semibold text-xs"
+                        >
+                            На головну
+                        </Button>
+                    </div>
+                </div>
+            </PageTransition>
+        );
+    }
 
     return (
         <PageTransition>
