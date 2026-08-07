@@ -22,7 +22,7 @@ public class GetVideoCommentsQueryHandler(
     {
         var videoExists = await context.Videos
             .Where(x => x.Id == request.VideoId && !x.IsDeleted)
-            .ForCurrentUser(currentUser)
+            .ForDirectAccess(currentUser)
             .AnyAsync(cancellationToken);
 
         if (!videoExists)

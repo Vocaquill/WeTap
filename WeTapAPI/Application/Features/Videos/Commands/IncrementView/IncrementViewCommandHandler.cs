@@ -17,7 +17,7 @@ public class IncrementViewCommandHandler(
             .Where(x => x.Id == request.Id && !x.IsDeleted);
 
         var updated = await query
-            .ForCurrentUser(currentUser)
+            .ForDirectAccess(currentUser)
             .ExecuteUpdateAsync(
             s => s.SetProperty(b => b.ViewCount, b => b.ViewCount + 1),
             cancellationToken);

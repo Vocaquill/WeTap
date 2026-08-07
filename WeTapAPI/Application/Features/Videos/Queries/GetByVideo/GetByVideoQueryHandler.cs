@@ -34,7 +34,7 @@ public class GetByVideoQueryHandler(
             throw new Exception("Необхідно вказати Id або Slug");
         }
 
-        query = query.ForCurrentUser(currentUser);
+        query = query.ForDirectAccess(currentUser);
 
         var model = await mapper.ProjectToItemModel(query)
             .FirstOrDefaultAsync(cancellationToken);
