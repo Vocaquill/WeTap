@@ -74,25 +74,27 @@ function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#121318] text-white flex items-center justify-center p-4 relative overflow-hidden py-10">
+    <div className="min-h-screen bg-[rgb(var(--color-bg))] text-[rgb(var(--color-zinc-50))] flex items-center justify-center p-4 relative overflow-hidden py-10 transition-colors duration-300">
       {isLoading && <LoadingOverlay />}
 
-      {/* М'які кольорові плями на фоні */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-full -translate-y-1/2 w-96 h-96 bg-[#ff2a6d]/15 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 left-1/2 translate-y-1/2 w-96 h-96 bg-purple-600/15 rounded-full blur-[120px] pointer-events-none" />
+      {/* 1. РОЖЕВО-ЧЕРВОНА ПЛЯМА (Зліва вгорі) */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-[110%] -translate-y-1/2 w-[30rem] h-[30rem] bg-[#ff2a6d]/25 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* Центрований картка-прямокутник */}
+      {/* 2. СИНЯ ПЛЯМА (Справа внизу) */}
+      <div className="absolute bottom-1/4 left-1/2 translate-x-[10%] translate-y-1/2 w-[30rem] h-[30rem] bg-[#3b82f6]/25 rounded-full blur-[120px] pointer-events-none" />
+
+      {/* Центрована картка */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
-        className="w-full max-w-md bg-[#1b1c22]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl z-10 flex flex-col items-center relative"
+        className="w-full max-w-md bg-[rgb(var(--color-zinc-950)/0.8)] backdrop-blur-xl border border-[rgb(var(--color-zinc-700))] rounded-3xl p-8 shadow-2xl z-10 flex flex-col items-center relative transition-colors duration-300"
       >
         {/* Кнопка "Назад" */}
         <button
           type="button"
           onClick={() => navigate('/login')}
-          className="absolute top-6 left-6 text-zinc-400 hover:text-white flex items-center gap-1.5 text-xs transition-colors"
+          className="absolute top-6 left-6 text-[rgb(var(--color-zinc-400))] hover:text-[rgb(var(--color-zinc-50))] flex items-center gap-1.5 text-xs transition-colors cursor-pointer"
         >
           <ArrowLeft size={16} />
           <span>Вхід</span>
@@ -105,8 +107,8 @@ function RegisterPage() {
         </div>
 
         {/* Title & Subtitle */}
-        <h1 className="text-2xl font-bold text-center mb-1">Create Account</h1>
-        <p className="text-zinc-400 text-xs text-center mb-6">
+        <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">Create Account</h1>
+        <p className="text-[rgb(var(--color-zinc-400))] text-xs text-center mb-6">
           Join WeTap and get started today!
         </p>
 
@@ -117,12 +119,12 @@ function RegisterPage() {
           <div className="flex flex-col items-center mb-2">
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="relative w-20 h-20 rounded-full bg-white/5 border-2 border-dashed border-zinc-600 flex items-center justify-center cursor-pointer overflow-hidden group hover:border-[#ff2a6d] transition-all"
+              className="relative w-20 h-20 rounded-full bg-[rgb(var(--color-zinc-800))] border-2 border-dashed border-[rgb(var(--color-zinc-600))] flex items-center justify-center cursor-pointer overflow-hidden group hover:border-[#ff2a6d] transition-all"
             >
               {imagePreview ? (
                 <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
               ) : (
-                <Camera size={24} className="text-zinc-400 group-hover:text-[#ff2a6d] transition-colors" />
+                <Camera size={24} className="text-[rgb(var(--color-zinc-400))] group-hover:text-[#ff2a6d] transition-colors" />
               )}
             </div>
             <input
@@ -132,7 +134,7 @@ function RegisterPage() {
               className="hidden"
               accept="image/*"
             />
-            <span className="text-[11px] text-zinc-400 mt-1.5 font-medium">
+            <span className="text-[11px] text-[rgb(var(--color-zinc-400))] mt-1.5 font-medium">
               Profile Photo
             </span>
           </div>
@@ -140,45 +142,45 @@ function RegisterPage() {
           {/* FIRST & LAST NAME */}
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-zinc-300">First Name</label>
+              <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">First Name</label>
               <input
                 type="text"
                 required
                 placeholder="John"
                 value={formData.firstName}
                 onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                className="w-full bg-white text-zinc-900 placeholder-zinc-400 px-3.5 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#ff2a6d] transition-all"
+                className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] px-3.5 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-zinc-300">Last Name</label>
+              <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Last Name</label>
               <input
                 type="text"
                 required
                 placeholder="Doe"
                 value={formData.lastName}
                 onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                className="w-full bg-white text-zinc-900 placeholder-zinc-400 px-3.5 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#ff2a6d] transition-all"
+                className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] px-3.5 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
               />
             </div>
           </div>
 
           {/* EMAIL */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-semibold text-zinc-300">Email</label>
+            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Email</label>
             <input
               type="email"
               required
               placeholder="Enter your email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full bg-white text-zinc-900 placeholder-zinc-400 px-4 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#ff2a6d] transition-all"
+              className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] px-4 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
             />
           </div>
 
           {/* PASSWORD */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-semibold text-zinc-300">Password</label>
+            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Password</label>
             <div className="relative flex items-center">
               <input
                 type={showPassword ? "text" : "password"}
@@ -186,12 +188,12 @@ function RegisterPage() {
                 placeholder="Create password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full bg-white text-zinc-900 placeholder-zinc-400 pl-4 pr-11 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#ff2a6d] transition-all"
+                className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] pl-4 pr-11 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 text-zinc-600 hover:text-zinc-900 transition-colors"
+                className="absolute right-4 text-[rgb(var(--color-zinc-400))] hover:text-[rgb(var(--color-zinc-50))] transition-colors"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -206,19 +208,19 @@ function RegisterPage() {
           {/* SUBMIT BUTTON */}
           <button
             type="submit"
-            className="w-full bg-[#0d0d11] hover:bg-black text-white font-semibold py-2.5 rounded-full text-sm transition-all border border-zinc-800 shadow-md mt-4"
+            className="w-full bg-[rgb(var(--color-zinc-100))] hover:bg-[rgb(var(--color-zinc-50))] text-[rgb(var(--color-zinc-950))] font-semibold py-2.5 rounded-full text-sm transition-all shadow-md mt-4 cursor-pointer"
           >
             Sign Up
           </button>
         </form>
 
         {/* LOGIN LINK */}
-        <p className="text-xs text-zinc-400 mt-6">
+        <p className="text-xs text-[rgb(var(--color-zinc-400))] mt-6">
           Already have an account?{' '}
           <button
             type="button"
             onClick={() => navigate('/login')}
-            className="text-[#ff2a6d] hover:underline font-medium"
+            className="text-[#ff2a6d] hover:underline font-medium cursor-pointer"
           >
             Sign in
           </button>
