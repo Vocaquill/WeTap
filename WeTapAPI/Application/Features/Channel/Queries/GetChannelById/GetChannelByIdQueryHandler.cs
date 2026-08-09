@@ -1,6 +1,7 @@
 using Application.Interfaces;
 using Application.Mappings;
 using Application.Models.Channel;
+using Domain;
 using Domain.Entities.Channel;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,9 @@ namespace Application.Features.Channel.Queries.GetChannelById;
 
 public class GetChannelByIdQueryHandler(
     IGenericRepository<ChannelEntity, long> repo,
-    ChannelMappingProfile channelMapper)
+    ChannelMappingProfile channelMapper,
+    ICurrentUserService currentUserService,
+    AppDbContext context)
     : IRequestHandler<GetChannelByIdQuery, ChannelItemModel>
 {
     public async Task<ChannelItemModel> Handle(GetChannelByIdQuery request, CancellationToken cancellationToken)
@@ -22,6 +25,16 @@ public class GetChannelByIdQueryHandler(
 
         if (channel == null)
             throw new KeyNotFoundException($"Канал з ID {request.Id} не знайдено.");
+        
+        channel.SubscriberCount = await context.ChannelSubscribers
+            .CountAsync(x => x.ChannelId == channel.Id, cancellationToken);
+        
+        var userId = currentUserService.TryGetCurrentUserId();
+        if (userId.HasValue)
+        {
+            channel.IsSubscribed = await context.ChannelSubscribers
+                .AnyAsync(x => x.ChannelId == channel.Id && x.UserId == userId.Value, cancellationToken);
+        }
 
         return channel;
     }

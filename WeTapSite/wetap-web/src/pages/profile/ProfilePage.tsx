@@ -34,7 +34,6 @@ function ProfilePage() {
         <div className="min-h-screen bg-theme-bg text-theme-text p-6 md:p-12">
             <div className="max-w-4xl mx-auto">
 
-                {/* --- HEADER PROFILE --- */}
                 <section
                     className="relative mb-12 flex flex-col md:flex-row items-center gap-8 bg-zinc-100 dark:bg-zinc-900/20 p-8 rounded-[3rem] border border-zinc-200 dark:border-white/5 backdrop-blur-sm">
                     <div className="relative group">
@@ -79,10 +78,8 @@ function ProfilePage() {
                     </Button>
                 </section>
 
-                {/* --- GRID SETTINGS --- */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    {/* Особиста інформація */}
                     <motion.div whileHover={{y: -5}}
                                 className="bg-zinc-100 dark:bg-zinc-900/40 p-8 rounded-[2.5rem] border border-zinc-200 dark:border-white/5 space-y-6">
                         <div className="flex items-center gap-3 mb-2">
@@ -99,7 +96,6 @@ function ProfilePage() {
                         </div>
                     </motion.div>
 
-                    {/* Безпека та швидкі дії */}
                     <div className="space-y-6">
                         <motion.div whileHover={{y: -5}}
                                     className="bg-zinc-100 dark:bg-zinc-900/40 p-8 rounded-[2.5rem] border border-zinc-200 dark:border-white/5">
@@ -142,7 +138,6 @@ function ProfilePage() {
     );
 }
 
-// Допоміжний компонент для рядків інформації
 function InfoRow({label, value}: { label: string, value: string }) {
     return (
         <div className="border-b border-zinc-200 dark:border-white/5 pb-3">

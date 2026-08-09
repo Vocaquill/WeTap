@@ -13,4 +13,5 @@ public class VideoSearchModel : BaseSearchParamsModel
     public string? CreateYearTo { get; set; }
     public string? SortBy { get; set; } // сортування за популярністю, датою, рейтингом...
     public long? ChannelId { get; set; }
+    public bool? IsLiked { get; set; }
 }

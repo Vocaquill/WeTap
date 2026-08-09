@@ -100,7 +100,7 @@ export default function SearchPage() {
         <PageTransition>
             <div className="min-h-screen bg-theme-bg text-zinc-100 pb-16 px-4 md:px-8">
 
-                <div className="flex flex-wrap items-center gap-4 pt-6 mb-8">
+                <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 pt-4 sm:pt-6 mb-8">
 
                     <SelectField
                         name="genreId"
@@ -111,6 +111,7 @@ export default function SearchPage() {
                             ...(genresData?.items.map((g) => ({ id: g.id, name: g.name })) || [])
                         ]}
                         variant="filter"
+                        wrapperClassName="w-full sm:w-auto"
                     />
 
                     <SelectField
@@ -122,6 +123,7 @@ export default function SearchPage() {
                             ...(tagsData?.items.map((t) => ({ id: t.id, name: t.name })) || [])
                         ]}
                         variant="filter"
+                        wrapperClassName="w-full sm:w-auto"
                     />
 
                     <SelectField
@@ -135,9 +137,10 @@ export default function SearchPage() {
                             { id: 'likes', name: 'Сортувати за: Лайками' }
                         ]}
                         variant="filter"
+                        wrapperClassName="w-full sm:w-auto"
                     />
 
-                    <div className="flex items-center gap-3 bg-zinc-800/60 rounded-full py-1.5 px-4 text-sm font-medium text-zinc-200">
+                    <div className="flex items-center justify-between sm:justify-start gap-3 bg-zinc-800/60 border border-zinc-700/40 rounded-full py-2 px-4 text-sm font-medium text-zinc-200 w-full sm:w-auto">
                         <span className="text-xs text-zinc-400 shrink-0 select-none">Роки:</span>
                         <div className="flex items-center gap-2">
                             <input
@@ -150,7 +153,7 @@ export default function SearchPage() {
                                     setYearFrom(val);
                                     handleYearChange(val, yearTo);
                                 }}
-                                className="w-16 md:w-24 h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-rose-500 focus:outline-none"
+                                className="w-20 sm:w-16 md:w-24 h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-rose-500 focus:outline-none"
                             />
                             <span className="text-xs font-bold text-rose-500 min-w-[65px] text-center select-none">
                                 {yearFrom === minPossibleYear && yearTo === maxPossibleYear ? 'Будь-які' : `${yearFrom}-${yearTo}`}
@@ -165,7 +168,7 @@ export default function SearchPage() {
                                     setYearTo(val);
                                     handleYearChange(yearFrom, val);
                                 }}
-                                className="w-16 md:w-24 h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-rose-500 focus:outline-none"
+                                className="w-20 sm:w-16 md:w-24 h-1 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-rose-500 focus:outline-none"
                             />
                         </div>
                     </div>
@@ -233,7 +236,7 @@ export default function SearchPage() {
                                                         className="w-full h-full object-cover"
                                                     />
                                                 </Link>
-                                                <Link to={`/channel/${video.channel?.id}`} className="font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 text-sm transition-colors cursor-pointer truncate">
+                                                <Link to={`/channel/${video.channel?.id}`} className="font-bold text-zinc-400 hover:text-zinc-100 text-sm transition-colors cursor-pointer truncate">
                                                     {video.channel?.name}
                                                 </Link>
                                                 <CheckCircle2 size={13} className="text-zinc-500 shrink-0" fill="currentColor" />

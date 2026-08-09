@@ -9,6 +9,7 @@ import LoadingOverlay from "../../components/ui/loading/LoadingOverlay";
 import type { ServerError } from "../../types/Account/ServerError.ts";
 import type { ILogin } from "../../types/Account/ILogin.ts";
 
+/*цю сторінку протестив*/
 function LoginPage() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");

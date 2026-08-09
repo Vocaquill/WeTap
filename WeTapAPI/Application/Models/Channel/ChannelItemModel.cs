@@ -9,4 +9,5 @@ public class ChannelItemModel
     public string? Description { get; set; } = string.Empty;
     public string? AvatarImage { get; set; }
     public string? BannerImage { get; set; }
+    public bool IsSubscribed { get; set; }
 }

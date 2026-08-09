@@ -63,7 +63,6 @@ function EditProfilePage() {
             className="min-h-screen bg-theme-bg text-theme-text flex items-center justify-center relative overflow-hidden py-12">
             {isLoading && <LoadingOverlay/>}
 
-            {/* Background */}
             <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-600/20 blur-[120px] rounded-full"/>
 
             <motion.div
@@ -86,7 +85,6 @@ function EditProfilePage() {
                     onSubmit={handleSubmit}
                     className="space-y-6 bg-zinc-100 dark:bg-zinc-900/30 p-8 rounded-[2.5rem] border border-zinc-200 dark:border-white/5 backdrop-blur-md shadow-2xl"
                 >
-                    {/* AVATAR */}
                     <div className="flex flex-col items-center">
                         <div
                             onClick={() => fileInputRef.current?.click()}
@@ -106,11 +104,10 @@ function EditProfilePage() {
                             accept="image/*"
                         />
                         <span className="text-[10px] text-zinc-500 mt-3 font-bold uppercase">
-              Фото профілю
-            </span>
+                            Фото профілю
+                        </span>
                     </div>
 
-                    {/* NAMES */}
                     <InputField
                         label="Ім'я"
                         required
@@ -123,7 +120,6 @@ function EditProfilePage() {
                         labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
                     />
 
-                    {/* LASTNAME */}
                     <InputField
                         label="Прізвище"
                         required
@@ -136,7 +132,6 @@ function EditProfilePage() {
                         labelClassName="text-[10px] uppercase text-zinc-500 ml-1"
                     />
 
-                    {/* EMAIL */}
                     <InputField
                         label="Email"
                         type="email"

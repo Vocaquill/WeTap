@@ -1,3 +1,4 @@
+import { Calendar } from "lucide-react";
 import { InputField } from "../../form/InputField";
 
 interface StudioDateRangePickerProps {
@@ -13,17 +14,19 @@ export function StudioDateRangePicker({ from, to, onChange }: StudioDateRangePic
                 label="Від"
                 type="date"
                 value={from}
+                icon={<Calendar size={18} className="text-rose-500" />}
                 onChange={(e) => onChange(e.target.value, to)}
                 wrapperClassName="w-full sm:w-auto"
-                inputClassName="py-2 text-sm bg-zinc-950 text-zinc-100 border-zinc-800/80 focus:border-zinc-500 focus:ring-zinc-500/20 [color-scheme:dark]"
+                inputClassName="py-2 text-sm bg-zinc-950 text-zinc-100 border-zinc-800/80 focus:border-zinc-500 focus:ring-zinc-500/20"
             />
             <InputField
                 label="До"
                 type="date"
                 value={to}
+                icon={<Calendar size={18} className="text-rose-500" />}
                 onChange={(e) => onChange(from, e.target.value)}
                 wrapperClassName="w-full sm:w-auto"
-                inputClassName="py-2 text-sm bg-zinc-950 text-zinc-100 border-zinc-800/80 focus:border-zinc-500 focus:ring-zinc-500/20 [color-scheme:dark]"
+                inputClassName="py-2 text-sm bg-zinc-950 text-zinc-100 border-zinc-800/80 focus:border-zinc-500 focus:ring-zinc-500/20"
             />
         </div>
     );

@@ -80,6 +80,22 @@ public class SearchVideosQueryHandler(
             query = query.Where(x => x.DateCreated.Year <= toYear);
         }
 
+        // ДОДАНО: Фільтрація для сторінки Liked Videos
+        if (request.Model.IsLiked == true)
+        {
+            var currentUserId = currentUser.TryGetCurrentUserId();
+            if (currentUserId.HasValue)
+            {
+                // Залишаємо тільки ті відео, які вподобав (IsLike == true) поточний користувач
+                query = query.Where(x => x.VideoReactions.Any(r => r.UserId == currentUserId.Value && r.IsLike));
+            }
+            else
+            {
+                // Захист: якщо запит прийшов від неавторизованого гостя, повертаємо порожній список
+                query = query.Where(x => false);
+            }
+        }
+
         int totalCount = await query.CountAsync();
         int totalPages = (int)Math.Ceiling(totalCount / (double)itemsPerPage);
 
@@ -107,6 +123,7 @@ public class SearchVideosQueryHandler(
         ).ToListAsync();
 
         var videoIds = items.Select(x => x.Id).ToList();
+        
         var reactions = await context.VideoReactions
             .Where(r => videoIds.Contains(r.VideoId))
             .GroupBy(r => r.VideoId)

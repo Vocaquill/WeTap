@@ -6,4 +6,5 @@ export interface IChannelItemResponse {
     description?: string;
     avatarImage?: string;
     bannerImage?: string;
+    isSubscribed?: boolean;
 }
