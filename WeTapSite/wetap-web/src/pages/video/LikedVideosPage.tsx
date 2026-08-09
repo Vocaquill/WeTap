@@ -9,7 +9,6 @@ import { Button } from '../../components/form/Button';
 export default function LikedVideosPage() {
     const { user } = useAppSelector(state => state.auth);
 
-    // Робимо запит з параметром isLiked: true
     const { data, isLoading } = useSearchVideosQuery({
         page: 1,
         itemPerPage: 50,
