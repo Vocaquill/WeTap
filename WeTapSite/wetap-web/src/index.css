@@ -24,7 +24,6 @@ body {
   background-color: rgb(var(--color-bg));
 }
 
-/* Плавний перехід кольорів ЛИШЕ під час моменту зміни теми */
 .theme-transitioning,
 .theme-transitioning *,
 .theme-transitioning *::before,
