@@ -10,21 +10,26 @@ interface FileUploadFieldProps {
 }
 
 export const FileUploadField = ({
-    label,
-    name,
-    accept,
-    required = false,
-    error,
-    onChange,
-}: FileUploadFieldProps) => {
+                                    label,
+                                    name,
+                                    accept,
+                                    required = false,
+                                    error,
+                                    onChange,
+                                }: FileUploadFieldProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [isDragging, setIsDragging] = useState(false);
+
+    const [fileName, setFileName] = useState<string | null>(null);
 
     const handleClick = () => {
         inputRef.current?.click();
     };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        setFileName(file ? file.name : null);
+
         onChange(e);
     };
 
@@ -62,6 +67,8 @@ export const FileUploadField = ({
                 });
                 if (!isAccepted) return;
             }
+
+            setFileName(file.name);
 
             const dt = new DataTransfer();
             dt.items.add(file);
@@ -121,30 +128,38 @@ export const FileUploadField = ({
                     isDragging
                         ? 'border-zinc-400 bg-zinc-800/60'
                         : hasError
-                        ? 'border-red-500/70 bg-zinc-900/50 hover:border-red-400'
-                        : 'border-zinc-700 bg-zinc-900/50 hover:border-zinc-500 hover:bg-zinc-800/40',
+                            ? 'border-red-500/70 bg-zinc-900/50 hover:border-red-400'
+                            : 'border-zinc-700 bg-zinc-900/50 hover:border-zinc-500 hover:bg-zinc-800/40',
                 ].join(' ')}
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className={`w-7 h-7 shrink-0 transition-colors duration-200 ${
-                        isDragging ? 'text-zinc-300' : 'text-zinc-500'
+                        isDragging ? 'text-zinc-300' : fileName ? 'text-[#FF2D7A]' : 'text-zinc-500'
                     }`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                     strokeWidth={1.5}
                 >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                    />
+                    {fileName ? (
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    ) : (
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                    )}
                 </svg>
 
-                <span className="text-zinc-500 text-sm text-center leading-snug">
-                    <span className="text-zinc-300 font-medium">Оберіть файл</span>{' '}
-                    або перетягніть сюди
+                <span className="text-sm text-center leading-snug">
+                    {/* ДОДАНО: Якщо файл вибрано, показуємо його ім'я, інакше стандартний текст */}
+                    {fileName ? (
+                        <span className="text-[#FF2D7A] font-semibold block truncate max-w-[200px] sm:max-w-[300px]">
+                            {fileName}
+                        </span>
+                    ) : (
+                        <span className="text-zinc-500">
+                            <span className="text-zinc-300 font-medium">Оберіть файл</span> або перетягніть сюди
+                        </span>
+                    )}
                 </span>
             </div>
 
