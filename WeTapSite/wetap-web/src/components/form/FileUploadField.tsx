@@ -101,7 +101,7 @@ export const FileUploadField = ({
 
     return (
         <div className="flex flex-col gap-1 w-full">
-            <label className="text-zinc-400 font-semibold text-sm">{label}</label>
+            <label className="text-zinc-700 dark:text-zinc-300 font-semibold text-sm">{label}</label>
 
             <div
                 role="button"
@@ -119,16 +119,16 @@ export const FileUploadField = ({
                     'border-2 border-dashed transition-colors duration-200',
                     'focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500',
                     isDragging
-                        ? 'border-zinc-400 bg-zinc-800/60'
+                        ? 'border-zinc-400 dark:border-zinc-500 bg-zinc-100 dark:bg-zinc-800/60'
                         : hasError
-                        ? 'border-red-500/70 bg-zinc-900/50 hover:border-red-400'
-                        : 'border-zinc-700 bg-zinc-900/50 hover:border-zinc-500 hover:bg-zinc-800/40',
+                        ? 'border-red-500/70 bg-red-500/5 dark:bg-zinc-900/50 hover:border-red-400'
+                        : 'border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50 hover:border-zinc-400 dark:hover:border-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/40',
                 ].join(' ')}
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className={`w-7 h-7 shrink-0 transition-colors duration-200 ${
-                        isDragging ? 'text-zinc-300' : 'text-zinc-500'
+                        isDragging ? 'text-[#ff2a6d]' : 'text-zinc-400 dark:text-zinc-500'
                     }`}
                     fill="none"
                     viewBox="0 0 24 24"
@@ -142,8 +142,8 @@ export const FileUploadField = ({
                     />
                 </svg>
 
-                <span className="text-zinc-500 text-sm text-center leading-snug">
-                    <span className="text-zinc-300 font-medium">Оберіть файл</span>{' '}
+                <span className="text-zinc-500 dark:text-zinc-400 text-sm text-center leading-snug">
+                    <span className="text-zinc-800 dark:text-zinc-200 font-medium">Оберіть файл</span>{' '}
                     або перетягніть сюди
                 </span>
             </div>
