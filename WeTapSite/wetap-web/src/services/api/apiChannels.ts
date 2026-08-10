@@ -3,6 +3,7 @@ import { createBaseQuery } from "../../utils/createBaseQuery.ts";
 import { serialize } from "object-to-formdata";
 import type { IChannelItemResponse } from "../../types/Channel/IChannelItemResponse.ts";
 import type { IChannelCreateRequest } from "../../types/Channel/IChannelCreateRequest.ts";
+import type { IChannelUpdateModel } from "../../types/Channel/IChannelUpdateModel.ts";
 import type { IGetByRequest } from "../../types/Additional/IGetByRequest.ts";
 
 export const apiChannels = createApi({
@@ -17,6 +18,14 @@ export const apiChannels = createApi({
                 body: serialize(body),
             }),
             invalidatesTags: ["Channels"],
+        }),
+        updateChannel: builder.mutation<IChannelItemResponse, IChannelUpdateModel>({
+            query: (body) => ({
+                url: "",
+                method: "PUT",
+                body: serialize(body, { indices: true, nullsAsUndefineds: true }),
+            }),
+            invalidatesTags: (_result, _error, { id }) => [{ type: "Channel", id }, "Channels"],
         }),
         getBy: builder.query<IChannelItemResponse, IGetByRequest>({
             query: (par) => ({
@@ -49,6 +58,7 @@ export const apiChannels = createApi({
 
 export const {
     useCreateChannelMutation,
+    useUpdateChannelMutation,
     useGetByQuery,
     useToggleSubscriptionMutation,
 } = apiChannels;
