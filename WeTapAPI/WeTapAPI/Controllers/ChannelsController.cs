@@ -28,7 +28,7 @@ public class ChannelsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = Roles.User)]
+    [Authorize(Roles = $"{Roles.User},{Roles.Author},{Roles.Admin}")]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<ChannelItemModel>> Create([FromForm] ChannelCreateModel model)
     {
@@ -38,7 +38,7 @@ public class ChannelsController(IMediator mediator) : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(Roles = Roles.Author)]
+    [Authorize(Roles = $"{Roles.Author},{Roles.Admin}")]
     [Consumes("multipart/form-data")]
     public async Task<ActionResult<ChannelItemModel>> Update([FromForm] ChannelUpdateModel model)
     {
@@ -48,7 +48,7 @@ public class ChannelsController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete]
-    [Authorize(Roles = Roles.Author)]
+    [Authorize(Roles = $"{Roles.Author},{Roles.Admin}")]
     public async Task<IActionResult> Delete([FromBody] ChannelDeleteModel model)
     {
         var command = new DeleteChannelCommand(model);

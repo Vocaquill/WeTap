@@ -20,14 +20,14 @@ function Sidebar({isOpen, toggleSidebar}: SidebarProps) {
     const sections: SidebarSection[] = [
         {
             items: [
-                {name: 'Home', path: '/', end: true, icon: <Home size={18}/>},
-                {name: 'Popular', path: '/popular', icon: <Flame size={18}/>},
+                {name: 'Головна', path: '/', end: true, icon: <Home size={18}/>},
+                {name: 'Популярне', path: '/popular', icon: <Flame size={18}/>},
                 {
                     name: 'Колекції',
                     icon: <Library size={18}/>,
                     subItems: genreSubItems
                 },
-                {name: 'Liked Videos', path: '/liked', icon: <ThumbsUp size={18}/>},
+                {name: 'Вподобані відео', path: '/liked', icon: <ThumbsUp size={18}/>},
             ]
         },
     ];

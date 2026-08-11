@@ -89,20 +89,20 @@ function LoginPage() {
         </div>
 
         {/* Title & Subtitle */}
-        <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">Welcome Back</h1>
+        <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">З поверненням</h1>
         <p className="text-[rgb(var(--color-zinc-400))] text-xs text-center mb-6">
-          Good to see you again! Please enter your details.
+          Раді бачити вас знову! Будь ласка, введіть свої дані.
         </p>
 
         {/* FORM */}
         <form onSubmit={handleSubmit} className="w-full space-y-4">
           {/* EMAIL */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Email</label>
+            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Електронна пошта</label>
             <input
               type="email"
               required
-              placeholder="Enter your email"
+              placeholder="Введіть ваш email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] px-4 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
@@ -111,12 +111,12 @@ function LoginPage() {
 
           {/* PASSWORD */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Password</label>
+            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Пароль</label>
             <div className="relative flex items-center">
               <input
                 type={showPassword ? "text" : "password"}
                 required
-                placeholder="Enter your password"
+                placeholder="Введіть ваш пароль"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] pl-4 pr-11 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
@@ -145,7 +145,7 @@ function LoginPage() {
                 onChange={(e) => setRememberMe(e.target.checked)}
                 className="w-4 h-4 rounded-full accent-[#ff2a6d] cursor-pointer"
               />
-              <span className="text-[rgb(var(--color-zinc-300))] font-medium">Remember me</span>
+              <span className="text-[rgb(var(--color-zinc-300))] font-medium">Запам'ятати мене</span>
             </label>
 
             <button
@@ -153,7 +153,7 @@ function LoginPage() {
               onClick={() => navigate('/forgot-password')}
               className="text-[#ff2a6d] hover:underline font-medium"
             >
-              Forgot password
+              Забули пароль?
             </button>
           </div>
 
@@ -162,7 +162,7 @@ function LoginPage() {
             type="submit"
             className="w-full bg-[rgb(var(--color-zinc-100))] hover:bg-[rgb(var(--color-zinc-50))] text-[rgb(var(--color-zinc-950))] font-semibold py-2.5 rounded-full text-sm transition-all shadow-md mt-2 cursor-pointer"
           >
-            Sign In
+            Увійти
           </button>
         </form>
 
@@ -173,18 +173,18 @@ function LoginPage() {
           className="w-full bg-[rgb(var(--color-zinc-900))] hover:bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] font-semibold py-2.5 rounded-full text-sm transition-all flex items-center justify-center gap-2 mt-3 shadow-sm border border-[rgb(var(--color-zinc-700))] cursor-pointer"
         >
           <GoogleIcon />
-          Sign with google
+          Увійти через Google
         </button>
 
         {/* REGISTER LINK */}
         <p className="text-xs text-[rgb(var(--color-zinc-400))] mt-6">
-          Don't have an account{' '}
+          Немає акаунту?{' '}
           <button
             type="button"
             onClick={() => navigate('/register')}
             className="text-[#ff2a6d] hover:underline font-medium cursor-pointer"
           >
-            Sign up
+            Зареєструватися
           </button>
         </p>
       </motion.div>

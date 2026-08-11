@@ -107,9 +107,9 @@ function RegisterPage() {
         </div>
 
         {/* Title & Subtitle */}
-        <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">Create Account</h1>
+        <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">Створення акаунта</h1>
         <p className="text-[rgb(var(--color-zinc-400))] text-xs text-center mb-6">
-          Join NextPlay and get started today!
+          Приєднуйтесь до WeTap вже сьогодні!
         </p>
 
         {/* FORM */}
@@ -135,29 +135,29 @@ function RegisterPage() {
               accept="image/*"
             />
             <span className="text-[11px] text-[rgb(var(--color-zinc-400))] mt-1.5 font-medium">
-              Profile Photo
+              Фото профілю
             </span>
           </div>
 
           {/* FIRST & LAST NAME */}
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">First Name</label>
+              <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Ім'я</label>
               <input
                 type="text"
                 required
-                placeholder="John"
+                placeholder="Іван"
                 value={formData.firstName}
                 onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                 className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] px-3.5 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Last Name</label>
+              <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Прізвище</label>
               <input
                 type="text"
                 required
-                placeholder="Doe"
+                placeholder="Іваненко"
                 value={formData.lastName}
                 onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                 className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] px-3.5 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
@@ -167,11 +167,11 @@ function RegisterPage() {
 
           {/* EMAIL */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Email</label>
+            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Електронна пошта</label>
             <input
               type="email"
               required
-              placeholder="Enter your email"
+              placeholder="Введіть ваш email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] px-4 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
@@ -180,12 +180,12 @@ function RegisterPage() {
 
           {/* PASSWORD */}
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Password</label>
+            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Пароль</label>
             <div className="relative flex items-center">
               <input
                 type={showPassword ? "text" : "password"}
                 required
-                placeholder="Create password"
+                placeholder="Створіть пароль"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] pl-4 pr-11 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
@@ -210,19 +210,19 @@ function RegisterPage() {
             type="submit"
             className="w-full bg-[rgb(var(--color-zinc-100))] hover:bg-[rgb(var(--color-zinc-50))] text-[rgb(var(--color-zinc-950))] font-semibold py-2.5 rounded-full text-sm transition-all shadow-md mt-4 cursor-pointer"
           >
-            Sign Up
+            Зареєструватися
           </button>
         </form>
 
         {/* LOGIN LINK */}
         <p className="text-xs text-[rgb(var(--color-zinc-400))] mt-6">
-          Already have an account?{' '}
+          Вже є акаунт?{' '}
           <button
             type="button"
             onClick={() => navigate('/login')}
             className="text-[#ff2a6d] hover:underline font-medium cursor-pointer"
           >
-            Sign in
+            Увійти
           </button>
         </p>
       </motion.div>

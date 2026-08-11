@@ -63,7 +63,7 @@ export function SearchAutocomplete() {
                 <div className="relative w-full">
                     <input
                         type="text"
-                        placeholder="Search"
+                        placeholder="Пошук"
                         value={searchVal}
                         onChange={(e) => {
                             setSearchVal(e.target.value);

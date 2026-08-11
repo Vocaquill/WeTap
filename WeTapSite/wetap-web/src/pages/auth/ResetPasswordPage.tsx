@@ -27,11 +27,11 @@ function ResetPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.newPassword.length < 8) {
-      setErrorMessage("Password must be at least 8 characters long!");
+      setErrorMessage("Пароль повинен містити щонайменше 8 символів!");
       return;
     }
     if (formData.newPassword !== formData.confirmPassword) {
-      setErrorMessage("Passwords do not match!");
+      setErrorMessage("Паролі не збігаються!");
       return;
     }
 
@@ -40,7 +40,7 @@ function ResetPasswordPage() {
       setErrorMessage("");
       navigate("/login");
     } catch (err) {
-      setErrorMessage("An error occurred while resetting the password");
+      setErrorMessage("Сталася помилка під час скидання пароля");
     }
   };
 
@@ -68,21 +68,21 @@ function ResetPasswordPage() {
         </div>
 
         {/* Title & Subtitle */}
-        <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">Create new password</h1>
+        <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">Створення нового пароля</h1>
         <p className="text-[rgb(var(--color-zinc-400))] text-xs text-center mb-6">
-          Your new password must be different from previous used passwords
+          Ваш новий пароль має відрізнятися від раніше використовуваних
         </p>
 
         {/* FORM */}
         <form onSubmit={handleSubmit} className="w-full space-y-4">
           {/* NEW PASSWORD */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">New Password</label>
+            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Новий пароль</label>
             <div className="relative flex items-center">
               <input
                 type={showNewPassword ? "text" : "password"}
                 required
-                placeholder="Enter your new password"
+                placeholder="Введіть новий пароль"
                 value={formData.newPassword}
                 onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
                 className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] pl-4 pr-11 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
@@ -99,12 +99,12 @@ function ResetPasswordPage() {
 
           {/* CONFIRM PASSWORD */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Confirm Password</label>
+            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Підтвердження пароля</label>
             <div className="relative flex items-center">
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 required
-                placeholder="Confirm your password"
+                placeholder="Підтвердіть ваш пароль"
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] pl-4 pr-11 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
@@ -129,19 +129,19 @@ function ResetPasswordPage() {
             type="submit"
             className="w-full bg-[#ff2a6d] hover:bg-[#e0245e] text-white font-semibold py-2.5 rounded-full text-sm transition-all shadow-md shadow-[#ff2a6d]/20 mt-2 cursor-pointer"
           >
-            Reset password
+            Скинути пароль
           </button>
         </form>
 
         {/* BACK TO SIGN IN */}
         <p className="text-xs text-[rgb(var(--color-zinc-400))] mt-6">
-          Back to{' '}
+          Повернутися до{' '}
           <button
             type="button"
             onClick={() => navigate('/login')}
             className="text-[#ff2a6d] hover:underline font-medium cursor-pointer"
           >
-            Sign in
+            Увійти
           </button>
         </p>
       </motion.div>
