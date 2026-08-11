@@ -60,18 +60,18 @@ function ForgotPasswordPage() {
               exit={{ opacity: 0, x: 10 }}
               className="w-full flex flex-col items-center"
             >
-              <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">Forgot password?</h1>
+              <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">Забули пароль?</h1>
               <p className="text-[rgb(var(--color-zinc-400))] text-xs text-center mb-6">
-                Enter your email address and we'll send you a recovery link
+                Введіть свою електронну пошту, і ми надішлемо вам посилання для відновлення
               </p>
 
               <form onSubmit={handleSubmit} className="w-full space-y-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Email</label>
+                  <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Електронна пошта</label>
                   <input
                     type="email"
                     required
-                    placeholder="Enter your email"
+                    placeholder="Введіть ваш email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] px-4 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
@@ -86,18 +86,18 @@ function ForgotPasswordPage() {
                   type="submit"
                   className="w-full bg-[#ff2a6d] hover:bg-[#e0245e] text-white font-semibold py-2.5 rounded-full text-sm transition-all shadow-md shadow-[#ff2a6d]/20 mt-2 cursor-pointer"
                 >
-                  Send recovery link
+                  Надіслати посилання
                 </button>
               </form>
 
               <p className="text-xs text-[rgb(var(--color-zinc-400))] mt-6">
-                Back to{' '}
+                Повернутися до{' '}
                 <button
                   type="button"
                   onClick={() => navigate('/login')}
                   className="text-[#ff2a6d] hover:underline font-medium cursor-pointer"
                 >
-                  Sign in
+                  Увійти
                 </button>
               </p>
             </motion.div>
@@ -113,9 +113,9 @@ function ForgotPasswordPage() {
                 <CheckCircle2 className="text-[#ff2a6d]" size={32} />
               </div>
 
-              <h2 className="text-xl font-bold mb-2 text-[rgb(var(--color-zinc-50))]">Check your email</h2>
+              <h2 className="text-xl font-bold mb-2 text-[rgb(var(--color-zinc-50))]">Перевірте вашу пошту</h2>
               <p className="text-[rgb(var(--color-zinc-400))] text-xs leading-relaxed mb-6">
-                We sent password recovery instructions to <br />
+                Ми надіслали інструкції з відновлення пароля на <br />
                 <span className="text-[rgb(var(--color-zinc-50))] font-medium">{email}</span>
               </p>
 
@@ -124,7 +124,7 @@ function ForgotPasswordPage() {
                 onClick={() => setIsSubmitted(false)}
                 className="text-xs text-[rgb(var(--color-zinc-400))] hover:text-[rgb(var(--color-zinc-50))] transition-colors mb-4 cursor-pointer"
               >
-                Didn't receive the email? Try again
+                Не отримали лист? Спробувати знову
               </button>
 
               <button
@@ -132,7 +132,7 @@ function ForgotPasswordPage() {
                 onClick={() => navigate('/login')}
                 className="w-full bg-[#ff2a6d] hover:bg-[#e0245e] text-white font-semibold py-2.5 rounded-full text-sm transition-all shadow-md shadow-[#ff2a6d]/20 cursor-pointer"
               >
-                Back to Sign in
+                Повернутися до входу
               </button>
             </motion.div>
           )}

@@ -56,12 +56,12 @@ function ProfilePage() {
                             {user!.roles.includes("Admin") ? (
                                 <span
                                     className="px-3 py-1 bg-red-600/10 border border-red-600/20 rounded-full text-[10px] font-black uppercase text-red-500 tracking-widest">
-                                    Premium Member
+                                    Адміністратор
                                 </span>
                             ) : (
                                 <span
                                     className="px-3 py-1 bg-red-600/10 border border-red-600/20 rounded-full text-[10px] font-black uppercase text-red-500 tracking-widest">
-                                    Free Member
+                                    Користувач
                                 </span>
                             )}
                         </div>

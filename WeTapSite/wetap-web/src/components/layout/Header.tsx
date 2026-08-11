@@ -135,7 +135,7 @@ function Header() {
                     >
                         <span
                             className="block px-3 py-1.5 sm:px-5 sm:py-2 rounded-full bg-theme-bg text-zinc-200 group-hover:text-white group-hover:bg-theme-bg/80 transition-all duration-300 whitespace-nowrap">
-                          Sign In
+                          Увійти
                         </span>
                     </button>
                 )}
