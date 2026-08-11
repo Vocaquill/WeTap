@@ -7,7 +7,7 @@ function AdminSidebar() {
     {
       title: 'Аналітика',
       items: [
-        { name: 'Dashboard', path: '/admin', icon: <LayoutDashboard size={20} />, end: true }
+        { name: 'Панель керування', path: '/admin', icon: <LayoutDashboard size={20} />, end: true }
       ]
     },
     {

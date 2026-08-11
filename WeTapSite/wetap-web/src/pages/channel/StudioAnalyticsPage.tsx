@@ -13,7 +13,50 @@ import {
 } from "recharts";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay.tsx";
 import type { MetricType } from "../../env/index.ts";
-import {formatMetricName, formatNumber} from "../../utils/statsUtils.ts";
+import { formatMetricName, formatNumber } from "../../utils/statsUtils.ts";
+import { GenericTable } from "../../components/ui/common/GenericTable";
+import type { IColumnConfig } from "../../types/Additional/IColumnConfig";
+
+interface AnalyticsTableRow {
+    id: string;
+    date: string;
+    views: number;
+    comments: number;
+    likes: number;
+    subscribers: number;
+}
+
+const columns: IColumnConfig<AnalyticsTableRow>[] = [
+    {
+        key: 'date',
+        label: 'Дата',
+        render: (item) => <span className="font-medium text-zinc-100">{item.date}</span>,
+    },
+    {
+        key: 'views',
+        label: 'Перегляди',
+        render: (item) => <span>{formatNumber(item.views)}</span>,
+    },
+    {
+        key: 'comments',
+        label: 'Коментарі',
+        render: (item) => <span>{item.comments === 0 ? '-' : formatNumber(item.comments)}</span>,
+    },
+    {
+        key: 'likes',
+        label: 'Вподобайки',
+        render: (item) => <span>{formatNumber(item.likes)}</span>,
+    },
+    {
+        key: 'subscribers',
+        label: 'Підписки',
+        render: (item) => (
+            <span>
+                {item.subscribers > 0 ? `+${formatNumber(item.subscribers)}` : formatNumber(item.subscribers)}
+            </span>
+        ),
+    },
+];
 
 export default function StudioAnalyticsPage() {
     const today = new Date();
@@ -83,7 +126,7 @@ export default function StudioAnalyticsPage() {
         };
     });
 
-    const tableData = [...allDates].reverse().map((date) => {
+    const tableData: AnalyticsTableRow[] = [...allDates].reverse().map((date) => {
         const viewsVal = viewsMetric.find((dp) => dp.date === date)?.value || 0;
         const likesVal = likesMetric.find((dp) => dp.date === date)?.value || 0;
         const subsVal = subscribersMetric.find((dp) => dp.date === date)?.value || 0;
@@ -96,6 +139,7 @@ export default function StudioAnalyticsPage() {
         });
 
         return {
+            id: date,
             date: formattedDate,
             views: viewsVal,
             likes: likesVal,
@@ -105,10 +149,10 @@ export default function StudioAnalyticsPage() {
     });
 
     return (
-        <div className="p-8 space-y-10 animate-in fade-in duration-500 max-w-6xl mx-auto bg-theme-bg min-h-screen text-zinc-100">
+        <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-10 animate-in fade-in duration-500 max-w-6xl mx-auto bg-theme-bg min-h-screen text-zinc-100">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="flex flex-col gap-2">
-                    <h1 className="text-3xl font-black tracking-tight text-zinc-50">
+                    <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-100">
                         Аналітика каналу – {formatMetricName(activeMetric)}
                     </h1>
                 </div>
@@ -120,14 +164,14 @@ export default function StudioAnalyticsPage() {
                 />
             </div>
  
-            <div className="flex gap-4 border-b border-zinc-800 pb-2">
+            <div className="flex gap-2 sm:gap-4 border-b border-zinc-800 pb-2 overflow-x-auto">
                 {(["Views", "Likes", "Subscribers"] as MetricType[]).map((metric) => (
                     <Button
                         key={metric}
                         onClick={() => setActiveMetric(metric)}
                         className={`pb-2 px-1 text-sm font-bold border-b-2 transition-all ${
                             activeMetric === metric
-                                ? "border-[#ec4899] text-zinc-50"
+                                ? "border-[#ec4899] text-zinc-100"
                                 : "border-transparent text-zinc-500 hover:text-zinc-300"
                         }`}
                     >
@@ -136,20 +180,20 @@ export default function StudioAnalyticsPage() {
                 ))}
             </div>
  
-            <div className="h-[400px] w-full bg-zinc-900 p-6 rounded-[1.5rem] border border-zinc-800/80">
+            <div className="h-[350px] sm:h-[400px] w-full bg-zinc-900 p-4 sm:p-6 rounded-[1.5rem] border border-zinc-800/80">
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={chartDisplayData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--color-zinc-800))" vertical={false} />
                         <XAxis
                             dataKey="date"
-                            stroke="#71717a"
+                            stroke="rgb(var(--color-zinc-500))"
                             fontSize={11}
                             tickLine={false}
                             axisLine={false}
                             dy={10}
                         />
                         <YAxis
-                            stroke="#71717a"
+                            stroke="rgb(var(--color-zinc-500))"
                             fontSize={11}
                             tickLine={false}
                             axisLine={false}
@@ -158,12 +202,12 @@ export default function StudioAnalyticsPage() {
                         />
                         <Tooltip
                             contentStyle={{
-                                backgroundColor: "#18181b",
-                                border: "1px solid #27272a",
+                                backgroundColor: "rgb(var(--color-zinc-900))",
+                                border: "1px solid rgb(var(--color-zinc-800))",
                                 borderRadius: "0.75rem",
-                                color: "#f4f4f5"
+                                color: "rgb(var(--color-zinc-100))"
                             }}
-                            labelStyle={{ color: "#a1a1aa", fontSize: 11, fontWeight: "bold" }}
+                            labelStyle={{ color: "rgb(var(--color-zinc-400))", fontSize: 11, fontWeight: "bold" }}
                             itemStyle={{ color: "#ec4899", fontSize: 12, fontWeight: "bold" }}
                             formatter={(value: any) => [formatNumber(Number(value || 0)), formatMetricName(activeMetric)]}
                         />
@@ -179,45 +223,11 @@ export default function StudioAnalyticsPage() {
                 </ResponsiveContainer>
             </div>
  
-            <div className="bg-zinc-900 border border-zinc-800/80 rounded-[1.5rem] overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm border-collapse">
-                        <thead>
-                            <tr className="border-b border-zinc-800 text-zinc-400 font-bold text-xs uppercase tracking-wider">
-                                <th className="p-4 border-r border-zinc-800">Дата</th>
-                                <th className="p-4 border-r border-zinc-800">Перегляди</th>
-                                <th className="p-4 border-r border-zinc-800">Коментарі</th>
-                                <th className="p-4 border-r border-zinc-800">Вподобайки</th>
-                                <th className="p-4">Підписки</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {tableData.length > 0 ? (
-                                tableData.map((row, idx) => (
-                                    <tr
-                                        key={idx}
-                                        className="border-b border-zinc-800/50 hover:bg-zinc-800/20 text-zinc-300 transition-colors"
-                                    >
-                                        <td className="p-4 border-r border-zinc-800 font-medium">{row.date}</td>
-                                        <td className="p-4 border-r border-zinc-800">{formatNumber(row.views)}</td>
-                                        <td className="p-4 border-r border-zinc-800">{row.comments === 0 ? "-" : row.comments}</td>
-                                        <td className="p-4 border-r border-zinc-800">{formatNumber(row.likes)}</td>
-                                        <td className="p-4">
-                                            {row.subscribers > 0 ? `+${formatNumber(row.subscribers)}` : row.subscribers}
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={5} className="p-8 text-center text-zinc-500 italic">
-                                        Немає даних за вибраний період
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <GenericTable
+                data={tableData}
+                columns={columns}
+                emptyMessage="Немає даних за вибраний період"
+            />
         </div>
     );
 }

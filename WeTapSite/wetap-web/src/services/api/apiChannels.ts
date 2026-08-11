@@ -3,6 +3,7 @@ import { createBaseQuery } from "../../utils/createBaseQuery.ts";
 import { serialize } from "object-to-formdata";
 import type { IChannelItemResponse } from "../../types/Channel/IChannelItemResponse.ts";
 import type { IChannelCreateRequest } from "../../types/Channel/IChannelCreateRequest.ts";
+import type { IChannelUpdateModel } from "../../types/Channel/IChannelUpdateModel.ts";
 import type { IGetByRequest } from "../../types/Additional/IGetByRequest.ts";
 
 export const apiChannels = createApi({
@@ -18,6 +19,14 @@ export const apiChannels = createApi({
             }),
             invalidatesTags: ["Channels"],
         }),
+        updateChannel: builder.mutation<IChannelItemResponse, IChannelUpdateModel>({
+            query: (body) => ({
+                url: "",
+                method: "PUT",
+                body: serialize(body, { indices: true, nullsAsUndefineds: true }),
+            }),
+            invalidatesTags: (_result, _error, { id }) => [{ type: "Channel", id }, "Channels"],
+        }),
         getBy: builder.query<IChannelItemResponse, IGetByRequest>({
             query: (par) => ({
                 url: "get-by",
@@ -27,10 +36,29 @@ export const apiChannels = createApi({
             providesTags: (result) =>
                 result ? [{ type: "Channel", id: result.id }] : ["Channel"],
         }),
+        toggleSubscription: builder.mutation<void, number>({
+            query: (channelId) => ({
+                url: `subscribe`,
+                method: "POST",
+                body: { channelId }
+            }),
+            invalidatesTags: (_result, _error, channelId) => [
+                { type: "Channel", id: channelId },
+                "Channel",
+            ],
+            async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                    dispatch({ type: 'api/videos/invalidateTags', payload: ['Video'] });
+                } catch {}
+            }
+        }),
     }),
 });
 
 export const {
     useCreateChannelMutation,
+    useUpdateChannelMutation,
     useGetByQuery,
+    useToggleSubscriptionMutation,
 } = apiChannels;

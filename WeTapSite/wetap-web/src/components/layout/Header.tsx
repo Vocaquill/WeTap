@@ -4,14 +4,14 @@ import { Plus, Users } from 'lucide-react';
 import { useAppSelector } from "../../store/index";
 import { APP_ENV } from "../../env/index";
 import { Button } from '../form/Button';
-import { themes, applyTheme, getActiveTheme } from '../../themes';
+import { themes, applyTheme, getActiveTheme, initThemeSystem } from '../../themes';
 import { SearchAutocomplete } from '../form/SearchAutocomplete';
-import { SelectField } from '../form/SelectField'; // <-- Імпортуємо ваш компонент
+import { SelectField } from '../form/SelectField';
 import logoImg from '../../layouts/logo.png';
 
 function Header() {
     const [scrolled, setScrolled] = useState(false);
-    const [activeTheme, setActiveTheme] = useState(getActiveTheme());
+    const [activeTheme, setActiveTheme] = useState(() => getActiveTheme());
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -23,7 +23,13 @@ function Header() {
             setScrolled(window.scrollY > 10);
         };
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        const cleanupTheme = initThemeSystem((newTheme) => {
+            setActiveTheme(newTheme);
+        });
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            cleanupTheme();
+        };
     }, []);
 
     const handleMyChannelClick = () => {
@@ -82,8 +88,8 @@ function Header() {
                     <Plus size={20}/>
                 </Button>
 
-                {/* Використання SelectField замість звичайного select */}
-                <div className="hidden md:block min-w-[130px]">
+                {/* Тема доступна і для мобільних, і для десктопу */}
+                <div className="block min-w-[90px] xs:min-w-[110px] sm:min-w-[130px]">
                     <SelectField
                         name="theme"
                         variant="filter"
@@ -129,7 +135,7 @@ function Header() {
                     >
                         <span
                             className="block px-3 py-1.5 sm:px-5 sm:py-2 rounded-full bg-theme-bg text-zinc-200 group-hover:text-white group-hover:bg-theme-bg/80 transition-all duration-300 whitespace-nowrap">
-                          Sign In
+                          Увійти
                         </span>
                     </button>
                 )}

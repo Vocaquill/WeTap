@@ -26,11 +26,8 @@ const getUserFromToken = (token: string): User | null => {
 
         const idVal = decoded["nameid"] ?? decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
 
-        // ДОДАНО: спроба дістати ID каналу з токена
         const channelIdVal = decoded["channelId"] ?? decoded["ChannelId"];
         const rawImage: string = decoded["image"] ?? "";
-        // Додаємо cache-busting щоб браузер не показував стару аватарку
-        // після реєстрації, логіну або оновлення фото
         const image = rawImage ? `${rawImage}?v=${Date.now()}` : "";
         return {
             id: idVal ? Number(idVal) : undefined,
@@ -39,7 +36,6 @@ const getUserFromToken = (token: string): User | null => {
             image,
             token,
             roles,
-            // ДОДАНО: передаємо ID каналу, якщо він є
             channelId: channelIdVal ? Number(channelIdVal) : undefined,
         };
     } catch (e) {

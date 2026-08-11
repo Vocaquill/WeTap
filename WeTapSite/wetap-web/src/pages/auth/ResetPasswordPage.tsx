@@ -27,11 +27,11 @@ function ResetPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.newPassword.length < 8) {
-      setErrorMessage("Password must be at least 8 characters long!");
+      setErrorMessage("Пароль повинен містити щонайменше 8 символів!");
       return;
     }
     if (formData.newPassword !== formData.confirmPassword) {
-      setErrorMessage("Passwords do not match!");
+      setErrorMessage("Паролі не збігаються!");
       return;
     }
 
@@ -40,24 +40,26 @@ function ResetPasswordPage() {
       setErrorMessage("");
       navigate("/login");
     } catch (err) {
-      setErrorMessage("An error occurred while resetting the password");
+      setErrorMessage("Сталася помилка під час скидання пароля");
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#121318] text-white flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-[rgb(var(--color-bg))] text-[rgb(var(--color-zinc-50))] flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">
       {isLoading && <LoadingOverlay />}
 
-      {/* М'які кольорові плями на фоні */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-full -translate-y-1/2 w-96 h-96 bg-[#ff2a6d]/15 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 left-1/2 translate-y-1/2 w-96 h-96 bg-purple-600/15 rounded-full blur-[120px] pointer-events-none" />
+      {/* 1. РОЖЕВО-ЧЕРВОНА ПЛЯМА (Зліва вгорі) */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-[110%] -translate-y-1/2 w-[30rem] h-[30rem] bg-[#ff2a6d]/25 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* Центрований картка-прямокутник */}
+      {/* 2. СИНЯ ПЛЯМА (Справа внизу) */}
+      <div className="absolute bottom-1/4 left-1/2 translate-x-[10%] translate-y-1/2 w-[30rem] h-[30rem] bg-[#3b82f6]/25 rounded-full blur-[120px] pointer-events-none" />
+
+      {/* Центрована картка */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
-        className="w-full max-w-md bg-[#1b1c22]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl z-10 flex flex-col items-center"
+        className="w-full max-w-md bg-[rgb(var(--color-zinc-950)/0.8)] backdrop-blur-xl border border-[rgb(var(--color-zinc-700))] rounded-3xl p-8 shadow-2xl z-10 flex flex-col items-center transition-colors duration-300"
       >
         {/* Logo / Header */}
         <div className="flex items-center gap-2 mb-8">
@@ -66,29 +68,29 @@ function ResetPasswordPage() {
         </div>
 
         {/* Title & Subtitle */}
-        <h1 className="text-2xl font-bold text-center mb-1">Create new password</h1>
-        <p className="text-zinc-400 text-xs text-center mb-6">
-          Your new password must be different from previous used passwords
+        <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">Створення нового пароля</h1>
+        <p className="text-[rgb(var(--color-zinc-400))] text-xs text-center mb-6">
+          Ваш новий пароль має відрізнятися від раніше використовуваних
         </p>
 
         {/* FORM */}
         <form onSubmit={handleSubmit} className="w-full space-y-4">
           {/* NEW PASSWORD */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-zinc-300">New Password</label>
+            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Новий пароль</label>
             <div className="relative flex items-center">
               <input
                 type={showNewPassword ? "text" : "password"}
                 required
-                placeholder="Enter your new password"
+                placeholder="Введіть новий пароль"
                 value={formData.newPassword}
                 onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
-                className="w-full bg-white text-zinc-900 placeholder-zinc-400 pl-4 pr-11 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#ff2a6d] transition-all"
+                className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] pl-4 pr-11 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
               />
               <button
                 type="button"
                 onClick={() => setShowNewPassword(!showNewPassword)}
-                className="absolute right-4 text-zinc-600 hover:text-zinc-900 transition-colors"
+                className="absolute right-4 text-[rgb(var(--color-zinc-400))] hover:text-[rgb(var(--color-zinc-50))] transition-colors"
               >
                 {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -97,20 +99,20 @@ function ResetPasswordPage() {
 
           {/* CONFIRM PASSWORD */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-zinc-300">Confirm Password</label>
+            <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Підтвердження пароля</label>
             <div className="relative flex items-center">
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 required
-                placeholder="Confirm your password"
+                placeholder="Підтвердіть ваш пароль"
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                className="w-full bg-white text-zinc-900 placeholder-zinc-400 pl-4 pr-11 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-[#ff2a6d] transition-all"
+                className="w-full bg-[rgb(var(--color-zinc-800))] text-[rgb(var(--color-zinc-50))] placeholder-[rgb(var(--color-zinc-400))] pl-4 pr-11 py-2.5 rounded-full text-sm outline-none border border-[rgb(var(--color-zinc-700))] focus:border-[#ff2a6d] focus:ring-2 focus:ring-[#ff2a6d] transition-all"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-4 text-zinc-600 hover:text-zinc-900 transition-colors"
+                className="absolute right-4 text-[rgb(var(--color-zinc-400))] hover:text-[rgb(var(--color-zinc-50))] transition-colors"
               >
                 {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -125,21 +127,21 @@ function ResetPasswordPage() {
           {/* SUBMIT BUTTON */}
           <button
             type="submit"
-            className="w-full bg-[#ff2a6d] hover:bg-[#e0245e] text-white font-semibold py-2.5 rounded-full text-sm transition-all shadow-md shadow-[#ff2a6d]/20 mt-2"
+            className="w-full bg-[#ff2a6d] hover:bg-[#e0245e] text-white font-semibold py-2.5 rounded-full text-sm transition-all shadow-md shadow-[#ff2a6d]/20 mt-2 cursor-pointer"
           >
-            Reset password
+            Скинути пароль
           </button>
         </form>
 
         {/* BACK TO SIGN IN */}
-        <p className="text-xs text-zinc-400 mt-6">
-          Back to{' '}
+        <p className="text-xs text-[rgb(var(--color-zinc-400))] mt-6">
+          Повернутися до{' '}
           <button
             type="button"
             onClick={() => navigate('/login')}
-            className="text-[#ff2a6d] hover:underline font-medium"
+            className="text-[#ff2a6d] hover:underline font-medium cursor-pointer"
           >
-            Sign in
+            Увійти
           </button>
         </p>
       </motion.div>

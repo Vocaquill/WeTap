@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import UserHomePage from './pages/home/UserHomePage';
+import PopularPage from './pages/popular/PopularPage';
+import LikedVideosPage from './pages/video/LikedVideosPage';
 import VideoPage from './pages/video/VideoPage';
 import SearchPage from './pages/video/SearchPage';
 import LoginPage from './pages/auth/LoginPage';
@@ -18,6 +20,7 @@ import CreateChannelPage from './pages/channel/CreateChannelPage';
 import StudioContentPage from "./pages/channel/StudioContentPage.tsx";
 import StudioReviewPage from "./pages/channel/StudioReviewPage.tsx";
 import StudioAnalyticsPage from "./pages/channel/StudioAnalyticsPage.tsx";
+import StudioPersonalizationPage from "./pages/channel/StudioPersonalizationPage";
 import StudioLayout from "./layouts/StudioLayout.tsx";
 import ChannelPage from "./pages/channel/ChannelPage.tsx";
 
@@ -37,7 +40,7 @@ import RequireAdmin from './components/auth/RequireAdmin';
 import RequireNoChannel from './components/auth/RequireNoChannel';
 import { useEffect, useState } from 'react';
 import { useRefreshTokenMutation } from './services/api/apiAccount';
-import { applyTheme, getActiveTheme } from './themes';
+import { initThemeSystem } from './themes';
 
 import ScrollToTop from './components/layout/ScrollToTop.tsx';
 
@@ -46,7 +49,8 @@ function App() {
     const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
     useEffect(() => {
-        applyTheme(getActiveTheme());
+        const cleanup = initThemeSystem();
+        return cleanup;
     }, []);
 
     useEffect(() => {
@@ -78,6 +82,7 @@ function App() {
             <Routes>
                 <Route element={<AppLayout />}>
                     <Route path="/" element={<UserHomePage />} />
+                    <Route path="/popular" element={<PopularPage />} />
                     <Route path="/video/:slug" element={<VideoPage />} />
                     <Route path="/search" element={<SearchPage />} />
                     <Route path="/channel/:slug" element={<ChannelPage />} />
@@ -87,6 +92,7 @@ function App() {
                     <Route path="/reset-password" element={<ResetPasswordPage />} />
 
                     <Route element={<RequireLogin />}>
+                        <Route path="/liked" element={<LikedVideosPage />} />
                         <Route path="/account" element={<ProfilePage />} />
                         <Route path="/edit-account" element={<EditProfilePage />} />
                         <Route element={<RequireNoChannel />}>
@@ -107,6 +113,7 @@ function App() {
                         <Route path="review" element={<StudioReviewPage />} />
                         <Route path="content" element={<StudioContentPage />} />
                         <Route path="analytics" element={<StudioAnalyticsPage />} />
+                        <Route path="personalization" element={<StudioPersonalizationPage/>} />
                     </Route>
                 </Route>
 

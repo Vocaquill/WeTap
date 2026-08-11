@@ -1,4 +1,4 @@
-import {Film, Star, BarChart2, ArrowLeft} from 'lucide-react';
+import {Film, Star, BarChart2, ArrowLeft, Settings} from 'lucide-react';
 import BaseSidebar, {type SidebarSection, type SidebarItem} from './BaseSidebar';
 import {useAppSelector} from '../../store';
 import {useGetByQuery} from '../../services/api/apiChannels';
@@ -31,6 +31,11 @@ function StudioSidebar({isOpen, toggleSidebar}: StudioSidebarProps) {
                     name: 'Аналітика',
                     path: '/studio/analytics',
                     icon: <BarChart2 size={18}/>,
+                },
+                {
+                    name: 'Персоналізація',
+                    path: '/studio/personalization',
+                    icon: <Settings size={18}/>,
                 },
             ]
         }

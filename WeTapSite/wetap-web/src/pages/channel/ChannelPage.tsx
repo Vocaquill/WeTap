@@ -1,25 +1,29 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useGetByQuery } from '../../services/api/apiChannels';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useGetByQuery, useToggleSubscriptionMutation } from '../../services/api/apiChannels';
 import { useSearchVideosQuery } from '../../services/api/apiVideos';
 import { VideoCard } from "../../components/video/VideoCard.tsx";
 import { TabButtons } from '../../components/ui/common/TabButton';
 import { Button } from '../../components/form/Button';
 import { APP_ENV } from '../../env';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Info } from 'lucide-react';
+import { useAppSelector } from '../../store/index';
 
 export default function ChannelPage() {
     const { slug } = useParams<{ slug: string }>();
-    const [activeTab, setActiveTab] = useState<string>('Home');
-    const [sortBy, setSortBy] = useState<string>('newest'); // 'popular', 'newest', 'oldest'
+    const navigate = useNavigate();
+    const { user } = useAppSelector((state) => state.auth);
 
-    // Отримуємо дані каналу
+    const [activeTab, setActiveTab] = useState<string>('Home');
+    const [sortBy, setSortBy] = useState<string>('date');
+
     const { data: channel, isLoading: isChannelLoading } = useGetByQuery(
         { id: Number(slug) },
         { skip: !slug }
     );
 
-    // Отримуємо відео каналу
+    const [toggleSubscription, { isLoading: isSubscribing }] = useToggleSubscriptionMutation();
+
     const { data: videosData, isLoading: isVideosLoading } = useSearchVideosQuery(
         {
             channelId: channel?.id,
@@ -27,8 +31,36 @@ export default function ChannelPage() {
             page: 1,
             itemPerPage: 20
         },
-        { skip: !channel?.id }
+        { skip: !channel?.id || activeTab !== 'Videos' }
     );
+
+    const { data: popularVideosData, isLoading: isPopularLoading } = useSearchVideosQuery(
+        {
+            channelId: channel?.id,
+            sortBy: 'views',
+            page: 1,
+            itemPerPage: 5
+        },
+        { skip: !channel?.id || activeTab !== 'Home' }
+    );
+
+    // Визначаємо, чи є поточний користувач власником цього каналу
+    const userChannelId = user?.channelId ?? user?.id;
+    const isOwnChannel = userChannelId === channel?.id;
+
+    const handleSubscribe = async () => {
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+        if (channel?.id) {
+            try {
+                await toggleSubscription(channel.id).unwrap();
+            } catch (error) {
+                console.error('Помилка підписки', error);
+            }
+        }
+    };
 
     if (isChannelLoading) {
         return (
@@ -54,7 +86,7 @@ export default function ChannelPage() {
                         className="w-full h-full object-cover"
                     />
                 ) : (
-                    <div className="w-full h-full bg-zinc-700/50" /> // Заглушка, як на скріншоті
+                    <div className="w-full h-full bg-zinc-700/50" />
                 )}
             </div>
 
@@ -74,46 +106,70 @@ export default function ChannelPage() {
                             <span className="font-medium text-zinc-300">@{channel.nickName}</span>
                             <span>•</span>
                             <span>{channel.subscriberCount} subscribers</span>
-                            {/* Якщо є поле кількості відео, можна вивести його тут */}
-                            {channel.description && (
-                                <>
-                                    <span>•</span>
-                                    <span className="line-clamp-1 max-w-md">{channel.description}</span>
-                                </>
-                            )}
                         </div>
                     </div>
                 </div>
 
-                {/* Кнопка підписки */}
                 <div className="shrink-0">
-                    <Button variant="secondary" size="lg" className="rounded-full">
-                        Subscribed
-                    </Button>
+                    {/* Перевірка на власний канал */}
+                    {isOwnChannel ? (
+                        <Button
+                            variant="secondary"
+                            size="lg"
+                            className="rounded-full font-semibold"
+                            onClick={() => navigate('/studio/personalization')}
+                        >
+                            Налаштувати канал
+                        </Button>
+                    ) : (
+                        <Button
+                            variant={channel.isSubscribed ? "secondary" : "primary"}
+                            size="lg"
+                            className="rounded-full"
+                            onClick={handleSubscribe}
+                            disabled={isSubscribing}
+                        >
+                            {channel.isSubscribed ? "Відписатися" : "Підписатися"}
+                        </Button>
+                    )}
                 </div>
             </div>
 
-            {/* Навігація (Tabs) */}
+            {/* Навігація (Tabs) - Видалено зайві вкладки */}
             <div className="border-b border-white/5 pb-2">
                 <TabButtons
-                    tabList={['Home', 'Videos', 'Posts', 'Shorts', 'Playlists', 'About']}
+                    tabList={['Home', 'Videos', 'About']}
                     onTabChange={setActiveTab}
                 />
             </div>
 
-            {/* Контент активної вкладки */}
+            {/* Контент вкладок */}
             {activeTab === 'Videos' && (
                 <div className="space-y-6">
-                    {/* Фільтри сортування (тільки для вкладки Videos) */}
                     <div className="flex items-center gap-3">
-                        <Button variant={sortBy === 'popular' ? 'chip' : 'ghost'} onClick={() => setSortBy('popular')} className={sortBy === 'popular' ? 'bg-zinc-800 text-white' : ''} size="sm">
+                        <Button
+                            variant={sortBy === 'views' ? 'chip' : 'ghost'}
+                            onClick={() => setSortBy('views')}
+                            className={sortBy === 'views' ? 'bg-zinc-800 text-white' : ''}
+                            size="sm"
+                        >
                             Popular
                         </Button>
-                        <Button variant={sortBy === 'newest' ? 'chip' : 'ghost'} onClick={() => setSortBy('newest')} className={sortBy === 'newest' ? 'bg-zinc-800 text-white' : ''} size="sm">
+                        <Button
+                            variant={sortBy === 'date' ? 'chip' : 'ghost'}
+                            onClick={() => setSortBy('date')}
+                            className={sortBy === 'date' ? 'bg-zinc-800 text-white' : ''}
+                            size="sm"
+                        >
                             Newest
                         </Button>
-                        <Button variant={sortBy === 'oldest' ? 'chip' : 'ghost'} onClick={() => setSortBy('oldest')} className={sortBy === 'oldest' ? 'bg-zinc-800 text-white' : ''} size="sm">
-                            Oldest
+                        <Button
+                            variant={sortBy === 'rating' ? 'chip' : 'ghost'}
+                            onClick={() => setSortBy('rating')}
+                            className={sortBy === 'rating' ? 'bg-zinc-800 text-white' : ''}
+                            size="sm"
+                        >
+                            Top Rated
                         </Button>
                     </div>
 
@@ -133,20 +189,43 @@ export default function ChannelPage() {
 
             {activeTab === 'Home' && (
                 <div className="space-y-8">
-                    {/* Тут можна зробити кастомну вибірку найпопулярніших відео, або просто показати сітку */}
-                    <h2 className="text-xl font-bold text-zinc-100">Uploads</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-4 gap-y-8">
-                        {videosData?.items.slice(0, 5).map((video) => (
-                            <VideoCard key={video.id} video={video} />
-                        ))}
-                    </div>
+                    <h2 className="text-xl font-bold text-zinc-100">Popular Uploads</h2>
+                    {isPopularLoading ? (
+                        <div className="flex justify-center py-10">
+                            <Loader2 className="animate-spin text-zinc-500" />
+                        </div>
+                    ) : popularVideosData?.items.length === 0 ? (
+                        <div className="text-zinc-500">Немає відео на цьому каналі.</div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-4 gap-y-8">
+                            {popularVideosData?.items.map((video) => (
+                                <VideoCard key={video.id} video={video} />
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
 
-            {/* Заглушка для інших вкладок */}
-            {!['Home', 'Videos'].includes(activeTab) && (
-                <div className="py-20 text-center text-zinc-500">
-                    Вкладка {activeTab} знаходиться в розробці
+            {/* Вкладка About */}
+            {activeTab === 'About' && (
+                <div className="bg-zinc-900/50 p-6 md:p-8 rounded-[2rem] border border-zinc-800 max-w-4xl">
+                    <h2 className="text-xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
+                        <Info size={24} className="text-[#FF2D7A]" />
+                        Про канал
+                    </h2>
+
+                    <div className="text-zinc-300 whitespace-pre-wrap leading-relaxed">
+                        {channel.description ? channel.description : 'Автор ще не додав опис до цього каналу.'}
+                    </div>
+
+                    <hr className="border-zinc-800 my-6" />
+
+                    <div className="flex flex-col gap-4 text-sm text-zinc-400">
+                        <div className="flex justify-between items-center bg-zinc-900 p-4 rounded-xl border border-zinc-800/80">
+                            <span className="font-semibold text-zinc-300">Підписників</span>
+                            <span className="text-zinc-100">{channel.subscriberCount}</span>
+                        </div>
+                    </div>
                 </div>
             )}
 
