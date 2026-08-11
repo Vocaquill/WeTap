@@ -6,7 +6,7 @@ import { VideoCard } from "../../components/video/VideoCard.tsx";
 import { TabButtons } from '../../components/ui/common/TabButton';
 import { Button } from '../../components/form/Button';
 import { APP_ENV } from '../../env';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Info } from 'lucide-react';
 import { useAppSelector } from '../../store/index';
 
 export default function ChannelPage() {
@@ -44,6 +44,10 @@ export default function ChannelPage() {
         { skip: !channel?.id || activeTab !== 'Home' }
     );
 
+    // Визначаємо, чи є поточний користувач власником цього каналу
+    const userChannelId = user?.channelId ?? user?.id;
+    const isOwnChannel = userChannelId === channel?.id;
+
     const handleSubscribe = async () => {
         if (!user) {
             navigate('/login');
@@ -73,6 +77,7 @@ export default function ChannelPage() {
     return (
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
 
+            {/* Банер каналу */}
             <div className="w-full h-48 md:h-64 bg-zinc-800 rounded-[2rem] overflow-hidden">
                 {channel.bannerImage ? (
                     <img
@@ -85,6 +90,7 @@ export default function ChannelPage() {
                 )}
             </div>
 
+            {/* Інформація про канал */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div className="flex items-center gap-6">
                     <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-zinc-800 shrink-0 border-4 border-[#121213]">
@@ -100,65 +106,71 @@ export default function ChannelPage() {
                             <span className="font-medium text-zinc-300">@{channel.nickName}</span>
                             <span>•</span>
                             <span>{channel.subscriberCount} subscribers</span>
-                            {channel.description && (
-                                <>
-                                    <span>•</span>
-                                    <span className="line-clamp-1 max-w-md">{channel.description}</span>
-                                </>
-                            )}
                         </div>
                     </div>
                 </div>
 
                 <div className="shrink-0">
-                    <Button
-                        variant={channel.isSubscribed ? "secondary" : "primary"}
-                        size="lg"
-                        className="rounded-full"
-                        onClick={handleSubscribe}
-                        disabled={isSubscribing}
-                    >
-                        {channel.isSubscribed ? "Subscribed" : "Subscribe"}
-                    </Button>
+                    {/* Перевірка на власний канал */}
+                    {isOwnChannel ? (
+                        <Button
+                            variant="secondary"
+                            size="lg"
+                            className="rounded-full font-semibold"
+                            onClick={() => navigate('/studio/personalization')}
+                        >
+                            Налаштувати канал
+                        </Button>
+                    ) : (
+                        <Button
+                            variant={channel.isSubscribed ? "secondary" : "primary"}
+                            size="lg"
+                            className="rounded-full"
+                            onClick={handleSubscribe}
+                            disabled={isSubscribing}
+                        >
+                            {channel.isSubscribed ? "Відписатися" : "Підписатися"}
+                        </Button>
+                    )}
                 </div>
             </div>
 
+            {/* Навігація (Tabs) - Видалено зайві вкладки */}
             <div className="border-b border-white/5 pb-2">
                 <TabButtons
-                    tabList={['Home', 'Videos', 'Posts', 'Shorts', 'Playlists', 'About']}
+                    tabList={['Home', 'Videos', 'About']}
                     onTabChange={setActiveTab}
                 />
             </div>
 
+            {/* Контент вкладок */}
             {activeTab === 'Videos' && (
                 <div className="space-y-6">
                     <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-3">
-                            <Button
-                                variant={sortBy === 'views' ? 'chip' : 'ghost'}
-                                onClick={() => setSortBy('views')}
-                                className={sortBy === 'views' ? 'bg-zinc-800 text-white' : ''}
-                                size="sm"
-                            >
-                                Popular
-                            </Button>
-                            <Button
-                                variant={sortBy === 'date' ? 'chip' : 'ghost'}
-                                onClick={() => setSortBy('date')}
-                                className={sortBy === 'date' ? 'bg-zinc-800 text-white' : ''}
-                                size="sm"
-                            >
-                                Newest
-                            </Button>
-                            <Button
-                                variant={sortBy === 'rating' ? 'chip' : 'ghost'}
-                                onClick={() => setSortBy('rating')}
-                                className={sortBy === 'rating' ? 'bg-zinc-800 text-white' : ''}
-                                size="sm"
-                            >
-                                Top Rated
-                            </Button>
-                        </div>
+                        <Button
+                            variant={sortBy === 'views' ? 'chip' : 'ghost'}
+                            onClick={() => setSortBy('views')}
+                            className={sortBy === 'views' ? 'bg-zinc-800 text-white' : ''}
+                            size="sm"
+                        >
+                            Popular
+                        </Button>
+                        <Button
+                            variant={sortBy === 'date' ? 'chip' : 'ghost'}
+                            onClick={() => setSortBy('date')}
+                            className={sortBy === 'date' ? 'bg-zinc-800 text-white' : ''}
+                            size="sm"
+                        >
+                            Newest
+                        </Button>
+                        <Button
+                            variant={sortBy === 'rating' ? 'chip' : 'ghost'}
+                            onClick={() => setSortBy('rating')}
+                            className={sortBy === 'rating' ? 'bg-zinc-800 text-white' : ''}
+                            size="sm"
+                        >
+                            Top Rated
+                        </Button>
                     </div>
 
                     {isVideosLoading ? (
@@ -194,9 +206,26 @@ export default function ChannelPage() {
                 </div>
             )}
 
-            {!['Home', 'Videos'].includes(activeTab) && (
-                <div className="py-20 text-center text-zinc-500">
-                    Вкладка {activeTab} знаходиться в розробці
+            {/* Вкладка About */}
+            {activeTab === 'About' && (
+                <div className="bg-zinc-900/50 p-6 md:p-8 rounded-[2rem] border border-zinc-800 max-w-4xl">
+                    <h2 className="text-xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
+                        <Info size={24} className="text-[#FF2D7A]" />
+                        Про канал
+                    </h2>
+
+                    <div className="text-zinc-300 whitespace-pre-wrap leading-relaxed">
+                        {channel.description ? channel.description : 'Автор ще не додав опис до цього каналу.'}
+                    </div>
+
+                    <hr className="border-zinc-800 my-6" />
+
+                    <div className="flex flex-col gap-4 text-sm text-zinc-400">
+                        <div className="flex justify-between items-center bg-zinc-900 p-4 rounded-xl border border-zinc-800/80">
+                            <span className="font-semibold text-zinc-300">Підписників</span>
+                            <span className="text-zinc-100">{channel.subscriberCount}</span>
+                        </div>
+                    </div>
                 </div>
             )}
 

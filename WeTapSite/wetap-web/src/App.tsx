@@ -20,6 +20,7 @@ import CreateChannelPage from './pages/channel/CreateChannelPage';
 import StudioContentPage from "./pages/channel/StudioContentPage.tsx";
 import StudioReviewPage from "./pages/channel/StudioReviewPage.tsx";
 import StudioAnalyticsPage from "./pages/channel/StudioAnalyticsPage.tsx";
+import StudioPersonalizationPage from "./pages/channel/StudioPersonalizationPage";
 import StudioLayout from "./layouts/StudioLayout.tsx";
 import ChannelPage from "./pages/channel/ChannelPage.tsx";
 
@@ -112,6 +113,7 @@ function App() {
                         <Route path="review" element={<StudioReviewPage />} />
                         <Route path="content" element={<StudioContentPage />} />
                         <Route path="analytics" element={<StudioAnalyticsPage />} />
+                        <Route path="personalization" element={<StudioPersonalizationPage/>} />
                     </Route>
                 </Route>
 
