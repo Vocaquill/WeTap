@@ -286,7 +286,7 @@ export function BaseSidebar({
                                 <div className="h-9 w-auto flex items-center justify-center shrink-0">
                                     <img
                                         src={logoImg}
-                                        alt="WeTap Logo"
+                                        alt="NextPlay Logo"
                                         className="h-full object-contain"
                                     />
                                 </div>
@@ -307,7 +307,7 @@ export function BaseSidebar({
                                         animation: 'shimmer-move 15s ease infinite',
                                     }}
                                 >
-                                    WeTap
+                                    NextPlay
                                 </h2>
                             </Link>
                         )}
