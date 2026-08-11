@@ -22,7 +22,7 @@ export interface Theme {
 export const themes: Theme[] = [
     {
         id: 'dark',
-        name: 'Dark',
+        name: 'Темна',
         colors: {
             bg: '18 18 19',
             black: '0 0 0',
@@ -42,7 +42,7 @@ export const themes: Theme[] = [
     },
     {
         id: 'light',
-        name: 'Light',
+        name: 'Світла',
         colors: {
             bg: '255 255 255',
             black: '9 9 11',
