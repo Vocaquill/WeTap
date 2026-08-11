@@ -109,7 +109,7 @@ function RegisterPage() {
         {/* Title & Subtitle */}
         <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">Створення акаунта</h1>
         <p className="text-[rgb(var(--color-zinc-400))] text-xs text-center mb-6">
-          Приєднуйтесь до WeTap вже сьогодні!
+          Приєднуйтесь до NextPlay вже сьогодні!
         </p>
 
         {/* FORM */}

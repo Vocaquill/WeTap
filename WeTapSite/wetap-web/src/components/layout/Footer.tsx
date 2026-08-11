@@ -18,7 +18,7 @@ function Footer() {
 
           <div className="space-y-4 col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-1">
             <h2 className="text-2xl font-black tracking-tighter uppercase italic">
-              WE<span style={{ color: '#FF2D7A' }}>TAP</span>
+              NEXT<span style={{ color: '#FF2D7A' }}>PLAY</span>
             </h2>
             <p className="text-zinc-500 text-sm leading-relaxed max-w-sm">
               Найкращий досвід перегляду відео онлайн. Твій власний сервіс у кишені.
