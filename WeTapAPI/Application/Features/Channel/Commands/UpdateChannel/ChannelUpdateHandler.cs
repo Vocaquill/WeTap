@@ -1,3 +1,4 @@
+using Application.Constants;
 using Application.Interfaces;
 using Application.Models.Channel;
 using Application.Mappings;
@@ -25,7 +26,7 @@ public class ChannelUpdateHandler(
         if (entity == null)
             throw new Exception("Канал не знайдено");
 
-        if (entity.Author?.Id != userId)
+        if (entity.Author?.Id != userId && !currentUserService.IsInRole(Roles.Admin))
             throw new Exception("Ви не маєте прав на редагування цього каналу");
 
         channelMapper.MapToEntity(request.Model, entity);
