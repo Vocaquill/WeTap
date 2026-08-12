@@ -84,8 +84,8 @@ function LoginPage() {
       >
         {/* Logo / Header */}
         <div className="flex items-center gap-2 mb-6">
-          <img src={logoImg} alt="WeTap Logo" className="h-8 w-auto object-contain" />
-          <span className="text-2xl font-bold tracking-tight text-[#ff2a6d]">WeTap</span>
+          <img src={logoImg} alt="NextPlay Logo" className="h-8 w-auto object-contain" />
+          <span className="text-2xl font-bold tracking-tight text-[#ff2a6d]">NextPlay</span>
         </div>
 
         {/* Title & Subtitle */}

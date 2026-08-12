@@ -57,14 +57,14 @@ function Header() {
         >
             <div className="flex items-center shrink-0">
                 <Link to="/" className="flex items-center shrink-0 md:hidden active:scale-95 transition-transform">
-                    <img src={logoImg} alt="WeTap Logo" className="h-7 sm:h-8 w-auto object-contain" />
+                    <img src={logoImg} alt="NextPlay Logo" className="h-7 sm:h-8 w-auto object-contain" />
                     <span
                         className="ml-1.5 text-sm sm:text-base font-black tracking-tight bg-clip-text text-transparent hidden sm:inline"
                         style={{
                             backgroundImage: 'linear-gradient(to right, #f43f5e, #ec4899, #a855f7)',
                         }}
                     >
-                        WeTap
+                        NextPlay
                     </span>
                 </Link>
 

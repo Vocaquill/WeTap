@@ -102,14 +102,14 @@ function RegisterPage() {
 
         {/* Logo / Header */}
         <div className="flex items-center gap-2 mb-4 mt-2">
-          <img src={logoImg} alt="WeTap Logo" className="h-8 w-auto object-contain" />
-          <span className="text-2xl font-bold tracking-tight text-[#ff2a6d]">WeTap</span>
+          <img src={logoImg} alt="NextPlay Logo" className="h-8 w-auto object-contain" />
+          <span className="text-2xl font-bold tracking-tight text-[#ff2a6d]">NextPlay</span>
         </div>
 
         {/* Title & Subtitle */}
         <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">Створення акаунта</h1>
         <p className="text-[rgb(var(--color-zinc-400))] text-xs text-center mb-6">
-          Приєднуйтесь до WeTap вже сьогодні!
+          Приєднуйтесь до NextPlay вже сьогодні!
         </p>
 
         {/* FORM */}

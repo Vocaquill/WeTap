@@ -121,7 +121,7 @@ function CreateChannelPage() {
                         Створити <span className="text-red-600">канал</span>
                     </h1>
                     <p className="text-zinc-500 dark:text-zinc-400 mt-2 text-xs sm:text-sm">
-                        Заповніть інформацію нижче, щоб розпочати свій творчий шлях на WeTap
+                        Заповніть інформацію нижче, щоб розпочати свій творчий шлях на NextPlay
                     </p>
                 </div>
 
