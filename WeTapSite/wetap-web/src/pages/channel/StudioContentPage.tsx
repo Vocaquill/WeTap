@@ -126,7 +126,7 @@ function StudioContentPage() {
             label: 'Оцінки',
             render: (item) => (
                 <span className="text-zinc-400 whitespace-nowrap text-xs">
-                  👍 {item.likesCount} / 👎 {item.dislikesCount}
+                    👍 {item.likesCount} / 👎 {item.dislikesCount}
                 </span>
             ),
         },
@@ -136,7 +136,7 @@ function StudioContentPage() {
             render: (item) => (
                 <span
                     className="px-2 py-0.5 bg-zinc-900 text-zinc-400 whitespace-nowrap rounded-md text-xs font-semibold border border-zinc-800">
-                  {item.privacy?.name || 'Публічне'}
+                    {item.privacy?.name || 'Публічне'}
                 </span>
             ),
         },
@@ -148,7 +148,7 @@ function StudioContentPage() {
             render: (item) => (
                 <span
                     className="px-2 py-0.5 bg-zinc-900 text-zinc-400 whitespace-nowrap rounded-md text-xs font-semibold border border-zinc-800">
-                  {item.dateCreated || 'Колись'}
+                    {item.dateCreated || 'Колись'}
                 </span>
             ),
         },
