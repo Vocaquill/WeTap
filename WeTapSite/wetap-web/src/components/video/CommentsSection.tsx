@@ -162,11 +162,12 @@ interface CommentItemProps {
         name: string;
         image: string;
     } | null;
+    parentId?: number | null;
     onModified?: () => void;
     depth?: number;
 }
 
-const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser, onModified, depth = 0 }) => {
+const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser, parentId = null, onModified, depth = 0 }) => {
     const isOwner = currentUser && currentUser.id === comment.userId;
     const [isEditing, setIsEditing] = useState(false);
     const [editText, setEditText] = useState(comment.content);
@@ -226,7 +227,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
         if (!editText.trim()) return;
 
         try {
-            await updateComment({ id: comment.id, content: editText.trim() }).unwrap();
+            await updateComment({ id: comment.id, content: editText.trim(), videoId, parentId }).unwrap();
             setIsEditing(false);
             onModified?.();
         } catch (error) {
@@ -236,7 +237,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
 
     const handleDelete = async () => {
         try {
-            await deleteComment(comment.id).unwrap();
+            await deleteComment({ id: comment.id, videoId, parentId }).unwrap();
             setIsDeleteModalOpen(false);
             onModified?.();
         } catch (error) {
@@ -424,6 +425,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, videoId, currentUser
                                 comment={reply}
                                 videoId={videoId}
                                 currentUser={currentUser}
+                                parentId={comment.id}
                                 onModified={() => fetchReplies(1)}
                                 depth={depth + 1}
                             />

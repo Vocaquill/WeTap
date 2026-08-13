@@ -51,18 +51,20 @@ export const apiComments = createApi({
                 method: "PUT",
                 body,
             }),
-            invalidatesTags: (_result, _error, { id }) => [
-                { type: "Comment", id },
+            invalidatesTags: (_result, _error, { videoId, parentId }) => [
+                { type: "Comments", id: `VIDEO_${videoId}` },
+                ...(parentId != null ? [{ type: "Comments" as const, id: `REPLIES_${parentId}` }] : []),
             ],
         }),
 
-        deleteComment: builder.mutation<void, number>({
-            query: (id) => ({
+        deleteComment: builder.mutation<void, { id: number; videoId: number; parentId?: number | null }>({
+            query: ({ id }) => ({
                 url: `${id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: (_result, _error, id) => [
-                { type: "Comment", id },
+            invalidatesTags: (_result, _error, { videoId, parentId }) => [
+                { type: "Comments", id: `VIDEO_${videoId}` },
+                ...(parentId != null ? [{ type: "Comments" as const, id: `REPLIES_${parentId}` }] : []),
             ],
         }),
     }),
