@@ -23,6 +23,7 @@ import StudioAnalyticsPage from "./pages/channel/StudioAnalyticsPage.tsx";
 import StudioPersonalizationPage from "./pages/channel/StudioPersonalizationPage";
 import StudioLayout from "./layouts/StudioLayout.tsx";
 import ChannelPage from "./pages/channel/ChannelPage.tsx";
+import SubscriptionsPage from "./pages/channel/SubscriptionsPage.tsx";
 
 import Dashboard from './pages/Admin/Dashboard.tsx';
 import VideosPage from './pages/Admin/VideosPage.tsx';
@@ -93,6 +94,7 @@ function App() {
 
                     <Route element={<RequireLogin />}>
                         <Route path="/liked" element={<LikedVideosPage />} />
+                        <Route path="/subscriptions" element={<SubscriptionsPage />} />
                         <Route path="/account" element={<ProfilePage />} />
                         <Route path="/edit-account" element={<EditProfilePage />} />
                         <Route element={<RequireNoChannel />}>

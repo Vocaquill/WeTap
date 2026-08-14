@@ -1,4 +1,4 @@
-import {ShieldCheck, Home, ThumbsUp, Film, Flame, Library, Plus} from 'lucide-react';
+import {ShieldCheck, Home, ThumbsUp, Film, Flame, Library, Plus, Users} from 'lucide-react';
 import {useAppSelector} from "../../store";
 import BaseSidebar, { type SidebarSection } from './BaseSidebar';
 import { useSearchGenresQuery } from '../../services/api/apiGenres';
@@ -28,6 +28,7 @@ function Sidebar({isOpen, toggleSidebar}: SidebarProps) {
                     subItems: genreSubItems
                 },
                 {name: 'Вподобані відео', path: '/liked', icon: <ThumbsUp size={18}/>},
+                ...(user ? [{name: 'Підписки', path: '/subscriptions', icon: <Users size={18}/>}] : []),
             ]
         },
     ];
