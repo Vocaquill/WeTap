@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 import { APP_ENV } from '../../env';
 import { useSearchVideosQuery } from '../../services/api/apiVideos';
 import { useSearchGenresQuery } from '../../services/api/apiGenres';
+import { useSearchLanguagesQuery } from '../../services/api/apiLanguages';
 import { Pagination } from '../../components/ui/common/Pagination';
 import PageTransition from '../../components/layout/PageTransition';
 import { SelectField } from '../../components/form/SelectField';
@@ -23,6 +24,7 @@ export default function SearchPage() {
 
     const query = searchParams.get('q') || '';
     const genreId = searchParams.get('genreId') ? Number(searchParams.get('genreId')) : undefined;
+    const languageId = searchParams.get('languageId') ? Number(searchParams.get('languageId')) : undefined;
     const channelId = searchParams.get('channelId') ? Number(searchParams.get('channelId')) : undefined;
     const sortBy = searchParams.get('sortBy') || 'relevance';
     const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
@@ -47,12 +49,14 @@ export default function SearchPage() {
     }
 
     const { data: genresData } = useSearchGenresQuery({ page: 1, itemPerPage: 100 });
+    const { data: languagesData } = useSearchLanguagesQuery({ page: 1, itemPerPage: 100 });
 
     const searchRequestParams = {
         page,
         itemPerPage: 10,
         q: query || undefined,
         genreId,
+        languageId,
         channelId,
         sortBy: sortBy !== 'relevance' ? sortBy : undefined,
         createYearFrom: yearFrom > minPossibleYear ? yearFrom.toString() : undefined,
@@ -108,6 +112,18 @@ export default function SearchPage() {
                         options={[
                             { id: 'all', name: 'Жанр: Всі' },
                             ...(genresData?.items.map((g) => ({ id: g.id, name: g.name })) || [])
+                        ]}
+                        variant="filter"
+                        wrapperClassName="w-full sm:w-auto"
+                    />
+
+                    <SelectField
+                        name="languageId"
+                        value={languageId || 'all'}
+                        onChange={(e) => updateUrlParam('languageId', e.target.value === 'all' ? undefined : Number(e.target.value))}
+                        options={[
+                            { id: 'all', name: 'Мова: Всі' },
+                            ...(languagesData?.items.map((l) => ({ id: l.id, name: l.name })) || [])
                         ]}
                         variant="filter"
                         wrapperClassName="w-full sm:w-auto"
