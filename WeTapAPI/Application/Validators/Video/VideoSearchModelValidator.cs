@@ -31,7 +31,7 @@ public class VideoSearchModelValidator : AbstractValidator<VideoSearchModel>
             .WithMessage("Рік 'до' повинен бути числовим значенням");
 
         RuleFor(x => x.SortBy)
-            .Must(sortBy => string.IsNullOrEmpty(sortBy) || new[] { "date", "views", "rating" }.Contains(sortBy.ToLower()))
-            .WithMessage("Обрано недопустиме поле для сортування, доступні такі поля: date, views, rating");
+            .Must(sortBy => string.IsNullOrEmpty(sortBy) || new[] { "date", "views", "rating", "likes", "reactions" }.Contains(sortBy.ToLower()))
+            .WithMessage("Обрано недопустиме поле для сортування, доступні такі поля: date, views, rating, likes, reactions");
     }
 }

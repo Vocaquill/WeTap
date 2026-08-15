@@ -5,12 +5,22 @@ import type { IChannelItemResponse } from "../../types/Channel/IChannelItemRespo
 import type { IChannelCreateRequest } from "../../types/Channel/IChannelCreateRequest.ts";
 import type { IChannelUpdateModel } from "../../types/Channel/IChannelUpdateModel.ts";
 import type { IGetByRequest } from "../../types/Additional/IGetByRequest.ts";
+import type { IPagedResult } from "../../types/Additional/IPagedResult.ts";
+import type { IChannelSearchRequest } from "../../types/Channel/IChannelSearchRequest.ts";
 
 export const apiChannels = createApi({
     reducerPath: "api/channels",
     baseQuery: createBaseQuery("Channels"),
     tagTypes: ["Channels", "Channel"],
     endpoints: (builder) => ({
+        searchChannels: builder.query<IPagedResult<IChannelItemResponse>, IChannelSearchRequest>({
+            query: (params) => ({
+                url: "search",
+                method: "GET",
+                params,
+            }),
+            providesTags: ["Channels"],
+        }),
         createChannel: builder.mutation<IChannelItemResponse, IChannelCreateRequest>({
             query: (body) => ({
                 url: "",
@@ -45,6 +55,7 @@ export const apiChannels = createApi({
             invalidatesTags: (_result, _error, channelId) => [
                 { type: "Channel", id: channelId },
                 "Channel",
+                "Channels",
             ],
             async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
                 try {
@@ -57,8 +68,9 @@ export const apiChannels = createApi({
 });
 
 export const {
+    useSearchChannelsQuery,
     useCreateChannelMutation,
     useUpdateChannelMutation,
     useGetByQuery,
     useToggleSubscriptionMutation,
-} = apiChannels;
+} = apiChannels;

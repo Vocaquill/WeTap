@@ -35,8 +35,8 @@ function ProfilePage() {
             <div className="max-w-4xl mx-auto">
 
                 <section
-                    className="relative mb-12 flex flex-col md:flex-row items-center gap-8 bg-zinc-100 dark:bg-zinc-900/20 p-8 rounded-[3rem] border border-zinc-200 dark:border-white/5 backdrop-blur-sm">
-                    <div className="relative group">
+                    className="relative mb-12 flex flex-col md:flex-row md:flex-wrap items-center gap-6 bg-zinc-100 dark:bg-zinc-900/20 p-8 rounded-[3rem] border border-zinc-200 dark:border-white/5 backdrop-blur-sm">
+                    <div className="relative group shrink-0">
                         <div
                             className="w-32 h-32 rounded-[2.5rem] overflow-hidden border-2 border-red-600 shadow-2xl shadow-red-600/20">
                             <img
@@ -45,12 +45,12 @@ function ProfilePage() {
                         </div>
                     </div>
 
-                    <div className="text-center md:text-left space-y-2">
-                        <h1 className="text-4xl font-black uppercase italic tracking-tighter text-theme-text">
+                    <div className="text-center md:text-left space-y-2 flex-1 min-w-0">
+                        <h1 className="text-4xl font-black uppercase italic tracking-tighter text-theme-text truncate">
                             {firstName!} <span className="text-red-600">{lastName!}</span>
                         </h1>
-                        <p className="text-zinc-500 font-medium flex items-center justify-center md:justify-start gap-2">
-                            <Mail size={16}/> {user!.email}
+                        <p className="text-zinc-500 font-medium flex items-center justify-center md:justify-start gap-2 truncate">
+                            <Mail size={16} className="shrink-0"/> {user!.email}
                         </p>
                         <div className="flex gap-2 pt-2 justify-center md:justify-start">
                             {user!.roles.includes("Admin") ? (
@@ -70,7 +70,7 @@ function ProfilePage() {
                     <Button
                         variant="inverse"
                         size="sm"
-                        className="md:ml-auto gap-2"
+                        className="shrink-0 md:ml-auto gap-2"
                         icon={<Edit2 size={16}/>}
                         onClick={() => navigate('/edit-account')}
                     >

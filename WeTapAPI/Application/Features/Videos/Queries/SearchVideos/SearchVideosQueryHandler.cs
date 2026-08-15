@@ -70,6 +70,11 @@ public class SearchVideosQueryHandler(
             query = query.Where(x => x.ChannelId == request.Model.ChannelId.Value);
         }
 
+        if (request.Model.LanguageId.HasValue)
+        {
+            query = query.Where(x => x.LanguageId == request.Model.LanguageId.Value);
+        }
+
         if (int.TryParse(request.Model.CreateYearFrom, out int fromYear))
         {
             query = query.Where(x => x.DateCreated.Year >= fromYear);
@@ -99,17 +104,19 @@ public class SearchVideosQueryHandler(
         int totalCount = await query.CountAsync();
         int totalPages = (int)Math.Ceiling(totalCount / (double)itemsPerPage);
 
-        if (request.Model.SortBy == "date")
+        string? sortBy = request.Model.SortBy?.ToLower();
+
+        if (sortBy == "date")
         {
             query = query.OrderByDescending(x => x.DateCreated);
         }
-        else if (request.Model.SortBy == "views")
+        else if (sortBy == "views")
         {
             query = query.OrderByDescending(x => x.ViewCount);
         }
-        else if (request.Model.SortBy == "reactions")
+        else if (sortBy == "likes" || sortBy == "rating" || sortBy == "reactions")
         {
-            query = query.OrderByDescending(x => x.VideoReactions.Count);
+            query = query.OrderByDescending(x => x.VideoReactions.Count(r => r.IsLike));
         }
         else
         {

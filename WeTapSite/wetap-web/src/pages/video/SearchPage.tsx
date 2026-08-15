@@ -13,17 +13,19 @@ import { motion } from 'framer-motion';
 import { APP_ENV } from '../../env';
 import { useSearchVideosQuery } from '../../services/api/apiVideos';
 import { useSearchGenresQuery } from '../../services/api/apiGenres';
-import { useSearchTagsQuery } from '../../services/api/apiTags';
+import { useSearchLanguagesQuery } from '../../services/api/apiLanguages';
 import { Pagination } from '../../components/ui/common/Pagination';
 import PageTransition from '../../components/layout/PageTransition';
 import { SelectField } from '../../components/form/SelectField';
+import { AuthorSearchAutocomplete } from '../../components/form/AuthorSearchAutocomplete';
 
 export default function SearchPage() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const query = searchParams.get('q') || '';
     const genreId = searchParams.get('genreId') ? Number(searchParams.get('genreId')) : undefined;
-    const tagId = searchParams.get('tagId') ? Number(searchParams.get('tagId')) : undefined;
+    const languageId = searchParams.get('languageId') ? Number(searchParams.get('languageId')) : undefined;
+    const channelId = searchParams.get('channelId') ? Number(searchParams.get('channelId')) : undefined;
     const sortBy = searchParams.get('sortBy') || 'relevance';
     const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
 
@@ -47,14 +49,15 @@ export default function SearchPage() {
     }
 
     const { data: genresData } = useSearchGenresQuery({ page: 1, itemPerPage: 100 });
-    const { data: tagsData } = useSearchTagsQuery({ page: 1, itemPerPage: 100 });
+    const { data: languagesData } = useSearchLanguagesQuery({ page: 1, itemPerPage: 100 });
 
     const searchRequestParams = {
         page,
         itemPerPage: 10,
         q: query || undefined,
         genreId,
-        tagId,
+        languageId,
+        channelId,
         sortBy: sortBy !== 'relevance' ? sortBy : undefined,
         createYearFrom: yearFrom > minPossibleYear ? yearFrom.toString() : undefined,
         createYearTo: yearTo < maxPossibleYear ? yearTo.toString() : undefined,
@@ -115,15 +118,21 @@ export default function SearchPage() {
                     />
 
                     <SelectField
-                        name="tagId"
-                        value={tagId || 'all'}
-                        onChange={(e) => updateUrlParam('tagId', e.target.value === 'all' ? undefined : Number(e.target.value))}
+                        name="languageId"
+                        value={languageId || 'all'}
+                        onChange={(e) => updateUrlParam('languageId', e.target.value === 'all' ? undefined : Number(e.target.value))}
                         options={[
-                            { id: 'all', name: 'Особливості: Будь-які' },
-                            ...(tagsData?.items.map((t) => ({ id: t.id, name: t.name })) || [])
+                            { id: 'all', name: 'Мова: Всі' },
+                            ...(languagesData?.items.map((l) => ({ id: l.id, name: l.name })) || [])
                         ]}
                         variant="filter"
                         wrapperClassName="w-full sm:w-auto"
+                    />
+
+                    <AuthorSearchAutocomplete
+                        channelId={channelId}
+                        onChange={(id) => updateUrlParam('channelId', id)}
+                        wrapperClassName="w-full sm:w-auto min-w-[200px]"
                     />
 
                     <SelectField

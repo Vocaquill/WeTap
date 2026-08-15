@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.Models.Channel;
 using Application.Models.Search;
 using Application.Mappings;
+using Domain;
 using Domain.Entities.Channel;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,9 @@ namespace Application.Features.Channel.Queries.SearchChannels;
 
 public class SearchChannelsQueryHandler(
         IGenericRepository<ChannelEntity, long> repo,
-        ChannelMappingProfile channelMapper
+        ChannelMappingProfile channelMapper,
+        AppDbContext context,
+        ICurrentUserService currentUserService
     )
     : IRequestHandler<SearchChannelsQuery, SearchResult<ChannelItemModel>>
 {
@@ -31,6 +34,33 @@ public class SearchChannelsQueryHandler(
                 x.NickName.ToLower().Contains(q) ||
                 x.Description.ToLower().Contains(q)
             );
+        }
+
+        if (request.Model.IsSubscribed == true)
+        {
+            long? userId = currentUserService.TryGetCurrentUserId();
+            if (userId.HasValue)
+            {
+                var subscribedIds = context.ChannelSubscribers
+                    .Where(s => s.UserId == userId.Value)
+                    .Select(s => s.ChannelId);
+
+                query = query.Where(x => subscribedIds.Contains(x.Id));
+            }
+            else
+            {
+                return new SearchResult<ChannelItemModel>
+                {
+                    Items = new List<ChannelItemModel>(),
+                    Pagination = new PaginationModel
+                    {
+                        TotalCount = 0,
+                        TotalPages = 0,
+                        ItemsPerPage = itemsPerPage,
+                        CurrentPage = currentPage
+                    }
+                };
+            }
         }
 
         int totalCount = await query.CountAsync(cancellationToken);

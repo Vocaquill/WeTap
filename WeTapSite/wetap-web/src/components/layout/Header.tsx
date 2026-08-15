@@ -57,14 +57,14 @@ function Header() {
         >
             <div className="flex items-center shrink-0">
                 <Link to="/" className="flex items-center shrink-0 md:hidden active:scale-95 transition-transform">
-                    <img src={logoImg} alt="NextPlay Logo" className="h-7 sm:h-8 w-auto object-contain" />
+                    <img src={logoImg} alt="NexPlay Logo" className="h-7 sm:h-8 w-auto object-contain" />
                     <span
                         className="ml-1.5 text-sm sm:text-base font-black tracking-tight bg-clip-text text-transparent hidden sm:inline"
                         style={{
                             backgroundImage: 'linear-gradient(to right, #f43f5e, #ec4899, #a855f7)',
                         }}
                     >
-                        NextPlay
+                        NexPlay
                     </span>
                 </Link>
 
@@ -135,7 +135,7 @@ function Header() {
                     >
                         <span
                             className="block px-3 py-1.5 sm:px-5 sm:py-2 rounded-full bg-theme-bg text-zinc-200 group-hover:text-white group-hover:bg-theme-bg/80 transition-all duration-300 whitespace-nowrap">
-                          Увійти
+                            Увійти
                         </span>
                     </button>
                 )}

@@ -58,7 +58,7 @@ export default function PopularPage() {
                     </div>
                     <div>
                         <h1 className="text-3xl font-black text-zinc-100 tracking-wide">В тренді</h1>
-                        <p className="text-zinc-400 mt-1">Найпопулярніші відео на NextPlay</p>
+                        <p className="text-zinc-400 mt-1">Найпопулярніші відео на NexPlay</p>
                     </div>
                 </div>
 

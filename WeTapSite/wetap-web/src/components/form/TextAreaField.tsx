@@ -12,15 +12,15 @@ interface TextAreaFieldProps {
 }
 
 export const TextAreaField = ({
-                                  label,
-                                  name,
-                                  value,
-                                  placeholder,
-                                  rows = 5,
-                                  required = false,
-                                  error,
-                                  onChange,
-                              }: TextAreaFieldProps) => (
+    label,
+    name,
+    value,
+    placeholder,
+    rows = 5,
+    required = false,
+    error,
+    onChange,
+}: TextAreaFieldProps) => (
     <div className="flex flex-col">
         <label className="text-zinc-400 mb-1 font-semibold">{label}</label>
 
@@ -43,3 +43,4 @@ export const TextAreaField = ({
         )}
     </div>
 );
+

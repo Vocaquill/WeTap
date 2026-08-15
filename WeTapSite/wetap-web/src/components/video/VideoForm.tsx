@@ -27,16 +27,16 @@ export interface VideoFormProps {
 }
 
 export function VideoForm({
-                              title,
-                              submitButtonText,
-                              onSubmit,
-                              isLoading,
-                              initialData,
-                              initialTags,
-                              requireVideoFile = true,
-                              initialImageUrl,
-                              initialVideoUrl,
-                          }: VideoFormProps) {
+    title,
+    submitButtonText,
+    onSubmit,
+    isLoading,
+    initialData,
+    initialTags,
+    requireVideoFile = true,
+    initialImageUrl,
+    initialVideoUrl,
+}: VideoFormProps) {
     const [createTag, {isLoading: isLoadingTag}] = useCreateTagMutation();
     const {data: genresData} = useSearchGenresQuery({page: 1, itemPerPage: 100});
     const [tagInput, setTagInput] = useState('');
@@ -353,9 +353,9 @@ export function VideoForm({
                                                     onClick={() => handleGenreToggle(genre.id)}
                                                     className="inline-flex items-center gap-1 bg-[#ff2a6d]/15 text-[#ff2a6d] border border-[#ff2a6d]/60 text-xs px-3 py-1.5 rounded-full cursor-pointer hover:bg-[#ff2a6d]/25 transition-colors font-medium"
                                                 >
-                          {genre.name}
+                                                    {genre.name}
                                                     <X size={12}/>
-                        </span>
+                                                </span>
                                             ))}
                                         {genresData?.items
                                             .filter(genre => !form.genreIds?.includes(genre.id))
@@ -365,9 +365,9 @@ export function VideoForm({
                                                     onClick={() => handleGenreToggle(genre.id)}
                                                     className="inline-flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700/60 text-xs px-3 py-1.5 rounded-full cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-600 transition-all font-medium"
                                                 >
-                          <Plus size={11}/>
+                                                    <Plus size={11}/>
                                                     {genre.name}
-                        </span>
+                                                </span>
                                             ))}
                                     </div>
                                 </div>
@@ -390,9 +390,9 @@ export function VideoForm({
                                                     onClick={() => handleTagToggle(tag.id)}
                                                     className="inline-flex items-center gap-1 bg-[#ff2a6d]/15 text-[#ff2a6d] border border-[#ff2a6d]/60 text-xs px-3 py-1.5 rounded-full cursor-pointer hover:bg-[#ff2a6d]/25 transition-colors font-medium"
                                                 >
-                          #{tag.name}
+                                                    #{tag.name}
                                                     <X size={12}/>
-                        </span>
+                                                </span>
                                             ))}
                                         {tagsData?.items
                                             .filter(tag => !form.tagIds?.includes(tag.id))
@@ -402,9 +402,9 @@ export function VideoForm({
                                                     onClick={() => handleTagToggle(tag.id)}
                                                     className="inline-flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700/60 text-xs px-3 py-1.5 rounded-full cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-600 transition-all font-medium"
                                                 >
-                          <Plus size={11}/>
+                                                    <Plus size={11}/>
                                                     {tag.name}
-                        </span>
+                                                </span>
                                             ))}
                                     </div>
                                 </div>

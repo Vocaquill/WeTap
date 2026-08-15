@@ -9,5 +9,6 @@ export interface IVideoSearchRequest extends IBaseSearch {
     createYearTo?: string;
     sortBy?: string;
     channelId?: number;
+    languageId?: number;
     isLiked?: boolean;
 }

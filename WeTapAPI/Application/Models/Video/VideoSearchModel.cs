@@ -9,6 +9,7 @@ public class VideoSearchModel : BaseSearchParamsModel
     public string? ChannelName { get; set; }
     public long? GenreId { get; set; }
     public long? TagId { get; set; }
+    public long? LanguageId { get; set; }
     public string? CreateYearFrom { get; set; }
     public string? CreateYearTo { get; set; }
     public string? SortBy { get; set; } // сортування за популярністю, датою, рейтингом...
