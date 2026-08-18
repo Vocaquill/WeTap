@@ -23,7 +23,7 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
          selectClassName = '',
          variant = 'default',
          disabled,
-     }, _ref) => {
+     }) => {
         const errorMessage = Array.isArray(error) ? error[0] : error;
         const [isOpen, setIsOpen] = useState(false);
         const containerRef = useRef<HTMLDivElement>(null);
@@ -63,7 +63,6 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
                 )}
 
                 <div className="relative w-full">
-                    {/* Trigger button */}
                     <button
                         type="button"
                         disabled={disabled}
@@ -79,7 +78,6 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
                         />
                     </button>
 
-                    {/* Custom dropdown list */}
                     {isOpen && (
                         <div
                             className={`
@@ -93,7 +91,6 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
                             `}
                             role="listbox"
                         >
-                            {/* Decorative top gradient line */}
                             <div className="h-px w-full bg-gradient-to-r from-rose-500/60 via-purple-500/40 to-blue-500/40" />
 
                             <div className="py-1.5 max-h-64 overflow-y-auto">
@@ -125,7 +122,6 @@ export const SelectField = React.forwardRef<HTMLSelectElement, SelectFieldProps>
                                 })}
                             </div>
 
-                            {/* Decorative bottom gradient line */}
                             <div className="h-px w-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-rose-500/20" />
                         </div>
                     )}
