@@ -13,8 +13,8 @@ import {SelectField} from '../../components/form/SelectField';
 import type {IUserSearchRequest} from "../../types/User/IUserSearchRequest.ts";
 import type {IUserItemResponse} from "../../types/User/IUserItemResponse.ts";
 import {useDeleteUserMutation, useSearchUsersQuery} from "../../services/api/apiUsers.ts";
-import EditUserModal from "../../components/modal/EditUserModal.tsx";
-import AddUserModal from "../../components/modal/AddUserModal.tsx";
+import EditUserModal from "../../components/modal/user/EditUserModal.tsx";
+import AddUserModal from "../../components/modal/user/AddUserModal.tsx";
 import {useSearchState} from '../../hooks/useSearchState';
 
 const perPageOptions = [

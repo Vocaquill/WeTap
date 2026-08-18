@@ -2,13 +2,13 @@ import {useState, type ChangeEvent, type FormEvent} from 'react';
 import {motion, AnimatePresence} from 'framer-motion';
 import {X} from 'lucide-react';
 
-import {useRegisterMutation} from "../../services/api/apiAccount.ts";
-import {useFormServerErrors} from "../../hooks/useFormServerErrors.ts";
+import {useRegisterMutation} from "../../../services/api/apiAccount.ts";
+import {useFormServerErrors} from "../../../hooks/useFormServerErrors.ts";
 
-import {InputField} from "../form/InputField";
-import {FileUploadField} from '../form/FileUploadField';
-import {Button} from "../form/Button";
-import type {IRegister} from "../../types/Account/IRegister.ts";
+import {InputField} from "../../form/InputField.tsx";
+import {FileUploadField} from '../../form/FileUploadField.tsx';
+import {Button} from "../../form/Button.tsx";
+import type {IRegister} from "../../../types/Account/IRegister.ts";
 
 interface Props {
     isOpen: boolean;

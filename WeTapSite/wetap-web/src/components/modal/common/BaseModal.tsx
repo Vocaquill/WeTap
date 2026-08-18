@@ -24,7 +24,6 @@ export function BaseModal({
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -33,7 +32,6 @@ export function BaseModal({
                         className="absolute inset-0 bg-black/90 backdrop-blur-sm"
                     />
 
-                    {/* Modal container */}
                     <motion.div
                         initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
@@ -41,7 +39,6 @@ export function BaseModal({
                         transition={{ duration: 0.2 }}
                         className={`relative z-10 w-full ${maxWidth} bg-zinc-950 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl`}
                     >
-                        {/* Header */}
                         <div className="p-6 border-b border-zinc-800 flex justify-between items-center">
                             <div className="flex items-center gap-3">
                                 {headerIcon && (
@@ -58,7 +55,6 @@ export function BaseModal({
                             </Button>
                         </div>
 
-                        {/* Content */}
                         <div className="p-6">
                             {children}
                         </div>
@@ -69,4 +65,3 @@ export function BaseModal({
     );
 }
 
-export default BaseModal;

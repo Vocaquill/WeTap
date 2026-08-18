@@ -461,5 +461,3 @@ export function VideoProcessingModal({ trackingId, videoSlug }: VideoProcessingM
         />
     );
 }
-
-export default VideoProcessingModal;
