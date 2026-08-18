@@ -91,7 +91,7 @@ function AddUserModal({isOpen, onClose}: Props) {
                                          error={errors.imageFile}/>
 
                         {form.imageFile && (
-                            <img src={URL.createObjectURL(form.imageFile)}
+                            <img alt={form.email} src={URL.createObjectURL(form.imageFile)}
                                  className="w-full h-32 object-cover rounded-xl border border-zinc-800"/>
                         )}
 
