@@ -231,7 +231,6 @@ export function VideoForm({
         }
     };
 
-    // --- СТИЛІ ДЛЯ СВІТЛОЇ ТА ТЕМНОЇ ТЕМИ ---
     const inputBaseStyle = "w-full bg-white dark:bg-zinc-900/50 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 rounded-xl px-5 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff2a6d]/80 focus:border-transparent transition-all duration-200 border border-zinc-300 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 shadow-xs";
 
     const cardContainerStyle = "bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xs backdrop-blur-md overflow-hidden";

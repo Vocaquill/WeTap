@@ -184,7 +184,6 @@ export function GenericTable<T extends { id: string | number }>({
                             key={item.id}
                             className="bg-zinc-900/60 border border-zinc-800/80 hover:border-zinc-700/80 rounded-2xl p-4 transition-all space-y-3.5 shadow-md"
                         >
-                            {/* Поля картки */}
                             <div className="space-y-2.5">
                                 {activeColumns.map((col) => {
                                     const value = col.render ? col.render(item) : String((item as any)[col.key] ?? '');
@@ -211,7 +210,6 @@ export function GenericTable<T extends { id: string | number }>({
                                 })}
                             </div>
 
-                            {/* Кнопки дій для мобільних */}
                             {hasActions && (
                                 <div className="pt-2 border-t border-zinc-800/60 flex items-center justify-end gap-2">
                                     {onEdit && (
