@@ -23,7 +23,6 @@ function LoginPage() {
     const [login, { isLoading: isLoginLoading }] = useLoginMutation();
     const [loginByGoogle, { isLoading: isGoogleLoading }] = useLoginByGoogleMutation();
 
-    /* ================= EMAIL / PASSWORD LOGIN ================= */
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMessage("");
@@ -36,7 +35,6 @@ function LoginPage() {
         }
     };
 
-    /* ================= GOOGLE LOGIN ================= */
     const loginUseGoogle = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             setErrorMessage("");
@@ -69,34 +67,27 @@ function LoginPage() {
         <div className="min-h-screen bg-[rgb(var(--color-bg))] text-[rgb(var(--color-zinc-50))] flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">
             {(isLoginLoading || isGoogleLoading) && <LoadingOverlay />}
 
-            {/* 1. РОЖЕВО-ЧЕРВОНА ПЛЯМА (Зліва вгорі) */}
             <div className="absolute top-1/4 left-1/2 -translate-x-[110%] -translate-y-1/2 w-[30rem] h-[30rem] bg-[#ff2a6d]/25 rounded-full blur-[120px] pointer-events-none" />
 
-            {/* 2. СИНЯ ПЛЯМА (Справа внизу) */}
             <div className="absolute bottom-1/4 left-1/2 translate-x-[10%] translate-y-1/2 w-[30rem] h-[30rem] bg-[#3b82f6]/25 rounded-full blur-[120px] pointer-events-none" />
 
-            {/* Центрована картка */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
                 className="w-full max-w-md bg-[rgb(var(--color-zinc-950)/0.8)] backdrop-blur-xl border border-[rgb(var(--color-zinc-700))] rounded-3xl p-8 shadow-2xl z-10 flex flex-col items-center transition-colors duration-300"
             >
-                {/* Logo / Header */}
                 <div className="flex items-center gap-2 mb-6">
                     <img src={logoImg} alt="NexPlay Logo" className="h-8 w-auto object-contain" />
                     <span className="text-2xl font-bold tracking-tight text-[#ff2a6d]">NexPlay</span>
                 </div>
 
-                {/* Title & Subtitle */}
                 <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">З поверненням</h1>
                 <p className="text-[rgb(var(--color-zinc-400))] text-xs text-center mb-6">
                     Раді бачити вас знову! Будь ласка, введіть свої дані.
                 </p>
 
-                {/* FORM */}
                 <form onSubmit={handleSubmit} className="w-full space-y-4">
-                    {/* EMAIL */}
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Електронна пошта</label>
                         <input
@@ -109,7 +100,6 @@ function LoginPage() {
                         />
                     </div>
 
-                    {/* PASSWORD */}
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Пароль</label>
                         <div className="relative flex items-center">
@@ -131,12 +121,10 @@ function LoginPage() {
                         </div>
                     </div>
 
-                    {/* ERROR MESSAGE */}
                     {errorMessage && (
                         <p className="text-red-500 text-xs font-medium text-center">{errorMessage}</p>
                     )}
 
-                    {/* REMEMBER ME & FORGOT PASSWORD */}
                     <div className="flex items-center justify-between text-xs pt-1">
                         <label className="flex items-center gap-2 cursor-pointer select-none">
                             <input
@@ -157,7 +145,6 @@ function LoginPage() {
                         </button>
                     </div>
 
-                    {/* SUBMIT BUTTON */}
                     <button
                         type="submit"
                         className="w-full bg-[rgb(var(--color-zinc-100))] hover:bg-[rgb(var(--color-zinc-50))] text-[rgb(var(--color-zinc-950))] font-semibold py-2.5 rounded-full text-sm transition-all shadow-md mt-2 cursor-pointer"
@@ -166,7 +153,6 @@ function LoginPage() {
                     </button>
                 </form>
 
-                {/* GOOGLE BUTTON */}
                 <button
                     type="button"
                     onClick={() => loginUseGoogle()}
@@ -176,7 +162,6 @@ function LoginPage() {
                     Увійти через Google
                 </button>
 
-                {/* REGISTER LINK */}
                 <p className="text-xs text-[rgb(var(--color-zinc-400))] mt-6">
                     Немає акаунту?{' '}
                     <button
