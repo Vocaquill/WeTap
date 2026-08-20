@@ -30,7 +30,6 @@ function RegisterPage() {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-    /* ================= IMAGE ================= */
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -39,7 +38,6 @@ function RegisterPage() {
         setImagePreview(URL.createObjectURL(file));
     };
 
-    /* ================= SUBMIT ================= */
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const reg: IRegister = {
@@ -77,20 +75,16 @@ function RegisterPage() {
         <div className="min-h-screen bg-[rgb(var(--color-bg))] text-[rgb(var(--color-zinc-50))] flex items-center justify-center p-4 relative overflow-hidden py-10 transition-colors duration-300">
             {isLoading && <LoadingOverlay />}
 
-            {/* 1. РОЖЕВО-ЧЕРВОНА ПЛЯМА (Зліва вгорі) */}
             <div className="absolute top-1/4 left-1/2 -translate-x-[110%] -translate-y-1/2 w-[30rem] h-[30rem] bg-[#ff2a6d]/25 rounded-full blur-[120px] pointer-events-none" />
 
-            {/* 2. СИНЯ ПЛЯМА (Справа внизу) */}
             <div className="absolute bottom-1/4 left-1/2 translate-x-[10%] translate-y-1/2 w-[30rem] h-[30rem] bg-[#3b82f6]/25 rounded-full blur-[120px] pointer-events-none" />
 
-            {/* Центрована картка */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
                 className="w-full max-w-md bg-[rgb(var(--color-zinc-950)/0.8)] backdrop-blur-xl border border-[rgb(var(--color-zinc-700))] rounded-3xl p-8 shadow-2xl z-10 flex flex-col items-center relative transition-colors duration-300"
             >
-                {/* Кнопка "Назад" */}
                 <button
                     type="button"
                     onClick={() => navigate('/login')}
@@ -100,22 +94,18 @@ function RegisterPage() {
                     <span>Вхід</span>
                 </button>
 
-                {/* Logo / Header */}
                 <div className="flex items-center gap-2 mb-4 mt-2">
                     <img src={logoImg} alt="NexPlay Logo" className="h-8 w-auto object-contain" />
                     <span className="text-2xl font-bold tracking-tight text-[#ff2a6d]">NexPlay</span>
                 </div>
 
-                {/* Title & Subtitle */}
                 <h1 className="text-2xl font-bold text-center mb-1 text-[rgb(var(--color-zinc-50))]">Створення акаунта</h1>
                 <p className="text-[rgb(var(--color-zinc-400))] text-xs text-center mb-6">
                     Приєднуйтесь до NexPlay вже сьогодні!
                 </p>
 
-                {/* FORM */}
                 <form onSubmit={handleSubmit} className="w-full space-y-4">
 
-                    {/* AVATAR UPLOAD */}
                     <div className="flex flex-col items-center mb-2">
                         <div
                             onClick={() => fileInputRef.current?.click()}
@@ -139,7 +129,6 @@ function RegisterPage() {
                         </span>
                     </div>
 
-                    {/* FIRST & LAST NAME */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-1">
                             <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Ім'я</label>
@@ -165,7 +154,6 @@ function RegisterPage() {
                         </div>
                     </div>
 
-                    {/* EMAIL */}
                     <div className="flex flex-col gap-1">
                         <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Електронна пошта</label>
                         <input
@@ -178,7 +166,6 @@ function RegisterPage() {
                         />
                     </div>
 
-                    {/* PASSWORD */}
                     <div className="flex flex-col gap-1">
                         <label className="text-xs font-semibold text-[rgb(var(--color-zinc-200))]">Пароль</label>
                         <div className="relative flex items-center">
@@ -200,12 +187,10 @@ function RegisterPage() {
                         </div>
                     </div>
 
-                    {/* ERROR MESSAGE */}
                     {errorMessage && (
                         <p className="text-red-500 text-xs font-medium text-center pt-1">{errorMessage}</p>
                     )}
 
-                    {/* SUBMIT BUTTON */}
                     <button
                         type="submit"
                         className="w-full bg-[rgb(var(--color-zinc-100))] hover:bg-[rgb(var(--color-zinc-50))] text-[rgb(var(--color-zinc-950))] font-semibold py-2.5 rounded-full text-sm transition-all shadow-md mt-4 cursor-pointer"
@@ -214,7 +199,6 @@ function RegisterPage() {
                     </button>
                 </form>
 
-                {/* LOGIN LINK */}
                 <p className="text-xs text-[rgb(var(--color-zinc-400))] mt-6">
                     Вже є акаунт?{' '}
                     <button

@@ -2,14 +2,14 @@ import {useState, type ChangeEvent, type FormEvent} from 'react';
 import {motion, AnimatePresence} from 'framer-motion';
 import {X} from 'lucide-react';
 
-import {useFormServerErrors} from "../../hooks/useFormServerErrors";
-import {InputField} from '../form/InputField';
-import {FileUploadField} from '../form/FileUploadField';
-import {Button} from '../form/Button';
-import {APP_ENV} from '../../env/index';
-import type {IUserItemResponse} from "../../types/User/IUserItemResponse.ts";
-import type {IUserEditRequest} from "../../types/User/IUserEditRequest.ts";
-import {useEditUserMutation} from "../../services/api/apiUsers.ts";
+import {useFormServerErrors} from "../../../hooks/useFormServerErrors.ts";
+import {InputField} from '../../form/InputField.tsx';
+import {FileUploadField} from '../../form/FileUploadField.tsx';
+import {Button} from '../../form/Button.tsx';
+import {APP_ENV} from '../../../env';
+import type {IUserItemResponse} from "../../../types/User/IUserItemResponse.ts";
+import type {IUserEditRequest} from "../../../types/User/IUserEditRequest.ts";
+import {useEditUserMutation} from "../../../services/api/apiUsers.ts";
 
 interface Props {
     isOpen: boolean;
@@ -161,10 +161,10 @@ function EditUserModal({isOpen, onClose, user}: Props) {
 
                         <div className="mt-2">
                             {form.image ? (
-                                <img src={URL.createObjectURL(form.image)}
+                                <img alt={form.email} src={URL.createObjectURL(form.image)}
                                      className="w-full h-32 object-cover rounded-xl border border-red-600/50"/>
                             ) : user.image ? (
-                                <img src={APP_ENV.IMAGES_400_URL + user.image}
+                                <img alt={form.email} src={APP_ENV.IMAGES_400_URL + user.image}
                                      className="w-full h-32 object-cover rounded-xl border border-zinc-800"/>
                             ) : null}
                         </div>

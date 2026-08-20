@@ -76,16 +76,12 @@ function CreateChannelPage() {
         if (!validateClient()) return;
 
         try {
-            // 1. Відправляємо запит на створення
             await createChannel(form).unwrap();
 
-            // 2. Оновлюємо токен (щоб отримати роль Author, якщо бекенд її видає)
             await refreshToken().unwrap();
 
-            // 3. Переходимо в профіль (або на сторінку каналу)
             navigate("/account");
         } catch (err: any) {
-            // ДОДАНО: Виводимо повну помилку в консоль браузера
             console.error("Помилка при створенні каналу:", err);
 
             if (err?.data?.errors) {
@@ -93,7 +89,6 @@ function CreateChannelPage() {
             } else if (err?.data?.message) {
                 setServerErrors({ name: [err.data.message] });
             } else {
-                // ДОДАНО: Якщо структура помилки невідома, показуємо це користувачу
                 setServerErrors({
                     name: ["Не вдалося створити канал. Відкрийте консоль розробника (F12) для деталей."]
                 });
@@ -108,7 +103,6 @@ function CreateChannelPage() {
         <div className="min-h-screen bg-theme-bg text-theme-text flex items-center justify-center relative overflow-hidden py-8 sm:py-12">
             {isLoading && <LoadingOverlay />}
 
-            {/* Background elements */}
             <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-600/10 dark:bg-red-600/20 blur-[120px] rounded-full pointer-events-none" />
             <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-zinc-300/30 dark:bg-zinc-800/30 blur-[120px] rounded-full pointer-events-none" />
 

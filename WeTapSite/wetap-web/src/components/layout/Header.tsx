@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Plus, Users } from 'lucide-react';
-import { useAppSelector } from "../../store/index";
-import { APP_ENV } from "../../env/index";
+import { useAppSelector } from "../../store";
+import { APP_ENV } from "../../env";
 import { Button } from '../form/Button';
 import { themes, applyTheme, getActiveTheme, initThemeSystem } from '../../themes';
 import { SearchAutocomplete } from '../form/SearchAutocomplete';
@@ -88,7 +88,6 @@ function Header() {
                     <Plus size={20}/>
                 </Button>
 
-                {/* Тема доступна і для мобільних, і для десктопу */}
                 <div className="block min-w-[90px] xs:min-w-[110px] sm:min-w-[130px]">
                     <SelectField
                         name="theme"

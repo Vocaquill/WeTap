@@ -7,7 +7,7 @@ import type {IGenreEditRequest as IGenreEdit} from '../../../types/Genre/IGenreE
 import {InputField} from '../../form/InputField';
 import {FileUploadField} from '../../form/FileUploadField';
 import {Button} from '../../form/Button';
-import {APP_ENV} from '../../../env/index';
+import {APP_ENV} from '../../../env';
 import {BaseModal} from '../common/BaseModal';
 
 interface Props {

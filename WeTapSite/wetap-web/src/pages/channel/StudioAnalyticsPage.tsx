@@ -12,7 +12,7 @@ import {
     ResponsiveContainer
 } from "recharts";
 import LoadingOverlay from "../../components/ui/loading/LoadingOverlay.tsx";
-import type { MetricType } from "../../env/index.ts";
+import type { MetricType } from "../../env";
 import { formatMetricName, formatNumber } from "../../utils/statsUtils.ts";
 import { GenericTable } from "../../components/ui/common/GenericTable";
 import type { IColumnConfig } from "../../types/Additional/IColumnConfig";

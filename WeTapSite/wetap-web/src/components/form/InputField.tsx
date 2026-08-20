@@ -22,7 +22,6 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
         error,
         onChange,
         icon,
-        className = '',
         inputClassName = '',
         wrapperClassName = '',
         labelClassName = '',

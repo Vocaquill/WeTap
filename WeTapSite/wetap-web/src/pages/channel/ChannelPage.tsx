@@ -7,7 +7,7 @@ import { TabButtons } from '../../components/ui/common/TabButton';
 import { Button } from '../../components/form/Button';
 import { APP_ENV } from '../../env';
 import { Loader2, Info } from 'lucide-react';
-import { useAppSelector } from '../../store/index';
+import { useAppSelector } from '../../store';
 
 export default function ChannelPage() {
     const { slug } = useParams<{ slug: string }>();
@@ -44,7 +44,6 @@ export default function ChannelPage() {
         { skip: !channel?.id || activeTab !== 'Home' }
     );
 
-    // Визначаємо, чи є поточний користувач власником цього каналу
     const userChannelId = user?.channelId ?? user?.id;
     const isOwnChannel = userChannelId === channel?.id;
 
@@ -77,7 +76,6 @@ export default function ChannelPage() {
     return (
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
 
-            {/* Банер каналу */}
             <div className="w-full h-48 md:h-64 bg-zinc-800 rounded-[2rem] overflow-hidden">
                 {channel.bannerImage ? (
                     <img
@@ -90,7 +88,6 @@ export default function ChannelPage() {
                 )}
             </div>
 
-            {/* Інформація про канал */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div className="flex items-center gap-6">
                     <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-zinc-800 shrink-0 border-4 border-[#121213]">
@@ -111,7 +108,6 @@ export default function ChannelPage() {
                 </div>
 
                 <div className="shrink-0">
-                    {/* Перевірка на власний канал */}
                     {isOwnChannel ? (
                         <Button
                             variant="secondary"
@@ -135,7 +131,6 @@ export default function ChannelPage() {
                 </div>
             </div>
 
-            {/* Навігація (Tabs) - Видалено зайві вкладки */}
             <div className="border-b border-white/5 pb-2">
                 <TabButtons
                     tabList={['Home', 'Videos', 'About']}
@@ -143,7 +138,6 @@ export default function ChannelPage() {
                 />
             </div>
 
-            {/* Контент вкладок */}
             {activeTab === 'Videos' && (
                 <div className="space-y-6">
                     <div className="flex items-center gap-3">
@@ -206,7 +200,6 @@ export default function ChannelPage() {
                 </div>
             )}
 
-            {/* Вкладка About */}
             {activeTab === 'About' && (
                 <div className="bg-zinc-900/50 p-6 md:p-8 rounded-[2rem] border border-zinc-800 max-w-4xl">
                     <h2 className="text-xl font-bold text-zinc-100 mb-6 flex items-center gap-2">

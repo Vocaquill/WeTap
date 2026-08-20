@@ -2,13 +2,13 @@ import {useState, type ChangeEvent, type FormEvent} from 'react';
 import {motion, AnimatePresence} from 'framer-motion';
 import {X} from 'lucide-react';
 
-import {useRegisterMutation} from "../../services/api/apiAccount.ts";
-import {useFormServerErrors} from "../../hooks/useFormServerErrors.ts";
+import {useRegisterMutation} from "../../../services/api/apiAccount.ts";
+import {useFormServerErrors} from "../../../hooks/useFormServerErrors.ts";
 
-import {InputField} from "../form/InputField";
-import {FileUploadField} from '../form/FileUploadField';
-import {Button} from "../form/Button";
-import type {IRegister} from "../../types/Account/IRegister.ts";
+import {InputField} from "../../form/InputField.tsx";
+import {FileUploadField} from '../../form/FileUploadField.tsx';
+import {Button} from "../../form/Button.tsx";
+import type {IRegister} from "../../../types/Account/IRegister.ts";
 
 interface Props {
     isOpen: boolean;
@@ -91,7 +91,7 @@ function AddUserModal({isOpen, onClose}: Props) {
                                          error={errors.imageFile}/>
 
                         {form.imageFile && (
-                            <img src={URL.createObjectURL(form.imageFile)}
+                            <img alt={form.email} src={URL.createObjectURL(form.imageFile)}
                                  className="w-full h-32 object-cover rounded-xl border border-zinc-800"/>
                         )}
 

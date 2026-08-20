@@ -150,7 +150,6 @@ export const FileUploadField = ({
                 </svg>
 
                 <span className="text-sm text-center leading-snug">
-                    {/* ДОДАНО: Якщо файл вибрано, показуємо його ім'я, інакше стандартний текст */}
                     {fileName ? (
                         <span className="text-[#FF2D7A] font-semibold block truncate max-w-[200px] sm:max-w-[300px]">
                             {fileName}
